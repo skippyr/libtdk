@@ -111,12 +111,16 @@ TDK::RGBColor TDK::RGBColor::Invert()
     return color;
 }
 
-std::ostream& TDK::operator<<(std::ostream& stream, XColor color)
+std::ostream& TDK::operator<<(std::ostream& stream, Effect effect)
 {
     CHECK_STREAM_TTY_STATUS();
-    return color.m_code == static_cast<int>(TDK::XColorCode::Default)
-               ? stream << "\x1b[" << static_cast<int>(color.m_layer) << "9m"
-               : stream << "\x1b[" << static_cast<int>(color.m_layer) << "8;5;" << color.m_code << "m";
+    return stream << "\x1b[" << static_cast<int>(effect) << "m";
+}
+
+std::ostream& TDK::operator>>(std::ostream& stream, Effect effect)
+{
+    CHECK_STREAM_TTY_STATUS();
+    return stream << "\x1b[" << static_cast<int>(effect) + 20 << "m";
 }
 
 std::ostream& TDK::operator<<(std::ostream& stream, HexColor color)
@@ -129,4 +133,12 @@ std::ostream& TDK::operator<<(std::ostream& stream, RGBColor color)
     CHECK_STREAM_TTY_STATUS();
     return stream << "\x1b[" << static_cast<int>(color.m_layer) << "8;2;" << static_cast<int>(color.m_red) << ";"
                   << static_cast<int>(color.m_green) << ";" << static_cast<int>(color.m_blue) << "m";
+}
+
+std::ostream& TDK::operator<<(std::ostream& stream, XColor color)
+{
+    CHECK_STREAM_TTY_STATUS();
+    return color.m_code == static_cast<int>(TDK::XColorCode::Default)
+               ? stream << "\x1b[" << static_cast<int>(color.m_layer) << "9m"
+               : stream << "\x1b[" << static_cast<int>(color.m_layer) << "8;5;" << color.m_code << "m";
 }

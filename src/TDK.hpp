@@ -16,6 +16,26 @@
 namespace TDK
 {
     /*
+     * @brief An enum class containing the available terminal text effects. To apply one, use the left shifting
+     * operator (<<) agains an instance of the std::ostream class. To remove it, use the right shifting instead.
+     */
+    enum class Effect
+    {
+        /* @brief The italic effect makes the text curly. It may require the use of a font with italic style. */
+        Italic = 3,
+        /* @brief The underline effect draws a horizontal line crossing below the text. */
+        Underline,
+        /* @brief The blinking effect makes the text blink indefinitely. */
+        Blinking,
+        /* @brief The reverse-video effect swaps the foreground and background colors. */
+        ReverseVideo = 7,
+        /* @brief The conceal effect makes the text hard to see or invisible. */
+        Conceal,
+        /* @brief The strike-through effect draws a horizontal line crossing through the middle of the text. */
+        Strikethrough
+    };
+
+    /*
      * @brief An enum class containing the available layers where a color can be applied on. They are used as reference
      * to apply the classes XColor, HexColor and RGBColor.
      */
@@ -171,7 +191,9 @@ namespace TDK
         XColor Invert();
     };
 
-    std::ostream& operator<<(std::ostream& stream, XColor color);
+    std::ostream& operator<<(std::ostream& stream, Effect effect);
+    std::ostream& operator>>(std::ostream& stream, Effect effect);
     std::ostream& operator<<(std::ostream& stream, HexColor color);
     std::ostream& operator<<(std::ostream& stream, RGBColor color);
+    std::ostream& operator<<(std::ostream& stream, XColor color);
 }
