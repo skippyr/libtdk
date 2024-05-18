@@ -1,7 +1,7 @@
 #pragma once
 
-#include <iostream>
 #include <cstdarg>
+#include <iostream>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -261,6 +261,19 @@ namespace TDK
     std::ostream& operator<<(std::ostream& stream, Weight weight);
 
     /*
+     * @brief Gets the dimensions of the terminal window.
+     * @param dimensions The address where the dimensions info will be put into.
+     * @returns 0 if successful and -1 otherwise.
+     */
+    int GetWindowDimensions(Dimensions& dimensions);
+    /*
+     * @brief Looks into the library cache to checks if a standard terminal stream is connected to an interactive
+     * terminal (TTY).
+     * @param stream The stream to be checked.
+     * @returns The check result.
+     */
+    bool IsTTY(Stream stream);
+    /*
      * @brief Sets the terminal cursor shape.
      * @param shape The shape to be set.
      */
@@ -270,10 +283,4 @@ namespace TDK
      * @param isToShow A boolean that states the cursor should be visible or not.
      */
     void SetCursorVisibility(bool isToShow);
-    /*
-     * @brief Gets the dimensions of the terminal window.
-     * @param dimensions The address where the dimensions info will be put into.
-     * @returns 0 if successful and -1 otherwise.
-     */
-    int GetWindowDimensions(Dimensions& dimensions);
 }

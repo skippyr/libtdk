@@ -6,7 +6,7 @@ static char g_cache = 0;
 /*
  * @brief Looks into cache to check if a standard terminal stream is a TTY.
  * @param a_stream The stream to be checked. It must be a value from the TDK::Stream enum class.
- * @returns A boolean with the result.
+ * @returns The check result.
  */
 #define IS_TTY(stream) static_cast<bool>(g_cache & 1 << static_cast<int>(stream))
 /* @brief Causes an early return if the standard terminal stream being targeted is not a TTY. */
@@ -178,16 +178,6 @@ std::ostream& TDK::operator<<(std::ostream& stream, Weight weight)
     return weight == Weight::Default ? stream << "\x1b[22m" : stream << "\x1b[22;" << static_cast<int>(weight) << "m";
 }
 
-void TDK::SetCursorShape(CursorShape shape)
-{
-    WriteANSI("\x1b[%d q", static_cast<int>(shape));
-}
-
-void TDK::SetCursorVisibility(bool isToShow)
-{
-    WriteANSI("\x1b[?25%c", isToShow ? 'h' : 'l');
-}
-
 int TDK::GetWindowDimensions(Dimensions& dimensions)
 {
 #ifdef _WIN32
@@ -210,4 +200,20 @@ int TDK::GetWindowDimensions(Dimensions& dimensions)
     dimensions.m_totalColumns = size.ws_row;
 #endif
     return 0;
+}
+
+bool TDK::IsTTY(Stream stream)
+{
+    PrepareTTYAndCache();
+    return IS_TTY(stream);
+}
+
+void TDK::SetCursorShape(CursorShape shape)
+{
+    WriteANSI("\x1b[%d q", static_cast<int>(shape));
+}
+
+void TDK::SetCursorVisibility(bool isToShow)
+{
+    WriteANSI("\x1b[?25%c", isToShow ? 'h' : 'l');
 }
