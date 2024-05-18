@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <cstdarg>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -16,6 +17,28 @@
  */
 namespace TDK
 {
+    /*
+     * @brief An enum class containing the available terminal cursor shapes. To apply one, use the SetCursorShape
+     * function.
+     */
+    enum class CursorShape
+    {
+        /* @brief The default shape, intended for resets. */
+        Default,
+        /* @brief The blinking variant of the block shape. */
+        BlinkingBlock,
+        /* @brief The non-blinking variant of the block shape. */
+        Block,
+        /* @brief The blinking variant of the underline shape. */
+        BlinkingUnderline,
+        /* @brief The non-blinking variant of the underline shape. */
+        Underline,
+        /* @brief The blinking variant of the bar shape. */
+        BlinkingBar,
+        /* @brief The non-blinking variant of the bar shape. */
+        Bar
+    };
+
     /*
      * @brief An enum class containing the available terminal text effects. To apply one, use the left shifting
      * operator (<<) agains an instance of the std::ostream class. To remove it, use the right shifting instead.
@@ -154,8 +177,7 @@ namespace TDK
     public:
         /*
          * @brief Creates an instance of the HexColor class.
-         * @param code The hexadecimal code of
-         * the color.
+         * @param code The hexadecimal code of the color.
          * @param layer The layer where the color should be applied on.
          */
         HexColor(unsigned int code, Layer layer);
@@ -178,18 +200,15 @@ namespace TDK
     public:
         /*
          * @brief Creates an instance of the RGBColor class.
-         * @param red The red component the
-         * color.
+         * @param red The red component the color.
          * @param green The green component of the color.
-         * @param blue The blue component of
-         * the color.
+         * @param blue The blue component of the color.
          * @param layer The layer where the color should be applied on.
          */
         RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer);
         /*
          * @brief Creates an instance of the RGBColor class.
-         * @param color An hexadecimal color to
-         * be converted.
+         * @param color An hexadecimal color to be converted.
          */
         RGBColor(HexColor color);
         /* @brief Invers the layer of the color. */
@@ -241,6 +260,11 @@ namespace TDK
     std::ostream& operator<<(std::ostream& stream, XColor color);
     std::ostream& operator<<(std::ostream& stream, Weight weight);
 
+    /*
+     * @brief Sets the terminal cursor shape.
+     * @param shape The shape to be set.
+     */
+    void SetCursorShape(CursorShape shape);
     /*
      * @brief Gets the dimensions of the terminal window.
      * @param dimensions The address where the dimensions info will be put into.

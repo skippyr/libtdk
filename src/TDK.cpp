@@ -42,10 +42,19 @@ static char g_cache = 0;
 #endif
 
 /*
- * @brief Creates a cache containing info about the TTY statuses of the standard terminal streams and, on Windows, set
- * the ENABLE_VIRTUAL_TERMINAL_PROCESSING bit in order to the terminal to start parsing ANSI escape sequences.
+ * @brief Creates a cache containing info about the TTY statuses of the standard terminal streams and, on
+ * Windows, set the ENABLE_VIRTUAL_TERMINAL_PROCESSING bit in order to the terminal to start parsing ANSI escape
+ * sequences.
  */
 static void PrepareTTYAndCache();
+/*
+ * @brief Writes an ANSI escape sequence to either the standard output or error terminal streams based on the
+ * fact if they are or not TTY and their character orientation.
+ * @param format The format to be used to write the sequence. It uses the same format specifiers as the printf function
+ * family.
+ * @param ... The arguments to be formatted.
+ */
+static int WriteANSI(const char* format, ...);
 
 static void PrepareTTYAndCache()
 {
@@ -61,6 +70,20 @@ static void PrepareTTYAndCache()
      GetConsoleMode((handle = GetStdHandle(STD_ERROR_HANDLE)), &mode)) &&
         SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 #endif
+}
+
+static int WriteANSI(const char* format, ...)
+{
+    PrepareTTYAndCache();
+    if (!IS_TTY(TDK::Stream::Output) && !IS_TTY(TDK::Stream::Error))
+    {
+        return -1;
+    }
+    std::va_list arguments;
+    va_start(arguments, format);
+    int totalBytesWritten = std::vfprintf(IS_TTY(TDK::Stream::Output) ? stdout : stderr, format, arguments);
+    va_end(arguments);
+    return -(totalBytesWritten < 0);
 }
 
 TDK::Dimensions::Dimensions() : m_totalColumns(0), m_totalRows(0)
@@ -155,6 +178,11 @@ std::ostream& TDK::operator<<(std::ostream& stream, Weight weight)
     return weight == Weight::Default ? stream << "\x1b[22m" : stream << "\x1b[22;" << static_cast<int>(weight) << "m";
 }
 
+void TDK::SetCursorShape(CursorShape shape)
+{
+    WriteANSI("\x1b[%d q", static_cast<int>(shape));
+}
+
 int TDK::GetWindowDimensions(Dimensions& dimensions)
 {
 #ifdef _WIN32
@@ -164,7 +192,7 @@ int TDK::GetWindowDimensions(Dimensions& dimensions)
     {
         return -1;
     }
-    dimensions.m_totalColumns= bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1;
+    dimensions.m_totalColumns = bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1;
     dimensions.m_totalRows = bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1;
 #else
     struct winsize size;
