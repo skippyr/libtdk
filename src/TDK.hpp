@@ -82,6 +82,67 @@ namespace TDK
     };
 
     /*
+     * @brief A class that represents a hexadecimal color. Apply it by using the left shifting operator (<<)
+     * against an instance of the std::ostream class. Remove it by using the XColor class with XColorCode::Default
+     * targetting the same layer where the color has been applied on.
+     */
+    class HexColor
+    {
+    public:
+        /* @brief The hexadecimal code of the color. */
+        unsigned int m_code;
+        /* @brief The layer where the color should be applied on. */
+        Layer m_layer;
+
+        /*
+         * @brief Creates an instance of the HexColor class.
+         * @param code The hexadecimal code of
+         * the color.
+         * @param layer The layer where the color should be applied on.
+         */
+        HexColor(unsigned int code, Layer layer);
+        /* @brief Inverts the layer of the color. */
+        HexColor Invert();
+    };
+
+    /*
+     * @brief A class that represents an RGB color. Apply it by using the left shifting operator (<<) against an
+     * instance of the std::ostream class. Remove it by using the XColor class with XColorCode::Default targetting the
+     * same layer where the color has been applied on.
+     */
+    class RGBColor
+    {
+    public:
+        /* @brief The red component of the color. */
+        unsigned char m_red;
+        /* @brief The green component of the color. */
+        unsigned char m_green;
+        /* @brief The blue component of the color. */
+        unsigned char m_blue;
+        /* @brief The layer where the color should be applied on. */
+        Layer m_layer;
+
+        /*
+         * @brief Creates an instance of the RGBColor class.
+         * @param red The red component the
+         * color.
+         * @param green The green component of the color.
+         * @param blue The blue component of
+         * the color.
+         * @param layer The layer where the color should be applied on.
+         */
+        RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer);
+        /*
+         * @brief Creates an instance of the RGBColor class.
+         * @param color An hexadecimal color to
+         * be converted.
+         */
+        RGBColor(HexColor color);
+        /* @brief Invers the layer of the color. */
+        RGBColor Invert();
+    };
+
+    /*
      * @brief A class that represents a color from the XTerm palette: a terminal exclusive palette composed by 256
      * colors. Apply it by using the left shifting operator (<<) against an instance of the std::ostream class. Remove
      * it by using the XColorCode::Default targetting the same layer where the color has been applied on.
@@ -110,29 +171,7 @@ namespace TDK
         XColor Invert();
     };
 
-    /*
-     * @brief A class that represents an RGB color. Apply it by using the left shifting operator (<<) against an
-     * instance of the std::ostream class. Remove it by using the XColorCode::Default targetting the same layer where
-     * the color has been applied on.
-     */
-    class RGBColor
-    {
-    public:
-        /* @brief The red component of the color. */
-        unsigned char m_red;
-        /* @brief The green component of the color. */
-        unsigned char m_green;
-        /* @brief The blue component of the color. */
-        unsigned char m_blue;
-        /* @brief The layer where the color should be applied on. */
-        Layer m_layer;
-
-        /* @brief Creates an instance of the RGBColor class. */
-        RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer);
-        /* @brief Invers the layer of the color. */
-        RGBColor Invert();
-    };
-
     std::ostream& operator<<(std::ostream& stream, XColor color);
+    std::ostream& operator<<(std::ostream& stream, HexColor color);
     std::ostream& operator<<(std::ostream& stream, RGBColor color);
 }

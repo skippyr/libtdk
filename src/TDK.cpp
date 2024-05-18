@@ -81,8 +81,26 @@ TDK::XColor TDK::XColor::Invert()
     return color;
 }
 
+TDK::HexColor::HexColor(unsigned int code, Layer layer)
+    : m_code((std::min)(static_cast<int>(code), 0xffffff)), m_layer(layer)
+{
+}
+
+TDK::HexColor TDK::HexColor::Invert()
+{
+    HexColor color = *this;
+    color.m_layer = color.m_layer == TDK::Layer::Foreground ? TDK::Layer::Background : TDK::Layer::Foreground;
+    return color;
+}
+
 TDK::RGBColor::RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer)
     : m_red(red), m_green(green), m_blue(blue), m_layer(layer)
+{
+}
+
+TDK::RGBColor::RGBColor(HexColor color)
+    : m_red(color.m_code >> 16 & 0xff), m_green(color.m_code >> 8 & 0xff), m_blue(color.m_code & 0xff),
+      m_layer(color.m_layer)
 {
 }
 
@@ -101,9 +119,14 @@ std::ostream& TDK::operator<<(std::ostream& stream, XColor color)
                : stream << "\x1b[" << static_cast<int>(color.m_layer) << "8;5;" << color.m_code << "m";
 }
 
+std::ostream& TDK::operator<<(std::ostream& stream, HexColor color)
+{
+    return stream << RGBColor(color);
+}
+
 std::ostream& TDK::operator<<(std::ostream& stream, RGBColor color)
 {
     CHECK_STREAM_TTY_STATUS();
-    return stream << "\x1b[" << static_cast<int>(color.m_layer) << "8;2;" << color.m_red << ";" << color.m_green << ";"
-                  << color.m_blue << "m";
+    return stream << "\x1b[" << static_cast<int>(color.m_layer) << "8;2;" << static_cast<int>(color.m_red) << ";"
+                  << static_cast<int>(color.m_green) << ";" << static_cast<int>(color.m_blue) << "m";
 }
