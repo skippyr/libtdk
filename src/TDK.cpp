@@ -86,6 +86,14 @@ static int WriteANSI(const char* format, ...)
     return -(totalBytesWritten < 0);
 }
 
+TDK::Coordinate::Coordinate() : m_column(0), m_row(0)
+{
+}
+
+TDK::Coordinate::Coordinate(unsigned short column, unsigned short row) : m_column(column), m_row(row)
+{
+}
+
 TDK::Dimensions::Dimensions() : m_totalColumns(0), m_totalRows(0)
 {
 }
@@ -204,6 +212,38 @@ void TDK::ClearInputBuffer()
     tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
     fcntl(STDIN_FILENO, F_SETFL, flags);
 #endif
+}
+
+int TDK::GetCursorCoordinate(Coordinate& coordinate)
+{
+#ifdef _WIN32
+    CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
+    if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) &&
+        !GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo))
+    {
+        return -1;
+    }
+    coordinate.m_column = bufferInfo.dwCursorPosition.X - bufferInfo.srWindow.Left;
+    coordinate.m_row = bufferInfo.dwCursorPosition.Y - bufferInfo.srWindow.Top;
+#else
+    struct termios attributes;
+    if (WriteANSI("\x1b[6n") || tcgetattr(STDIN_FILENO, &attributes))
+    {
+        return -1;
+    }
+    attributes.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+    int totalMatchesRead = std::scanf("\x1b[%hu;%huR", &coordinate.m_row, &coordinate.m_column);
+    attributes.c_lflag |= ICANON | ECHO;
+    tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+    if (totalMatchesRead != 2)
+    {
+        return -1;
+    }
+    --coordinate.m_column;
+    --coordinate._row;
+#endif
+    return 0;
 }
 
 int TDK::GetWindowDimensions(Dimensions& dimensions)

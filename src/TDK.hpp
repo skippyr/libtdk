@@ -295,6 +295,13 @@ namespace TDK
      */
     void ClearInputBuffer();
     /*
+     * @brief Gets the terminal cursor coordinate. On Linux, as it parses a terminal answer given through the standard
+     * input buffer, it will always clear the input buffer.
+     * @param coordinate The address where the coordinate info will be put into.
+     * @returns 0 if successful and -1 otherwise.
+     */
+    int GetCursorCoordinate(Coordinate& coordinate);
+    /*
      * @brief Gets the dimensions of the terminal window.
      * @param dimensions The address where the dimensions info will be put into.
      * @returns 0 if successful and -1 otherwise.
