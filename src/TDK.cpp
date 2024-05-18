@@ -183,6 +183,29 @@ void TDK::ClearCursorLine()
     WriteANSI("\x1b[2K\x1b[1G");
 }
 
+void TDK::ClearInputBuffer()
+{
+#ifdef _WIN32
+    FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+#else
+    struct termios attributes;
+    int flags = fcntl(STDIN_FILENO, F_GETFL);
+    if (tcgetattr(STDIN_FILENO, &attributes))
+    {
+        return;
+    }
+    attributes.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+    fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
+    while (std::getchar() != EOF)
+    {
+    }
+    attributes.c_lflag |= ICANON | ECHO;
+    tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+    fcntl(STDIN_FILENO, F_SETFL, flags);
+#endif
+}
+
 int TDK::GetWindowDimensions(Dimensions& dimensions)
 {
 #ifdef _WIN32

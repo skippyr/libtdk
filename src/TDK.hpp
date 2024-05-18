@@ -7,7 +7,9 @@
 #include <Windows.h>
 #include <io.h>
 #else
+#include <fcntl.h>
 #include <sys/ioctl.h>
+#include <termios.h>
 #include <unistd.h>
 #endif
 
@@ -262,6 +264,11 @@ namespace TDK
 
     /* @brief Clears the contents present in the terminal cursor line. */
     void ClearCursorLine();
+    /*
+     * @brief Clears the contents present in the terminal input buffer, allowing new readings to be performed without
+     * conflicts.
+     */
+    void ClearInputBuffer();
     /*
      * @brief Gets the dimensions of the terminal window.
      * @param dimensions The address where the dimensions info will be put into.
