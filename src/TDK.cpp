@@ -1,8 +1,15 @@
 #include "TDK.hpp"
 
+/* @brief A cache that contains the TTY statuses of the standard terminal streams. */
 static char g_cache = 0;
 
-#define IS_TTY(a_stream) (g_cache & 1 << static_cast<int>(a_stream))
+/*
+ * @brief Looks into cache to check if a standard terminal stream is a TTY.
+ * @param a_stream The stream to be checked. It must be a value from the TDK::Stream enum class.
+ * @returns A boolean with the result.
+ */
+#define IS_TTY(a_stream) static_cast<bool>(g_cache & 1 << static_cast<int>(a_stream))
+/* @brief Causes an early return if the standard terminal stream being targeted is not a TTY. */
 #define CHECK_STREAM_TTY_STATUS()                                                                                      \
     PrepareTTYAndCache();                                                                                              \
     if ((stream.rdbuf() == std::cout.rdbuf() && !IS_TTY(TDK::Stream::Output)) ||                                       \
@@ -10,23 +17,42 @@ static char g_cache = 0;
     {                                                                                                                  \
         return stream;                                                                                                 \
     }
-
+/* @brief A bit that states the cache has already been filled in. */
+#define HAS_CACHED_TTY_BIT (1 << 7)
 #ifdef _WIN32
+/*
+ * @brief Creates the TTY status cache of a standard terminal stream.
+ * @param a_stream The stream being checked.
+ */
 #define TTY_CACHE(a_stream)                                                                                            \
-    (_isatty(_fileno(!static_cast<int>(a_stream) ? stdin : static_cast<int>(a_stream) == 1 ? stdout : stderr)))
+    (_isatty(_fileno(!static_cast<int>(a_stream)       ? stdin                                                         \
+                     : static_cast<int>(a_stream) == 1 ? stdout                                                        \
+                                                       : stderr))                                                      \
+     << static_cast<int>(a_stream))
 #else
+/*
+ * @brief Creates the TTY status cache of a standard terminal stream.
+ * @param a_stream The stream being checked.
+ */
 #define TTY_CACHE(a_stream)                                                                                            \
-    (isatty(fileno(!static_cast<int>(a_stream) ? stdin : static_cast<int>(a_stream) == 1 ? stdout : stderr)))
+    (isatty(fileno(!static_cast<int>(a_stream)       ? stdin                                                           \
+                   : static_cast<int>(a_stream) == 1 ? stdout                                                          \
+                                                     : stderr))                                                        \
+     << static_cast<int>(a_stream))
 #endif
 
+/*
+ * @brief Creates a cache containing info about the TTY status of the standard terminal streams and, on Windows, set the
+ * ENABLE_VIRTUAL_TERMINAL_PROCESSING bit in order to the terminal to start accepting ANSI escape sequences.
+ */
 static void PrepareTTYAndCache();
 
 static void PrepareTTYAndCache()
 {
-    if (!(g_cache & 1 << 7))
+    if (!(g_cache & HAS_CACHED_TTY_BIT))
     {
-        g_cache = TTY_CACHE(TDK::Stream::Input) | TTY_CACHE(TDK::Stream::Output) << 1 |
-                  TTY_CACHE(TDK::Stream::Error) << 2 | 1 << 7;
+        g_cache =
+            TTY_CACHE(TDK::Stream::Input) | TTY_CACHE(TDK::Stream::Output) | TTY_CACHE(TDK::Stream::Error) | 1 << 7;
     }
 #ifdef _WIN32
     if (!IS_TTY(TDK::Stream::Input) && !IS_TTY(TDK::Stream::Error))
@@ -50,7 +76,7 @@ TDK::XColor::XColor(XColorCode code, Layer layer) : m_code(static_cast<int>(code
 
 std::ostream& TDK::operator<<(std::ostream& stream, XColor color)
 {
-    CHECK_STREAM_TTY_STATUS(); 
+    CHECK_STREAM_TTY_STATUS();
     return color.m_code == static_cast<int>(TDK::XColorCode::Default)
                ? stream << "\x1b[" << static_cast<int>(color.m_layer) << "9m"
                : stream << "\x1b[" << static_cast<int>(color.m_layer) << "8;5;" << color.m_code << "m";
