@@ -66,7 +66,7 @@ static void PrepareTTYAndCache()
 #endif
 }
 
-TDK::XColor::XColor(int code, Layer layer) : m_code(code), m_layer(layer)
+TDK::XColor::XColor(unsigned char code, Layer layer) : m_code(code), m_layer(layer)
 {
 }
 
@@ -81,10 +81,29 @@ TDK::XColor TDK::XColor::Invert()
     return color;
 }
 
+TDK::RGBColor::RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer)
+    : m_red(red), m_green(green), m_blue(blue), m_layer(layer)
+{
+}
+
+TDK::RGBColor TDK::RGBColor::Invert()
+{
+    RGBColor color = *this;
+    color.m_layer = color.m_layer == TDK::Layer::Foreground ? TDK::Layer::Background : TDK::Layer::Foreground;
+    return color;
+}
+
 std::ostream& TDK::operator<<(std::ostream& stream, XColor color)
 {
     CHECK_STREAM_TTY_STATUS();
     return color.m_code == static_cast<int>(TDK::XColorCode::Default)
                ? stream << "\x1b[" << static_cast<int>(color.m_layer) << "9m"
                : stream << "\x1b[" << static_cast<int>(color.m_layer) << "8;5;" << color.m_code << "m";
+}
+
+std::ostream& TDK::operator<<(std::ostream& stream, RGBColor color)
+{
+    CHECK_STREAM_TTY_STATUS();
+    return stream << "\x1b[" << static_cast<int>(color.m_layer) << "8;2;" << color.m_red << ";" << color.m_green << ";"
+                  << color.m_blue << "m";
 }

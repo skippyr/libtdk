@@ -99,7 +99,7 @@ namespace TDK
          * @param code The ANSI code of the color. It must be a value in range from 0 to 255.
          * @param layer The layer where the color should be applied on.
          */
-        XColor(int code, Layer layer);
+        XColor(unsigned char code, Layer layer);
         /*
          * @brief Creates an instance of the XColor class.
          * @param code The ANSI code of the color.
@@ -107,8 +107,21 @@ namespace TDK
          */
         XColor(XColorCode code, Layer layer);
         /* @brief Inverts the layer of the color. */
-        TDK::XColor Invert();
+        XColor Invert();
+    };
+
+    class RGBColor
+    {
+    public:
+        unsigned char m_red;
+        unsigned char m_green;
+        unsigned char m_blue;
+        Layer m_layer;
+
+        RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer);
+        RGBColor Invert();
     };
 
     std::ostream& operator<<(std::ostream& stream, XColor color);
+    std::ostream& operator<<(std::ostream& stream, RGBColor color);
 }
