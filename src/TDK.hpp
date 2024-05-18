@@ -106,6 +106,8 @@ namespace TDK
          * @param layer The layer where the color should be applied on.
          */
         XColor(XColorCode code, Layer layer);
+        /* @brief Inverts the layer of the color. */
+        TDK::XColor Invert();
     };
 
     std::ostream& operator<<(std::ostream& stream, XColor color);

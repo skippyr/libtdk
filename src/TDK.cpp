@@ -8,7 +8,7 @@ static char g_cache = 0;
  * @param a_stream The stream to be checked. It must be a value from the TDK::Stream enum class.
  * @returns A boolean with the result.
  */
-#define IS_TTY(a_stream) static_cast<bool>(g_cache & 1 << static_cast<int>(a_stream))
+#define IS_TTY(stream) static_cast<bool>(g_cache & 1 << static_cast<int>(stream))
 /* @brief Causes an early return if the standard terminal stream being targeted is not a TTY. */
 #define CHECK_STREAM_TTY_STATUS()                                                                                      \
     PrepareTTYAndCache();                                                                                              \
@@ -24,21 +24,21 @@ static char g_cache = 0;
  * @brief Creates the TTY status cache of a standard terminal stream.
  * @param a_stream The stream being checked.
  */
-#define TTY_CACHE(a_stream)                                                                                            \
-    (!!(_isatty(_fileno(!static_cast<int>(a_stream)       ? stdin                                                      \
-                        : static_cast<int>(a_stream) == 1 ? stdout                                                     \
-                                                          : stderr)))                                                  \
-     << static_cast<int>(a_stream))
+#define TTY_CACHE(stream)                                                                                              \
+    (!!(_isatty(_fileno(!static_cast<int>(stream)       ? stdin                                                        \
+                        : static_cast<int>(stream) == 1 ? stdout                                                       \
+                                                        : stderr)))                                                    \
+     << static_cast<int>(stream))
 #else
 /*
  * @brief Creates the TTY status cache of a standard terminal stream.
  * @param a_stream The stream being checked.
  */
-#define TTY_CACHE(a_stream)                                                                                            \
-    (isatty(fileno(!static_cast<int>(a_stream)       ? stdin                                                           \
-                   : static_cast<int>(a_stream) == 1 ? stdout                                                          \
-                                                     : stderr))                                                        \
-     << static_cast<int>(a_stream))
+#define TTY_CACHE(stream)                                                                                              \
+    (isatty(fileno(!static_cast<int>(stream)       ? stdin                                                             \
+                   : static_cast<int>(stream) == 1 ? stdout                                                            \
+                                                   : stderr))                                                          \
+     << static_cast<int>(stream))
 #endif
 
 /*
@@ -72,6 +72,13 @@ TDK::XColor::XColor(int code, Layer layer) : m_code(code), m_layer(layer)
 
 TDK::XColor::XColor(XColorCode code, Layer layer) : m_code(static_cast<int>(code)), m_layer(layer)
 {
+}
+
+TDK::XColor TDK::XColor::Invert()
+{
+    XColor color = *this;
+    color.m_layer = color.m_layer == TDK::Layer::Foreground ? TDK::Layer::Background : TDK::Layer::Foreground;
+    return color;
 }
 
 std::ostream& TDK::operator<<(std::ostream& stream, XColor color)
