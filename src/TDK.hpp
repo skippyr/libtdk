@@ -14,8 +14,11 @@
 #endif
 
 /*
- * @brief Terminal Development Kit (TDK) is a C++ terminal manipulation library that can be used to create keyboard
- * driven applications and other libraries for more specific use cases for both Windows and Linux.
+ * @brief Terminal Development Kit (TDK) is a cross-platform C++ terminal manipulation library that provides a
+ * human-friendly interface to manipulate ANSI escape sequences and parse terminal events. It can be used to create
+ * keyboard driven applications and other terminal libraries for more specific use cases for both Windows and Linux.
+ * @brief -
+ * @brief Check its full documentation at https://github.com/skippyr/wiki.
  */
 namespace TDK
 {
@@ -145,6 +148,28 @@ namespace TDK
         Bold,
         /* @brief The dim weight is usually rendered with faint colors. */
         Dim
+    };
+
+    /*
+     * @brief A class that represents a coordinate inside of the terminal window. It is primarily used to refer to the
+     * cursor one by using the GetCursorCoordinate and SetCursorCoordinate functions.
+     */
+    class Coordinate
+    {
+    public:
+        /* @brief Creates an instance of the Coordinate class. */
+        Coordinate();
+        /*
+         * @brief Creates an instance of the Coordinate class.
+         * @param column The column component of the coordinate.
+         * @param row The row component of the coordinate.
+         */
+        Coordinate(unsigned short column, unsigned short row);
+
+        /* @brief The column component of the coordinate. */
+        unsigned short m_column;
+        /* @brief The row component of the coordinate. */
+        unsigned short m_row;
     };
 
     /*
@@ -292,6 +317,12 @@ namespace TDK
      * @param isToOpen A boolean that states the alternate window should be opened or not.
      */
     void SetAlternateWindow(bool isToOpen);
+    /*
+     * @brief Sets the terminal cursor coordinate.
+     * @param coordinate The coordinate to be set. It will always be fit within the terminal window boundaries. Use
+     * GetWindowDimensions to treat possible exceptions.
+     */
+    void SetCursorCoordinate(Coordinate coordinate);
     /*
      * @brief Sets the terminal cursor shape.
      * @param shape The shape to be set.

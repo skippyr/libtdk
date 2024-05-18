@@ -246,6 +246,11 @@ void TDK::SetAlternateWindow(bool isToOpen)
     WriteANSI(isToOpen ? "\x1b[?1049h\x1b[2J\x1b[1;1H" : "\x1b[?1049l");
 }
 
+void TDK::SetCursorCoordinate(Coordinate coordinate)
+{
+    WriteANSI("\x1b[%hu;%huH", coordinate.m_row + 1, coordinate.m_column + 1);
+}
+
 void TDK::SetCursorShape(CursorShape shape)
 {
     WriteANSI("\x1b[%d q", static_cast<int>(shape));
