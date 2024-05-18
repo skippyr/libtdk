@@ -142,3 +142,9 @@ std::ostream& TDK::operator<<(std::ostream& stream, XColor color)
                ? stream << "\x1b[" << static_cast<int>(color.m_layer) << "9m"
                : stream << "\x1b[" << static_cast<int>(color.m_layer) << "8;5;" << color.m_code << "m";
 }
+
+std::ostream& TDK::operator<<(std::ostream& stream, Weight weight)
+{
+    CHECK_STREAM_TTY_STATUS();
+    return weight == Weight::Default ? stream << "\x1b[22m" : stream << "\x1b[22;" << static_cast<int>(weight) << "m";
+}

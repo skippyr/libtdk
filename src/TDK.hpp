@@ -21,7 +21,10 @@ namespace TDK
      */
     enum class Effect
     {
-        /* @brief The italic effect makes the text curly. It may require the use of a font with italic style. */
+        /*
+         * @brief The italic effect makes the text curly. It may require the use of a font with italic style in order to
+         * be seen.
+         */
         Italic = 3,
         /* @brief The underline effect draws a horizontal line crossing below the text. */
         Underline,
@@ -99,6 +102,23 @@ namespace TDK
         LightCyan,
         /* @brief The light variant of the white color. */
         LightWhite
+    };
+
+    /*
+     * @brief An enum class containing the available terminal text weights. To apply one, use the left shifting operator
+     * (<<) agains an instance of the std::ostream class.
+     */
+    enum class Weight
+    {
+        /* @brief The default weight, intended for resets. */
+        Default,
+        /*
+         * @brief The bold weight is usually rendered with bold weight and/or with light colors. It may require the use
+         * of a font with bold weight in order to be seen.
+         */
+        Bold,
+        /* @brief The dim weight is usually rendered with faint colors. */
+        Dim
     };
 
     /*
@@ -196,4 +216,5 @@ namespace TDK
     std::ostream& operator<<(std::ostream& stream, HexColor color);
     std::ostream& operator<<(std::ostream& stream, RGBColor color);
     std::ostream& operator<<(std::ostream& stream, XColor color);
+    std::ostream& operator<<(std::ostream& stream, Weight weight);
 }
