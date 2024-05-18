@@ -208,6 +208,11 @@ bool TDK::IsTTY(Stream stream)
     return IS_TTY(stream);
 }
 
+void TDK::RingBell()
+{
+    WriteANSI("\7");
+}
+
 void TDK::SetCursorShape(CursorShape shape)
 {
     WriteANSI("\x1b[%d q", static_cast<int>(shape));

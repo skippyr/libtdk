@@ -274,6 +274,11 @@ namespace TDK
      */
     bool IsTTY(Stream stream);
     /*
+     * @brief Rings the terminal bell, possibly emitting a symbol in the terminal title bar, visual flash, a system
+     * notification or a beep from the motherboard speaker.
+     */
+    void RingBell();
+    /*
      * @brief Sets the terminal cursor shape.
      * @param shape The shape to be set.
      */
