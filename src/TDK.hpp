@@ -279,6 +279,11 @@ namespace TDK
      */
     void RingBell();
     /*
+     * @brief Sets the state of the alternate window buffer.
+     * @param isToOpen A boolean that states the alternate window should be opened or not.
+     */
+    void SetAlternateWindow(bool isToOpen);
+    /*
      * @brief Sets the terminal cursor shape.
      * @param shape The shape to be set.
      */

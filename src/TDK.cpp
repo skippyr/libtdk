@@ -213,6 +213,11 @@ void TDK::RingBell()
     WriteANSI("\7");
 }
 
+void TDK::SetAlternateWindow(bool isToOpen)
+{
+    WriteANSI(isToOpen ? "\x1b[?1049h\x1b[2J\x1b[1;1H" : "\x1b[?1049l");
+}
+
 void TDK::SetCursorShape(CursorShape shape)
 {
     WriteANSI("\x1b[%d q", static_cast<int>(shape));
