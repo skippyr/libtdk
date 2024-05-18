@@ -260,6 +260,8 @@ namespace TDK
     std::ostream& operator<<(std::ostream& stream, XColor color);
     std::ostream& operator<<(std::ostream& stream, Weight weight);
 
+    /* @brief Clears the contents present in the terminal cursor line. */
+    void ClearCursorLine();
     /*
      * @brief Gets the dimensions of the terminal window.
      * @param dimensions The address where the dimensions info will be put into.

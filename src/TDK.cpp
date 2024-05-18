@@ -178,6 +178,11 @@ std::ostream& TDK::operator<<(std::ostream& stream, Weight weight)
     return weight == Weight::Default ? stream << "\x1b[22m" : stream << "\x1b[22;" << static_cast<int>(weight) << "m";
 }
 
+void TDK::ClearCursorLine()
+{
+    WriteANSI("\x1b[2K\x1b[1G");
+}
+
 int TDK::GetWindowDimensions(Dimensions& dimensions)
 {
 #ifdef _WIN32
