@@ -25,9 +25,9 @@ static char g_cache = 0;
  * @param a_stream The stream being checked.
  */
 #define TTY_CACHE(a_stream)                                                                                            \
-    (_isatty(_fileno(!static_cast<int>(a_stream)       ? stdin                                                         \
-                     : static_cast<int>(a_stream) == 1 ? stdout                                                        \
-                                                       : stderr))                                                      \
+    (!!(_isatty(_fileno(!static_cast<int>(a_stream)       ? stdin                                                      \
+                        : static_cast<int>(a_stream) == 1 ? stdout                                                     \
+                                                          : stderr)))                                                  \
      << static_cast<int>(a_stream))
 #else
 /*
@@ -42,8 +42,8 @@ static char g_cache = 0;
 #endif
 
 /*
- * @brief Creates a cache containing info about the TTY status of the standard terminal streams and, on Windows, set the
- * ENABLE_VIRTUAL_TERMINAL_PROCESSING bit in order to the terminal to start accepting ANSI escape sequences.
+ * @brief Creates a cache containing info about the TTY statuses of the standard terminal streams and, on Windows, set
+ * the ENABLE_VIRTUAL_TERMINAL_PROCESSING bit in order to the terminal to start parsing ANSI escape sequences.
  */
 static void PrepareTTYAndCache();
 
@@ -51,8 +51,8 @@ static void PrepareTTYAndCache()
 {
     if (!(g_cache & HAS_CACHED_TTY_BIT))
     {
-        g_cache =
-            TTY_CACHE(TDK::Stream::Input) | TTY_CACHE(TDK::Stream::Output) | TTY_CACHE(TDK::Stream::Error) | 1 << 7;
+        g_cache = TTY_CACHE(TDK::Stream::Input) | TTY_CACHE(TDK::Stream::Output) | TTY_CACHE(TDK::Stream::Error) |
+                  HAS_CACHED_TTY_BIT;
     }
 #ifdef _WIN32
     if (!IS_TTY(TDK::Stream::Input) && !IS_TTY(TDK::Stream::Error))
