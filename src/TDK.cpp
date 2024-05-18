@@ -286,9 +286,14 @@ void TDK::SetAlternateWindow(bool isToOpen)
     WriteANSI(isToOpen ? "\x1b[?1049h\x1b[2J\x1b[1;1H" : "\x1b[?1049l");
 }
 
-void TDK::SetCursorCoordinate(Coordinate coordinate)
+void TDK::SetCursorCoordinate(unsigned short column, unsigned short row)
 {
-    WriteANSI("\x1b[%hu;%huH", coordinate.m_row + 1, coordinate.m_column + 1);
+    WriteANSI("\x1b[%hu;%huH", row + 1, column + 1);
+}
+
+void TDK::SetCursorCoordinate(Coordinate& coordinate)
+{
+    SetCursorCoordinate(coordinate.m_column, coordinate.m_row);
 }
 
 void TDK::SetCursorShape(CursorShape shape)
