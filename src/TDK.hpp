@@ -266,6 +266,11 @@ namespace TDK
      */
     void SetCursorShape(CursorShape shape);
     /*
+     * @brief Sets the terminal cursor visibility.
+     * @param isToShow A boolean that states the cursor should be visible or not.
+     */
+    void SetCursorVisibility(bool isToShow);
+    /*
      * @brief Gets the dimensions of the terminal window.
      * @param dimensions The address where the dimensions info will be put into.
      * @returns 0 if successful and -1 otherwise.

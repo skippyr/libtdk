@@ -183,6 +183,11 @@ void TDK::SetCursorShape(CursorShape shape)
     WriteANSI("\x1b[%d q", static_cast<int>(shape));
 }
 
+void TDK::SetCursorVisibility(bool isToShow)
+{
+    WriteANSI("\x1b[?25%c", isToShow ? 'h' : 'l');
+}
+
 int TDK::GetWindowDimensions(Dimensions& dimensions)
 {
 #ifdef _WIN32
