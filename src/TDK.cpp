@@ -50,7 +50,7 @@ TDK::XColor::XColor(XColorCode code, Layer layer) : m_code(static_cast<int>(code
 
 std::ostream& TDK::operator<<(std::ostream& stream, XColor color)
 {
-    CHECK_STREAM_TTY_STATUS();
+    CHECK_STREAM_TTY_STATUS(); 
     return color.m_code == static_cast<int>(TDK::XColorCode::Default)
                ? stream << "\x1b[" << static_cast<int>(color.m_layer) << "9m"
                : stream << "\x1b[" << static_cast<int>(color.m_layer) << "8;5;" << color.m_code << "m";
