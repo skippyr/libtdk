@@ -55,30 +55,21 @@ static void PrepareTTYAndCache()
                   HAS_CACHED_TTY_BIT;
     }
 #ifdef _WIN32
-    if (!IS_TTY(TDK::Stream::Input) && !IS_TTY(TDK::Stream::Error))
-    {
-        return;
-    }
-    HANDLE handle = GetStdHandle(IS_TTY(TDK::Stream::Output) ? STD_OUTPUT_HANDLE : STD_ERROR_HANDLE);
+    HANDLE handle;
     DWORD mode;
-    GetConsoleMode(handle, &mode);
-    SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+    (GetConsoleMode((handle = GetStdHandle(STD_OUTPUT_HANDLE)), &mode) ||
+     GetConsoleMode((handle = GetStdHandle(STD_ERROR_HANDLE)), &mode)) &&
+        SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 #endif
 }
 
-TDK::XColor::XColor(unsigned char code, Layer layer) : m_code(code), m_layer(layer)
+TDK::Dimensions::Dimensions() : m_totalColumns(0), m_totalRows(0)
 {
 }
 
-TDK::XColor::XColor(XColorCode code, Layer layer) : m_code(static_cast<int>(code)), m_layer(layer)
+TDK::Dimensions::Dimensions(unsigned short totalColumns, unsigned short totalRows)
+    : m_totalColumns(totalColumns), m_totalRows(totalRows)
 {
-}
-
-TDK::XColor TDK::XColor::Invert()
-{
-    XColor color = *this;
-    color.m_layer = color.m_layer == TDK::Layer::Foreground ? TDK::Layer::Background : TDK::Layer::Foreground;
-    return color;
 }
 
 TDK::HexColor::HexColor(unsigned int code, Layer layer)
@@ -107,6 +98,21 @@ TDK::RGBColor::RGBColor(HexColor color)
 TDK::RGBColor TDK::RGBColor::Invert()
 {
     RGBColor color = *this;
+    color.m_layer = color.m_layer == TDK::Layer::Foreground ? TDK::Layer::Background : TDK::Layer::Foreground;
+    return color;
+}
+
+TDK::XColor::XColor(unsigned char code, Layer layer) : m_code(code), m_layer(layer)
+{
+}
+
+TDK::XColor::XColor(XColorCode code, Layer layer) : m_code(static_cast<int>(code)), m_layer(layer)
+{
+}
+
+TDK::XColor TDK::XColor::Invert()
+{
+    XColor color = *this;
     color.m_layer = color.m_layer == TDK::Layer::Foreground ? TDK::Layer::Background : TDK::Layer::Foreground;
     return color;
 }
@@ -147,4 +153,28 @@ std::ostream& TDK::operator<<(std::ostream& stream, Weight weight)
 {
     CHECK_STREAM_TTY_STATUS();
     return weight == Weight::Default ? stream << "\x1b[22m" : stream << "\x1b[22;" << static_cast<int>(weight) << "m";
+}
+
+int TDK::GetWindowDimensions(Dimensions& dimensions)
+{
+#ifdef _WIN32
+    CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
+    if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) &&
+        !GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo))
+    {
+        return -1;
+    }
+    dimensions.m_totalColumns= bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1;
+    dimensions.m_totalRows = bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1;
+#else
+    struct winsize size;
+    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &size) && ioctl(STDIN_FILENO, TIOCGWINSZ, &windowSize) &&
+        ioctl(STDERR_FILENO, TIOCGWINSZ, &size))
+    {
+        return -1;
+    }
+    dimensions.m_totalColumns = size.ws_col;
+    dimensions.m_totalColumns = size.ws_row;
+#endif
+    return 0;
 }

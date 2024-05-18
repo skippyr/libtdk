@@ -6,6 +6,7 @@
 #include <Windows.h>
 #include <io.h>
 #else
+#include <sys/ioctl.h>
 #include <unistd.h>
 #endif
 
@@ -122,6 +123,28 @@ namespace TDK
     };
 
     /*
+     * @brief A class that represents dimensions inside of the terminal window. It is primarily used to refer to the
+     * window dimensions by using the GetWindowDimensions function.
+     */
+    class Dimensions
+    {
+    public:
+        /* @brief Creates an instance of the Dimensions class. */
+        Dimensions();
+        /*
+         * @brief Creates an instance of the Dimensions class.
+         * @param totalColumns The total columns of the dimensions.
+         * @param totalRows The total rows of the dimensions.
+         */
+        Dimensions(unsigned short totalColumns, unsigned short totalRows);
+
+        /* @brief The total columns of the dimensions. */
+        unsigned short m_totalColumns;
+        /* @brief The total rows of the dimensions. */
+        unsigned short m_totalRows;
+    };
+
+    /*
      * @brief A class that represents a hexadecimal color. Apply it by using the left shifting operator (<<)
      * against an instance of the std::ostream class. Remove it by using the XColor class with XColorCode::Default
      * targetting the same layer where the color has been applied on.
@@ -129,11 +152,6 @@ namespace TDK
     class HexColor
     {
     public:
-        /* @brief The hexadecimal code of the color. */
-        unsigned int m_code;
-        /* @brief The layer where the color should be applied on. */
-        Layer m_layer;
-
         /*
          * @brief Creates an instance of the HexColor class.
          * @param code The hexadecimal code of
@@ -143,6 +161,11 @@ namespace TDK
         HexColor(unsigned int code, Layer layer);
         /* @brief Inverts the layer of the color. */
         HexColor Invert();
+
+        /* @brief The hexadecimal code of the color. */
+        unsigned int m_code;
+        /* @brief The layer where the color should be applied on. */
+        Layer m_layer;
     };
 
     /*
@@ -153,15 +176,6 @@ namespace TDK
     class RGBColor
     {
     public:
-        /* @brief The red component of the color. */
-        unsigned char m_red;
-        /* @brief The green component of the color. */
-        unsigned char m_green;
-        /* @brief The blue component of the color. */
-        unsigned char m_blue;
-        /* @brief The layer where the color should be applied on. */
-        Layer m_layer;
-
         /*
          * @brief Creates an instance of the RGBColor class.
          * @param red The red component the
@@ -180,6 +194,15 @@ namespace TDK
         RGBColor(HexColor color);
         /* @brief Invers the layer of the color. */
         RGBColor Invert();
+
+        /* @brief The red component of the color. */
+        unsigned char m_red;
+        /* @brief The green component of the color. */
+        unsigned char m_green;
+        /* @brief The blue component of the color. */
+        unsigned char m_blue;
+        /* @brief The layer where the color should be applied on. */
+        Layer m_layer;
     };
 
     /*
@@ -190,11 +213,6 @@ namespace TDK
     class XColor
     {
     public:
-        /* @brief The ANSI code of the color. */
-        int m_code;
-        /* @brief The layer where color should be applied on. */
-        Layer m_layer;
-
         /*
          * @brief Creates an instance of the XColor class.
          * @param code The ANSI code of the color. It must be a value in range from 0 to 255.
@@ -209,6 +227,11 @@ namespace TDK
         XColor(XColorCode code, Layer layer);
         /* @brief Inverts the layer of the color. */
         XColor Invert();
+
+        /* @brief The ANSI code of the color. */
+        int m_code;
+        /* @brief The layer where color should be applied on. */
+        Layer m_layer;
     };
 
     std::ostream& operator<<(std::ostream& stream, Effect effect);
@@ -217,4 +240,11 @@ namespace TDK
     std::ostream& operator<<(std::ostream& stream, RGBColor color);
     std::ostream& operator<<(std::ostream& stream, XColor color);
     std::ostream& operator<<(std::ostream& stream, Weight weight);
+
+    /*
+     * @brief Gets the dimensions of the terminal window.
+     * @param dimensions The address where the dimensions info will be put into.
+     * @returns 0 if successful and -1 otherwise.
+     */
+    int GetWindowDimensions(Dimensions& dimensions);
 }
