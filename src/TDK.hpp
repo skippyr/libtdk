@@ -110,15 +110,26 @@ namespace TDK
         XColor Invert();
     };
 
+    /*
+     * @brief A class that represents an RGB color. Apply it by using the left shifting operator (<<) against an
+     * instance of the std::ostream class. Remove it by using the XColorCode::Default targetting the same layer where
+     * the color has been applied on.
+     */
     class RGBColor
     {
     public:
+        /* @brief The red component of the color. */
         unsigned char m_red;
+        /* @brief The green component of the color. */
         unsigned char m_green;
+        /* @brief The blue component of the color. */
         unsigned char m_blue;
+        /* @brief The layer where the color should be applied on. */
         Layer m_layer;
 
+        /* @brief Creates an instance of the RGBColor class. */
         RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer);
+        /* @brief Invers the layer of the color. */
         RGBColor Invert();
     };
 
