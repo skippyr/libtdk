@@ -301,11 +301,10 @@ public:
   unsigned short m_totalRows;
 };
 
-/* @brief A class that represents a hexadecimal color. Apply it by using the
- * left shifting operator (<<) against an instance of the std::ostream class.
- * Remove it by applying an instance of the XColor class with code
- * XColorCode::Default targetting the same layer where it has been applied
- * instead.
+/* @brief A class that represents a hex color. Apply it by using the left
+ * shifting operator (<<) against an instance of the std::ostream class. Remove
+ * it by applying an instance of the XColor class with code XColorCode::Default
+ * targetting the same layer where it has been applied instead.
  */
 class HexColor {
 public:
@@ -348,36 +347,113 @@ public:
   bool m_hasCtrl;
 };
 
+/*
+ * @brief A class that represents an RGB color. Apply it by using the left
+ * shifting operator (<<) against an instance of the std::ostream class. Remove
+ * it by applying an instance of the XColor class with code XColorCode::Default
+ * targetting the same layer where it has been applied instead.
+ */
 class RGBColor {
 public:
+  /*
+   * @brief Creates an instance of the RGBColor class.
+   * @param red The red component of the color.
+   * @param green The green component of the color.
+   * @param blue The blue component of the color.
+   */
   RGBColor(unsigned char red, unsigned char green, unsigned char blue,
            Layer layer);
+  /*
+   * @brief Creates an instance of the RGBColor class.
+   * @param color A hex color to be converted.
+   */
   RGBColor(HexColor color);
+  /* @brief Inverts the layer where it is being applied. */
   RGBColor m_invert();
 
+  /* @brief The red component of the color. */
   unsigned char m_red;
+  /* @brief The green component of the color. */
   unsigned char m_green;
+  /* @brief The blue component of the color. */
   unsigned char m_blue;
+  /* @brief The layer where the color should be applied. */
   Layer m_layer;
 };
 
+/*
+ * @brief A class that represents a color from the XTerm palette: a terminal
+ * exclusive palette that contains 256 colors.
+ */
 class XColor {
 public:
+  /*
+   * @brief Creates an instance of the XColor class.
+   * @param code The ANSI code of the color.
+   * @param layer The layer where the color should be applied on.
+   */
   XColor(unsigned char code, Layer layer);
+  /*
+   * @brief Creates an instance of the XColor class.
+   * @param code The ANSI code of the color.
+   * @param layer The layer where the color should be applied on.
+   */
   XColor(XColorCode code, Layer layer);
   XColor m_invert();
 
+  /* @brief The ANSI code of the color. */
   int m_code;
+  /* @brief The layer where the color should be applied on. */
   Layer m_layer;
 };
 
+/*
+ * @brief Applies a terminal text effect.
+ * @param stream The stream to be affected.
+ * @param effect The effect to be applied.
+ */
 std::ostream &operator<<(std::ostream &stream, Effect effect);
+/*
+ * @brief Removes a terminal text effect.
+ * @param stream The stream to be affected.
+ * @param effect The effect to be removed.
+ */
 std::ostream &operator>>(std::ostream &stream, Effect effect);
+/*
+ * @brief Applies a hex color.
+ * @param stream The stream to be affected.
+ * @param color The color to be applied.
+ */
 std::ostream &operator<<(std::ostream &stream, HexColor color);
+/*
+ * @brief Applies an RGB color.
+ * @param stream The stream to be affected.
+ * @param color The RGB color to be applied.
+ */
 std::ostream &operator<<(std::ostream &stream, RGBColor color);
+/*
+ * @brief Applies an XTerm color.
+ * @param stream The stream to be affected.
+ * @param color The XTerm color to be applied.
+ */
 std::ostream &operator<<(std::ostream &stream, XColor color);
+/*
+ * @brief Applies a terminal weight.
+ * @param stream The stream to be affected.
+ * @param weight The weight to be applied.
+ */
 std::ostream &operator<<(std::ostream &stream, Weight weight);
+/*
+ * @brief Checks if a key is of the same code.
+ * @param code The code to be used as reference.
+ * @param key The key to be checked.
+ */
 bool operator==(int code, Key key);
+/*
+ * @brief Checks if a key is not of the same code.
+ * @param code The code to be used as reference.
+ * @param key The key to be checked.
+ */
 bool operator!=(int code, Key key);
 
 void clearCursorLine();
