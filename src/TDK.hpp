@@ -68,6 +68,23 @@ namespace TDK
     };
 
     /*
+     * @brief An enum class that contains the possible statuses of a key event reading returned by the ReadKeyEvent
+     * function.
+     */
+    enum class KeyEventStatus
+    {
+        /* @brief The success status states the reading was sucessful. */
+        Success,
+        /*
+         * @brief Only happening on Windows, the window resize interrupt states a window resize event happened before
+         * the reading.
+         */
+        WindowResizeInterrupt = -2,
+        /* @brief The failure status states the reading failed. */
+        Failure
+    };
+
+    /*
      * @brief An enum class containing mostly keyboard keys not represented by UTF-8. For exceptions, the value here
      * serve the purpose of increase readability.
      */
