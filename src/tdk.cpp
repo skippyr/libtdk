@@ -257,11 +257,11 @@ bool tdk::isTTY(Stream stream) {
   return IS_TTY(stream);
 }
 
-tdk::KeyEventStatus tdk::readKeyEvent(KeyEvent &event) {
+tdk::EventStatus tdk::readKeyEvent(KeyEvent &event) {
   prepareStreamsAndCache();
   if (!IS_TTY(tdk::Stream::Input) || std::fwide(stdin, 0) > 0 ||
       (!IS_TTY(tdk::Stream::Output) && !IS_TTY(tdk::Stream::Error))) {
-    return KeyEventStatus::Failure;
+    return EventStatus::Failure;
   }
 #ifdef _WIN32
   HANDLE handle = GetStdHandle(STD_INPUT_HANDLE);
@@ -276,7 +276,7 @@ tdk::KeyEventStatus tdk::readKeyEvent(KeyEvent &event) {
     ReadConsoleInputW(handle, &record, 1, &totalEventsRead);
     if (record.EventType == WINDOW_BUFFER_SIZE_EVENT) {
       SetConsoleMode(handle, mode);
-      return KeyEventStatus::WindowResizeInterrupt;
+      return EventStatus::WindowResizeInterrupt;
     } else if (record.EventType != KEY_EVENT ||
                !record.Event.KeyEvent.bKeyDown ||
                record.Event.KeyEvent.wVirtualKeyCode == VK_CONTROL ||
@@ -400,7 +400,7 @@ tdk::KeyEventStatus tdk::readKeyEvent(KeyEvent &event) {
   tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
   fcntl(STDIN_FILENO, F_SETFL, flags);
 #endif
-  return KeyEventStatus::Success;
+  return EventStatus::Success;
 }
 
 void tdk::ringBell() {
@@ -419,7 +419,7 @@ void tdk::setCursorCoordinate(Coordinate &coordinate) {
   setCursorCoordinate(coordinate.m_column, coordinate.m_row);
 }
 
-void tdk::setCursorShape(CursorShape shape) {
+void tdk::setCursorShape(Shape shape) {
   writeANSI("\x1b[%d q", static_cast<int>(shape));
 }
 

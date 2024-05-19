@@ -456,16 +456,70 @@ bool operator==(int code, Key key);
  */
 bool operator!=(int code, Key key);
 
+/* @brief Clears the contents present in the terminal cursor line. */
 void clearCursorLine();
+/* @brief Clears the contents or events present in the terminal input buffer. */
 void clearInputBuffer();
+/*
+ * @brief Gets the terminal cursor coordinate if successful
+ * @param coordinate The address where the information about the coordinate will
+ * be set into.
+ * @returns 0 if successful and -1 otherwise.
+ */
 int getCursorCoordinate(Coordinate &coordinate);
+/*
+ * @brief Gets the terminal window dimensions.
+ * @param dimensions The address where the information about the dimensions will
+ * be set into.
+ * @returns 0 if successful and -1 otherwise.
+ */
 int getWindowDimensions(Dimensions &dimensions);
+/*
+ * @brief Checks if a standard stream is connected to an interactive terminal
+ * (TTY).
+ * @param stream The stream to be checked.
+ * @returns A boolean that states the check result.
+ */
 bool isTTY(Stream stream);
+/*
+ * @brief Reads the characters or events inside of the terminal input buffer and
+ * parses one key event if successful. It does not stop execution until at least
+ * one valid event is read or an error happens.
+ * @param event The address where the information about the event will be set
+ * into.
+ * @returns The status of the reading.
+ */
 EventStatus readKeyEvent(KeyEvent &event);
+/*
+ * @brief Rings the terminal bell possibly emitting a symbol in the terminal
+ * title bar, visual flash, system notification or a beep from the motherboard
+ * speaker.
+ */
 void ringBell();
+/*
+ * @brief Opens/Closes the alternate window (alternate screen buffer).
+ * @param isToOpen A boolean that states the alternate window should be opened or closed.
+ */
 void setAlternateWindow(bool isToOpen);
+/*
+ * @brief Sets the terminal cursor coordinate.
+ * @param column The column component of the coordinate.
+ * @param row The row component of the coordinate.
+ */
 void setCursorCoordinate(unsigned short column, unsigned short row);
+/*
+ * @brief Sets the terminal cursor coordinate.
+ * @param coordinate The coordinate to be set.
+ */
 void setCursorCoordinate(Coordinate &coordinate);
+/*
+ * @brief Sets the terminal cursor shape.
+ * @param shape The shape to be set.
+ */
 void setCursorShape(Shape shape);
+/*
+ * @brief Sets the terminal cursor visibility.
+ * @param isToShow A boolean that states the cursor should be visible or hidden.
+ */
 void setCursorVisibility(bool isToShow);
 }
