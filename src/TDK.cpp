@@ -324,6 +324,7 @@ TDK::KeyEventStatus TDK::ReadKeyEvent(KeyEvent& event)
         ReadConsoleInputW(handle, &record, 1, &totalEventsRead);
         if (record.EventType == WINDOW_BUFFER_SIZE_EVENT)
         {
+            SetConsoleMode(handle, mode);
             return KeyEventStatus::WindowResizeInterrupt;
         }
         else if (record.EventType != KEY_EVENT || !record.Event.KeyEvent.bKeyDown ||
@@ -351,6 +352,7 @@ TDK::KeyEventStatus TDK::ReadKeyEvent(KeyEvent& event)
             }
             else
             {
+                event.m_key = 0;
                 WideCharToMultiByte(CP_UTF8, 0, (wchar_t*)&buffer, 1, (char*)&event.m_key, 4, NULL, NULL);
             }
             event.m_hasAlt = record.Event.KeyEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED);
