@@ -415,7 +415,7 @@ TDK::KeyEventStatus TDK::ReadKeyEvent(KeyEvent& event)
             {
                 buffer[offset] = std::getchar();
             }
-            event.m_key = *(int*)buffer;
+            event.m_key = *reinterpret_cast<int*>(buffer);
         }
         else if ((event.m_key = (event.m_hasAlt = buffer[0] == 27 && buffer[1] != EOF) ? buffer[1] : buffer[0]) >= 0 &&
                  event.m_key <= 26 && event.m_key != TDK::Key::Tab && event.m_key != TDK::Key::Enter)
