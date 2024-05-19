@@ -360,14 +360,14 @@ TDK::KeyEventStatus TDK::ReadKeyEvent(KeyEvent& event)
             continue;
         }
         PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_LEFT && record.Event.KeyEvent.wVirtualKeyCode <= VK_DOWN,
-                  record.Event.KeyEvent.wVirtualKeyCode - VK_LEFT + TDK::Key::LeftArrow);
+                  record.Event.KeyEvent.wVirtualKeyCode - VK_LEFT + static_cast<int>(TDK::Key::LeftArrow));
         PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_PRIOR && record.Event.KeyEvent.wVirtualKeyCode <= VK_HOME,
-                  record.Event.KeyEvent.wVirtualKeyCode - VK_PRIOR + TDK::Key::PageUp);
+                  record.Event.KeyEvent.wVirtualKeyCode - VK_PRIOR + static_cast<int>(TDK::Key::PageUp));
         PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_INSERT &&
                       record.Event.KeyEvent.wVirtualKeyCode <= VK_DELETE,
-                  record.Event.KeyEvent.wVirtualKeyCode - VK_INSERT + TDK::Key::Insert);
+                  record.Event.KeyEvent.wVirtualKeyCode - VK_INSERT + static_cast<int>(TDK::Key::Insert));
         PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_F1 && record.Event.KeyEvent.wVirtualKeyCode <= VK_F12,
-                  record.Event.KeyEvent.wVirtualKeyCode - VK_F1 + TDK::Key::F1);
+                  record.Event.KeyEvent.wVirtualKeyCode - VK_F1 + static_cast<int>(TDK::Key::F1));
     }
     SetConsoleMode(handle, mode);
 #else
