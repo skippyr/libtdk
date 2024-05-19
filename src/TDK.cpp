@@ -197,11 +197,6 @@ std::ostream& TDK::operator<<(std::ostream& stream, Weight weight)
     return weight == Weight::Default ? stream << "\x1b[22m" : stream << "\x1b[22;" << static_cast<int>(weight) << "m";
 }
 
-int TDK::operator+(int code, Key key)
-{
-    return code + static_cast<int>(key);
-}
-
 bool TDK::operator==(int code, Key key)
 {
     return code == static_cast<int>(key);
@@ -268,7 +263,7 @@ int TDK::GetCursorCoordinate(Coordinate& coordinate)
         return -1;
     }
     --coordinate.m_column;
-    --coordinate._row;
+    --coordinate.m_row;
 #endif
     return 0;
 }
@@ -286,7 +281,7 @@ int TDK::GetWindowDimensions(Dimensions& dimensions)
     dimensions.m_totalRows = bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1;
 #else
     struct winsize size;
-    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &size) && ioctl(STDIN_FILENO, TIOCGWINSZ, &windowSize) &&
+    if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &size) && ioctl(STDIN_FILENO, TIOCGWINSZ, &size) &&
         ioctl(STDERR_FILENO, TIOCGWINSZ, &size))
     {
         return -1;
@@ -375,6 +370,65 @@ TDK::KeyEventStatus TDK::ReadKeyEvent(KeyEvent& event)
                   record.Event.KeyEvent.wVirtualKeyCode - VK_F1 + TDK::Key::F1);
     }
     SetConsoleMode(handle, mode);
+#else
+    struct termios attributes;
+    int flags = fcntl(STDIN_FILENO, F_GETFL);
+    tcgetattr(STDIN_FILENO, &attributes);
+    attributes.c_lflag &= ~(ICANON | ECHO | ISIG);
+    attributes.c_iflag &= ~IXON;
+    tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+    event = KeyEvent();
+    while (true)
+    {
+        char buffer[] = {0, 0, 0, 0, 0};
+        buffer[0] = std::getchar();
+        fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
+        if (buffer[0] == 27 && (buffer[1] = std::getchar()) == 79 || buffer[1] == 91)
+        {
+            for (std::size_t offset = 2; offset < 5; ++offset)
+            {
+                buffer[offset] = std::getchar();
+            }
+            while (std::getchar() != EOF)
+            {
+            }
+            PARSE_KEY(buffer[2] >= 65 && buffer[2] <= 68, buffer[2] - 65 + static_cast<int>(TDK::Key::UpArrow));
+            PARSE_KEY(buffer[3] == 126, buffer[2] - 49 + static_cast<int>(TDK::Key::Home));
+            PARSE_KEY(buffer[3] == 104 || (buffer[1] == 91 && buffer[2] == 80),
+                      !(buffer[3] == 104) + static_cast<int>(TDK::Key::Insert));
+            PARSE_KEY(buffer[2] == 70 || buffer[2] == 72,
+                      buffer[2] == 72 ? static_cast<int>(TDK::Key::Home) : static_cast<int>(TDK::Key::End));
+            PARSE_KEY(buffer[2] >= 80 && buffer[2] <= 83, buffer[2] - 80 + static_cast<int>(TDK::Key::F1));
+            PARSE_KEY(buffer[3] >= 65 && buffer[3] <= 69, buffer[3] - 65 + static_cast<int>(TDK::Key::F1));
+            PARSE_KEY(buffer[4] == 126,
+                      buffer[3] == 53                      ? static_cast<int>(TDK::Key::F5)
+                      : buffer[3] >= 55 && buffer[3] <= 57 ? buffer[3] - 55 + static_cast<int>(TDK::Key::F6)
+                      : buffer[3] == 48 || buffer[3] == 49 ? buffer[3] - 48 + static_cast<int>(TDK::Key::F9)
+                                                           : buffer[3] - 51 + static_cast<int>(TDK::Key::F11));
+            fcntl(STDIN_FILENO, F_SETFL, flags);
+            continue;
+        }
+        if (buffer[0] & 1 << 7)
+        {
+            for (std::size_t offset = 1;
+                 offset < 1 + !!(buffer[0] & 1 << 6) + !!(buffer[0] & 1 << 5) + !!(buffer[0] & 1 << 4); ++offset)
+            {
+                buffer[offset] = std::getchar();
+            }
+            event.m_key = *(int*)buffer;
+        }
+        else if ((event.m_key = (event.m_hasAlt = buffer[0] == 27 && buffer[1] != EOF) ? buffer[1] : buffer[0]) >= 0 &&
+                 event.m_key <= 26 && event.m_key != TDK::Key::Tab && event.m_key != TDK::Key::Enter)
+        {
+            event.m_key = !event.m_key ? static_cast<int>(TDK::Key::Spacebar) : event.m_key + 96;
+            event.m_hasCtrl = true;
+        }
+        break;
+    }
+    attributes.c_lflag |= ICANON | ECHO | ISIG;
+    attributes.c_iflag |= IXON;
+    tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+    fcntl(STDIN_FILENO, F_SETFL, flags);
 #endif
     return KeyEventStatus::Success;
 }

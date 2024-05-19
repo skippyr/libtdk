@@ -411,7 +411,6 @@ namespace TDK
     std::ostream& operator<<(std::ostream& stream, RGBColor color);
     std::ostream& operator<<(std::ostream& stream, XColor color);
     std::ostream& operator<<(std::ostream& stream, Weight weight);
-    int operator+(int code, Key key);
     bool operator==(int code, Key key);
     bool operator!=(int code, Key key);
 
