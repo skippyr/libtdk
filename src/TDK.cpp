@@ -287,7 +287,7 @@ int TDK::GetWindowDimensions(Dimensions& dimensions)
         return -1;
     }
     dimensions.m_totalColumns = size.ws_col;
-    dimensions.m_totalColumns = size.ws_row;
+    dimensions.m_totalRows = size.ws_row;
 #endif
     return 0;
 }
