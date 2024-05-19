@@ -340,8 +340,6 @@ namespace TDK
         bool m_hasAlt;
         /* @brief A boolean that states the Ctrl modifier key was being hold during the event. */
         bool m_hasCtrl;
-        /* @brief A boolean that states the Shift modifier key was being hold during the event. */
-        bool m_hasShift;
     };
 
     /*
@@ -413,6 +411,9 @@ namespace TDK
     std::ostream& operator<<(std::ostream& stream, RGBColor color);
     std::ostream& operator<<(std::ostream& stream, XColor color);
     std::ostream& operator<<(std::ostream& stream, Weight weight);
+    int operator+(int code, Key key);
+    bool operator==(int code, Key key);
+    bool operator!=(int code, Key key);
 
     /* @brief Clears the contents present in the terminal cursor line. */
     void ClearCursorLine();

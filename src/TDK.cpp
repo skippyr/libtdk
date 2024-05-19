@@ -19,6 +19,13 @@ static char g_cache = 0;
     }
 /* @brief A bit that states the cache has already been filled in. */
 #define HAS_CACHED_TTY_BIT (1 << 7)
+/* @brief Sets the event key member based on a condition. */
+#define PARSE_KEY(condition, key)                                                                                      \
+    if (condition)                                                                                                     \
+    {                                                                                                                  \
+        event.m_key = key;                                                                                             \
+        break;                                                                                                         \
+    }
 #ifdef _WIN32
 /*
  * @brief Creates the TTY status cache of a standard terminal stream.
@@ -190,6 +197,21 @@ std::ostream& TDK::operator<<(std::ostream& stream, Weight weight)
     return weight == Weight::Default ? stream << "\x1b[22m" : stream << "\x1b[22;" << static_cast<int>(weight) << "m";
 }
 
+int TDK::operator+(int code, Key key)
+{
+    return code + static_cast<int>(key);
+}
+
+bool TDK::operator==(int code, Key key)
+{
+    return code == static_cast<int>(key);
+}
+
+bool TDK::operator!=(int code, Key key)
+{
+    return code != static_cast<int>(key);
+}
+
 void TDK::ClearCursorLine()
 {
     WriteANSI("\x1b[2K\x1b[1G");
@@ -231,6 +253,7 @@ int TDK::GetCursorCoordinate(Coordinate& coordinate)
     coordinate.m_row = bufferInfo.dwCursorPosition.Y - bufferInfo.srWindow.Top;
 #else
     struct termios attributes;
+    ClearInputBuffer();
     if (WriteANSI("\x1b[6n") || tcgetattr(STDIN_FILENO, &attributes))
     {
         return -1;
@@ -282,6 +305,75 @@ bool TDK::IsTTY(Stream stream)
 
 TDK::KeyEventStatus TDK::ReadKeyEvent(KeyEvent& event)
 {
+    PrepareTTYAndCache();
+    if (!IS_TTY(TDK::Stream::Input) || std::fwide(stdin, 0) > 0 ||
+        (!IS_TTY(TDK::Stream::Output) && !IS_TTY(TDK::Stream::Error)))
+    {
+        return KeyEventStatus::Failure;
+    }
+#ifdef _WIN32
+    HANDLE handle = GetStdHandle(STD_INPUT_HANDLE);
+    INPUT_RECORD record;
+    DWORD mode;
+    DWORD totalEventsRead;
+    int buffer;
+    GetConsoleMode(handle, &mode);
+    SetConsoleMode(handle, mode & ~ENABLE_PROCESSED_INPUT);
+    while (true)
+    {
+        ReadConsoleInputW(handle, &record, 1, &totalEventsRead);
+        if (record.EventType == WINDOW_BUFFER_SIZE_EVENT)
+        {
+            return KeyEventStatus::WindowResizeInterrupt;
+        }
+        else if (record.EventType != KEY_EVENT || !record.Event.KeyEvent.bKeyDown ||
+                 record.Event.KeyEvent.wVirtualKeyCode == VK_CONTROL ||
+                 record.Event.KeyEvent.wVirtualKeyCode == VK_SHIFT ||
+                 record.Event.KeyEvent.wVirtualKeyCode == VK_MENU ||
+                 record.Event.KeyEvent.wVirtualKeyCode == VK_CAPITAL ||
+                 record.Event.KeyEvent.wVirtualKeyCode == VK_NUMLOCK ||
+                 record.Event.KeyEvent.wVirtualKeyCode == VK_SCROLL)
+        {
+            continue;
+        }
+        if ((buffer = record.Event.KeyEvent.uChar.UnicodeChar))
+        {
+            if (buffer <= 26 && buffer != TDK::Key::Tab && buffer != TDK::Key::Enter)
+            {
+                event.m_key = buffer + 96;
+            }
+            else if (buffer >= HIGH_SURROGATE_START && buffer <= HIGH_SURROGATE_END)
+            {
+                ReadConsoleInputW(handle, &record, 1, &totalEventsRead);
+                ReadConsoleInputW(handle, &record, 1, &totalEventsRead);
+                *((short*)&buffer + 1) = record.Event.KeyEvent.uChar.UnicodeChar;
+                WideCharToMultiByte(CP_UTF8, 0, (wchar_t*)&buffer, 2, (char*)&event.m_key, 4, NULL, NULL);
+            }
+            else
+            {
+                WideCharToMultiByte(CP_UTF8, 0, (wchar_t*)&buffer, 1, (char*)&event.m_key, 4, NULL, NULL);
+            }
+            event.m_hasAlt = record.Event.KeyEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED);
+            event.m_hasCtrl = record.Event.KeyEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED);
+            break;
+        }
+        else if (record.Event.KeyEvent.dwControlKeyState &
+                 (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED | SHIFT_PRESSED))
+        {
+            continue;
+        }
+        PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_LEFT && record.Event.KeyEvent.wVirtualKeyCode <= VK_DOWN,
+                  record.Event.KeyEvent.wVirtualKeyCode - VK_LEFT + TDK::Key::LeftArrow);
+        PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_PRIOR && record.Event.KeyEvent.wVirtualKeyCode <= VK_HOME,
+                  record.Event.KeyEvent.wVirtualKeyCode - VK_PRIOR + TDK::Key::PageUp);
+        PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_INSERT &&
+                      record.Event.KeyEvent.wVirtualKeyCode <= VK_DELETE,
+                  record.Event.KeyEvent.wVirtualKeyCode - VK_INSERT + TDK::Key::Insert);
+        PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_F1 && record.Event.KeyEvent.wVirtualKeyCode <= VK_F12,
+                  record.Event.KeyEvent.wVirtualKeyCode - VK_F1 + TDK::Key::F1);
+    }
+    SetConsoleMode(handle, mode);
+#endif
     return KeyEventStatus::Success;
 }
 
