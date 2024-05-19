@@ -68,23 +68,6 @@ namespace TDK
     };
 
     /*
-     * @brief An enum class that contains the possible statuses of a key event reading returned by the ReadKeyEvent
-     * function.
-     */
-    enum class KeyEventStatus
-    {
-        /* @brief The success status states the reading was sucessful. */
-        Success,
-        /*
-         * @brief Only happening on Windows, the window resize interrupt states a window resize event happened before
-         * the reading.
-         */
-        WindowResizeInterrupt = -2,
-        /* @brief The failure status states the reading failed. */
-        Failure
-    };
-
-    /*
      * @brief An enum class containing mostly keyboard keys not represented by UTF-8. For exceptions, the value here
      * serve the purpose of increase readability.
      */
@@ -175,6 +158,23 @@ namespace TDK
         Spacebar = 32,
         /* @brief The Backspace deletion key. */
         Backspace = 127
+    };
+
+    /*
+     * @brief An enum class that contains the possible statuses of a terminal key event reading returned by the
+     * ReadKeyEvent function.
+     */
+    enum class KeyEventStatus
+    {
+        /* @brief The success status states the reading was sucessful. */
+        Success,
+        /*
+         * @brief Only happening on Windows, the window resize interrupt states a window resize event happened before
+         * the reading.
+         */
+        WindowResizeInterrupt = -2,
+        /* @brief The failure status states the reading failed. */
+        Failure
     };
 
     /*
@@ -327,6 +327,23 @@ namespace TDK
         Layer m_layer;
     };
 
+    /* @brief A class that represents a terminal key event. It is used by the ReadKeyEvent function. */
+    class KeyEvent
+    {
+    public:
+        /* @brief Creates an instance of the KeyEvent class. */
+        KeyEvent();
+
+        /* @brief The key pressed during the event. It may be an UTF-8 grapheme or a value from Key enum class. */
+        int m_key;
+        /* @brief A boolean that states the Alt modifier key was being hold during the event. */
+        bool m_hasAlt;
+        /* @brief A boolean that states the Ctrl modifier key was being hold during the event. */
+        bool m_hasCtrl;
+        /* @brief A boolean that states the Shift modifier key was being hold during the event. */
+        bool m_hasShift;
+    };
+
     /*
      * @brief A class that represents an RGB color. Apply it by using the left shifting operator (<<) against an
      * instance of the std::ostream class. Remove it by using the XColor class with XColorCode::Default targetting the
@@ -424,6 +441,12 @@ namespace TDK
      * @returns The check result.
      */
     bool IsTTY(Stream stream);
+    /*
+     * @brief Reads the characters and events present in the terminal input buffer and parse key events.
+     * @param event The address where the event info will be put into.
+     * @returns The status of the event reading.
+     */
+    KeyEventStatus ReadKeyEvent(KeyEvent& event);
     /*
      * @brief Rings the terminal bell, possibly emitting a symbol in the terminal title bar, visual flash, a system
      * notification or a beep from the motherboard speaker.

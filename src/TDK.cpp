@@ -115,6 +115,10 @@ TDK::HexColor TDK::HexColor::Invert()
     return color;
 }
 
+TDK::KeyEvent::KeyEvent() : m_key(0), m_hasAlt(false), m_hasCtrl(false)
+{
+}
+
 TDK::RGBColor::RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer)
     : m_red(red), m_green(green), m_blue(blue), m_layer(layer)
 {
@@ -274,6 +278,11 @@ bool TDK::IsTTY(Stream stream)
 {
     PrepareTTYAndCache();
     return IS_TTY(stream);
+}
+
+TDK::KeyEventStatus TDK::ReadKeyEvent(KeyEvent& event)
+{
+    return KeyEventStatus::Success;
 }
 
 void TDK::RingBell()
