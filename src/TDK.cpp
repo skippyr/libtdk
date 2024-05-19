@@ -314,6 +314,7 @@ TDK::KeyEventStatus TDK::ReadKeyEvent(KeyEvent& event)
     int buffer;
     GetConsoleMode(handle, &mode);
     SetConsoleMode(handle, mode & ~ENABLE_PROCESSED_INPUT);
+    event = KeyEvent();
     while (true)
     {
         ReadConsoleInputW(handle, &record, 1, &totalEventsRead);
@@ -342,13 +343,14 @@ TDK::KeyEventStatus TDK::ReadKeyEvent(KeyEvent& event)
             {
                 ReadConsoleInputW(handle, &record, 1, &totalEventsRead);
                 ReadConsoleInputW(handle, &record, 1, &totalEventsRead);
-                *((short*)&buffer + 1) = record.Event.KeyEvent.uChar.UnicodeChar;
-                WideCharToMultiByte(CP_UTF8, 0, (wchar_t*)&buffer, 2, (char*)&event.m_key, 4, NULL, NULL);
+                *(reinterpret_cast<short*>(&buffer) + 1) = record.Event.KeyEvent.uChar.UnicodeChar;
+                WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<wchar_t*>(&buffer), 2,
+                                    reinterpret_cast<char*>(&event.m_key), 4, NULL, NULL);
             }
             else
             {
-                event.m_key = 0;
-                WideCharToMultiByte(CP_UTF8, 0, (wchar_t*)&buffer, 1, (char*)&event.m_key, 4, NULL, NULL);
+                WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<wchar_t*>(&buffer), 1,
+                                    reinterpret_cast<char*>(&event.m_key), 4, NULL, NULL);
             }
             event.m_hasAlt = record.Event.KeyEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED);
             event.m_hasCtrl = record.Event.KeyEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED);
