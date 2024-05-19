@@ -458,7 +458,7 @@ bool operator!=(int code, Key key);
 
 /* @brief Clears the contents present in the terminal cursor line. */
 void clearCursorLine();
-/* @brief Clears the contents or events present in the terminal input buffer. */
+/* @brief Clears the contents present in the terminal input buffer. */
 void clearInputBuffer();
 /*
  * @brief Gets the terminal cursor coordinate if successful
@@ -482,33 +482,35 @@ int getWindowDimensions(Dimensions &dimensions);
  */
 bool isTTY(Stream stream);
 /*
- * @brief Reads the characters or events inside of the terminal input buffer and
- * parses one key event if successful. It does not stop execution until at least
- * one valid event is read or an error happens.
+ * @brief Reads and parses a key event. It does not return until at least a
+ * valid event is read or an error happens.
  * @param event The address where the information about the event will be set
  * into.
- * @returns The status of the reading.
+ * @returns The reading status.
  */
 EventStatus readKeyEvent(KeyEvent &event);
 /*
  * @brief Rings the terminal bell possibly emitting a symbol in the terminal
- * title bar, visual flash, system notification or a beep from the motherboard
+ * tab, visual flash, system notification or a beep from the motherboard
  * speaker.
  */
 void ringBell();
 /*
  * @brief Opens/Closes the alternate window (alternate screen buffer).
- * @param isToOpen A boolean that states the alternate window should be opened or closed.
+ * @param isToOpen A boolean that states the alternate window should be opened
+ * or closed.
  */
 void setAlternateWindow(bool isToOpen);
 /*
- * @brief Sets the terminal cursor coordinate.
+ * @brief Sets the terminal cursor coordinate. The coordinate will always be fit
+ * within the terminal window boundaries.
  * @param column The column component of the coordinate.
  * @param row The row component of the coordinate.
  */
 void setCursorCoordinate(unsigned short column, unsigned short row);
 /*
- * @brief Sets the terminal cursor coordinate.
+ * @brief Sets the terminal cursor coordinate. The coordinate will always be fit
+ * within the terminal window boundaries.
  * @param coordinate The coordinate to be set.
  */
 void setCursorCoordinate(Coordinate &coordinate);
