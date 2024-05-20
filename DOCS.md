@@ -2,6 +2,7 @@
   <img alt="" src="assets/ornament.webp" />
 </p>
 <h1 align="center">≥v≥v&ensp;libtdk&ensp;≥v≥v</h1>
+<p align="center">Terminal Development Kit - Documentation - v13.0.0</p>
 <p align="center">
   <img alt="" src="https://img.shields.io/github/license/skippyr/libtdk?style=plastic&label=%E2%89%A5%20license&labelColor=%2324130e&color=%23b8150d" />
   &nbsp;
@@ -14,13 +15,9 @@
 
 ## ❡ About
 
-This documentation will abroad:
+This document will give you an overview about certain topics related to terminal manipulation, showing you how to use this library to handle them, and it will also include the documentation of each of its components.
 
-- An explanation over its usage, limitations and namespace.
-- An overview of certain topics related to terminal manipulation and show how to use the library components to handle them. Some examples will be given so you can test them in your development environment.
-- A more specific explain over each component of the library, providing examples and remarks over their usages.
-
-To access each section more easily, remember to use the GitHub table of contents feature available at the top right corner of the website.
+The recommended way of reading it is directly on GitHub. That way as you will be able to use its table of contents feature available at the top right corner of the website to access each section more easily.
 
 ## ❡ Usage Limitation
 
@@ -32,39 +29,33 @@ This library has some limitations over its usage. To avoid conflicts and malfunc
 
 ## ❡ Namespace
 
-This library reserves names under the `tdk` namespace. It is highly recommend to not short them by using the `using namespace` keywords.
+This library reserves names under the `tdk` namespace. To avoid naming conflicts, it is highly recommend to not short them by using the `using namespace` keywords.
 
 ## ❡ Included Headers
 
 When included, the library will always put the following headers in the scope of your program:
 
-```cpp
-/* Standard Headers */
-#include <cstdarg>
-#include <iostream>
-
-#ifdef _WIN32
-/* Windows Headers */
-#include <Windows.h>
-#include <io.h>
-#else
-/* Linux Headers */
-#include <fcntl.h>
-#include <sys/ioctl.h>
-#include <termios.h>
-#include <unistd.h>
-#endif
-```
+- **Standard Headers**:
+  - cstdarg
+  - iostream
+- **Windows Specific Headers** (only imported when compiled for Windows):
+  - Windows.h
+  - io.h
+- **Linux Specific Headers** (only imported when compiled for Linux):
+  - fcntl.h
+  - sys/ioctl.h
+  - termios.h
+  - unistd.h
 
 ## ❡ Colors
 
-This library allows you to set terminals colors in terminal layers using different color formats. Available terminal layers are contained in the `Layer` enum class. Each color format accepted is a class:
+This library allows you to set terminals colors in terminal layers using different color formats. Available terminal layers are contained in the [`Layer`](#layer-enum-class) enum class. Each color format accepted is a class:
 
-- `XColor`: refers to a color from the XTerm palette. The ANSI code of the first 16 colors of this palette plus one more color intended for resets are contained in the `XColorCode` enum class.
-- `HexColor`: refers to a hexadecimal color.
-- `RGBColor`: refers to an RGB color.
+- [`XColor`](#xcolor-class): refers to a color from the XTerm palette. The ANSI code of the first 16 colors of this palette plus one more color intended for resets are contained in the `XColorCode` enum class.
+- [`HexColor`](#hexcolor-class): refers to a hexadecimal color.
+- [`RGBColor`](#rgbcolor-class): refers to an RGB color.
 
-A color can be applied by using the left shifting operator (`<<`) with an instance of a color class against an instance of the `std::ostream` class. To be removed, you must apply an instance of the `XColor` class constructed with the ANSI code `XColorCode::Default` in the layer where the color has been applied.
+A color can be applied by using the left shifting operator (`<<`) with an instance of a color class against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. To be removed, you must apply an instance of the [`XColor`](#xcolor-class) class constructed with the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
 
 The following example shows an usage example of both background and foreground colors. In it, the terminal will output the demo of three colors, each in using a different supported color format:
 
@@ -105,13 +96,33 @@ int main() {
 Check the specific documentation for the enum classes and classes used in this section for more details.
 
 ## ❡ Weights
+
 ## ❡ Effects
+
 ## ❡ Standard Streams
+
 ## ❡ Window
+
 ## ❡ Cursor
+
 ## ❡ Key Events
+
 ## ❡ Responsive Layouts
+
 ## ❡ Enum Classes
+
+### Layer Enum Class
+
+### XColorCode Enum Class
+
 ## ❡ Functions
+
 ## ❡ Classes
+
+### XColor Class
+
+### HexColor Class
+
+### RGBColor Class
+
 ## ❡ Operator Overloadings
