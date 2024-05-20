@@ -475,7 +475,7 @@ namespace TDK
     /* @brief Clears the contents present in the terminal input buffer. */
     void ClearInputBuffer();
     /*
-     * @brief Gets the terminal cursor coordinate if successful
+     * @brief Gets the terminal cursor coordinate if successful.
      * @param coordinate The address where the information about the coordinate will
      * be set into.
      * @returns 0 if successful and -1 otherwise.

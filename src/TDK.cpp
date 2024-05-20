@@ -1,10 +1,11 @@
 #include "tdk.hpp"
 
+/* @brief A small cache containing the TTY statuses of the standard streams. */
 static char g_cache = 0;
 
 #define IS_TTY(stream) static_cast<bool>(g_cache & 1 << static_cast<int>(stream))
 #define CHECK_STREAM_TTY_STATUS()                                                                                      \
-    prepareStreamsAndCache();                                                                                          \
+    PrepareStreamsAndCache();                                                                                          \
     if ((stream.rdbuf() == std::cout.rdbuf() && !IS_TTY(TDK::Stream::Output)) ||                                       \
         (stream.rdbuf() == std::cerr.rdbuf() && !IS_TTY(TDK::Stream::Error)))                                          \
     {                                                                                                                  \
@@ -31,10 +32,19 @@ static char g_cache = 0;
      << static_cast<int>(stream))
 #endif
 
-static void prepareStreamsAndCache();
-static int writeANSI(const char* format, ...);
+/*
+ * @brief Prepare the standard streams by setting the ENABLE_VIRTUAL_TERMINAL_PROCESSING on Windows and by filling up
+ * the TTY statuses cache.
+ */
+static void PrepareStreamsAndCache();
+/*
+ * @brief Writes an ANSI escape sequence to a standard stream based on the fact if it is a TTY.
+ * @param format The format to be used. It uses the same specifiers as the printf function family.
+ * @param ... The arguments to be formatted.
+ */
+static int WriteANSI(const char* format, ...);
 
-static void prepareStreamsAndCache()
+static void PrepareStreamsAndCache()
 {
     if (!(g_cache & HAS_CACHED_TTY_BIT))
     {
@@ -50,9 +60,9 @@ static void prepareStreamsAndCache()
 #endif
 }
 
-static int writeANSI(const char* format, ...)
+static int WriteANSI(const char* format, ...)
 {
-    prepareStreamsAndCache();
+    PrepareStreamsAndCache();
     if (!IS_TTY(TDK::Stream::Output) && !IS_TTY(TDK::Stream::Error))
     {
         return -1;
@@ -180,7 +190,7 @@ bool TDK::operator!=(int code, Key key)
 
 void TDK::ClearCursorLine()
 {
-    writeANSI("\x1b[2K\x1b[1G");
+    WriteANSI("\x1b[2K\x1b[1G");
 }
 
 void TDK::ClearInputBuffer()
@@ -220,7 +230,7 @@ int TDK::GetCursorCoordinate(Coordinate& coordinate)
 #else
     struct termios attributes;
     ClearInputBuffer();
-    if (writeANSI("\x1b[6n") || tcgetattr(STDIN_FILENO, &attributes))
+    if (WriteANSI("\x1b[6n") || tcgetattr(STDIN_FILENO, &attributes))
     {
         return -1;
     }
@@ -265,13 +275,13 @@ int TDK::GetWindowDimensions(Dimensions& dimensions)
 
 bool TDK::IsTTY(Stream stream)
 {
-    prepareStreamsAndCache();
+    PrepareStreamsAndCache();
     return IS_TTY(stream);
 }
 
 TDK::EventStatus TDK::ReadKeyEvent(KeyEvent& event)
 {
-    prepareStreamsAndCache();
+    PrepareStreamsAndCache();
     if (!IS_TTY(TDK::Stream::Input) || std::fwide(stdin, 0) > 0 ||
         (!IS_TTY(TDK::Stream::Output) && !IS_TTY(TDK::Stream::Error)))
     {
@@ -408,17 +418,17 @@ TDK::EventStatus TDK::ReadKeyEvent(KeyEvent& event)
 
 void TDK::RingBell()
 {
-    writeANSI("\7");
+    WriteANSI("\7");
 }
 
 void TDK::SetAlternateWindow(bool isToOpen)
 {
-    writeANSI(isToOpen ? "\x1b[?1049h\x1b[2J\x1b[1;1H" : "\x1b[?1049l");
+    WriteANSI(isToOpen ? "\x1b[?1049h\x1b[2J\x1b[1;1H" : "\x1b[?1049l");
 }
 
 void TDK::SetCursorCoordinate(unsigned short column, unsigned short row)
 {
-    writeANSI("\x1b[%hu;%huH", row + 1, column + 1);
+    WriteANSI("\x1b[%hu;%huH", row + 1, column + 1);
 }
 
 void TDK::SetCursorCoordinate(Coordinate& coordinate)
@@ -428,10 +438,10 @@ void TDK::SetCursorCoordinate(Coordinate& coordinate)
 
 void TDK::SetCursorShape(Shape shape)
 {
-    writeANSI("\x1b[%d q", static_cast<int>(shape));
+    WriteANSI("\x1b[%d q", static_cast<int>(shape));
 }
 
 void TDK::SetCursorVisibility(bool isToShow)
 {
-    writeANSI("\x1b[?25%c", isToShow ? 'h' : 'l');
+    WriteANSI("\x1b[?25%c", isToShow ? 'h' : 'l');
 }
