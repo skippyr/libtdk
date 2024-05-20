@@ -143,12 +143,7 @@ An enum class containing the ANSI codes of the first 16 colors of the XTerm pale
 
 A class that represents a color from the XTerm palette: a terminal exclusive palette containing 256 colors. Apply it by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it by using the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
 
-The color is not applied if the standard output and error streams are being redirected.
-
-#### Public Member Variables
-
-- (`int`) `m_code`: the ANSI code of the color.
-- ([`Layer`](#layer-enum-class)) `m_layer`: the layer where the color should be applied on.
+The color is not applied if the standard output and error streams are being redirected or piped.
 
 #### Constructors
 
@@ -167,6 +162,11 @@ XColor(XColorCode code, Layer layer);
 
 - `code`: the ANSI code of the color.
 - `layer`: the layer where the color should be applied on.
+
+#### Public Member Variables
+
+- (`int`) `m_code`: the ANSI code of the color.
+- ([`Layer`](#layer-enum-class)) `m_layer`: the layer where the color should be applied on.
 
 #### Public Member Functions
 
@@ -192,7 +192,7 @@ Returns a color with the inverted layer.
 
 A class that represents a hex color. Apply it by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it, by applying an instance of the [`XColor`](#xcolor-class) class constructed with the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
 
-The color is not applied if the standard output and error streams are being redirected.
+It requires the terminal to have truecolor support. The color is not applied if the standard output and error streams are being redirected or piped.
 
 #### Constructors
 
@@ -234,18 +234,11 @@ Returns a color with the inverted layer.
 
 A class that represents an RGB color. Apply it by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it, by applying an instance of the [`XColor`](#xcolor-class) class constructed with the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
 
-The color is not applied if the standard output and error streams are being redirected.
-
-#### Public Member Variables
-
-- (`unsigned char`) `m_red`: the red component of the color.
-- (`unsigned char`) `m_green`: the green component of the color.
-- (`unsigned char`) `m_blue`: the blue component of the color.
-- ([`Layer`](#layer-enum-class)) `m_layer`: the layer where the color should be applied on.
+It requires the terminal to have truecolor support. The color is not applied if the standard output and error streams are being redirected or piped.
 
 #### Constructors
 
-Creates an instance of the [`RGBColor`] class.
+Creates an instance of the [`RGBColor`](#rgbcolor-class) class.
 
 ```cpp
 RGBColor(unsigned char red, unsigned char green, unsigned char blue,
@@ -262,6 +255,13 @@ RGBColor(HexColor color);
 ```
 
 - `color`: a hex color to be converted.
+
+#### Public Member Variables
+
+- (`unsigned char`) `m_red`: the red component of the color.
+- (`unsigned char`) `m_green`: the green component of the color.
+- (`unsigned char`) `m_blue`: the blue component of the color.
+- ([`Layer`](#layer-enum-class)) `m_layer`: the layer where the color should be applied on.
 
 #### Public Member Functions
 
@@ -282,3 +282,69 @@ Inverts the layer the color applies on.
 Returns a color with the inverted layer.
 
 ## ❡ Operator Overloadings
+
+### std::ostream &operator<<(std::ostream &stream, HexColor color);
+
+#### Brief
+
+Applies a hex color.
+
+#### Declaration
+
+```cpp
+std::ostream &operator<<(std::ostream &stream, Color color);
+```
+
+#### Parameters
+
+- `stream`: the terminal stream to be affected.
+- `color`: the color to be applied.
+
+#### Remarks
+
+It requires the terminal to have truecolor support. The color is not applied if the standard output and error streams are being redirected or piped.
+
+### std::ostream &operator<<(std::ostream &stream, RGBColor color);
+
+#### Brief
+
+Applies an RGB color.
+
+#### Declaration
+
+```cpp
+std::ostream &operator<<(std::ostream &stream, RGBColor color);
+```
+
+#### Parameters
+
+- `stream`: the terminal stream to be affected.
+- `color`: the color to be applied.
+
+#### Remarks
+
+It requires the terminal to have truecolor support. The color is not applied if the standard output and error streams are being redirected or piped.
+
+### std::ostream &operator<<(std::ostream &stream, XColor color);
+
+#### Brief
+
+Applies a color from the XTerm palette.
+
+#### Declaration
+
+```cpp
+std::ostream &operator<<(std::ostream &stream, XColor color);
+```
+
+#### Parameters
+
+- `stream`: the terminal stream to be affected.
+- `color`: the color to be applied.
+
+#### Remarks
+
+The color is not applied if the stream is being redirected or piped.
+
+&ensp;
+<p align="center"><sup><strong>≥v≥v&ensp;Here Be Dragons!&ensp;≥v≥</strong><br />Made with love by skippyr <3</sup></p>
