@@ -2,6 +2,7 @@
   <img alt="" src="assets/ornament.webp" />
 </p>
 <h1 align="center">≥v≥v&ensp;libtdk&ensp;≥v≥v</h1>
+<p align="center">Terminal Development Kit</p>
 <p align="center">
   <img alt="" src="https://img.shields.io/github/license/skippyr/libtdk?style=plastic&label=%E2%89%A5%20license&labelColor=%2324130e&color=%23b8150d" />
   &nbsp;
@@ -20,43 +21,20 @@ A simple C++ terminal manipulation library for Windows and Linux that can be use
 
 ### Dependencies
 
+#### Windows
+
 The following dependencies must be installed before installing it:
 
 - **git**: it will be used to clone this repository.
-- **gcc**, **make**: they will be used to compile this software.
+- **Visual Studio 2022**: it contains the tools required to compile this software.
+
+#### Linux
+
+- **git**: it will be used to clone this repository.
+- **g++**, **make**: they will be used to compile this software.
 
 ### Procedures
 
-To install this software, using a terminal, follow these steps:
-
-- Clone this repository using `git`:
-
-```sh
-git clone --depth 1 https://github.com/skippyr/libtdk;
-```
-
-- Access the directory of the repository you cloned using `cd`:
-
-```sh
-cd libtdk;
-```
-
-- Use `make` to compile and install this software:
-
-```sh
-make install;
-```
-
-- Add the following environment variables to your shell startup file in order to include the installed files that are at the directories under `~/.local/share`:
-
-```zsh
-export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:~/.local/share/lib;
-export LIBRARY_PATH=${LD_LIBRARY_PATH}:~/.local/share/lib;
-export MANPATH=${MANPATH}:~/.local/share/man;
-export CPATH=${CPATH}:~/.local/share/include;
-```
-
-- Open a new shell session.
 
 ## ❡ Uninstall
 
