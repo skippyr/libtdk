@@ -14,9 +14,7 @@
 
 ## ❡ About
 
-A simple C99 terminal manipulation library for Linux that can be used to create general purpose terminal applications.
-
-It includes features to manipulate terminal properties, styles and key readings with UTF-8 encoding.
+A simple C++ terminal manipulation library for Windows and Linux that can be used to create general purpose keyboard driven terminal applications and other libraries for more specific use cases. In summary, it includes features to manipulate terminal properties, styles and key readings with UTF-8 encoding.
 
 ## ❡ Install
 
@@ -72,12 +70,6 @@ make uninstall;
 ```
 
 ## ❡ Documentation
-
-After installed, you can access its documentation using `man`:
-
-```sh
-man tdk.3;
-```
 
 ## ❡ Help
 

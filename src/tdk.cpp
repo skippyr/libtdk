@@ -2,41 +2,41 @@
 
 static char g_cache = 0;
 
-#define IS_TTY(stream)                                                         \
-  static_cast<bool>(g_cache & 1 << static_cast<int>(stream))
+#define IS_TTY(a_stream)                                                       \
+  static_cast<bool>(g_cache & 1 << static_cast<int>(a_stream))
 #define CHECK_STREAM_TTY_STATUS()                                              \
   prepareStreamsAndCache();                                                    \
   if ((stream.rdbuf() == std::cout.rdbuf() && !IS_TTY(tdk::Stream::Output)) || \
       (stream.rdbuf() == std::cerr.rdbuf() && !IS_TTY(tdk::Stream::Error))) {  \
     return stream;                                                             \
   }
-#define HAS_CACHED_TTY_BIT (1 << 7)
-#define PARSE_KEY(condition, key)                                              \
-  if (condition) {                                                             \
-    event.m_key = key;                                                         \
+#define HAS_CACHED_TTY_FLAG (1 << 7)
+#define PARSE_KEY(a_condition, a_key)                                          \
+  if (a_condition) {                                                           \
+    event.m_key = a_key;                                                       \
     break;                                                                     \
   }
 #ifdef _WIN32
-#define TTY_CACHE(stream)                                                      \
-  (!!(_isatty(_fileno(!static_cast<int>(stream)       ? stdin                  \
-                      : static_cast<int>(stream) == 1 ? stdout                 \
-                                                      : stderr)))              \
-   << static_cast<int>(stream))
+#define TTY_CACHE(a_stream)                                                    \
+  (!!(_isatty(_fileno(!static_cast<int>(a_stream)       ? stdin                \
+                      : static_cast<int>(a_stream) == 1 ? stdout               \
+                                                        : stderr)))            \
+   << static_cast<int>(a_stream))
 #else
-#define TTY_CACHE(stream)                                                      \
-  (isatty(fileno(!static_cast<int>(stream)       ? stdin                       \
-                 : static_cast<int>(stream) == 1 ? stdout                      \
-                                                 : stderr))                    \
-   << static_cast<int>(stream))
+#define TTY_CACHE(a_stream)                                                    \
+  (isatty(fileno(!static_cast<int>(a_stream)       ? stdin                     \
+                 : static_cast<int>(a_stream) == 1 ? stdout                    \
+                                                   : stderr))                  \
+   << static_cast<int>(a_stream))
 #endif
 
 static void prepareStreamsAndCache();
 static int writeANSI(const char *format, ...);
 
 static void prepareStreamsAndCache() {
-  if (!(g_cache & HAS_CACHED_TTY_BIT)) {
+  if (!(g_cache & HAS_CACHED_TTY_FLAG)) {
     g_cache = TTY_CACHE(tdk::Stream::Input) | TTY_CACHE(tdk::Stream::Output) |
-              TTY_CACHE(tdk::Stream::Error) | HAS_CACHED_TTY_BIT;
+              TTY_CACHE(tdk::Stream::Error) | HAS_CACHED_TTY_FLAG;
   }
 #ifdef _WIN32
   HANDLE handle;

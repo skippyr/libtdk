@@ -1,9 +1,1 @@
-AccessModifierOffset: -4
-AlignTrailingComments: false
-AllowShortLambdasOnASingleLine: None
-AlwaysBreakTemplateDeclarations: true
-BasedOnStyle: Microsoft
-FixNamespaceComments: false
-NamespaceIndentation: All
-PointerAlignment: Left
-SpacesInContainerLiterals: false
+BasedOnStyle: LLVM
