@@ -137,55 +137,6 @@ An enum class containing the ANSI codes of the first 16 colors of the XTerm pale
 
 ## ❡ Classes
 
-### XColor Class
-
-#### Brief
-
-A class that represents a color from the XTerm palette: a terminal exclusive palette containing 256 colors. Apply it by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it by using the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
-
-The color is not applied if the standard output and error streams are being redirected or piped.
-
-#### Constructors
-
-Creates an instance of the [`XColor`](#xcolor-class) class.
-
-```cpp
-XColor(unsigned char code, Layer layer);
-```
-
-- `code`: the ANSI code of the color.
-- `layer`: the layer where the color should be applied on.
-
-```cpp
-XColor(XColorCode code, Layer layer);
-```
-
-- `code`: the ANSI code of the color.
-- `layer`: the layer where the color should be applied on.
-
-#### Public Member Variables
-
-- (`int`) `m_code`: the ANSI code of the color.
-- ([`Layer`](#layer-enum-class)) `m_layer`: the layer where the color should be applied on.
-
-#### Public Member Functions
-
-##### m_invert Member Function
-
-###### Declaration
-
-```cpp
-XColor m_invert();
-```
-
-###### Brief
-
-Inverts the layer the color applies on.
-
-###### Return Value
-
-Returns a color with the inverted layer.
-
 ### HexColor Class
 
 #### Brief
@@ -196,11 +147,17 @@ It requires the terminal to have truecolor support. The color is not applied if 
 
 #### Constructors
 
+##### Brief
+
 Creates an instance of the [`HexColor`](#hexcolor-class) class.
+
+##### Declaration
 
 ```cpp
 HexColor(unsigned int code, Layer layer);
 ```
+
+##### Parameters
 
 - `code`: the hex code of the color. It must be a value in range from `0x0` to `0xffffff`.
 - `layer`: the layer where the color should be applied on.
@@ -226,7 +183,7 @@ Inverts the layer the color applies on.
 
 ###### Return Value
 
-Returns a color with the inverted layer.
+A copy of the color with the inverted layer.
 
 ### RGBColor Class
 
@@ -238,21 +195,31 @@ It requires the terminal to have truecolor support. The color is not applied if 
 
 #### Constructors
 
+##### Brief
+
 Creates an instance of the [`RGBColor`](#rgbcolor-class) class.
+
+##### Declaration 1
 
 ```cpp
 RGBColor(unsigned char red, unsigned char green, unsigned char blue,
          Layer layer);
 ```
 
+##### Parameters 1
+
 - `red`: the red component of the color.
 - `green`: the green component of the color.
 - `blue`: the blue component of the color.
 - `layer`: the layer where the color should be applied.
 
+##### Declaration 2
+
 ```cpp
 RGBColor(HexColor color);
 ```
+
+##### Parameters 2
 
 - `color`: a hex color to be converted.
 
@@ -281,9 +248,68 @@ Inverts the layer the color applies on.
 
 Returns a color with the inverted layer.
 
+### XColor Class
+
+#### Brief
+
+A class that represents a color from the XTerm palette: a terminal exclusive palette containing 256 colors. Apply it by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it by using the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
+
+The color is not applied if the standard output and error streams are being redirected or piped.
+
+#### Constructors
+
+##### Brief
+
+Creates an instance of the [`XColor`](#xcolor-class) class.
+
+##### Declaration 1
+
+```cpp
+XColor(unsigned char code, Layer layer);
+```
+
+##### Parameters 1
+
+- `code`: the ANSI code of the color.
+- `layer`: the layer where the color should be applied on.
+
+##### Declaration 2
+
+```cpp
+XColor(XColorCode code, Layer layer);
+```
+
+##### Parameters 2
+
+- `code`: the ANSI code of the color.
+- `layer`: the layer where the color should be applied on.
+
+#### Public Member Variables
+
+- (`int`) `m_code`: the ANSI code of the color.
+- ([`Layer`](#layer-enum-class)) `m_layer`: the layer where the color should be applied on.
+
+#### Public Member Functions
+
+##### m_invert Member Function
+
+###### Declaration
+
+```cpp
+XColor m_invert();
+```
+
+###### Brief
+
+Inverts the layer the color applies on.
+
+###### Return Value
+
+A copy of the color with the inverted layer.
+
 ## ❡ Operator Overloadings
 
-### std::ostream &operator<<(std::ostream &stream, HexColor color);
+### operator<<(std::ostream &stream, HexColor color);
 
 #### Brief
 
@@ -300,11 +326,15 @@ std::ostream &operator<<(std::ostream &stream, Color color);
 - `stream`: the terminal stream to be affected.
 - `color`: the color to be applied.
 
+#### Return Value
+
+The stream being affected.
+
 #### Remarks
 
 It requires the terminal to have truecolor support. The color is not applied if the standard output and error streams are being redirected or piped.
 
-### std::ostream &operator<<(std::ostream &stream, RGBColor color);
+### operator<<(std::ostream &stream, RGBColor color);
 
 #### Brief
 
@@ -320,6 +350,10 @@ std::ostream &operator<<(std::ostream &stream, RGBColor color);
 
 - `stream`: the terminal stream to be affected.
 - `color`: the color to be applied.
+
+#### Return Value
+
+The stream being affected.
 
 #### Remarks
 
@@ -341,6 +375,10 @@ std::ostream &operator<<(std::ostream &stream, XColor color);
 
 - `stream`: the terminal stream to be affected.
 - `color`: the color to be applied.
+
+#### Return Value
+
+The stream being affected.
 
 #### Remarks
 
