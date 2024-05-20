@@ -28,8 +28,8 @@ enum class Effect {
   Italic = 3,
   Underline,
   Blinking,
-  ReverseVideo = 7,
-  Conceal,
+  Negative = 7,
+  Hidden,
   Strikethrough
 };
 
