@@ -35,9 +35,9 @@ This library reserves names under the `tdk` namespace. To avoid naming conflicts
 
 This library allows you to set terminals colors into layers by using different color formats. Available layers are contained in the [`Layer`](#layer-enum-class) enum class. Each color format accepted is a class:
 
-- [`XColor`](#xcolor-class): refers to a color from the XTerm palette. The ANSI code of the first 16 colors of this palette plus one more color intended for resets are contained in the [`XColorCode`](#xcolorcode-enum-class) enum class.
 - [`HexColor`](#hexcolor-class): refers to a hexadecimal color.
 - [`RGBColor`](#rgbcolor-class): refers to an RGB color.
+- [`XColor`](#xcolor-class): refers to a color from the XTerm palette: a terminal exclusive palette containing 256 colors. The ANSI code of the first 16 colors of this palette plus one more color intended for resets are contained in the [`XColorCode`](#xcolorcode-enum-class) enum class. These codes map to colors of the active terminal theme and can be used to ensure consistency.
 
 A color can be applied by using the left shifting operator (`<<`) with an instance of a color class against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. To be removed, you must apply an instance of the [`XColor`](#xcolor-class) class constructed with the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
 
@@ -98,7 +98,40 @@ Check the specific documentation for the enum classes and classes used in this s
 
 ### Layer Enum Class
 
+#### Brief
+
+An enum class containing the available terminal layers. It is used to create instances of the [`HexColor`](#hexcolor-class), [`RGBColor`](#rgbcolor-class) and [`XColor`](#xcolor-class) classes.
+
+#### Enumerators
+
+- `Foreground`: the foreground layer.
+- `Background`: the background layer.
+
 ### XColorCode Enum Class
+
+#### Brief
+
+An enum class containing the ANSI codes of the first 16 colors of the XTerm palette plus one more color intended for resets. It is used to create instances of the [`XColor`](#xcolor-class) class. These codes map to colors of the active terminal theme and can be used to ensure consistency.
+
+#### Enumerators
+
+- `Default`: the default color, intended for resets.
+- `Black`: the regular variant of the black color.
+- `Red`: the regular variant of the red color.
+- `Green`: the regular variant of the green color.
+- `Yellow`: the regular variant of the yellow color.
+- `Blue`: the regular variant of the blue color.
+- `Magenta`: the regular variant of the magenta color.
+- `Cyan`: the regular variant of the cyan color.
+- `White`: the regular variant of the white color.
+- `LightBlack`: the light variant of the black color.
+- `LightRed`: the light variant of the red color.
+- `LightGreen`: the light variant of the green color.
+- `LightYellow`: the light variant of the yellow color.
+- `LightBlue`: the light variant of the blue color.
+- `LightMagenta`: the light variant of the magenta color.
+- `LightCyan`: the light variant of the cyan color.
+- `LightWhite`: the light variant of the white color.
 
 ## ❡ Functions
 
@@ -106,8 +139,146 @@ Check the specific documentation for the enum classes and classes used in this s
 
 ### XColor Class
 
+#### Brief
+
+A class that represents a color from the XTerm palette: a terminal exclusive palette containing 256 colors. Apply it by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it by using the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
+
+The color is not applied if the standard output and error streams are being redirected.
+
+#### Public Member Variables
+
+- (`int`) `m_code`: the ANSI code of the color.
+- ([`Layer`](#layer-enum-class)) `m_layer`: the layer where the color should be applied on.
+
+#### Constructors
+
+Creates an instance of the [`XColor`](#xcolor-class) class.
+
+```cpp
+XColor(unsigned char code, Layer layer);
+```
+
+- `code`: the ANSI code of the color.
+- `layer`: the layer where the color should be applied on.
+
+```cpp
+XColor(XColorCode code, Layer layer);
+```
+
+- `code`: the ANSI code of the color.
+- `layer`: the layer where the color should be applied on.
+
+#### Public Member Functions
+
+##### m_invert Member Function
+
+###### Declaration
+
+```cpp
+XColor m_invert();
+```
+
+###### Brief
+
+Inverts the layer the color applies on.
+
+###### Return Value
+
+Returns a color with the inverted layer.
+
 ### HexColor Class
 
+#### Brief
+
+A class that represents a hex color. Apply it by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it, by applying an instance of the [`XColor`](#xcolor-class) class constructed with the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
+
+The color is not applied if the standard output and error streams are being redirected.
+
+#### Constructors
+
+Creates an instance of the [`HexColor`](#hexcolor-class) class.
+
+```cpp
+HexColor(unsigned int code, Layer layer);
+```
+
+- `code`: the hex code of the color. It must be a value in range from `0x0` to `0xffffff`.
+- `layer`: the layer where the color should be applied on.
+
+#### Public Member Variables
+
+- (`unsigned int`) `m_code`: the hex code of the color. It is a value in range from `0x0` to `0xffffff`.
+- ([`Layer`](#layer-enum-class)) `m_layer`: the layer where the color should be applied on.
+
+#### Public Member Functions
+
+##### m_invert Member Function
+
+###### Declaration
+
+```cpp
+HexColor m_invert();
+```
+
+###### Brief
+
+Inverts the layer the color applies on.
+
+###### Return Value
+
+Returns a color with the inverted layer.
+
 ### RGBColor Class
+
+#### Brief
+
+A class that represents an RGB color. Apply it by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it, by applying an instance of the [`XColor`](#xcolor-class) class constructed with the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
+
+The color is not applied if the standard output and error streams are being redirected.
+
+#### Public Member Variables
+
+- (`unsigned char`) `m_red`: the red component of the color.
+- (`unsigned char`) `m_green`: the green component of the color.
+- (`unsigned char`) `m_blue`: the blue component of the color.
+- ([`Layer`](#layer-enum-class)) `m_layer`: the layer where the color should be applied on.
+
+#### Constructors
+
+Creates an instance of the [`RGBColor`] class.
+
+```cpp
+RGBColor(unsigned char red, unsigned char green, unsigned char blue,
+         Layer layer);
+```
+
+- `red`: the red component of the color.
+- `green`: the green component of the color.
+- `blue`: the blue component of the color.
+- `layer`: the layer where the color should be applied.
+
+```cpp
+RGBColor(HexColor color);
+```
+
+- `color`: a hex color to be converted.
+
+#### Public Member Functions
+
+##### m_invert Member Function
+
+###### Declaration
+
+```cpp
+RGBColor m_invert();
+```
+
+###### Brief
+
+Inverts the layer the color applies on.
+
+###### Return Value
+
+Returns a color with the inverted layer.
 
 ## ❡ Operator Overloadings
