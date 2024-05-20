@@ -17,7 +17,7 @@
 
 This document will give you an overview about certain topics related to terminal manipulation, showing you how to use this library to handle them, and it will also include the documentation of each of its components.
 
-The recommended way of reading it is directly on GitHub. That way as you will be able to use its table of contents feature available at the top right corner of the website to access each section more easily.
+The recommended way of reading it is directly on GitHub. That way as you will be able to use its **Outline** feature available at the top right corner of the website to access each section more easily.
 
 ## ❡ Usage Limitation
 
@@ -31,33 +31,19 @@ This library has some limitations over its usage. To avoid conflicts and malfunc
 
 This library reserves names under the `tdk` namespace. To avoid naming conflicts, it is highly recommend to not short them by using the `using namespace` keywords.
 
-## ❡ Included Headers
-
-When included, the library will always put the following headers in the scope of your program:
-
-- **Standard Headers**:
-  - cstdarg
-  - iostream
-- **Windows Specific Headers** (only imported when compiled for Windows):
-  - Windows.h
-  - io.h
-- **Linux Specific Headers** (only imported when compiled for Linux):
-  - fcntl.h
-  - sys/ioctl.h
-  - termios.h
-  - unistd.h
-
 ## ❡ Colors
 
-This library allows you to set terminals colors in terminal layers using different color formats. Available terminal layers are contained in the [`Layer`](#layer-enum-class) enum class. Each color format accepted is a class:
+This library allows you to set terminals colors into layers by using different color formats. Available layers are contained in the [`Layer`](#layer-enum-class) enum class. Each color format accepted is a class:
 
-- [`XColor`](#xcolor-class): refers to a color from the XTerm palette. The ANSI code of the first 16 colors of this palette plus one more color intended for resets are contained in the `XColorCode` enum class.
+- [`XColor`](#xcolor-class): refers to a color from the XTerm palette. The ANSI code of the first 16 colors of this palette plus one more color intended for resets are contained in the [`XColorCode`](#xcolorcode-enum-class) enum class.
 - [`HexColor`](#hexcolor-class): refers to a hexadecimal color.
 - [`RGBColor`](#rgbcolor-class): refers to an RGB color.
 
 A color can be applied by using the left shifting operator (`<<`) with an instance of a color class against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. To be removed, you must apply an instance of the [`XColor`](#xcolor-class) class constructed with the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
 
-The following example shows an usage example of both background and foreground colors. In it, the terminal will output the demo of three colors, each in using a different supported color format:
+Colors are not applied if the standard output and error streams are being redirected or piped. Using a hex or RGB colors require the terminal to have truecolor support.
+
+The following example shows an example that outputs the demo of three colors using different formats. Some colors are part of the [Flamerial](https://github.com/skippyr/flamerial) theme.
 
 ```cpp
 #include <iomanip>
@@ -81,8 +67,7 @@ int main() {
   tdk::RGBColor flamerialGreen =
       tdk::RGBColor(tdk::HexColor(0xa16205, tdk::Layer::Foreground));
   std::cout << std::left << std::setw(g_message.length()) << "Foreground"
-            << std::right << " "
-            << "Background" << std::endl
+            << std::right << " Background" << std::endl
             << std::string(g_message.length(), '-') << " "
             << std::string(g_message.length(), '-') << std::endl;
   writeColorDemo(red);
