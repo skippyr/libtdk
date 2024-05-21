@@ -172,6 +172,48 @@ int main() {
 
 ## ❡ Key Events
 
+```cpp
+#include <iomanip>
+
+#include <tdk.hpp>
+
+static void writeListItem(std::string item) {
+  std::cout << tdk::Weight::Bold
+            << tdk::XColor(tdk::XColorCode::Red, tdk::Layer::Foreground) << "  - "
+            << tdk::Weight::Default
+            << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Foreground)
+            << item << "." << std::endl;
+}
+
+int main() {
+  tdk::KeyEvent keyEvent;
+#ifdef _WIN32
+  SetConsoleOutputCP(CP_UTF8);
+#endif
+  std::cout << "Enter one of the following keyboard key sequences or grapheme:"
+            << std::endl;
+  writeListItem("Ctrl + A");
+  writeListItem("Any function key (F1 to F12)");
+  writeListItem("Up arrow key");
+  writeListItem("Dragon emoji 🐉");
+  tdk::readKeyEvent(keyEvent);
+  std::cout << std::endl << "You entered: ";
+  if (keyEvent.m_key == 'a' && keyEvent.m_hasCtrl && !keyEvent.m_hasAlt) {
+    std::cout << "Ctrl + A." << std::endl;
+  } else if (keyEvent.m_key >= tdk::Key::F1 &&
+             keyEvent.m_key <= tdk::Key::F12) {
+    std::cout << "a function key." << std::endl;
+  } else if (keyEvent.m_key == tdk::Key::UpArrow) {
+    std::cout << "the up arrow key." << std::endl;
+  } else if (keyEvent.m_key == *reinterpret_cast<int *>("🐉")) {
+    std::cout << "the dragon emoji." << std::endl;
+  } else {
+    std::cout << "a non-programmed key sequence or grapheme." << std::endl;
+  }
+  return 0;
+}
+```
+
 ## ❡ Cursor
 
 The terminal cursor coordinate can be get and set by using the [`getCursorCoordinate`](#getcursorcoordinate-function) and [`setCursorCoordinate`](#setcursorcoordinate-function) functions respectively.
@@ -219,6 +261,8 @@ You can ring the terminal bell by using the [`ringBell`](#ringbell-function) fun
 ## ❡ Animations
 
 ## ❡ Responsive Layouts
+
+## ❡ Windows Encoding
 
 ## ❡ Enum Classes
 

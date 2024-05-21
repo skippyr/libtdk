@@ -176,6 +176,10 @@ std::ostream &operator<<(std::ostream &stream, XColor color);
 std::ostream &operator<<(std::ostream &stream, Weight weight);
 bool operator==(int code, Key key);
 bool operator!=(int code, Key key);
+bool operator>(int code, Key key);
+bool operator>=(int code, Key key);
+bool operator<(int code, Key key);
+bool operator<=(int code, Key key);
 
 void clearCursorLine();
 void clearInputBuffer();

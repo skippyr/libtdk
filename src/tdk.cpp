@@ -159,6 +159,18 @@ bool tdk::operator!=(int code, Key key) {
   return code != static_cast<int>(key);
 }
 
+bool tdk::operator>(int code, Key key) { return code > static_cast<int>(key); }
+
+bool tdk::operator>=(int code, Key key) {
+  return code >= static_cast<int>(key);
+}
+
+bool tdk::operator<(int code, Key key) { return code < static_cast<int>(key); }
+
+bool tdk::operator<=(int code, Key key) {
+  return code <= static_cast<int>(key);
+}
+
 void tdk::clearCursorLine() { writeANSI("\x1b[2K\x1b[1G"); }
 
 void tdk::clearInputBuffer() {
