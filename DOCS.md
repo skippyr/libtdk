@@ -430,12 +430,12 @@ static void paintFooterElement() {
   tdk::setCursorCoordinate(0, g_windowDimensions.m_totalRows - 1);
   std::cout << tdk::Effect::Negative;
   for (int column = 0; column < g_windowDimensions.m_totalColumns; ++column) {
-     std::cout << " ";
+    std::cout << " ";
   }
   tdk::setCursorCoordinate(0, g_windowDimensions.m_totalRows - 1);
-  std::cout >> tdk::Effect::Negative << "Arrows" <<
-      tdk::Effect::Negative << "Move " >> tdk::Effect::Negative << "Enter" <<
-      tdk::Effect::Negative << "Confirm";
+  std::cout >>
+      tdk::Effect::Negative << "Arrows" << tdk::Effect::Negative << "Move " >>
+      tdk::Effect::Negative << "Enter" << tdk::Effect::Negative << "Confirm";
   tdk::setCursorCoordinate(g_windowDimensions.m_totalColumns -
                                g_version.length(),
                            g_windowDimensions.m_totalRows - 1);
@@ -456,8 +456,7 @@ int main() {
     if (tdk::readKeyEvent(keyEvent) ==
         tdk::EventStatus::WindowResizeInterrupt) {
       paintInterface(0);
-    }
-    else if (keyEvent.m_key == tdk::Key::DownArrow) {
+    } else if (keyEvent.m_key == tdk::Key::DownArrow) {
       g_selectedOffset =
           g_selectedOffset == g_options.size() - 1 ? 0 : g_selectedOffset + 1;
       paintBodyElement();
@@ -470,6 +469,35 @@ int main() {
            keyEvent.m_key != tdk::Key::Escape);
   tdk::setAlternateWindow(false);
   tdk::setCursorVisibility(true);
+  if (g_selectedOffset == g_options.size() - 1) {
+    std::cout << "Project canceled!" << std::endl;
+    std::exit(0);
+  }
+  signal(SIGWINCH, nullptr);
+  std::array<std::string, 6> frames = {"|", "/", "-", "|", "\\", "-"};
+  for (int timer = 0, frame = 0; timer < 101; ++timer) {
+    tdk::clearCursorLine();
+    std::cout << frames[frame] << " [" << timer << "%] "
+              << (timer < 40   ? "Downloading packages"
+                  : timer < 60 ? "Extracting contents"
+                  : timer < 90 ? "Creating directory structure"
+                               : "Finish your project setup")
+              << "...";
+    if (!(timer % 2)) {
+      ++frame;
+    }
+    if (frame == frames.size()) {
+      frame = 0;
+    }
+    std::cout.flush();
+#ifdef _WIN32
+    Sleep(100);
+#else
+    usleep(1000 * 100);
+#endif
+  }
+  tdk::clearCursorLine();
+  std::cout << "Done!" << std::endl;
 }
 ```
 
