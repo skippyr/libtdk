@@ -148,19 +148,21 @@ The following example demonstrates how to check their TTY statuses:
 #include <tdk.hpp>
 
 #define STATUS(a_stream)                                                       \
-  std::left << std::setw(6) << #a_stream << std::right << ": "                 \
+  std::left << std::setw(6) << #a_stream << std::right << " "                  \
             << tdk::XColor(status ? tdk::XColorCode::Green                     \
                                   : tdk::XColorCode::Red,                      \
                            tdk::Layer::Foreground)                             \
-            << ((status = tdk::isTTY(tdk::Stream::a_stream)) ? "True"          \
-                                                             : "False")        \
+            << ((status = tdk::isTTY(tdk::Stream::a_stream))                   \
+                    ? "Connected to TTY"                                       \
+                    : "Redirected or Piped")                                   \
             << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Foreground)   \
-            << "." << std::endl
+            << std::endl
 
 int main() {
   bool status = false;
-  std::cout << "TTY Statuses" << std::endl
-            << std::string(12, '-') << std::endl
+  std::cout << std::left << std::setw(6) << "Stream" << std::right << " Status"
+            << std::endl
+            << std::string(6, '-') << " " << std::string(19, '-') << std::endl
             << STATUS(Input) << STATUS(Output) << STATUS(Error);
   return 0;
 }
