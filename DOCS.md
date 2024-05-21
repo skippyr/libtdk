@@ -159,7 +159,7 @@ The following example demonstrates how to check their TTY statuses:
             << std::endl
 
 int main() {
-  bool status = false;
+  bool status;
   std::cout << std::left << std::setw(6) << "Stream" << std::right << " Status"
             << std::endl
             << std::string(6, '-') << " " << std::string(19, '-') << std::endl
@@ -170,17 +170,23 @@ int main() {
 
 ## ❡ Window
 
-The terminal window dimensions can be obtained by using the [`getWindowDimensions`](#getwindowdimensions-function).
+The terminal window dimensions can be get by using the [`getWindowDimensions`](#getwindowdimensions-function).
 
 The alternate window is an alternate buffer that creates the feeling of that a terminal applications is running in a separate environment. It can be opened and closed by using the [`setAlternateScreen`](#setalternatewindow-function) function.
 
 ## ❡ Cursor
+
+The terminal cursor coordinate can be get and set by using the [`getCursorCoordinate`](#getcursorcoordinate-function) and [`setCursorCoordinate`](#setcursorcoordinate-function) functions respectively.
+
+Its shape and visibility can be set by using the [`setCursorShape`](#setcursorshape-function) and [`setCursorVisibility`](#setcursorvisibility-function) functions respectively.
 
 ## ❡ Bell
 
 You can ring the terminal bell by using the [`ringBell`](#ringbell-function) function, possibly emitting a symbol in terminal tab bar, visual flash, a system notification or a beep from the motherboard speaker. Terminals might have this feature disabled by default.
 
 ## ❡ Key Events
+
+## ❡ Animations
 
 ## ❡ Responsive Layouts
 
@@ -190,7 +196,7 @@ You can ring the terminal bell by using the [`ringBell`](#ringbell-function) fun
 
 #### Brief
 
-An enum class containing the available terminal effects. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it by using the right shifting operator (`>>`) instead.
+Contains the available terminal effects. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it by using the right shifting operator (`>>`) instead.
 
 #### Enumerators
 
@@ -205,7 +211,7 @@ An enum class containing the available terminal effects. Apply one by using the 
 
 #### Brief
 
-An enum class containing the available terminal layers. It is used to create instances of the [`HexColor`](#hexcolor-class), [`RGBColor`](#rgbcolor-class) and [`XColor`](#xcolor-class) classes.
+Contains the available terminal layers. It is used to create instances of the [`HexColor`](#hexcolor-class), [`RGBColor`](#rgbcolor-class) and [`XColor`](#xcolor-class) classes.
 
 #### Enumerators
 
@@ -216,7 +222,7 @@ An enum class containing the available terminal layers. It is used to create ins
 
 #### Brief
 
-An enum class containing the standard terminal streams. You can check if they are connected to an interactive terminal by using the [`isTTY`](#istty-function) function.
+Contains the standard terminal streams. You can check if they are connected to an interactive terminal by using the [`isTTY`](#istty-function) function.
 
 #### Enumerators
 
@@ -224,13 +230,11 @@ An enum class containing the standard terminal streams. You can check if they ar
 - `Output`: the standard output stream (`stdout`).
 - `Error`: the standard error stream (`stderr`).
 
-#### Enumerators
-
 ### XColorCode Enum Class
 
 #### Brief
 
-An enum class containing the ANSI codes of the first 16 colors of the XTerm palette plus one more color used for resets. It is used to create instances of the [`XColor`](#xcolor-class) class. These codes map to colors of the active terminal theme and can be used to ensure consistency.
+Contains the ANSI codes of the first 16 colors of the XTerm palette plus one more color used for resets. It is used to create instances of the [`XColor`](#xcolor-class) class. These codes map to colors of the active terminal theme and can be used to ensure consistency.
 
 #### Enumerators
 
@@ -256,7 +260,7 @@ An enum class containing the ANSI codes of the first 16 colors of the XTerm pale
 
 #### Brief
 
-An enum containing the available terminal text weights. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class.
+Contains the available terminal text weights. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class.
 
 #### Enumerators
 
@@ -328,7 +332,7 @@ void ringBell();
 
 #### Brief
 
-Opens/closes the alternate window buffer.
+Opens/closes the alternate window: an alternate buffer that creates the feeling of that a terminal applications is running in a separate environment.
 
 #### Declaration
 
