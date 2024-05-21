@@ -83,19 +83,26 @@ Availabe text weights are contained inside of the [`Weight`](#weight-enum-class)
 The following example demonstrates how to use weights:
 
 ```cpp
+#include <array>
 #include <iomanip>
 
 #include <tdk.hpp>
 
 int main() {
   std::string message = "Here Be Dragons!";
-  int padding = 9;
-  std::cout << std::left << std::setw(padding) << "Bold" << tdk::Weight::Bold
-            << message << tdk::Weight::Default << std::endl
-            << std::setw(padding) << "Dim" << tdk::Weight::Dim << message
-            << tdk::Weight::Default << std::endl
-            << std::setw(padding) << "Default" << std::right << message
-            << std::endl;
+  std::array<std::string, 3> labels = {"Default", "Bold", "Dim"};
+  std::array<tdk::Weight, 3> weights = {tdk::Weight::Default, tdk::Weight::Bold,
+                                        tdk::Weight::Dim};
+  int padding = 7;
+  std::cout << std::left << std::setw(padding) << "Weight" << std::right
+            << " Preview" << std::endl
+            << std::string(padding, '-') << " "
+            << std::string(message.length(), '-') << std::endl;
+  for (int offset = 0; offset < labels.size(); ++offset) {
+    std::cout << std::left << std::setw(padding) << labels[offset] << std::right
+              << " " << weights[offset] << message << tdk::Weight::Default
+              << std::endl;
+  }
   return 0;
 }
 ```
@@ -107,31 +114,29 @@ Available text effects are contained inside of the [`Effect`](#effect-enum-class
 The following example demonstrates how to use effects:
 
 ```cpp
+#include <array>
 #include <iomanip>
 
 #include <tdk.hpp>
 
 int main() {
   std::string message = "Here Be Dragons!";
-  int padding = 15;
-  std::cout << std::left << std::setw(padding) << "Italic"
-            << tdk::Effect::Italic << message >>
-      tdk::Effect::Italic << std::endl
-                          << std::setw(padding) << "Underline"
-                          << tdk::Effect::Underline << message >>
-      tdk::Effect::Underline << std::endl
-                             << std::setw(padding) << "Blinking"
-                             << tdk::Effect::Blinking << message >>
-      tdk::Effect::Blinking << std::endl
-                            << std::setw(padding) << "Negative"
-                            << tdk::Effect::Negative << message >>
-      tdk::Effect::Negative << std::endl
-                            << std::setw(padding) << "Hidden"
-                            << tdk::Effect::Hidden << message >>
-      tdk::Effect::Hidden << std::endl
-                          << std::setw(padding) << "Strikethrough" << std::right
-                          << tdk::Effect::Strikethrough << message >>
-      tdk::Effect::Strikethrough << std::endl;
+  std::array<std::string, 6> labels = {
+      "Italic", "Underline", "Blinking", "Negative", "Hidden", "Strikethrough"};
+  std::array<tdk::Effect, 6> effects = {
+      tdk::Effect::Italic,   tdk::Effect::Underline,
+      tdk::Effect::Blinking, tdk::Effect::Negative,
+      tdk::Effect::Hidden,   tdk::Effect::Strikethrough};
+  int padding = 13;
+  std::cout << std::left << std::setw(padding) << "Effect" << std::right
+            << " Preview" << std::endl
+            << std::string(padding, '-') << " "
+            << std::string(message.length(), '-') << std::endl;
+  for (int offset = 0; offset < labels.size(); ++offset) {
+    std::cout << std::left << std::setw(padding) << labels[offset] << std::right
+              << " " << effects[offset] << message >>
+        effects[offset] << std::endl;
+  }
   return 0;
 }
 ```
