@@ -25,7 +25,10 @@ The library has some limitations over its usage. To avoid conflicts and malfunct
 
 - It uses byte oriented functions and operator overloadings from the standard library for UTF-8 encoding support. Thus, all standard streams must be kept unoriented or under that same orientation. Do not use wide character functions.
 
-- It does not provide full resets of terminal properties. Do not manipulate them manually.
+- It does not changes the Window encoding. You need to perform that change manually by using the [`SetConsoleOutputCP`](https://learn.microsoft.com/en-us/windows/console/setconsoleoutputcp) function with code page [`CP_UTF8`](https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers) at the start of your program in order to write UTF-8 graphemes.
+
+- It does not provide full resets of terminal properties. Do not manipulate them manually, unless you know what you are doing.
+
 
 ## ❡ Namespace
 
