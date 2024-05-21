@@ -15,13 +15,13 @@
 
 ## ❡ About
 
-This document will give you an overview about certain topics related to terminal manipulation, showing you how to use this library to handle them, and it will also include the documentation of each of its components.
+This document will give you an overview about certain topics related to terminal manipulation, showing you how to use The library to handle them, and it will also include the documentation of each of its components.
 
 The recommended way of reading it is directly on GitHub. That way as you will be able to use its **Outline** feature available at the top right corner of the website to access each section more easily.
 
 ## ❡ Usage Limitation
 
-This library has some limitations over its usage. To avoid conflicts and malfunctions, you must follow these rules:
+The library has some limitations over its usage. To avoid conflicts and malfunctions, you must follow these rules:
 
 - It uses byte oriented functions and operator overloadings from the standard library for UTF-8 encoding support. Thus, all standard streams must be kept unoriented or under that same orientation. Do not use wide character functions.
 
@@ -29,21 +29,21 @@ This library has some limitations over its usage. To avoid conflicts and malfunc
 
 ## ❡ Namespace
 
-This library reserves names under the `tdk` namespace. To avoid naming conflicts, it is highly recommend to not short them by using the `using namespace` keywords.
+The library reserves names under the `tdk` namespace. To avoid naming conflicts, it is highly recommend to not short them by using the `using namespace` keywords.
 
 ## ❡ Colors
 
-This library allows you to set terminals colors into layers by using different color formats. Available layers are contained in the [`Layer`](#layer-enum-class) enum class. Each color format accepted is a class:
+The library allows you to set terminals colors into layers by using different color formats. Available layers are contained in the [`Layer`](#layer-enum-class) enum class. Each color format accepted is a class:
 
 - [`HexColor`](#hexcolor-class): refers to a hexadecimal color.
 - [`RGBColor`](#rgbcolor-class): refers to an RGB color.
-- [`XColor`](#xcolor-class): refers to a color from the XTerm palette: a terminal exclusive palette containing 256 colors. The ANSI code of the first 16 colors of this palette plus one more color intended for resets are contained in the [`XColorCode`](#xcolorcode-enum-class) enum class. These codes map to colors of the active terminal theme and can be used to ensure consistency.
+- [`XColor`](#xcolor-class): refers to a color from the XTerm palette: a terminal exclusive palette containing 256 colors. The ANSI code of the first 16 colors of this palette plus one more color used for resets are contained in the [`XColorCode`](#xcolorcode-enum-class) enum class. These codes map to colors of the active terminal theme and can be used to ensure consistency.
 
 A color can be applied by using the left shifting operator (`<<`) with an instance of a color class against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. To be removed, you must apply an instance of the [`XColor`](#xcolor-class) class constructed with the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
 
 Colors are not applied if the standard output and error streams are being redirected or piped. Using a hex or RGB colors require the terminal to have truecolor support.
 
-The following example shows an example that outputs the demo of three colors using different formats. Some colors are part of the [Flamerial](https://github.com/skippyr/flamerial) theme.
+The following example outputs the demo of three colors using different formats. Some colors are part of the [Flamerial](https://github.com/skippyr/flamerial) theme:
 
 ```cpp
 #include <iomanip>
@@ -78,9 +78,25 @@ int main() {
 
 ```
 
-Check the specific documentation for the enum classes and classes used in this section for more details.
-
 ## ❡ Weights
+
+The library allow you to set terminal text weights, also refered as "foreground brightness". Availabe weight are contained inside of the `Weight` enum class. Apply one by using the left shifting operator (`<<`) against an instance of the `std::ostream` class.
+
+Weights are not applied if the standard output and error streams are being redirected or piped.
+
+The following example is a demo for the weights:
+
+```cpp
+#include <tdk.hpp>
+
+int main() {
+  std::string message = "Here Be Dragons!";
+  std::cout << tdk::Weight::Bold << message << std::endl
+            << tdk::Weight::Dim << message << std::endl
+            << tdk::Weight::Default << message << std::endl;
+  return 0;
+}
+```
 
 ## ❡ Effects
 
@@ -111,11 +127,11 @@ An enum class containing the available terminal layers. It is used to create ins
 
 #### Brief
 
-An enum class containing the ANSI codes of the first 16 colors of the XTerm palette plus one more color intended for resets. It is used to create instances of the [`XColor`](#xcolor-class) class. These codes map to colors of the active terminal theme and can be used to ensure consistency.
+An enum class containing the ANSI codes of the first 16 colors of the XTerm palette plus one more color used for resets. It is used to create instances of the [`XColor`](#xcolor-class) class. These codes map to colors of the active terminal theme and can be used to ensure consistency.
 
 #### Enumerators
 
-- `Default`: the default color, intended for resets.
+- `Default`: the default color is used for resets.
 - `Black`: the regular variant of the black color.
 - `Red`: the regular variant of the red color.
 - `Green`: the regular variant of the green color.
@@ -132,6 +148,20 @@ An enum class containing the ANSI codes of the first 16 colors of the XTerm pale
 - `LightMagenta`: the light variant of the magenta color.
 - `LightCyan`: the light variant of the cyan color.
 - `LightWhite`: the light variant of the white color.
+
+### Weight Enum Class
+
+#### Brief
+
+An enum containing the available terminal text weights. Apply one by using the left shifting operator (`<<`) against an instance of the `std::ostream` class.
+
+Weights are not applied if the standard output and error streams are being redirected or piped.
+
+#### Enumerators
+
+- `Default`: the default weight is used for resets.
+- `Bold`: the bold weight is usually rendered as bold and/or with bright colors.
+- `Dim`: the dim weight is usually rendered with faint colors.
 
 ## ❡ Functions
 
@@ -183,7 +213,7 @@ Inverts the layer the color applies on.
 
 ###### Return Value
 
-A copy of the color with the inverted layer.
+A color with the inverted layer.
 
 ### RGBColor Class
 
@@ -246,7 +276,7 @@ Inverts the layer the color applies on.
 
 ###### Return Value
 
-Returns a color with the inverted layer.
+A color with the inverted layer.
 
 ### XColor Class
 
@@ -305,7 +335,7 @@ Inverts the layer the color applies on.
 
 ###### Return Value
 
-A copy of the color with the inverted layer.
+A color with the inverted layer.
 
 ## ❡ Operator Overloadings
 
