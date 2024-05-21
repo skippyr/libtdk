@@ -313,19 +313,20 @@ int main() {
     tdk::setCursorShape(shapes[offset]);
     tdk::clearInputBuffer();
     tdk::readKeyEvent(keyEvent);
-    if (keyEvent.m_key == tdk::Key::LeftArrow ||
-        keyEvent.m_key == tdk::Key::DownArrow) {
-      offset = !offset ? names.size() - 1 : offset - 1;
-    } else if (keyEvent.m_key == tdk::Key::RightArrow ||
-               keyEvent.m_key == tdk::Key::UpArrow) {
-      offset = offset == names.size() - 1 ? 0 : offset + 1;
+    if ((keyEvent.m_key == tdk::Key::LeftArrow ||
+         keyEvent.m_key == tdk::Key::DownArrow) &&
+        offset) {
+      --offset;
+    } else if ((keyEvent.m_key == tdk::Key::RightArrow ||
+                keyEvent.m_key == tdk::Key::UpArrow) &&
+               offset != names.size() - 1) {
+      ++offset;
     }
   } while (keyEvent.m_key != tdk::Key::Enter);
   tdk::setCursorShape(tdk::Shape::Default);
   std::cout << std::endl << std::endl;
   return 0;
 }
-
 ```
 
 The line the cursor is in can be cleared by using the [`clearCursorLine`](#clearcursorline-function) function.
