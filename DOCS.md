@@ -80,7 +80,7 @@ int main() {
 
 ## ❡ Weights
 
-The library allows you to set terminal text weights, also refered as "foreground brightness". Availabe weight are contained inside of the `Weight` enum class. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class.
+The library allows you to set terminal text weights, also refered as "foreground brightness". Availabe weight are contained inside of the [`Weight`](#weight-enum-class) enum class. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class.
 
 Weights are not applied if the standard output and error streams are being redirected or piped.
 
@@ -101,12 +101,13 @@ int main() {
             << tdk::Weight::Default << std::endl
             << std::setw(padding) << "Default" << std::right << message
             << std::endl;
+  return 0;
 }
 ```
 
 ## ❡ Effects
 
-The library allows you to set terminal text effect. Available effects are contained inside of the `Effect` enum class. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it by using the right shifting operator (`>>`) instead.
+The library allows you to set terminal text effect. Available effects are contained inside of the [`Effect`](#effect-enum-class) enum class. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it by using the right shifting operator (`>>`) instead.
 
 Effects are not applied if the standard output and error streams are being redirected or piped.
 
@@ -140,10 +141,35 @@ int main() {
       tdk::Effect::Strikethrough << std::endl;
   return 0;
 }
-
 ```
 
 ## ❡ Standard Streams
+
+The terminal streams are contained in the [`Stream`](#streams-enum-class) enum class. You can check if they are connected to an interactive terminal by using the [`isTTY`](#istty-function) function.
+
+The following example shows how to use them to output the TTY statuses of each stream:
+
+```cpp
+#include <tdk.hpp>
+
+#define BOOLEAN(a_value)                                                       \
+  tdk::XColor(a_value ? tdk::XColorCode::Green : tdk::XColorCode::Red,         \
+              tdk::Layer::Foreground)                                          \
+      << (a_value ? "True" : "False")                                          \
+      << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Foreground)
+
+int main() {
+  std::cout << "TTY Statuses" << std::endl
+            << "------------" << std::endl
+            << "Input : " << BOOLEAN(tdk::isTTY(tdk::Stream::Input))
+            << std::endl
+            << "Output: " << BOOLEAN(tdk::isTTY(tdk::Stream::Output))
+            << std::endl
+            << "Error : " << BOOLEAN(tdk::isTTY(tdk::Stream::Error))
+            << std::endl;
+  return 0;
+}
+```
 
 ## ❡ Window
 
@@ -182,6 +208,20 @@ An enum class containing the available terminal layers. It is used to create ins
 
 - `Foreground`: the foreground layer.
 - `Background`: the background layer.
+
+### Stream Enum Class
+
+#### Brief
+
+An enum class containing the standard terminal streams. You can check if they are connected to an interactive terminal by using the [`isTTY`](#istty-function) function.
+
+#### Enumerators
+
+- `Input`: the standard input stream (`stdin`).
+- `Output`: the standard output stream (`stdout`).
+- `Error`: the standard error stream (`stderr`).
+
+#### Enumerators
 
 ### XColorCode Enum Class
 
@@ -224,6 +264,26 @@ Weights are not applied if the standard output and error streams are being redir
 - `Dim`: the dim weight is usually rendered with faint colors.
 
 ## ❡ Functions
+
+### isTTY Function
+
+#### Brief
+
+Checks if a standard stream is connected to an interactive terminal (TTY).
+
+#### Declaration
+
+```cpp
+bool isTTY(Stream stream);
+```
+
+#### Parameters
+
+- `stream`: the stream to be checked.
+
+#### Return Value
+
+A boolean that states the check result.
 
 ## ❡ Classes
 

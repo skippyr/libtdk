@@ -35,18 +35,6 @@ The following dependencies must be installed before installing it:
 
 ### Procedures
 
-
-## ❡ Uninstall
-
-To uninstall this software, using a terminal, follow these steps:
-
-- Go back to the directory of the repository you cloned.
-- Use `make` to uninstall it:
-
-```sh
-make uninstall;
-```
-
 ## ❡ Documentation
 
 ## ❡ Help
