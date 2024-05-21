@@ -256,6 +256,8 @@ The terminal cursor coordinate can be get and set by using the [`getCursorCoordi
 
 Its shape and visibility can be set by using the [`setCursorShape`](#setcursorshape-function) and [`setCursorVisibility`](#setcursorvisibility-function) functions respectively. Available shapes are contained in the [`Shape`](#shape-enum-class) enum class.
 
+The line the cursor is in can be cleared by using the [`clearCursorLine`](#clearcursorline-function) function.
+
 The following example demonstrates how to use them to build a menu to showcase the cursor shapes:
 
 ```cpp
@@ -329,21 +331,6 @@ int main() {
 }
 ```
 
-The line the cursor is in can be cleared by using the [`clearCursorLine`](#clearcursorline-function) function.
-
-The following example demonstrates how to use it to replace the content of a line:
-
-```cpp
-#include <tdk.hpp>
-
-int main() {
-  std::cout << "Hello, world!";
-  tdk::clearCursorLine();
-  std::cout << "Here Be Dragons!" << std::endl;
-  return 0;
-}
-```
-
 ## ❡ Window
 
 The terminal window dimensions can be get by using the [`getWindowDimensions`](#getwindowdimensions-function).
@@ -383,8 +370,6 @@ You can ring the terminal bell by using the [`ringBell`](#ringbell-function) fun
 ## ❡ Animations
 
 ## ❡ Responsive Layouts
-
-## ❡ Windows Encoding
 
 ## ❡ Enum Classes
 
