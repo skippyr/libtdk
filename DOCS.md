@@ -15,7 +15,7 @@
 
 ## ❡ About
 
-This document will give you an overview about certain topics related to terminal manipulation, showing you how to use The library to handle them, and it will also include the documentation of each of its components.
+This document will give you an overview about certain topics related to terminal manipulation, showing you how to use the library to handle them, and it will also include the documentation of each of its components.
 
 The recommended way of reading it is directly on GitHub. That way as you will be able to use its **Outline** feature available at the top right corner of the website to access each section more easily.
 
@@ -33,15 +33,15 @@ The library reserves names under the `tdk` namespace. To avoid naming conflicts,
 
 ## ❡ Colors
 
-The library allows you to set terminals colors into layers by using different color formats. Available layers are contained in the [`Layer`](#layer-enum-class) enum class. Each color format accepted is a class:
+You can set terminals colors into layers using different color formats. Available layers are contained in the [`Layer`](#layer-enum-class) enum class and each color  format accepted is a class:
 
 - [`HexColor`](#hexcolor-class): refers to a hexadecimal color.
 - [`RGBColor`](#rgbcolor-class): refers to an RGB color.
 - [`XColor`](#xcolor-class): refers to a color from the XTerm palette: a terminal exclusive palette containing 256 colors. The ANSI code of the first 16 colors of this palette plus one more color used for resets are contained in the [`XColorCode`](#xcolorcode-enum-class) enum class. These codes map to colors of the active terminal theme and can be used to ensure consistency.
 
-A color can be applied by using the left shifting operator (`<<`) with an instance of a color class against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. To be removed, you must apply an instance of the [`XColor`](#xcolor-class) class constructed with the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
+Apply one by using the left shifting operator (`<<`) with an instance of a color class against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it by applying an instance of the [`XColor`](#xcolor-class) class constructed with the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
 
-The following example outputs the demo of three colors using different formats. Some colors are part of the [Flamerial](https://github.com/skippyr/flamerial) theme:
+The following example demonstrates how to use colors:
 
 ```cpp
 #include <iomanip>
@@ -78,9 +78,9 @@ int main() {
 
 ## ❡ Weights
 
-The library allows you to set terminal text weights, also refered as "foreground brightness". Availabe weight are contained inside of the [`Weight`](#weight-enum-class) enum class. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class.
+Availabe text weights are contained inside of the [`Weight`](#weight-enum-class) enum class. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class.
 
-The following example is a demo for the weights:
+The following example demonstrates how to use weights:
 
 ```cpp
 #include <iomanip>
@@ -90,7 +90,6 @@ The following example is a demo for the weights:
 int main() {
   std::string message = "Here Be Dragons!";
   int padding = 9;
-  std::cout >> tdk::Effect::Strikethrough;
   std::cout << std::left << std::setw(padding) << "Bold" << tdk::Weight::Bold
             << message << tdk::Weight::Default << std::endl
             << std::setw(padding) << "Dim" << tdk::Weight::Dim << message
@@ -103,9 +102,9 @@ int main() {
 
 ## ❡ Effects
 
-The library allows you to set terminal text effect. Available effects are contained inside of the [`Effect`](#effect-enum-class) enum class. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it by using the right shifting operator (`>>`) instead.
+Available text effects are contained inside of the [`Effect`](#effect-enum-class) enum class. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it by using the right shifting operator (`>>`) instead.
 
-The following example is a demo for effects:
+The following example demonstrates how to use effects:
 
 ```cpp
 #include <iomanip>
@@ -141,7 +140,7 @@ int main() {
 
 The terminal streams are contained in the [`Stream`](#streams-enum-class) enum class. You can check if they are connected to an interactive terminal by using the [`isTTY`](#istty-function) function.
 
-The following example shows how to use them to output the TTY statuses of each stream:
+The following example demonstrates how to check their TTY statuses:
 
 ```cpp
 #include <tdk.hpp>
@@ -169,13 +168,13 @@ int main() {
 
 The terminal window dimensions can be obtained by using the [`getWindowDimensions`](#getwindowdimensions-function).
 
-The alternate window is an alternate buffer that can be used instead of the primary to write changes. This is what creates the feeling of that terminal applications are running in a separate environment. It can be opened and closed by using the [`setAlternateScreen`](#setalternatewindow-function) function.
+The alternate window is an alternate buffer that creates the feeling of that a terminal applications is running in a separate environment. It can be opened and closed by using the [`setAlternateScreen`](#setalternatewindow-function) function.
 
 ## ❡ Cursor
 
 ## ❡ Bell
 
-The library allows you to ring the terminal bell by using the [`ringBell`](#ringbell-function) function, possibly emitting a symbol in terminal tab bar, visual flash, a system notification or a beep from the motherboard speaker. Terminals might have this feature disabled by default.
+You can ring the terminal bell by using the [`ringBell`](#ringbell-function) function, possibly emitting a symbol in terminal tab bar, visual flash, a system notification or a beep from the motherboard speaker. Terminals might have this feature disabled by default.
 
 ## ❡ Key Events
 
