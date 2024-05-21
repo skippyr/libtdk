@@ -175,11 +175,13 @@ int main() {
 
 ## ❡ Key Events
 
-You can use the [`readkeyEvent`](#readkeyevent-function) function to read the standard input buffer for graphemes or events in order to parse key events and, exclusively on Windows, to intercept window resize events that happens synchronously on the same event loop and treat them as you see fit.
+You can use the [`readkeyEvent`](#readkeyevent-function) function to read key events from the standard input buffer. Exclusively on Windows, this function can be interrupted by window resize events that happend in the same event loop. It holds the thread until a valid key event is pulled or it is interrupted.
 
-This function holds the thread until a valid key event is pulled from the input buffer or, exclusively on Windows, a window resize interrupt happens. In case of content pasting into the terminal this function may leave unread content in there. Use the [`clearInputBuffer`](#clearinputbuffer-function) function before it to be able to perform new readings without conflicts with pre-existing contents.
+The key read may be an UTF-8 grapheme or a key value from the [`Key`](#key-enum-class) enum class static casted to an `int` type. Values from the `Key` enum can be compared directly against the key by using comparasion operators such as `==`, `>`, `>=`, `<` and `<=`.
 
-Any grapheme pasted into the input buffer is handled as a key event, making this function capable of reading any UTF-8 grapheme. Graphemes can be compared to the key read by reinterpret casting them to the `int` type.
+As a limitation of this library: modifier keys are only allowed to be detected in keys of the English alphabet (lowercase (`a-z`) and uppercase (`A-Z`) letters), as those are the ranges in which terminals offer the greatest support. The Shift modifier key is intended to be detected by checking the key received: For example, lowercase letters become uppercase when it is used.
+
+There may be some key sequences in which the library will be unable to distinguish the keys used. For example: the sequences `Ctrl + i` and `Ctrl + j` are the same as keys `Key::Backspace` and `Key::Enter` respectively because they have the same underlying code sent by the terminal. Some other key sequences may be reserved by the terminal.
 
 The following example shows how to use it:
 
@@ -307,6 +309,8 @@ Contains the available terminal effects. Apply one by using the left shifting op
 - `Negative`: the negative effect swaps the foreground and background colors.
 - `Hidden`: the hidden effect makes the text hard to see or invisible.
 - `Strikethrough`: the strike-through effect draws a horizontal line in the middle of the text.
+
+### Key Enum Class
 
 ### Layer Enum Class
 
