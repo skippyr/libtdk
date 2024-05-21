@@ -59,21 +59,16 @@ template <typename T> static void writeColorDemo(T foregroundColor) {
 }
 
 int main() {
-  tdk::XColor red = tdk::XColor(tdk::XColorCode::Red, tdk::Layer::Foreground);
-  tdk::HexColor flamerialYellow =
-      tdk::HexColor(0xe0a100, tdk::Layer::Foreground);
-  tdk::RGBColor flamerialGreen =
-      tdk::RGBColor(tdk::HexColor(0xa16205, tdk::Layer::Foreground));
   std::cout << std::left << std::setw(g_message.length()) << "Foreground"
             << std::right << " Background" << std::endl
             << std::string(g_message.length(), '-') << " "
             << std::string(g_message.length(), '-') << std::endl;
-  writeColorDemo(red);
-  writeColorDemo(flamerialYellow);
-  writeColorDemo(flamerialGreen);
+  writeColorDemo(tdk::XColor(tdk::XColorCode::Red, tdk::Layer::Foreground));
+  writeColorDemo(tdk::HexColor(0xe0a100, tdk::Layer::Foreground));
+  writeColorDemo(
+      tdk::RGBColor(tdk::HexColor(0xa16205, tdk::Layer::Foreground)));
   return 0;
 }
-
 ```
 
 ## ❡ Weights
