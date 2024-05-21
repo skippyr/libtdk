@@ -167,9 +167,9 @@ int main() {
 
 ## ❡ Window
 
-getWindowDimensions
+The terminal window dimensions can be obtained by using the [`getWindowDimensions`](#getwindowdimensions-function).
 
-Alternate window
+The alternate window is an alternate buffer that can be used instead of the primary to write changes. This is what creates the feeling of that terminal applications are running in a separate environment. It can be opened and closed by using the [`setAlternateScreen`](#setalternatewindow-function) function.
 
 ## ❡ Cursor
 
@@ -263,6 +263,32 @@ An enum containing the available terminal text weights. Apply one by using the l
 
 ## ❡ Functions
 
+### clearCursorLine Function
+
+### clearInputBuffer Function
+
+### getCursorCoordinate Function
+
+### getWindowDimensions Function
+
+#### Brief
+
+Gets the terminal window dimensions if successful.
+
+#### Declaration
+
+```cpp
+int getWindowDimensions(Dimensions &dimensions);
+```
+
+#### Parameters
+
+- `dimensions`: the address where the dimensions information will be put into.
+
+#### Return Value
+
+0 if successful and -1 otherwise.
+
 ### isTTY Function
 
 #### Brief
@@ -295,7 +321,59 @@ Rings the terminal bell, possibly emitting a symbol in terminal tab bar, visual 
 void ringBell();
 ```
 
+### setAlternateWindow Function
+
+#### Brief
+
+Opens/closes the alternate window buffer.
+
+#### Declaration
+
+```cpp
+void setAlternateWindow(bool isToOpen);
+```
+
+#### Parameters
+
+- `isToOpen`: a boolean that states the alternate window should be opened.
+
+### setCursorCoordinate Function
+
+### setCursorShape Function
+
+### setCursorVisibility Function
+
 ## ❡ Classes
+
+### Dimensions Class
+
+#### Brief
+
+A class that represents terminal dimensions.
+
+#### Constructors
+
+##### Declaration 1
+
+```cpp
+Dimensions();
+```
+
+##### Declaration 2
+
+```cpp
+Dimensions(unsigned short totalColumns, unsigned short totalRows);
+```
+
+##### Parameters 2
+
+- `totalColumns`: the total columns of the dimensions.
+- `totalRows`: the total rows of the dimensions.
+
+#### Public Member Variables
+
+- (`unsigned short`) `m_totalColumns`: the total columns of the dimensions.
+- (`unsigned short`) `m_totalRows`: the total rows of the dimensions.
 
 ### HexColor Class
 
