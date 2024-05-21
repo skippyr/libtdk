@@ -80,7 +80,7 @@ int main() {
 
 ## ❡ Weights
 
-The library allow you to set terminal text weights, also refered as "foreground brightness". Availabe weight are contained inside of the `Weight` enum class. Apply one by using the left shifting operator (`<<`) against an instance of the `std::ostream` class.
+The library allows you to set terminal text weights, also refered as "foreground brightness". Availabe weight are contained inside of the `Weight` enum class. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class.
 
 Weights are not applied if the standard output and error streams are being redirected or piped.
 
@@ -91,14 +91,47 @@ The following example is a demo for the weights:
 
 int main() {
   std::string message = "Here Be Dragons!";
-  std::cout << tdk::Weight::Bold << message << std::endl
-            << tdk::Weight::Dim << message << std::endl
-            << tdk::Weight::Default << message << std::endl;
+  std::cout >> tdk::Effect::Strikethrough;
+  std::cout << "Bold    " << tdk::Weight::Bold << message << tdk::Weight::Default << std::endl
+            << "Dim     " << tdk::Weight::Dim << message << tdk::Weight::Default << std::endl
+            << "Default " << message << std::endl;
   return 0;
 }
 ```
 
 ## ❡ Effects
+
+The library allows you to set terminal text effect. Available effects are contained inside of the `Effect` enum class. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it by using the right shifting operator (`>>`) instead.
+
+Effects are not applied if the standard output and error streams are being redirected or piped.
+
+The following example is a demo for effects:
+
+```cpp
+#include <tdk.hpp>
+
+int main() {
+  std::string message = "Here Be Dragons!";
+  std::cout << "Italic        " << tdk::Effect::Italic << message >>
+      tdk::Effect::Italic << std::endl
+                          << "Underline     " << tdk::Effect::Underline
+                          << message >>
+      tdk::Effect::Underline << std::endl
+                             << "Blinking      " << tdk::Effect::Blinking
+                             << message >>
+      tdk::Effect::Blinking << std::endl
+                            << "Negative      " << tdk::Effect::Negative
+                            << message >>
+      tdk::Effect::Negative << std::endl
+                            << "Hidden        " << tdk::Effect::Hidden
+                            << message >>
+      tdk::Effect::Hidden << std::endl
+                          << "Strikethrough " << tdk::Effect::Strikethrough
+                          << message >>
+      tdk::Effect::Strikethrough << std::endl;
+  return 0;
+}
+```
 
 ## ❡ Standard Streams
 
@@ -111,6 +144,23 @@ int main() {
 ## ❡ Responsive Layouts
 
 ## ❡ Enum Classes
+
+### Effect Enum Class
+
+#### Brief
+
+An enum class containing the available terminal effects. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it by using the right shifting operator (`>>`) instead.
+
+Effects are not applied if the standard output and error streams are being redirected or piped.
+
+#### Enumerators
+
+- `Italic`: the italic effect makes the text curly. The terminal might require the use of a font with italic style in order to make it visible.
+- `Underline`: the underline effect draws a horizontal line below the text.
+- `Blinking`: the blinking effect makes the text blink indefinitely.
+- `Negative`: the negative effect swaps the foreground and background colors.
+- `Hidden`: the hidden effect makes the text hard to see or invisible.
+- `Strikethrough`: the strike-through effect draws a horizontal line in the middle of the text.
 
 ### Layer Enum Class
 
@@ -153,14 +203,14 @@ An enum class containing the ANSI codes of the first 16 colors of the XTerm pale
 
 #### Brief
 
-An enum containing the available terminal text weights. Apply one by using the left shifting operator (`<<`) against an instance of the `std::ostream` class.
+An enum containing the available terminal text weights. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class.
 
 Weights are not applied if the standard output and error streams are being redirected or piped.
 
 #### Enumerators
 
 - `Default`: the default weight is used for resets.
-- `Bold`: the bold weight is usually rendered as bold and/or with bright colors.
+- `Bold`: the bold weight is usually rendered as bold and/or with bright colors. The terminal might require the use a font with bold weight in order to make it visible.
 - `Dim`: the dim weight is usually rendered with faint colors.
 
 ## ❡ Functions
