@@ -342,9 +342,34 @@ void setAlternateWindow(bool isToOpen);
 
 #### Parameters
 
-- `isToOpen`: a boolean that states the alternate window should be opened.
+- `isToOpen`: a boolean that states the alternate window should be opened or closed
 
 ### setCursorCoordinate Function
+
+#### Brief
+
+Sets the terminal cursor coordinate. The coordinate will always be fit within the window boundaries, use the [`getWindowDimensions`](#getwindowdimensions-function) function to treat possible exceptions.
+
+#### Declaration 1
+
+```cpp
+void setCursorCoordinate(unsigned short column, unsigned short row);
+```
+
+#### Parameters 1
+
+- `column`: the column component of the coordinate.
+- `row`: the row component of the coordinate.
+
+#### Declaration 2
+
+```cpp
+void setCursorCoordinate(Coordinate &coordinate);
+```
+
+#### Parameters 2
+
+- `coordinate`: the coordinate to be set.
 
 ### setCursorShape Function
 
