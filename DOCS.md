@@ -87,15 +87,20 @@ Weights are not applied if the standard output and error streams are being redir
 The following example is a demo for the weights:
 
 ```cpp
+#include <iomanip>
+
 #include <tdk.hpp>
 
 int main() {
   std::string message = "Here Be Dragons!";
+  int padding = 9;
   std::cout >> tdk::Effect::Strikethrough;
-  std::cout << "Bold    " << tdk::Weight::Bold << message << tdk::Weight::Default << std::endl
-            << "Dim     " << tdk::Weight::Dim << message << tdk::Weight::Default << std::endl
-            << "Default " << message << std::endl;
-  return 0;
+  std::cout << std::left << std::setw(padding) << "Bold" << tdk::Weight::Bold
+            << message << tdk::Weight::Default << std::endl
+            << std::setw(padding) << "Dim" << tdk::Weight::Dim << message
+            << tdk::Weight::Default << std::endl
+            << std::setw(padding) << "Default" << std::right << message
+            << std::endl;
 }
 ```
 
@@ -108,29 +113,34 @@ Effects are not applied if the standard output and error streams are being redir
 The following example is a demo for effects:
 
 ```cpp
+#include <iomanip>
+
 #include <tdk.hpp>
 
 int main() {
   std::string message = "Here Be Dragons!";
-  std::cout << "Italic        " << tdk::Effect::Italic << message >>
+  int padding = 15;
+  std::cout << std::left << std::setw(padding) << "Italic"
+            << tdk::Effect::Italic << message >>
       tdk::Effect::Italic << std::endl
-                          << "Underline     " << tdk::Effect::Underline
-                          << message >>
+                          << std::setw(padding) << "Underline"
+                          << tdk::Effect::Underline << message >>
       tdk::Effect::Underline << std::endl
-                             << "Blinking      " << tdk::Effect::Blinking
-                             << message >>
+                             << std::setw(padding) << "Blinking"
+                             << tdk::Effect::Blinking << message >>
       tdk::Effect::Blinking << std::endl
-                            << "Negative      " << tdk::Effect::Negative
-                            << message >>
+                            << std::setw(padding) << "Negative"
+                            << tdk::Effect::Negative << message >>
       tdk::Effect::Negative << std::endl
-                            << "Hidden        " << tdk::Effect::Hidden
-                            << message >>
+                            << std::setw(padding) << "Hidden"
+                            << tdk::Effect::Hidden << message >>
       tdk::Effect::Hidden << std::endl
-                          << "Strikethrough " << tdk::Effect::Strikethrough
-                          << message >>
+                          << std::setw(padding) << "Strikethrough" << std::right
+                          << tdk::Effect::Strikethrough << message >>
       tdk::Effect::Strikethrough << std::endl;
   return 0;
 }
+
 ```
 
 ## ❡ Standard Streams
