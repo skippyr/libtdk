@@ -373,7 +373,35 @@ void setCursorCoordinate(Coordinate &coordinate);
 
 ### setCursorShape Function
 
+#### Brief
+
+Sets the terminal cursor shape.
+
+#### Declaration
+
+```cpp
+void setCursorShape(Shape shape);
+```
+
+#### Parameters
+
+- `shape`: the shape to be set.
+
 ### setCursorVisibility Function
+
+#### Brief
+
+Sets the terminal cursor visibility.
+
+#### Declaration
+
+```cpp
+void setCursorVisibility(bool isToShow);
+```
+
+#### Parameters
+
+- `isToShow`: a boolean that states the cursor should be visible or not.
 
 ## ❡ Classes
 
