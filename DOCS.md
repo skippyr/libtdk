@@ -390,6 +390,17 @@ Contains the available terminal effects. Apply one by using the left shifting op
 
 ### Key Enum Class
 
+#### Brief
+
+Contains keys mostly not represented by UTF-8 graphemes. For exceptions, the values here may be used to improve readability. They are intended to be used to compose the information retrieved by the [`readKeyEvent`](#readkeyevent-function) function.
+
+#### Enumerators
+
+- `LeftArrow`, `UpArrow`, `RightArrow` and `DownArrow`: the arrow keys.
+- `F1` to `F12`: the function keys.
+- `PageUp`, `PageDown`, `Escape` `End` and `Home`: the navigation keys.
+- `Insert`, `Delete`, `Tab`, `Enter`, `Spacebar` and `Backspace`: the insertion/deletion keys.
+
 ### Layer Enum Class
 
 #### Brief
@@ -426,22 +437,14 @@ Contains the ANSI codes of the first 16 colors of the XTerm palette plus one mor
 #### Enumerators
 
 - `Default`: the default color is used for resets.
-- `Black`: the regular variant of the black color.
-- `Red`: the regular variant of the red color.
-- `Green`: the regular variant of the green color.
-- `Yellow`: the regular variant of the yellow color.
-- `Blue`: the regular variant of the blue color.
-- `Magenta`: the regular variant of the magenta color.
-- `Cyan`: the regular variant of the cyan color.
-- `White`: the regular variant of the white color.
-- `LightBlack`: the light variant of the black color.
-- `LightRed`: the light variant of the red color.
-- `LightGreen`: the light variant of the green color.
-- `LightYellow`: the light variant of the yellow color.
-- `LightBlue`: the light variant of the blue color.
-- `LightMagenta`: the light variant of the magenta color.
-- `LightCyan`: the light variant of the cyan color.
-- `LightWhite`: the light variant of the white color.
+- `Black`, `LightBlack`: the regular and light variants of the black color.
+- `Red`, `LightRed`: the regular and light variants of the red color.
+- `Green`, `LightGreen`: the regular and light variants of the green color.
+- `Yellow`, `LightYellow`: the regular and light variants of the yellow color.
+- `Blue`, `LightBlue`: the regular and light variants of the blue color.
+- `Magenta`, `LightMagenta`: the regular and light variants of the magenta color.
+- `Cyan`, `LightCyan`: the regular and light variants of the cyan color.
+- `White`, `LightWhite`: the regular and light variants of the white color.
 
 #### Brief
 
