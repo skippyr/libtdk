@@ -140,6 +140,8 @@ int main() {
 
 The terminal streams are contained in the [`Stream`](#streams-enum-class) enum class. You can check if they are connected to an interactive terminal by using the [`isTTY`](#istty-function) function.
 
+The standard input buffer can be cleared by using the [`clearInputBuffer`](#clearinputbuffer-function).
+
 The following example demonstrates how to check their TTY statuses:
 
 ```cpp
@@ -168,11 +170,7 @@ int main() {
 }
 ```
 
-## ❡ Window
-
-The terminal window dimensions can be get by using the [`getWindowDimensions`](#getwindowdimensions-function).
-
-The alternate window is an alternate buffer that creates the feeling of that a terminal applications is running in a separate environment. It can be opened and closed by using the [`setAlternateScreen`](#setalternatewindow-function) function.
+## ❡ Key Events
 
 ## ❡ Cursor
 
@@ -180,11 +178,43 @@ The terminal cursor coordinate can be get and set by using the [`getCursorCoordi
 
 Its shape and visibility can be set by using the [`setCursorShape`](#setcursorshape-function) and [`setCursorVisibility`](#setcursorvisibility-function) functions respectively.
 
+The line the cursor is in can be cleared by using the [`clearCursorLine`](#clearcursorline-function) function.
+
+## ❡ Window
+
+The terminal window dimensions can be get by using the [`getWindowDimensions`](#getwindowdimensions-function).
+
+The alternate window is an alternate buffer that creates the feeling of that a terminal applications is running in a separate environment. It can be opened and closed by using the [`setAlternateScreen`](#setalternatewindow-function) function.
+
+```cpp
+#include <iomanip>
+
+#include <tdk.hpp>
+
+int main() {
+  tdk::KeyEvent keyEvent;
+  tdk::Dimensions windowDimensions;
+  tdk::getWindowDimensions(windowDimensions);
+  tdk::setAlternateWindow(true);
+  tdk::setCursorVisibility(false);
+  std::cout << "Total columns: " << windowDimensions.m_totalColumns << "."
+            << std::endl
+            << std::setw(13) << std::left << "Total rows"
+            << ": " << std::right << windowDimensions.m_totalRows << "."
+            << std::endl
+            << std::endl
+            << "Press any key to continue...";
+  tdk::clearInputBuffer();
+  tdk::readKeyEvent(keyEvent);
+  tdk::setAlternateWindow(false);
+  tdk::setCursorVisibility(true);
+  return 0;
+}
+```
+
 ## ❡ Bell
 
 You can ring the terminal bell by using the [`ringBell`](#ringbell-function) function, possibly emitting a symbol in terminal tab bar, visual flash, a system notification or a beep from the motherboard speaker. Terminals might have this feature disabled by default.
-
-## ❡ Key Events
 
 ## ❡ Animations
 
@@ -272,7 +302,27 @@ Contains the available terminal text weights. Apply one by using the left shifti
 
 ### clearCursorLine Function
 
+#### Brief
+
+Clears the contents in the terminal cursor line.
+
+#### Declaration
+
+```cpp
+void clearCursorLine();
+```
+
 ### clearInputBuffer Function
+
+#### Brief
+
+Clears the standard input buffer.
+
+#### Declaration
+
+```cpp
+void clearInputBuffer();
+```
 
 ### getCursorCoordinate Function
 
