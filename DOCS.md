@@ -41,7 +41,7 @@ The library allows you to set terminals colors into layers by using different co
 
 A color can be applied by using the left shifting operator (`<<`) with an instance of a color class against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. To be removed, you must apply an instance of the [`XColor`](#xcolor-class) class constructed with the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
 
-Colors are not applied if the standard output and error streams are being redirected or piped. Using a hex or RGB colors require the terminal to have truecolor support.
+Colors are not applied if the stream being affected is being redirected or piped. Using a hex or RGB colors require the terminal to have truecolor support.
 
 The following example outputs the demo of three colors using different formats. Some colors are part of the [Flamerial](https://github.com/skippyr/flamerial) theme:
 
@@ -82,7 +82,7 @@ int main() {
 
 The library allows you to set terminal text weights, also refered as "foreground brightness". Availabe weight are contained inside of the [`Weight`](#weight-enum-class) enum class. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class.
 
-Weights are not applied if the standard output and error streams are being redirected or piped.
+Weights are not applied if the stream being affected is being redirected or piped.
 
 The following example is a demo for the weights:
 
@@ -109,7 +109,7 @@ int main() {
 
 The library allows you to set terminal text effect. Available effects are contained inside of the [`Effect`](#effect-enum-class) enum class. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it by using the right shifting operator (`>>`) instead.
 
-Effects are not applied if the standard output and error streams are being redirected or piped.
+Effects are not applied if the stream being affected is being redirected or piped.
 
 The following example is a demo for effects:
 
@@ -173,7 +173,13 @@ int main() {
 
 ## ❡ Window
 
+getWindowDimensions
+
+Alternate window
+
 ## ❡ Cursor
+
+## ❡ Bell
 
 ## ❡ Key Events
 
@@ -187,7 +193,7 @@ int main() {
 
 An enum class containing the available terminal effects. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it by using the right shifting operator (`>>`) instead.
 
-Effects are not applied if the standard output and error streams are being redirected or piped.
+Effects are not applied if the stream being affected is being redirected or piped.
 
 #### Enumerators
 
@@ -255,7 +261,7 @@ An enum class containing the ANSI codes of the first 16 colors of the XTerm pale
 
 An enum containing the available terminal text weights. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class.
 
-Weights are not applied if the standard output and error streams are being redirected or piped.
+Weights are not applied if the stream being affected is being redirected or piped.
 
 #### Enumerators
 
@@ -293,7 +299,7 @@ A boolean that states the check result.
 
 A class that represents a hex color. Apply it by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it, by applying an instance of the [`XColor`](#xcolor-class) class constructed with the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
 
-It requires the terminal to have truecolor support. The color is not applied if the standard output and error streams are being redirected or piped.
+It requires the terminal to have truecolor support. Colors are not applied if the stream being affected is being redirected or piped.
 
 #### Constructors
 
@@ -341,7 +347,7 @@ A color with the inverted layer.
 
 A class that represents an RGB color. Apply it by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it, by applying an instance of the [`XColor`](#xcolor-class) class constructed with the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
 
-It requires the terminal to have truecolor support. The color is not applied if the standard output and error streams are being redirected or piped.
+It requires the terminal to have truecolor support. Colors are not applied if the stream being affected is being redirected or piped.
 
 #### Constructors
 
@@ -404,7 +410,7 @@ A color with the inverted layer.
 
 A class that represents a color from the XTerm palette: a terminal exclusive palette containing 256 colors. Apply it by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it by using the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
 
-The color is not applied if the standard output and error streams are being redirected or piped.
+Colors are not applied if the stream being affected is being redirected or piped.
 
 #### Constructors
 
@@ -463,7 +469,7 @@ A color with the inverted layer.
 
 #### Brief
 
-Applies a hex color.
+Applies a hex color. It requires the terminal to have truecolor support. Colors are not applied if the stream being affected is being redirected or piped.
 
 #### Declaration
 
@@ -480,15 +486,11 @@ std::ostream &operator<<(std::ostream &stream, Color color);
 
 The stream being affected.
 
-#### Remarks
-
-It requires the terminal to have truecolor support. The color is not applied if the standard output and error streams are being redirected or piped.
-
 ### operator<<(std::ostream &stream, RGBColor color);
 
 #### Brief
 
-Applies an RGB color.
+Applies an RGB color. It requires the terminal to have truecolor support. Colors are not applied if the stream being affected is being redirected or piped.
 
 #### Declaration
 
@@ -505,15 +507,11 @@ std::ostream &operator<<(std::ostream &stream, RGBColor color);
 
 The stream being affected.
 
-#### Remarks
-
-It requires the terminal to have truecolor support. The color is not applied if the standard output and error streams are being redirected or piped.
-
 ### std::ostream &operator<<(std::ostream &stream, XColor color);
 
 #### Brief
 
-Applies a color from the XTerm palette.
+Applies a color from the XTerm palette. Colors are not applied if the stream is being redirected or piped.
 
 #### Declaration
 
@@ -529,10 +527,6 @@ std::ostream &operator<<(std::ostream &stream, XColor color);
 #### Return Value
 
 The stream being affected.
-
-#### Remarks
-
-The color is not applied if the stream is being redirected or piped.
 
 &ensp;
 <p align="center"><sup><strong>≥v≥v&ensp;Here Be Dragons!&ensp;≥v≥</strong><br />Made with love by skippyr <3</sup></p>
