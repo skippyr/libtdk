@@ -177,13 +177,13 @@ int main() {
 
 You can use the [`readkeyEvent`](#readkeyevent-function) function to read key events from the standard input buffer. Exclusively on Windows, this function can be interrupted by window resize events that happens in the same event loop. It holds the thread until a valid key event is pulled or it is interrupted.
 
-The key read may be an UTF-8 grapheme or a key value from the [`Key`](#key-enum-class) enum class static casted to an `int` type. Values from the `Key` enum can be compared directly against the key by using comparasion operators such as `==`, `>`, `>=`, `<` and `<=`.
+The key read may be an UTF-8 grapheme or a key value from the [`Key`](#key-enum-class) enum class static casted to an `int` type. Values from the [`Key`](#key-enum-class) enum can be compared directly against the key by using comparasion operators such as `==`, `>`, `>=`, `<` and `<=`.
 
 As a limitation of this library: modifier keys are only allowed to be detected in keys of the English alphabet (lowercase (`a-z`) and uppercase (`A-Z`) letters), as those are the ranges in which terminals offer the greatest support. The Shift modifier key is intended to be detected by checking the key received: For example, lowercase letters become uppercase when it is used.
 
 There may be some key sequences in which the library will be unable to distinguish the keys used. For example: the sequences `Ctrl + i` and `Ctrl + j` are the same as keys `Key::Backspace` and `Key::Enter` respectively because they have the same underlying code sent by the terminal. For the same reason, keys with `Ctrl` can not have the `Shift` key detected. Some other key sequences may be reserved by the terminal.
 
-The following example shows how to use it:
+The following example shows demonstrates how to read and parse a key event and catch the window resize interrupt:
 
 ```cpp
 #include <tdk.hpp>
@@ -225,26 +225,27 @@ int main() {
   }
   std::cout << "You entered: ";
   if (keyEvent.m_key == 'a' && keyEvent.m_hasCtrl && !keyEvent.m_hasAlt) {
-    std::cout << "Ctrl + A." << std::endl;
+    std::cout << "Ctrl + A.";
   } else if (keyEvent.m_key == 'b' && !keyEvent.m_hasCtrl &&
              keyEvent.m_hasAlt) {
-    std::cout << "Alt + B." << std::endl;
+    std::cout << "Alt + B.";
   } else if (keyEvent.m_key == 'C' && !keyEvent.m_hasCtrl &&
              !keyEvent.m_hasAlt) {
-    std::cout << "Shift + C." << std::endl;
+    std::cout << "Shift + C.";
   } else if (keyEvent.m_key == 'D' && !keyEvent.m_hasCtrl &&
              keyEvent.m_hasAlt) {
-    std::cout << "Alt + Shift + D." << std::endl;
+    std::cout << "Alt + Shift + D.";
   } else if (keyEvent.m_key >= tdk::Key::F1 &&
              keyEvent.m_key <= tdk::Key::F12) {
-    std::cout << "a function key." << std::endl;
+    std::cout << "a function key.";
   } else if (keyEvent.m_key == tdk::Key::UpArrow) {
-    std::cout << "the up arrow key." << std::endl;
+    std::cout << "the up arrow key.";
   } else if (keyEvent.m_key == *reinterpret_cast<const int *>("🐉")) {
-    std::cout << "the dragon emoji." << std::endl;
+    std::cout << "the dragon emoji.";
   } else {
-    std::cout << "a non-programmed key sequence or grapheme." << std::endl;
+    std::cout << "a non-programmed key sequence or grapheme.";
   }
+  std::cout << std::endl;
   return 0;
 }
 ```
@@ -253,9 +254,94 @@ int main() {
 
 The terminal cursor coordinate can be get and set by using the [`getCursorCoordinate`](#getcursorcoordinate-function) and [`setCursorCoordinate`](#setcursorcoordinate-function) functions respectively.
 
-Its shape and visibility can be set by using the [`setCursorShape`](#setcursorshape-function) and [`setCursorVisibility`](#setcursorvisibility-function) functions respectively.
+Its shape and visibility can be set by using the [`setCursorShape`](#setcursorshape-function) and [`setCursorVisibility`](#setcursorvisibility-function) functions respectively. Available shapes are contained in the [`Shape`](#shape-enum-class) enum class.
+
+The following example demonstrates how to use them to build a menu to showcase the cursor shapes:
+
+```cpp
+#include <array>
+
+#include <tdk.hpp>
+
+int main() {
+  tdk::KeyEvent keyEvent;
+  tdk::Coordinate coordinate;
+  std::array<std::string, 7> names = {
+      "Default",   "Blinking Block", "Block", "Blinking Underline",
+      "Underline", "Blinking Bar",   "Bar"};
+  std::array<std::string, 7> descriptions = {
+      "The default shape intended for resets.",
+      "The blinking variant of the block shape.",
+      "The non-blinking variant of the block shape.",
+      "The blinking variant of the underline shape.",
+      "The non-blinking variant of the underline shape.",
+      "The blinking variant of the bar shape.",
+      "The non-blinking variant of the bar shape."};
+  std::array<tdk::Shape, 7> shapes = {
+      tdk::Shape::Default,   tdk::Shape::BlinkingBlock,
+      tdk::Shape::Block,     tdk::Shape::BlinkingUnderline,
+      tdk::Shape::Underline, tdk::Shape::BlinkingBar,
+      tdk::Shape::Bar};
+  tdk::setCursorVisibility(false);
+  std::cout << "The following example will demonstrate the available terminal "
+               "cursor shapes."
+            << std::endl
+            << tdk::XColor(tdk::XColorCode::Blue, tdk::Layer::Foreground)
+            << "[?]"
+            << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Foreground)
+            << " Use the "
+            << tdk::XColor(tdk::XColorCode::Yellow, tdk::Layer::Foreground)
+            << tdk::Weight::Bold << "Arrows/Enter" << tdk::Weight::Default
+            << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Foreground)
+            << " keys to move and exit." << std::endl
+            << std::endl
+            << std::endl;
+  tdk::getCursorCoordinate(coordinate);
+  tdk::setCursorVisibility(true);
+  int offset = 0;
+  tdk::setCursorCoordinate(0, coordinate.m_row - 1);
+  do {
+    tdk::clearCursorLine();
+    std::cout << "  (" << offset + 1 << "/" << names.size() << ") "
+              << names[offset] << std::endl;
+    tdk::clearCursorLine();
+    std::cout << tdk::XColor(tdk::XColorCode::LightBlack,
+                             tdk::Layer::Foreground)
+              << "        " << descriptions[offset]
+              << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Foreground);
+    tdk::setCursorCoordinate(9 + names[offset].length(), coordinate.m_row - 1);
+    tdk::setCursorShape(shapes[offset]);
+    tdk::clearInputBuffer();
+    tdk::readKeyEvent(keyEvent);
+    if (keyEvent.m_key == tdk::Key::LeftArrow ||
+        keyEvent.m_key == tdk::Key::DownArrow) {
+      offset = !offset ? names.size() - 1 : offset - 1;
+    } else if (keyEvent.m_key == tdk::Key::RightArrow ||
+               keyEvent.m_key == tdk::Key::UpArrow) {
+      offset = offset == names.size() - 1 ? 0 : offset + 1;
+    }
+  } while (keyEvent.m_key != tdk::Key::Enter);
+  tdk::setCursorShape(tdk::Shape::Default);
+  std::cout << std::endl << std::endl;
+  return 0;
+}
+
+```
 
 The line the cursor is in can be cleared by using the [`clearCursorLine`](#clearcursorline-function) function.
+
+The following example demonstrates how to use it to replace the content of a line:
+
+```cpp
+#include <tdk.hpp>
+
+int main() {
+  std::cout << "Hello, world!";
+  tdk::clearCursorLine();
+  std::cout << "Here Be Dragons!" << std::endl;
+  return 0;
+}
+```
 
 ## ❡ Window
 
@@ -329,6 +415,8 @@ Contains the available terminal layers. It is used to create instances of the [`
 - `Foreground`: the foreground layer.
 - `Background`: the background layer.
 
+### Shape Enum Class
+
 ### Stream Enum Class
 
 #### Brief
@@ -340,6 +428,8 @@ Contains the standard terminal streams. You can check if they are connected to a
 - `Input`: the standard input stream (`stdin`).
 - `Output`: the standard output stream (`stdout`).
 - `Error`: the standard error stream (`stderr`).
+
+### Weight Enum Class
 
 ### XColorCode Enum Class
 
@@ -366,8 +456,6 @@ Contains the ANSI codes of the first 16 colors of the XTerm palette plus one mor
 - `LightMagenta`: the light variant of the magenta color.
 - `LightCyan`: the light variant of the cyan color.
 - `LightWhite`: the light variant of the white color.
-
-### Weight Enum Class
 
 #### Brief
 
