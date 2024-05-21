@@ -175,17 +175,31 @@ int main() {
 
 ## ❡ Key Events
 
-```cpp
-#include <iomanip>
+You can use the [`readkeyEvent`](#readkeyevent-function) function to read the standard input buffer for graphemes or events in order to parse key events and, exclusively on Windows, to intercept window resize events that happens synchronously on the same event loop and treat them as you see fit.
 
+This function holds the thread until a valid key event is pulled from the input buffer or, exclusively on Windows, a window resize interrupt happens. In case of content pasting into the terminal this function may leave unread content in there. Use the [`clearInputBuffer`](#clearinputbuffer-function) function before it to be able to perform new readings without conflicts with pre-existing contents.
+
+Any grapheme pasted into the input buffer is handled as a key event, making this function capable of reading any UTF-8 grapheme. Graphemes can be compared to the key read by reinterpret casting them to the `int` type.
+
+The following example shows how to use it:
+
+```cpp
 #include <tdk.hpp>
 
 static void writeListItem(std::string item) {
   std::cout << tdk::Weight::Bold
-            << tdk::XColor(tdk::XColorCode::Red, tdk::Layer::Foreground) << "  - "
-            << tdk::Weight::Default
+            << tdk::XColor(tdk::XColorCode::Red, tdk::Layer::Foreground)
+            << "  - " << tdk::Weight::Default
             << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Foreground)
             << item << "." << std::endl;
+}
+
+static void throwError(std::string message) {
+  std::cout << tdk::XColor(tdk::XColorCode::Red, tdk::Layer::Foreground)
+            << tdk::Weight::Bold << "[ERROR] " << tdk::Weight::Default
+            << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Foreground)
+            << message << std::endl;
+  std::exit(1);
 }
 
 int main() {
@@ -199,8 +213,18 @@ int main() {
   writeListItem("Any function key (F1 to F12)");
   writeListItem("Up arrow key");
   writeListItem("Dragon emoji 🐉");
-  tdk::readKeyEvent(keyEvent);
-  std::cout << std::endl << "You entered: ";
+  std::cout << std::endl;
+  tdk::clearInputBuffer();
+  if (tdk::readKeyEvent(keyEvent) == tdk::EventStatus::WindowResizeInterrupt) {
+    /*
+     * This interrupt only happens on Windows.
+     *
+     * In this case, it will throw an error, but you can decide to handle
+     * differently. For example, you can repaint the user interface instead.
+     */
+    throwError("The key reading was interrupted by a window resize event.");
+  }
+  std::cout << "You entered: ";
   if (keyEvent.m_key == 'a' && keyEvent.m_hasCtrl && !keyEvent.m_hasAlt) {
     std::cout << "Ctrl + A." << std::endl;
   } else if (keyEvent.m_key >= tdk::Key::F1 &&
@@ -412,6 +436,8 @@ bool isTTY(Stream stream);
 #### Return Value
 
 A boolean that states the check result.
+
+### readKeyEvent Function
 
 ### ringBell Function
 
