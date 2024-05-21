@@ -143,23 +143,25 @@ The terminal streams are contained in the [`Stream`](#streams-enum-class) enum c
 The following example demonstrates how to check their TTY statuses:
 
 ```cpp
+#include <iomanip>
+
 #include <tdk.hpp>
 
-#define BOOLEAN(a_value)                                                       \
-  tdk::XColor(a_value ? tdk::XColorCode::Green : tdk::XColorCode::Red,         \
-              tdk::Layer::Foreground)                                          \
-      << (a_value ? "True" : "False")                                          \
-      << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Foreground)
+#define STATUS(a_stream)                                                       \
+  std::left << std::setw(6) << #a_stream << std::right << ": "                 \
+            << tdk::XColor(status ? tdk::XColorCode::Green                     \
+                                  : tdk::XColorCode::Red,                      \
+                           tdk::Layer::Foreground)                             \
+            << ((status = tdk::isTTY(tdk::Stream::a_stream)) ? "True"          \
+                                                             : "False")        \
+            << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Foreground)   \
+            << "." << std::endl
 
 int main() {
+  bool status = false;
   std::cout << "TTY Statuses" << std::endl
-            << "------------" << std::endl
-            << "Input : " << BOOLEAN(tdk::isTTY(tdk::Stream::Input))
-            << std::endl
-            << "Output: " << BOOLEAN(tdk::isTTY(tdk::Stream::Output))
-            << std::endl
-            << "Error : " << BOOLEAN(tdk::isTTY(tdk::Stream::Error))
-            << std::endl;
+            << std::string(12, '-') << std::endl
+            << STATUS(Input) << STATUS(Output) << STATUS(Error);
   return 0;
 }
 ```
