@@ -481,7 +481,7 @@ Contains the ANSI codes of the first 16 colors of the XTerm palette plus one mor
 
 ### Coordinate Class
 
-A class that represents a terminal coordinate.
+Represents a terminal coordinate.
 
 #### Contructors
 
@@ -515,9 +515,9 @@ Coordinate(unsigned short column, unsigned short row);
 
 #### Brief
 
-A class that represents terminal dimensions.
+Represents terminal dimensions.
 
-#### Constructors
+#### Declaration
 
 ##### Brief
 
@@ -549,9 +549,9 @@ Dimensions(unsigned short totalColumns, unsigned short totalRows);
 
 #### Brief
 
-A class that represents a hex color. Apply it by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it, by applying an instance of the [`XColor`](#xcolor-class) class constructed with the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
+Represents a hex color. Apply it by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it, by applying an instance of the [`XColor`](#xcolor-class) class constructed with the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
 
-#### Constructors
+#### Declaration
 
 ##### Brief
 
@@ -591,13 +591,35 @@ Inverts the layer the color applies on.
 
 A color with the inverted layer.
 
+### KeyEvent Class
+
+#### Brief
+
+Represents a terminal key reading event.
+
+#### Declaration
+
+##### Brief
+
+Creates an instace of the [`KeyEvent`](#keyevent-class) class.
+
+```cpp
+KeyEvent();
+```
+
+#### Public Member Variables
+
+- `m_key`: the key pressed during the event. It may be an UTF-8 grapheme or a key value from the [`Key`](#key-enum-class) enum class static casted to an `int` type.
+- `m_hasCtrl`: a boolean that states the Ctrl key was being hold during the event.
+- `m_hasAlt`: a boolean that states the Alt key was being hold during the event.
+
 ### RGBColor Class
 
 #### Brief
 
-A class that represents an RGB color. Apply it by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it, by applying an instance of the [`XColor`](#xcolor-class) class constructed with the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
+Represents an RGB color. Apply it by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it, by applying an instance of the [`XColor`](#xcolor-class) class constructed with the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
 
-#### Constructors
+#### Declaration
 
 ##### Brief
 
@@ -658,7 +680,7 @@ A color with the inverted layer.
 
 A class that represents a color from the XTerm palette: a terminal exclusive palette containing 256 colors. Apply it by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it by using the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
 
-#### Constructors
+#### Declaration
 
 ##### Brief
 
