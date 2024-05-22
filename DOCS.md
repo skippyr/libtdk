@@ -731,71 +731,6 @@ Inverts the layer the color applies on.
 
 A color with the inverted layer.
 
-## ❡ Operator Overloadings
-
-### operator<<(std::ostream &stream, HexColor color);
-
-#### Brief
-
-Applies a hex color.
-
-#### Declaration
-
-```cpp
-std::ostream &operator<<(std::ostream &stream, Color color);
-```
-
-#### Parameters
-
-- `stream`: the terminal stream to be affected.
-- `color`: the color to be applied.
-
-#### Return Value
-
-The stream being affected.
-
-### operator<<(std::ostream &stream, RGBColor color);
-
-#### Brief
-
-Applies an RGB color.
-
-#### Declaration
-
-```cpp
-std::ostream &operator<<(std::ostream &stream, RGBColor color);
-```
-
-#### Parameters
-
-- `stream`: the terminal stream to be affected.
-- `color`: the color to be applied.
-
-#### Return Value
-
-The stream being affected.
-
-### std::ostream &operator<<(std::ostream &stream, XColor color);
-
-#### Brief
-
-Applies a color from the XTerm palette.
-
-#### Declaration
-
-```cpp
-std::ostream &operator<<(std::ostream &stream, XColor color);
-```
-
-#### Parameters
-
-- `stream`: the terminal stream to be affected.
-- `color`: the color to be applied.
-
-#### Return Value
-
-The stream being affected.
-
 ## ❡ Functions
 
 ### clearCursorLine Function
@@ -870,11 +805,9 @@ A boolean that states the check result.
 
 Reads a key event from the standard input buffer. Exclusively on Windows, it can be interrupted by a window resize event that might happen in the same event loop. It holds the thread until a valid key event is pulled or it is interrupted.
 
-The key read may be an UTF-8 grapheme or a key value from the [`Key`](#key-enum-class) enum class static casted to an `int` type. Values from the [`Key`](#key-enum-class) enum can be compared directly against the key by using comparasion operators such as `==`, `>`, `>=`, `<` and `<=`.
-
 As a limitation of this function: modifier keys are only allowed to be detected in keys of the English alphabet (lowercase (`a-z`) and uppercase (`A-Z`) letters), as those are the ranges in which terminals offer the greatest support. The Shift modifier key is intended to be detected by checking the key received: For example, lowercase letters become uppercase when it is used.
 
-There may be some key sequences in which it may be unable to distinguish the keys used. For example: the sequences `Ctrl + i` and `Ctrl + j` are the same as keys `Key::Backspace` and `Key::Enter` respectively because they have the same underlying code sent by the terminal. For the same reason, keys with `Ctrl` can not have the `Shift` key detected. Some other key sequences may be reserved by the terminal.
+There may be some key sequences in which the function may be unable to distinguish the keys used. For example: the sequences `Ctrl + i` and `Ctrl + j` are the same as keys `Key::Backspace` and `Key::Enter` respectively because they have the same underlying code sent by the terminal. For the same reason, keys with `Ctrl` can not have the `Shift` key detected. Some other key sequences may be reserved by the terminal.
 
 #### Declaration
 
@@ -978,6 +911,113 @@ void setCursorVisibility(bool isToShow);
 #### Parameters
 
 - `isToShow`: a boolean that states the cursor should be visible or not.
+
+## ❡ Operator Overloadings
+
+### operator<<(std::ostream &stream, Effect effect)
+
+#### Brief
+
+Applies a text effect.
+
+#### Declaration
+
+```cpp
+std::ostream &operator<<(std::ostream &stream, Effect effect);
+```
+
+#### Parameters
+
+- `stream`: the stream being affected.
+- `effect`: the effect to be applied.
+
+#### Return Value
+
+The stream being affected.
+
+### operator>>(std::ostream &stream, Effect effect)
+
+#### Brief
+
+Removes a text effect.
+
+#### Declaration
+
+```cpp
+std::ostream &operator>>(std::ostream &stream, Effect effect);
+```
+
+#### Parameters
+
+- `stream`: the stream being affected.
+- `effect`: the effect to be removed.
+
+#### Return Value
+
+The stream being affected.
+
+### operator<<(std::ostream &stream, HexColor color)
+
+#### Brief
+
+Applies a hex color.
+
+#### Declaration
+
+```cpp
+std::ostream &operator<<(std::ostream &stream, Color color);
+```
+
+#### Parameters
+
+- `stream`: the terminal stream to be affected.
+- `color`: the color to be applied.
+
+#### Return Value
+
+The stream being affected.
+
+### operator<<(std::ostream &stream, RGBColor color)
+
+#### Brief
+
+Applies an RGB color.
+
+#### Declaration
+
+```cpp
+std::ostream &operator<<(std::ostream &stream, RGBColor color);
+```
+
+#### Parameters
+
+- `stream`: the terminal stream to be affected.
+- `color`: the color to be applied.
+
+#### Return Value
+
+The stream being affected.
+
+### std::ostream &operator<<(std::ostream &stream, XColor color)
+
+#### Brief
+
+Applies a color from the XTerm palette.
+
+#### Declaration
+
+```cpp
+std::ostream &operator<<(std::ostream &stream, XColor color);
+```
+
+#### Parameters
+
+- `stream`: the terminal stream to be affected.
+- `color`: the color to be applied.
+
+#### Return Value
+
+The stream being affected.
 
 &ensp;
 <p align="center"><sup><strong>≥v≥v&ensp;Here Be Dragons!&ensp;≥v≥</strong><br />Made with love by skippyr <3</sup></p>
