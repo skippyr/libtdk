@@ -44,63 +44,31 @@ You can set terminals colors into layers using different color formats. Availabl
 
 Apply one by using the left shifting operator (`<<`) with an instance of a color class against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it by applying an instance of the [`XColor`](#xcolor-class) class constructed with the ANSI code [`XColorCode::Default`](#xcolorcode-enum-class) in the layer where the color has been applied.
 
-The following example demonstrates how to use colors:
+The following example demonstrates how to apply and reset a foreground color:
 
 ```cpp
-#include <iomanip>
-
 #include <tdk.hpp>
 
-std::string g_message = "Here Be Dragons!";
-
-template <typename T> static void writeColorDemo(T foregroundColor) {
-  std::cout << foregroundColor << g_message
-            << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Foreground)
-            << " " << foregroundColor.m_invert() << g_message
-            << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Background)
-            << std::endl;
-}
-
 int main() {
-  std::cout << std::left << std::setw(g_message.length()) << "Foreground"
-            << std::right << " Background" << std::endl
-            << std::string(g_message.length(), '-') << " "
-            << std::string(g_message.length(), '-') << std::endl;
-  writeColorDemo(tdk::XColor(tdk::XColorCode::Red, tdk::Layer::Foreground));
-  writeColorDemo(tdk::HexColor(0xe0a100, tdk::Layer::Foreground));
-  writeColorDemo(
-      tdk::RGBColor(tdk::HexColor(0xa16205, tdk::Layer::Foreground)));
+  std::cout << tdk::XColor(tdk::XColorCode::Red, tdk::Layer::Foreground)
+            << "Here Be Dragons!"
+            << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Foreground);
   return 0;
 }
+
 ```
 
 ## ❡ Weights
 
 Availabe text weights are contained inside of the [`Weight`](#weight-enum-class) enum class. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class.
 
-The following example demonstrates how to use weights:
+The following example demonstrates how to apply and reset a weight:
 
 ```cpp
-#include <array>
-#include <iomanip>
-
 #include <tdk.hpp>
 
 int main() {
-  std::string message = "Here Be Dragons!";
-  std::array<std::string, 3> labels = {"Default", "Bold", "Dim"};
-  std::array<tdk::Weight, 3> weights = {tdk::Weight::Default, tdk::Weight::Bold,
-                                        tdk::Weight::Dim};
-  int padding = 7;
-  std::cout << std::left << std::setw(padding) << "Weight" << std::right
-            << " Preview" << std::endl
-            << std::string(padding, '-') << " "
-            << std::string(message.length(), '-') << std::endl;
-  for (int offset = 0; offset < labels.size(); ++offset) {
-    std::cout << std::left << std::setw(padding) << labels[offset] << std::right
-              << " " << weights[offset] << message << tdk::Weight::Default
-              << std::endl;
-  }
+  std::cout << tdk::Weight::Bold << "Here Be Dragons!" << tdk::Weight::Default;
   return 0;
 }
 ```
@@ -109,32 +77,14 @@ int main() {
 
 Available text effects are contained inside of the [`Effect`](#effect-enum-class) enum class. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class. Remove it by using the right shifting operator (`>>`) instead.
 
-The following example demonstrates how to use effects:
+The following example demonstrates how to apply and remove an effect:
 
 ```cpp
-#include <array>
-#include <iomanip>
-
 #include <tdk.hpp>
 
 int main() {
-  std::string message = "Here Be Dragons!";
-  std::array<std::string, 6> labels = {
-      "Italic", "Underline", "Blinking", "Negative", "Hidden", "Strikethrough"};
-  std::array<tdk::Effect, 6> effects = {
-      tdk::Effect::Italic,   tdk::Effect::Underline,
-      tdk::Effect::Blinking, tdk::Effect::Negative,
-      tdk::Effect::Hidden,   tdk::Effect::Strikethrough};
-  int padding = 13;
-  std::cout << std::left << std::setw(padding) << "Effect" << std::right
-            << " Preview" << std::endl
-            << std::string(padding, '-') << " "
-            << std::string(message.length(), '-') << std::endl;
-  for (int offset = 0; offset < labels.size(); ++offset) {
-    std::cout << std::left << std::setw(padding) << labels[offset] << std::right
-              << " " << effects[offset] << message >>
-        effects[offset] << std::endl;
-  }
+  std::cout << tdk::Effect::Underline << "Here Be Dragons!" >>
+      tdk::Effect::Underline << std::endl;
   return 0;
 }
 ```
@@ -145,30 +95,15 @@ The terminal streams are contained in the [`Stream`](#streams-enum-class) enum c
 
 The standard input buffer can be cleared by using the [`clearInputBuffer`](#clearinputbuffer-function).
 
-The following example demonstrates how to check their TTY statuses:
+The following example demonstrates how to check the TTY status of the output stream:
 
 ```cpp
-#include <iomanip>
-
 #include <tdk.hpp>
 
-#define STATUS(a_stream)                                                       \
-  std::left << std::setw(6) << #a_stream << std::right << " "                  \
-            << tdk::XColor(status ? tdk::XColorCode::Green                     \
-                                  : tdk::XColorCode::Red,                      \
-                           tdk::Layer::Foreground)                             \
-            << ((status = tdk::isTTY(tdk::Stream::a_stream))                   \
-                    ? "Connected to TTY"                                       \
-                    : "Redirected or Piped")                                   \
-            << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Foreground)   \
-            << std::endl
-
 int main() {
-  bool status;
-  std::cout << std::left << std::setw(6) << "Stream" << std::right << " Status"
-            << std::endl
-            << std::string(6, '-') << " " << std::string(19, '-') << std::endl
-            << STATUS(Input) << STATUS(Output) << STATUS(Error);
+  std::cout << "Is Output TTY: "
+            << (tdk::isTTY(tdk::Stream::Output) ? "True" : "False")
+            << std::endl;
   return 0;
 }
 ```
@@ -188,42 +123,15 @@ The following example shows demonstrates how to read and parse a key event and c
 ```cpp
 #include <tdk.hpp>
 
-static void writeListItem(std::string item) {
-  std::cout << tdk::Weight::Bold
-            << tdk::XColor(tdk::XColorCode::Red, tdk::Layer::Foreground)
-            << "  - " << tdk::Weight::Default
-            << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Foreground)
-            << item << "." << std::endl;
-}
-
-static void throwError(std::string message) {
-  std::cout << tdk::XColor(tdk::XColorCode::Red, tdk::Layer::Foreground)
-            << tdk::Weight::Bold << "[ERROR] " << tdk::Weight::Default
-            << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Foreground)
-            << message << std::endl;
-  std::exit(1);
-}
-
 int main() {
   tdk::KeyEvent keyEvent;
-#ifdef _WIN32
-  SetConsoleOutputCP(CP_UTF8);
-#endif
-  std::cout << "Enter one of the following keyboard key sequences or grapheme:"
-            << std::endl;
-  writeListItem("Ctrl + A");
-  writeListItem("Alt + B");
-  writeListItem("Shift + C");
-  writeListItem("Alt + Shift + D");
-  writeListItem("Any function key (F1 to F12)");
-  writeListItem("Up arrow key");
-  writeListItem("Dragon emoji 🐉");
-  std::cout << std::endl;
   tdk::clearInputBuffer();
   if (tdk::readKeyEvent(keyEvent) == tdk::EventStatus::WindowResizeInterrupt) {
-    throwError("The key reading was interrupted by a window resize event.");
+    std::cerr << "The key reading was interrupted on Windows by a window "
+                 "resize event."
+              << std::endl;
+    std::exit(1);
   }
-  std::cout << "You entered: ";
   if (keyEvent.m_key == 'a' && keyEvent.m_hasCtrl && !keyEvent.m_hasAlt) {
     std::cout << "Ctrl + A.";
   } else if (keyEvent.m_key == 'b' && !keyEvent.m_hasCtrl &&
@@ -258,75 +166,16 @@ Its shape and visibility can be set by using the [`setCursorShape`](#setcursorsh
 
 The line the cursor is in can be cleared by using the [`clearCursorLine`](#clearcursorline-function) function.
 
-The following example demonstrates how to use them to build a menu to showcase the cursor shapes:
+The following example demonstrates how to apply and reset a cursor shape:
 
 ```cpp
-#include <array>
-
 #include <tdk.hpp>
 
 int main() {
-  tdk::KeyEvent keyEvent;
-  tdk::Coordinate coordinate;
-  std::array<std::string, 7> names = {
-      "Default",   "Blinking Block", "Block", "Blinking Underline",
-      "Underline", "Blinking Bar",   "Bar"};
-  std::array<std::string, 7> descriptions = {
-      "The default shape intended for resets.",
-      "The blinking variant of the block shape.",
-      "The non-blinking variant of the block shape.",
-      "The blinking variant of the underline shape.",
-      "The non-blinking variant of the underline shape.",
-      "The blinking variant of the bar shape.",
-      "The non-blinking variant of the bar shape."};
-  std::array<tdk::Shape, 7> shapes = {
-      tdk::Shape::Default,   tdk::Shape::BlinkingBlock,
-      tdk::Shape::Block,     tdk::Shape::BlinkingUnderline,
-      tdk::Shape::Underline, tdk::Shape::BlinkingBar,
-      tdk::Shape::Bar};
-  tdk::setCursorVisibility(false);
-  std::cout << "The following example will demonstrate the available terminal "
-               "cursor shapes."
-            << std::endl
-            << tdk::XColor(tdk::XColorCode::Blue, tdk::Layer::Foreground)
-            << "[?]"
-            << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Foreground)
-            << " Use the "
-            << tdk::XColor(tdk::XColorCode::Yellow, tdk::Layer::Foreground)
-            << tdk::Weight::Bold << "Arrows/Enter" << tdk::Weight::Default
-            << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Foreground)
-            << " keys to move and exit." << std::endl
-            << std::endl
-            << std::endl;
-  tdk::getCursorCoordinate(coordinate);
-  tdk::setCursorVisibility(true);
-  tdk::setCursorCoordinate(0, coordinate.m_row - 1);
-  int offset = 0;
-  do {
-    tdk::clearCursorLine();
-    std::cout << "  (" << offset + 1 << "/" << names.size() << ") "
-              << names[offset] << std::endl;
-    tdk::clearCursorLine();
-    std::cout << tdk::XColor(tdk::XColorCode::LightBlack,
-                             tdk::Layer::Foreground)
-              << "        " << descriptions[offset]
-              << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Foreground);
-    tdk::setCursorCoordinate(9 + names[offset].length(), coordinate.m_row - 1);
-    tdk::setCursorShape(shapes[offset]);
-    tdk::clearInputBuffer();
-    tdk::readKeyEvent(keyEvent);
-    if ((keyEvent.m_key == tdk::Key::LeftArrow ||
-         keyEvent.m_key == tdk::Key::DownArrow) &&
-        offset) {
-      --offset;
-    } else if ((keyEvent.m_key == tdk::Key::RightArrow ||
-                keyEvent.m_key == tdk::Key::UpArrow) &&
-               offset != names.size() - 1) {
-      ++offset;
-    }
-  } while (keyEvent.m_key != tdk::Key::Enter);
+  tdk::setCursorShape(tdk::Shape::Underline);
+  std::cout << "Here Be Dragons!" << std::endl;
+  std::cin.get();
   tdk::setCursorShape(tdk::Shape::Default);
-  std::cout << std::endl << std::endl;
   return 0;
 }
 ```
@@ -338,27 +187,16 @@ The terminal window dimensions can be get by using the [`getWindowDimensions`](#
 The alternate window is an alternate buffer that creates the feeling of that a terminal applications is running in a separate environment. It can be opened and closed by using the [`setAlternateScreen`](#setalternatewindow-function) function.
 
 ```cpp
-#include <iomanip>
-
 #include <tdk.hpp>
 
 int main() {
-  tdk::KeyEvent keyEvent;
   tdk::Dimensions windowDimensions;
-  tdk::getWindowDimensions(windowDimensions);
   tdk::setAlternateWindow(true);
-  tdk::setCursorVisibility(false);
-  std::cout << "Total columns: " << windowDimensions.m_totalColumns << "."
-            << std::endl
-            << std::setw(13) << std::left << "Total rows"
-            << ": " << std::right << windowDimensions.m_totalRows << "."
-            << std::endl
-            << std::endl
-            << "Press any key to continue...";
-  tdk::clearInputBuffer();
-  tdk::readKeyEvent(keyEvent);
+  tdk::getWindowDimensions(windowDimensions);
+  std::cout << "Total Columns: " << windowDimensions.m_totalColumns << std::endl
+            << "Total Rows   : " << windowDimensions.m_totalRows << std::endl;
+  std::cin.get();
   tdk::setAlternateWindow(false);
-  tdk::setCursorVisibility(true);
   return 0;
 }
 ```
