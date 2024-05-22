@@ -207,7 +207,7 @@ You can ring the terminal bell by using the [`ringBell`](#ringbell-function) fun
 
 ## ❡ Responsive Layouts
 
-You can create an application with responsive layout if you handle window resize events while keep painting the user interface. On Windows, those events can be catch by using the [`readKeyEvent`](#readkeyevent-function) function, and, on Linux, by setting up a handler function to be run whenever the terminal send the `SIGWINCH` (signal window change) by using the `signal` function from the `signal.h` POSIX header.
+You can create an application with a responsive layout if you handle window resize events while keep painting the user interface. On Windows, those events can be catch by handling the `EventStatus::WindowResizeInterrupt` returned by the [`readKeyEvent`](#readkeyevent-function) function, and, on Linux, by setting up a handler function to be run whenever the terminal send the `SIGWINCH` (signal window change) by using the `sigaction` function from the `signal.h` POSIX header.
 
 The following example demonstrates how to create a simple responsive layout:
 
