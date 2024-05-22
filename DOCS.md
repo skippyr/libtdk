@@ -1019,5 +1019,141 @@ std::ostream &operator<<(std::ostream &stream, XColor color);
 
 The stream being affected.
 
+### operator<<(std::ostream &stream, Weight weight)
+
+#### Brief
+
+Applies a text weight.
+
+#### Declaration
+
+```cpp
+std::ostream &operator<<(std::ostream &stream, Weight weight);
+```
+
+#### Parameters
+
+- `stream`: the stream being affected.
+- `weight`: the weight to be applied.
+
+#### Return Value
+
+The stream being affected.
+
+
+### operator==(int code, Key key)
+
+#### Brief
+
+Checks if a key is equal to a certain code.
+
+#### Declaration
+
+```cpp
+bool operator==(int code, Key key);
+```
+
+- `code`: the code to be used as reference.
+- `key`: the key to be compared.
+
+#### Return Value
+
+The check result.
+
+### operator!=(int code, Key key)
+
+#### Brief
+
+Checks if a key is not equal to a certain code.
+
+#### Declaration
+
+```cpp
+bool operator!=(int code, Key key);
+```
+
+- `code`: the code to be used as reference.
+- `key`: the key to be compared.
+
+#### Return Value
+
+The check result.
+
+### operator>(int code, Key key)
+
+#### Brief
+
+Checks if a key is greater than a certain code.
+
+#### Declaration
+
+```cpp
+bool operator>(int code, Key key);
+```
+
+- `code`: the code to be used as reference.
+- `key`: the key to be compared.
+
+#### Return Value
+
+The check result.
+
+### operator>=(int code, Key key)
+
+#### Brief
+
+Checks if a key is greater than or equal to a certain code.
+
+#### Declaration
+
+```cpp
+bool operator>=(int code, Key key);
+```
+
+- `code`: the code to be used as reference.
+- `key`: the key to be compared.
+
+#### Return Value
+
+The check result.
+
+### operator<(int code, Key key)
+
+#### Brief
+
+Checks if a key is less than a certain code.
+
+#### Declaration
+
+```cpp
+bool operator<(int code, Key key);
+```
+
+- `code`: the code to be used as reference.
+- `key`: the key to be compared.
+
+#### Return Value
+
+The check result.
+
+### operator<=(int code, Key key)
+
+#### Brief
+
+Checks if a key is less than or equal to a certain code.
+
+#### Declaration
+
+```cpp
+bool operator<=(int code, Key key);
+```
+
+- `code`: the code to be used as reference.
+- `key`: the key to be compared.
+
+#### Return Value
+
+The check result.
+
 &ensp;
 <p align="center"><sup><strong>≥v≥v&ensp;Here Be Dragons!&ensp;≥v≥</strong><br />Made with love by skippyr <3</sup></p>
