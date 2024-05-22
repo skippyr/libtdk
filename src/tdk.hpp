@@ -137,6 +137,7 @@ public:
   unsigned int m_code;
   Layer m_layer;
 };
+
 class KeyEvent {
 public:
   KeyEvent();

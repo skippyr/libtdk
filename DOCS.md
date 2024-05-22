@@ -479,6 +479,38 @@ Contains the ANSI codes of the first 16 colors of the XTerm palette plus one mor
 
 ## ❡ Classes
 
+### Coordinate Class
+
+A class that represents a terminal coordinate.
+
+#### Contructors
+
+##### Brief
+
+Creates an instance of the [`Coordinate`](#coordinate-class) class.
+
+##### Declaration 1
+
+```cpp
+Coordinate();
+```
+
+##### Declaration 2
+
+```cpp
+Coordinate(unsigned short column, unsigned short row);
+```
+
+##### Parameters 2
+
+- `column`: the column component of the coordinate.
+- `row`: the row component of the coordinate.
+
+#### Public Member Variables
+
+- (`unsigned short`) `m_column`: the column component of the coordinate.
+- (`unsigned short`) `m_row`: the row component of the coordinate.
+
 ### Dimensions Class
 
 #### Brief
@@ -486,6 +518,10 @@ Contains the ANSI codes of the first 16 colors of the XTerm palette plus one mor
 A class that represents terminal dimensions.
 
 #### Constructors
+
+##### Brief
+
+Creates an instance of the [`Dimensions`](#dimensions-class) class.
 
 ##### Declaration 1
 
