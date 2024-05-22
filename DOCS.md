@@ -175,13 +175,13 @@ int main() {
 
 ## ❡ Key Events
 
-You can use the [`readkeyEvent`](#readkeyevent-function) function to read key events from the standard input buffer. Exclusively on Windows, this function can be interrupted by window resize events that happens in the same event loop. It holds the thread until a valid key event is pulled or it is interrupted.
+You can use the [`readkeyEvent`](#readkeyevent-function) function to read key events from the standard input buffer. Exclusively on Windows, it can be interrupted by a window resize event that might happen in the same event loop. It holds the thread until a valid key event is pulled or it is interrupted.
 
 The key read may be an UTF-8 grapheme or a key value from the [`Key`](#key-enum-class) enum class static casted to an `int` type. Values from the [`Key`](#key-enum-class) enum can be compared directly against the key by using comparasion operators such as `==`, `>`, `>=`, `<` and `<=`.
 
-As a limitation of this library: modifier keys are only allowed to be detected in keys of the English alphabet (lowercase (`a-z`) and uppercase (`A-Z`) letters), as those are the ranges in which terminals offer the greatest support. The Shift modifier key is intended to be detected by checking the key received: For example, lowercase letters become uppercase when it is used.
+As a limitation of this function: modifier keys are only allowed to be detected in keys of the English alphabet (lowercase (`a-z`) and uppercase (`A-Z`) letters), as those are the ranges in which terminals offer the greatest support. The Shift modifier key is intended to be detected by checking the key received: For example, lowercase letters become uppercase when it is used.
 
-There may be some key sequences in which the library will be unable to distinguish the keys used. For example: the sequences `Ctrl + i` and `Ctrl + j` are the same as keys `Key::Backspace` and `Key::Enter` respectively because they have the same underlying code sent by the terminal. For the same reason, keys with `Ctrl` can not have the `Shift` key detected. Some other key sequences may be reserved by the terminal.
+There may be some key sequences in which the function will be unable to distinguish the keys used. For example: the sequences `Ctrl + i` and `Ctrl + j` are the same as keys `Key::Backspace` and `Key::Enter` respectively because they have the same underlying code sent by the terminal. For the same reason, keys with `Ctrl` can not have the `Shift` key detected. Some other key sequences may be reserved by the terminal.
 
 The following example shows demonstrates how to read and parse a key event and catch the window resize interrupt:
 
@@ -300,8 +300,8 @@ int main() {
             << std::endl;
   tdk::getCursorCoordinate(coordinate);
   tdk::setCursorVisibility(true);
-  int offset = 0;
   tdk::setCursorCoordinate(0, coordinate.m_row - 1);
+  int offset = 0;
   do {
     tdk::clearCursorLine();
     std::cout << "  (" << offset + 1 << "/" << names.size() << ") "
@@ -367,8 +367,6 @@ int main() {
 
 You can ring the terminal bell by using the [`ringBell`](#ringbell-function) function, possibly emitting a symbol in terminal tab bar, visual flash, a system notification or a beep from the motherboard speaker. Terminals might have this feature disabled by default.
 
-## ❡ Animations
-
 ## ❡ Responsive Layouts
 
 ## ❡ Enum Classes
@@ -387,6 +385,18 @@ Contains the available terminal effects. Apply one by using the left shifting op
 - `Negative`: the negative effect swaps the foreground and background colors.
 - `Hidden`: the hidden effect makes the text hard to see or invisible.
 - `Strikethrough`: the strike-through effect draws a horizontal line in the middle of the text.
+
+### EventStatus Enum Class
+
+#### Brief
+
+Contains the status of a key event reading.
+
+#### Enumerators
+
+- `Success`: states the reading was sucessful.
+- `WindowResizeInterrupt`: exclusively happening on Windows, states the key reading was interrupted by a window resize event.
+- `Failure`: states the reading failed.
 
 ### Key Enum Class
 
@@ -414,6 +424,17 @@ Contains the available terminal layers. It is used to create instances of the [`
 
 ### Shape Enum Class
 
+#### Brief
+
+Contains the available terminal cursor shapes.
+
+#### Parameters
+
+- `Default`: the default shape is intended to be used for resets.
+- `Block`, `BlinkingBlock`: the regular and blinking variants of the block shape.
+- `Underline`, `BlinkingUnderline`: the regular and blinking variants of the underline shape.
+- `Bar`, `BlinkingBar`: the regular and blinking variants of the bar shape.
+
 ### Stream Enum Class
 
 #### Brief
@@ -427,6 +448,16 @@ Contains the standard terminal streams. You can check if they are connected to a
 - `Error`: the standard error stream (`stderr`).
 
 ### Weight Enum Class
+
+#### Brief
+
+Contains the available terminal text weights. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class.
+
+#### Enumerators
+
+- `Default`: the default weight is used for resets.
+- `Bold`: the bold weight is usually rendered as bold and/or with bright colors. The terminal might require the use a font with bold weight in order to make it visible.
+- `Dim`: the dim weight is usually rendered with faint colors.
 
 ### XColorCode Enum Class
 
@@ -445,173 +476,6 @@ Contains the ANSI codes of the first 16 colors of the XTerm palette plus one mor
 - `Magenta`, `LightMagenta`: the regular and light variants of the magenta color.
 - `Cyan`, `LightCyan`: the regular and light variants of the cyan color.
 - `White`, `LightWhite`: the regular and light variants of the white color.
-
-#### Brief
-
-Contains the available terminal text weights. Apply one by using the left shifting operator (`<<`) against an instance of the [`std::ostream`](https://cplusplus.com/reference/ostream/ostream) class.
-
-#### Enumerators
-
-- `Default`: the default weight is used for resets.
-- `Bold`: the bold weight is usually rendered as bold and/or with bright colors. The terminal might require the use a font with bold weight in order to make it visible.
-- `Dim`: the dim weight is usually rendered with faint colors.
-
-## ❡ Functions
-
-### clearCursorLine Function
-
-#### Brief
-
-Clears the contents in the terminal cursor line.
-
-#### Declaration
-
-```cpp
-void clearCursorLine();
-```
-
-### clearInputBuffer Function
-
-#### Brief
-
-Clears the standard input buffer.
-
-#### Declaration
-
-```cpp
-void clearInputBuffer();
-```
-
-### getCursorCoordinate Function
-
-### getWindowDimensions Function
-
-#### Brief
-
-Gets the terminal window dimensions if successful.
-
-#### Declaration
-
-```cpp
-int getWindowDimensions(Dimensions &dimensions);
-```
-
-#### Parameters
-
-- `dimensions`: the address where the dimensions information will be put into.
-
-#### Return Value
-
-0 if successful and -1 otherwise.
-
-### isTTY Function
-
-#### Brief
-
-Checks if a standard stream is connected to an interactive terminal (TTY).
-
-#### Declaration
-
-```cpp
-bool isTTY(Stream stream);
-```
-
-#### Parameters
-
-- `stream`: the stream to be checked.
-
-#### Return Value
-
-A boolean that states the check result.
-
-### readKeyEvent Function
-
-### ringBell Function
-
-#### Brief
-
-Rings the terminal bell, possibly emitting a symbol in terminal tab bar, visual flash, a system notification or a beep from the motherboard speaker. Terminals might have this feature disabled by default.
-
-#### Declaration
-
-```cpp
-void ringBell();
-```
-
-### setAlternateWindow Function
-
-#### Brief
-
-Opens/closes the alternate window: an alternate buffer that creates the feeling of that a terminal applications is running in a separate environment.
-
-#### Declaration
-
-```cpp
-void setAlternateWindow(bool isToOpen);
-```
-
-#### Parameters
-
-- `isToOpen`: a boolean that states the alternate window should be opened or closed
-
-### setCursorCoordinate Function
-
-#### Brief
-
-Sets the terminal cursor coordinate. The coordinate will always be fit within the window boundaries, use the [`getWindowDimensions`](#getwindowdimensions-function) function to treat possible exceptions.
-
-#### Declaration 1
-
-```cpp
-void setCursorCoordinate(unsigned short column, unsigned short row);
-```
-
-#### Parameters 1
-
-- `column`: the column component of the coordinate.
-- `row`: the row component of the coordinate.
-
-#### Declaration 2
-
-```cpp
-void setCursorCoordinate(Coordinate &coordinate);
-```
-
-#### Parameters 2
-
-- `coordinate`: the coordinate to be set.
-
-### setCursorShape Function
-
-#### Brief
-
-Sets the terminal cursor shape.
-
-#### Declaration
-
-```cpp
-void setCursorShape(Shape shape);
-```
-
-#### Parameters
-
-- `shape`: the shape to be set.
-
-### setCursorVisibility Function
-
-#### Brief
-
-Sets the terminal cursor visibility.
-
-#### Declaration
-
-```cpp
-void setCursorVisibility(bool isToShow);
-```
-
-#### Parameters
-
-- `isToShow`: a boolean that states the cursor should be visible or not.
 
 ## ❡ Classes
 
@@ -873,6 +737,189 @@ std::ostream &operator<<(std::ostream &stream, XColor color);
 #### Return Value
 
 The stream being affected.
+
+## ❡ Functions
+
+### clearCursorLine Function
+
+#### Brief
+
+Clears the contents in the terminal cursor line.
+
+#### Declaration
+
+```cpp
+void clearCursorLine();
+```
+
+### clearInputBuffer Function
+
+#### Brief
+
+Clears the standard input buffer.
+
+#### Declaration
+
+```cpp
+void clearInputBuffer();
+```
+
+### getCursorCoordinate Function
+
+### getWindowDimensions Function
+
+#### Brief
+
+Gets the terminal window dimensions if successful.
+
+#### Declaration
+
+```cpp
+int getWindowDimensions(Dimensions &dimensions);
+```
+
+#### Parameters
+
+- `dimensions`: the address where the dimensions information will be put into.
+
+#### Return Value
+
+0 if successful and -1 otherwise.
+
+### isTTY Function
+
+#### Brief
+
+Checks if a standard stream is connected to an interactive terminal (TTY).
+
+#### Declaration
+
+```cpp
+bool isTTY(Stream stream);
+```
+
+#### Parameters
+
+- `stream`: the stream to be checked.
+
+#### Return Value
+
+A boolean that states the check result.
+
+### readKeyEvent Function
+
+#### Brief
+
+Reads a key event from the standard input buffer. Exclusively on Windows, it can be interrupted by a window resize event that might happen in the same event loop. It holds the thread until a valid key event is pulled or it is interrupted.
+
+The key read may be an UTF-8 grapheme or a key value from the [`Key`](#key-enum-class) enum class static casted to an `int` type. Values from the [`Key`](#key-enum-class) enum can be compared directly against the key by using comparasion operators such as `==`, `>`, `>=`, `<` and `<=`.
+
+As a limitation of this function: modifier keys are only allowed to be detected in keys of the English alphabet (lowercase (`a-z`) and uppercase (`A-Z`) letters), as those are the ranges in which terminals offer the greatest support. The Shift modifier key is intended to be detected by checking the key received: For example, lowercase letters become uppercase when it is used.
+
+There may be some key sequences in which it may be unable to distinguish the keys used. For example: the sequences `Ctrl + i` and `Ctrl + j` are the same as keys `Key::Backspace` and `Key::Enter` respectively because they have the same underlying code sent by the terminal. For the same reason, keys with `Ctrl` can not have the `Shift` key detected. Some other key sequences may be reserved by the terminal.
+
+#### Declaration
+
+```cpp
+EventStatus readKeyEvent(KeyEvent &event);
+```
+
+#### Parameters
+
+- `event`: the address where the event information will be put into.
+
+#### Return Value
+
+The status of the event reading.
+
+#### Parameters
+
+### ringBell Function
+
+#### Brief
+
+Rings the terminal bell, possibly emitting a symbol in terminal tab bar, visual flash, a system notification or a beep from the motherboard speaker. Terminals might have this feature disabled by default.
+
+#### Declaration
+
+```cpp
+void ringBell();
+```
+
+### setAlternateWindow Function
+
+#### Brief
+
+Opens/closes the alternate window: an alternate buffer that creates the feeling of that a terminal applications is running in a separate environment.
+
+#### Declaration
+
+```cpp
+void setAlternateWindow(bool isToOpen);
+```
+
+#### Parameters
+
+- `isToOpen`: a boolean that states the alternate window should be opened or closed
+
+### setCursorCoordinate Function
+
+#### Brief
+
+Sets the terminal cursor coordinate. The coordinate will always be fit within the window boundaries, use the [`getWindowDimensions`](#getwindowdimensions-function) function to treat possible exceptions.
+
+#### Declaration 1
+
+```cpp
+void setCursorCoordinate(unsigned short column, unsigned short row);
+```
+
+#### Parameters 1
+
+- `column`: the column component of the coordinate.
+- `row`: the row component of the coordinate.
+
+#### Declaration 2
+
+```cpp
+void setCursorCoordinate(Coordinate &coordinate);
+```
+
+#### Parameters 2
+
+- `coordinate`: the coordinate to be set.
+
+### setCursorShape Function
+
+#### Brief
+
+Sets the terminal cursor shape.
+
+#### Declaration
+
+```cpp
+void setCursorShape(Shape shape);
+```
+
+#### Parameters
+
+- `shape`: the shape to be set.
+
+### setCursorVisibility Function
+
+#### Brief
+
+Sets the terminal cursor visibility.
+
+#### Declaration
+
+```cpp
+void setCursorVisibility(bool isToShow);
+```
+
+#### Parameters
+
+- `isToShow`: a boolean that states the cursor should be visible or not.
 
 &ensp;
 <p align="center"><sup><strong>≥v≥v&ensp;Here Be Dragons!&ensp;≥v≥</strong><br />Made with love by skippyr <3</sup></p>
