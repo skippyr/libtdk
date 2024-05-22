@@ -209,133 +209,71 @@ You can ring the terminal bell by using the [`ringBell`](#ringbell-function) fun
 
 You can create an application with responsive layout if you handle window resize events while keep painting the user interface. On Windows, those events can be catch by using the [`readKeyEvent`](#readkeyevent-function) function, and, on Linux, by setting up a handler function to be run whenever the terminal send the `SIGWINCH` (signal window change) by using the `signal` function from the `signal.h` POSIX header.
 
-The following example demonstrates how to create the responsive layout of a demo application with an interactive menu:
+The following example demonstrates how to create a simple responsive layout:
 
 ```cpp
-#include <array>
-
 #ifndef _WIN32
 #include <signal.h>
 #endif
 
 #include <tdk.hpp>
 
-static void paintBodyElement();
+static tdk::Dimensions g_windowDimensions;
+
 static void paintHeadElement();
 static void paintInterface(int signal);
-static void paintFooterElement();
-
-static tdk::Dimensions g_windowDimensions;
-static std::string g_name = "DevSetup - Create New Project";
-static std::string g_version = "v1.0.0";
-static std::array<std::string, 5> g_options = {"C", "C++", "Java", "JavaScript",
-                                               "Cancel"};
-static int g_selectedOffset = 0;
-
-static void paintBodyElement() {
-  tdk::setCursorCoordinate(0, 2);
-  std::cout << tdk::Weight::Bold
-            << "Select the language you will work with:" << tdk::Weight::Default
-            << std::endl;
-  for (int offset = 0; offset < g_options.size(); ++offset) {
-    std::cout << "  ";
-    if (offset == g_selectedOffset) {
-      std::cout << tdk::Effect::Negative << " > ";
-    } else {
-      std::cout << "   ";
-    }
-    std::cout << g_options[offset] << " " >> tdk::Effect::Negative << std::endl;
-  }
-}
+static void paintFooter();
 
 static void paintHeadElement() {
-  int padding = (g_windowDimensions.m_totalColumns - g_name.length()) / 2;
-  std::cout << tdk::Effect::Negative << std::string(padding, ' ') << g_name
-            << std::string(padding, ' ') >>
-      tdk::Effect::Negative;
+  std::string center = "Center";
+  tdk::setCursorCoordinate(
+      (g_windowDimensions.m_totalColumns - center.length()) / 2, 0);
+  std::cout << center;
 }
 
 static void paintInterface(int signal) {
-  tdk::getWindowDimensions(g_windowDimensions);
   tdk::setAlternateWindow(true);
+  tdk::getWindowDimensions(g_windowDimensions);
   paintHeadElement();
-  paintFooterElement();
-  paintBodyElement();
+  paintFooter();
   std::cout.flush();
 }
 
-static void paintFooterElement() {
+static void paintFooter() {
+  std::string left = "Left";
+  std::string center = "Center";
+  std::string right = "Right";
   tdk::setCursorCoordinate(0, g_windowDimensions.m_totalRows - 1);
-  std::cout << tdk::Effect::Negative;
-  for (int column = 0; column < g_windowDimensions.m_totalColumns; ++column) {
-    std::cout << " ";
-  }
-  tdk::setCursorCoordinate(0, g_windowDimensions.m_totalRows - 1);
-  std::cout >>
-      tdk::Effect::Negative << "Arrows" << tdk::Effect::Negative << "Move " >>
-      tdk::Effect::Negative << "Enter" << tdk::Effect::Negative << "Confirm";
-  tdk::setCursorCoordinate(g_windowDimensions.m_totalColumns -
-                               g_version.length(),
+  std::cout << left;
+  tdk::setCursorCoordinate(
+      (g_windowDimensions.m_totalColumns - center.length()) / 2,
+      g_windowDimensions.m_totalRows - 1);
+  std::cout << center;
+  tdk::setCursorCoordinate(g_windowDimensions.m_totalColumns - right.length(),
                            g_windowDimensions.m_totalRows - 1);
-  std::cout << g_version >> tdk::Effect::Negative;
+  std::cout << right;
 }
 
 int main() {
-#ifdef _WIN32
-  SetConsoleOutputCP(CP_UTF8);
-#else
-  signal(SIGWINCH, paintInterface);
-#endif
-  paintInterface(0);
-  tdk::setCursorVisibility(false);
   tdk::KeyEvent keyEvent;
+#ifndef _WIN32
+  struct sigaction resizeHandler;
+  resizeHandler.sa_handler = paintInterface;
+  sigemptyset(&resizeHandler.sa_mask);
+  sigaction(SIGWINCH, &resizeHandler, nullptr);
+#endif
+  tdk::setCursorVisibility(false);
+  paintInterface(0);
   do {
-    tdk::clearInputBuffer();
     if (tdk::readKeyEvent(keyEvent) ==
         tdk::EventStatus::WindowResizeInterrupt) {
       paintInterface(0);
-    } else if (keyEvent.m_key == tdk::Key::DownArrow) {
-      g_selectedOffset =
-          g_selectedOffset == g_options.size() - 1 ? 0 : g_selectedOffset + 1;
-      paintBodyElement();
-    } else if (keyEvent.m_key == tdk::Key::UpArrow) {
-      g_selectedOffset =
-          !g_selectedOffset ? g_options.size() - 1 : g_selectedOffset - 1;
-      paintBodyElement();
     }
   } while (keyEvent.m_key != tdk::Key::Enter &&
            keyEvent.m_key != tdk::Key::Escape);
-  tdk::setAlternateWindow(false);
   tdk::setCursorVisibility(true);
-  if (g_selectedOffset == g_options.size() - 1) {
-    std::cout << "Project canceled!" << std::endl;
-    std::exit(0);
-  }
-  signal(SIGWINCH, nullptr);
-  std::array<std::string, 6> frames = {"|", "/", "-", "|", "\\", "-"};
-  for (int timer = 0, frame = 0; timer < 101; ++timer) {
-    tdk::clearCursorLine();
-    std::cout << frames[frame] << " [" << timer << "%] "
-              << (timer < 40   ? "Downloading packages"
-                  : timer < 60 ? "Extracting contents"
-                  : timer < 90 ? "Creating directory structure"
-                               : "Finish your project setup")
-              << "...";
-    if (!(timer % 2)) {
-      ++frame;
-    }
-    if (frame == frames.size()) {
-      frame = 0;
-    }
-    std::cout.flush();
-#ifdef _WIN32
-    Sleep(100);
-#else
-    usleep(1000 * 100);
-#endif
-  }
-  tdk::clearCursorLine();
-  std::cout << "Done!" << std::endl;
+  tdk::setAlternateWindow(false);
+  return 0;
 }
 ```
 
