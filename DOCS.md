@@ -369,6 +369,108 @@ You can ring the terminal bell by using the [`ringBell`](#ringbell-function) fun
 
 ## ❡ Responsive Layouts
 
+The following example demonstrates how to create the responsive layout of a demo application:
+
+```cpp
+#include <array>
+
+#ifndef _WIN32
+#include <signal.h>
+#endif
+
+#include <tdk.hpp>
+
+static void paintBodyElement();
+static void paintHeadElement();
+static void paintInterface(int signal);
+static void paintFooterElement();
+
+static tdk::Dimensions g_windowDimensions;
+static std::string g_name = "DevSetup - Create New Project";
+static std::string g_version = "v1.0.0";
+static std::array<std::string, 5> g_options = {"C", "C++", "Java", "JavaScript",
+                                               "Cancel"};
+static int g_selectedOffset = 0;
+
+static void paintBodyElement() {
+  tdk::setCursorCoordinate(0, 2);
+  std::cout << tdk::Weight::Bold
+            << "Select the language you will work with:" << tdk::Weight::Default
+            << std::endl;
+  for (int offset = 0; offset < g_options.size(); ++offset) {
+    std::cout << "  ";
+    if (offset == g_selectedOffset) {
+      std::cout << tdk::Effect::Negative << " > ";
+    } else {
+      std::cout << "   ";
+    }
+    std::cout << g_options[offset] << " " >> tdk::Effect::Negative << std::endl;
+  }
+}
+
+static void paintHeadElement() {
+  int padding = (g_windowDimensions.m_totalColumns - g_name.length()) / 2;
+  std::cout << tdk::Effect::Negative << std::string(padding, ' ') << g_name
+            << std::string(padding, ' ') >>
+      tdk::Effect::Negative;
+}
+
+static void paintInterface(int signal) {
+  tdk::getWindowDimensions(g_windowDimensions);
+  tdk::setAlternateWindow(true);
+  paintHeadElement();
+  paintFooterElement();
+  paintBodyElement();
+  std::cout.flush();
+}
+
+static void paintFooterElement() {
+  tdk::setCursorCoordinate(0, g_windowDimensions.m_totalRows - 1);
+  std::cout << tdk::Effect::Negative;
+  for (int column = 0; column < g_windowDimensions.m_totalColumns; ++column) {
+     std::cout << " ";
+  }
+  tdk::setCursorCoordinate(0, g_windowDimensions.m_totalRows - 1);
+  std::cout >> tdk::Effect::Negative << "Arrows" <<
+      tdk::Effect::Negative << "Move " >> tdk::Effect::Negative << "Enter" <<
+      tdk::Effect::Negative << "Confirm";
+  tdk::setCursorCoordinate(g_windowDimensions.m_totalColumns -
+                               g_version.length(),
+                           g_windowDimensions.m_totalRows - 1);
+  std::cout << g_version >> tdk::Effect::Negative;
+}
+
+int main() {
+#ifdef _WIN32
+  SetConsoleOutputCP(CP_UTF8);
+#else
+  signal(SIGWINCH, paintInterface);
+#endif
+  paintInterface(0);
+  tdk::setCursorVisibility(false);
+  tdk::KeyEvent keyEvent;
+  do {
+    tdk::clearInputBuffer();
+    if (tdk::readKeyEvent(keyEvent) ==
+        tdk::EventStatus::WindowResizeInterrupt) {
+      paintInterface(0);
+    }
+    else if (keyEvent.m_key == tdk::Key::DownArrow) {
+      g_selectedOffset =
+          g_selectedOffset == g_options.size() - 1 ? 0 : g_selectedOffset + 1;
+      paintBodyElement();
+    } else if (keyEvent.m_key == tdk::Key::UpArrow) {
+      g_selectedOffset =
+          !g_selectedOffset ? g_options.size() - 1 : g_selectedOffset - 1;
+      paintBodyElement();
+    }
+  } while (keyEvent.m_key != tdk::Key::Enter &&
+           keyEvent.m_key != tdk::Key::Escape);
+  tdk::setAlternateWindow(false);
+  tdk::setCursorVisibility(true);
+}
+```
+
 ## ❡ Enum Classes
 
 ### Effect Enum Class
