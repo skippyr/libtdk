@@ -1,5 +1,17 @@
 #include "tdk.hpp"
 
+#include <cstdarg>
+
+#ifdef _WIN32
+#include <Windows.h>
+#include <io.h>
+#else
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <termios.h>
+#include <unistd.h>
+#endif
+
 static char g_cache = 0;
 
 #define IS_TTY(a_stream)                                                       \

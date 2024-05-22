@@ -1,17 +1,6 @@
 #pragma once
 
-#include <cstdarg>
 #include <iostream>
-
-#ifdef _WIN32
-#include <Windows.h>
-#include <io.h>
-#else
-#include <fcntl.h>
-#include <sys/ioctl.h>
-#include <termios.h>
-#include <unistd.h>
-#endif
 
 namespace tdk {
 enum class Shape {
