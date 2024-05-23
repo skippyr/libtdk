@@ -306,7 +306,6 @@ enum class WindowsRecordStatus
 {
     KeyEvent,
     WindowResizeEvent,
-    FocusEvent,
     InvalidEvent
 };
 
@@ -315,10 +314,6 @@ WindowsRecordStatus checkWindowsRecordStatus(INPUT_RECORD record)
     if (record.EventType == WINDOW_BUFFER_SIZE_EVENT)
     {
         return WindowsRecordStatus::WindowResizeEvent;
-    }
-    else if (record.EventType == FOCUS_EVENT)
-    {
-        return WindowsRecordStatus::FocusEvent;
     }
     else if (record.EventType == KEY_EVENT && record.Event.KeyEvent.bKeyDown &&
              record.Event.KeyEvent.wVirtualKeyCode != VK_CONTROL && record.Event.KeyEvent.wVirtualKeyCode != VK_SHIFT &&
@@ -331,7 +326,7 @@ WindowsRecordStatus checkWindowsRecordStatus(INPUT_RECORD record)
 }
 #endif
 
-tdk::EventStatus tdk::readKeyEvent(KeyEvent& event, int waitInMilliseconds)
+tdk::EventStatus tdk::readKeyEvent(KeyEvent& event, int totalWaitSteps)
 {
     prepareStreamsAndCache();
     if (!IS_TTY(tdk::Stream::Input) || std::fwide(stdin, 0) > 0 ||
@@ -348,13 +343,8 @@ tdk::EventStatus tdk::readKeyEvent(KeyEvent& event, int waitInMilliseconds)
     GetConsoleMode(handle, &mode);
     SetConsoleMode(handle, mode & ~ENABLE_PROCESSED_INPUT);
     event = KeyEvent();
-    waitInMilliseconds = (std::min)(waitInMilliseconds, 1000);
-    int totalSteps = waitInMilliseconds / 100;
-    if (!totalSteps && waitInMilliseconds > 0)
-    {
-        totalSteps = 1;
-    }
-    if (waitInMilliseconds < 0)
+    totalWaitSteps = (std::min)(totalWaitSteps, 10);
+    if (totalWaitSteps < 0)
     {
         while (true)
         {
@@ -370,7 +360,7 @@ tdk::EventStatus tdk::readKeyEvent(KeyEvent& event, int waitInMilliseconds)
             }
         }
     }
-    else if (!waitInMilliseconds)
+    else if (!totalWaitSteps)
     {
         while (true)
         {
@@ -388,6 +378,34 @@ tdk::EventStatus tdk::readKeyEvent(KeyEvent& event, int waitInMilliseconds)
             else if (status == WindowsRecordStatus::WindowResizeEvent)
             {
                 return EventStatus::WindowsResize;
+            }
+        }
+    }
+    else
+    {
+        for (int step = 1; step <= totalWaitSteps; ++step)
+        {
+            int waitStatus = WaitForSingleObject(handle, 100);
+            if (waitStatus == WAIT_FAILED)
+            {
+                return EventStatus::Failure;
+            }
+            else if (waitStatus == WAIT_TIMEOUT && step == totalWaitSteps)
+            {
+                return EventStatus::TimeOut;
+            }
+            else if (waitStatus == WAIT_OBJECT_0)
+            {
+                ReadConsoleInputW(handle, &record, 1, &totalEventsRead);
+                WindowsRecordStatus status = checkWindowsRecordStatus(record);
+                if (status == WindowsRecordStatus::KeyEvent)
+                {
+                    break;
+                }
+                else if (status == WindowsRecordStatus::WindowResizeEvent)
+                {
+                    return EventStatus::WindowsResize;
+                }
             }
         }
     }

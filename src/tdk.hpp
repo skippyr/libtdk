@@ -208,7 +208,7 @@ namespace tdk
     int getCursorCoordinate(Coordinate& coordinate);
     int getWindowDimensions(Dimensions& dimensions);
     bool isTTY(Stream stream);
-    EventStatus readKeyEvent(KeyEvent& event, int waitInMilliseconds);
+    EventStatus readKeyEvent(KeyEvent& event, int totalWaitSteps);
     void ringBell();
     void setAlternateWindow(bool isToOpen);
     void setCursorCoordinate(unsigned short column, unsigned short row);
