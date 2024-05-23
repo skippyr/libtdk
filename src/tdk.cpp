@@ -370,6 +370,27 @@ tdk::EventStatus tdk::readKeyEvent(KeyEvent& event, int waitInMilliseconds)
             }
         }
     }
+    else if (!waitInMilliseconds)
+    {
+        while (true)
+        {
+            DWORD totalEventsAvailable;
+            GetNumberOfConsoleInputEvents(handle, &totalEventsAvailable);
+            if (!totalEventsAvailable)
+            {
+                return EventStatus::NoEvent;
+            }
+            WindowsRecordStatus status = checkWindowsRecordStatus(record);
+            if (status == WindowsRecordStatus::KeyEvent)
+            {
+                break;
+            }
+            else if (status == WindowsRecordStatus::WindowResizeEvent)
+            {
+                return EventStatus::WindowsResize;
+            }
+        }
+    }
     SetConsoleMode(handle, mode);
 #endif
     return EventStatus::Success;
