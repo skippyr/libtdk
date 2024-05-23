@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-namespace tdk
+namespace TDK
 {
     enum class Shape
     {
@@ -23,66 +23,6 @@ namespace tdk
         Negative = 7,
         Hidden,
         Strikethrough
-    };
-
-    enum class Key
-    {
-#ifdef _WIN32
-        LeftArrow = -23,
-        UpArrow,
-        RightArrow,
-        DownArrow,
-#else
-        UpArrow = -23,
-        DownArrow,
-        RightArrow,
-        LeftArrow,
-#endif
-        F1,
-        F2,
-        F3,
-        F4,
-        F5,
-        F6,
-        F7,
-        F8,
-        F9,
-        F10,
-        F11,
-        F12,
-#ifdef _WIN32
-        PageUp,
-        PageDown,
-        End,
-        Home,
-        Insert,
-        Delete,
-#else
-        Home,
-        Insert,
-        Delete,
-        End,
-        PageUp,
-        PageDown,
-#endif
-        Tab = 9,
-#if defined(_WIN32) || defined(__APPLE__)
-        Enter = 13,
-#else
-        Enter,
-#endif
-        Escape = 27,
-        Spacebar = 32,
-        Backspace = 127
-    };
-
-    enum class EventStatus
-    {
-        Success,
-        NoEvent = -4,
-        TimeOut,
-        WindowsResize,
-        Failure
     };
 
     enum class Layer
@@ -150,20 +90,10 @@ namespace tdk
     {
     public:
         HexColor(unsigned int code, Layer layer);
-        HexColor m_invert();
+        HexColor Invert();
 
         unsigned int m_code;
         Layer m_layer;
-    };
-
-    class KeyEvent
-    {
-    public:
-        KeyEvent();
-
-        int m_key;
-        bool m_hasAlt;
-        bool m_hasCtrl;
     };
 
     class RGBColor
@@ -171,7 +101,7 @@ namespace tdk
     public:
         RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer);
         RGBColor(HexColor color);
-        RGBColor m_invert();
+        RGBColor Invert();
 
         unsigned char m_red;
         unsigned char m_green;
@@ -184,7 +114,7 @@ namespace tdk
     public:
         XColor(unsigned char code, Layer layer);
         XColor(XColorCode code, Layer layer);
-        XColor m_invert();
+        XColor Invert();
 
         int m_code;
         Layer m_layer;
@@ -196,23 +126,16 @@ namespace tdk
     std::ostream& operator<<(std::ostream& stream, RGBColor color);
     std::ostream& operator<<(std::ostream& stream, XColor color);
     std::ostream& operator<<(std::ostream& stream, Weight weight);
-    bool operator==(int code, Key key);
-    bool operator!=(int code, Key key);
-    bool operator>(int code, Key key);
-    bool operator>=(int code, Key key);
-    bool operator<(int code, Key key);
-    bool operator<=(int code, Key key);
 
-    void clearCursorLine();
-    void clearInputBuffer();
-    int getCursorCoordinate(Coordinate& coordinate);
-    int getWindowDimensions(Dimensions& dimensions);
-    bool isTTY(Stream stream);
-    EventStatus readKeyEvent(KeyEvent& event, int totalWaitSteps);
-    void ringBell();
-    void setAlternateWindow(bool isToOpen);
-    void setCursorCoordinate(unsigned short column, unsigned short row);
-    void setCursorCoordinate(Coordinate& coordinate);
-    void setCursorShape(Shape shape);
-    void setCursorVisibility(bool isToShow);
+    void ClearCursorLine();
+    void ClearInputBuffer();
+    int GetCursorCoordinate(Coordinate& coordinate);
+    int GetWindowDimensions(Dimensions& dimensions);
+    bool IsTTY(Stream stream);
+    void RingBell();
+    void SetAlternateWindow(bool isToOpen);
+    void SetCursorCoordinate(unsigned short column, unsigned short row);
+    void SetCursorCoordinate(Coordinate& coordinate);
+    void SetCursorShape(Shape shape);
+    void SetCursorVisibility(bool isToShow);
 }
