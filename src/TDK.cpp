@@ -218,6 +218,11 @@ void TDK::ClearInputBuffer()
 #endif
 }
 
+void TDK::CloseAlternateWindow()
+{
+    WriteANSISequence("\x1b[?1049l");
+}
+
 int TDK::GetCursorCoordinate(Coordinate& coordinate)
 {
 #ifdef _WIN32
@@ -281,14 +286,14 @@ bool TDK::IsTTY(Stream stream)
     return IS_TTY(stream);
 }
 
+void TDK::OpenAlternateWindow()
+{
+    WriteANSISequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
+}
+
 void TDK::RingBell()
 {
     WriteANSISequence("\7");
-}
-
-void TDK::SetAlternateWindow(bool isToOpen)
-{
-    WriteANSISequence(isToOpen ? "\x1b[?1049h\x1b[2J\x1b[1;1H" : "\x1b[?1049l");
 }
 
 void TDK::SetCursorCoordinate(unsigned short column, unsigned short row)
@@ -301,7 +306,7 @@ void TDK::SetCursorCoordinate(Coordinate& coordinate)
     SetCursorCoordinate(coordinate.m_column, coordinate.m_row);
 }
 
-void TDK::SetCursorShape(Shape shape)
+void TDK::SetCursorShape(CursorShape shape)
 {
     WriteANSISequence("\x1b[%d q", static_cast<int>(shape));
 }

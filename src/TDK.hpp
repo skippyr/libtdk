@@ -4,7 +4,7 @@
 
 namespace TDK
 {
-    enum class Shape
+    enum class CursorShape
     {
         Default,
         BlinkingBlock,
@@ -139,13 +139,14 @@ namespace TDK
 
     void ClearCursorLine();
     void ClearInputBuffer();
+    void CloseAlternateWindow();
     int GetCursorCoordinate(Coordinate& coordinate);
     int GetWindowDimensions(Dimensions& dimensions);
     bool IsTTY(Stream stream);
+    void OpenAlternateWindow();
     void RingBell();
-    void SetAlternateWindow(bool isToOpen);
     void SetCursorCoordinate(unsigned short column, unsigned short row);
     void SetCursorCoordinate(Coordinate& coordinate);
-    void SetCursorShape(Shape shape);
+    void SetCursorShape(CursorShape shape);
     void SetCursorVisibility(bool isToShow);
 }
