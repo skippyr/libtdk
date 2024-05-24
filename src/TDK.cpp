@@ -316,7 +316,7 @@ void TDK::SetCursorShape(CursorShape shape)
     WriteANSISequence("\x1b[%d q", static_cast<int>(shape));
 }
 
-void TDK::SetTitle(std::string title)
+void TDK::SetWindowTitle(std::string title)
 {
     WriteANSISequence("\x1b]0;%s\7", title.c_str());
 }
