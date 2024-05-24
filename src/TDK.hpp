@@ -15,7 +15,7 @@ namespace TDK
         Bar
     };
 
-    enum class Effect
+    enum class EffectCode
     {
         Italic = 3,
         Underline,
@@ -86,6 +86,16 @@ namespace TDK
         unsigned short m_totalRows;
     };
 
+    class Effect
+    {
+    public:
+        int m_code;
+        bool m_isToEnable;
+
+        Effect(EffectCode code, bool isToEnable);
+        Effect(int code, bool isToEnable);
+    };
+
     class HexColor
     {
     public:
@@ -121,11 +131,11 @@ namespace TDK
     };
 
     std::ostream& operator<<(std::ostream& stream, Effect effect);
-    std::ostream& operator>>(std::ostream& stream, Effect effect);
     std::ostream& operator<<(std::ostream& stream, HexColor color);
     std::ostream& operator<<(std::ostream& stream, RGBColor color);
     std::ostream& operator<<(std::ostream& stream, XColor color);
     std::ostream& operator<<(std::ostream& stream, Weight weight);
+    int operator|(EffectCode code0, EffectCode code1);
 
     void ClearCursorLine();
     void ClearInputBuffer();

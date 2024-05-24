@@ -93,6 +93,15 @@ TDK::Dimensions::Dimensions(unsigned short totalColumns, unsigned short totalRow
 {
 }
 
+TDK::Effect::Effect(int code, bool isToEnable) : m_code(code), m_isToEnable(isToEnable)
+{
+}
+
+TDK::Effect::Effect(TDK::EffectCode code, bool isToEnable)
+    : m_code(1 << static_cast<int>(code)), m_isToEnable(isToEnable)
+{
+}
+
 TDK::HexColor::HexColor(unsigned int code, Layer layer)
     : m_code((std::min)(static_cast<int>(code), 0xffffff)), m_layer(layer)
 {
@@ -140,14 +149,14 @@ TDK::XColor TDK::XColor::Invert()
 
 std::ostream& TDK::operator<<(std::ostream& stream, Effect effect)
 {
-    CHECK_STREAM_TTY_STATUS();
-    return stream << "\x1b[" << static_cast<int>(effect) << "m";
-}
-
-std::ostream& TDK::operator>>(std::ostream& stream, Effect effect)
-{
-    CHECK_STREAM_TTY_STATUS();
-    return stream << "\x1b[" << static_cast<int>(effect) + 20 << "m";
+    for (int code = 0; code < 10; ++code)
+    {
+        if (effect.m_code & 1 << code)
+        {
+            std::cout << "\x1b[" << code + (!effect.m_isToEnable * 20) << "m";
+        }
+    }
+    return stream;
 }
 
 std::ostream& TDK::operator<<(std::ostream& stream, HexColor color)
@@ -174,6 +183,11 @@ std::ostream& TDK::operator<<(std::ostream& stream, Weight weight)
 {
     CHECK_STREAM_TTY_STATUS();
     return weight == Weight::Default ? stream << "\x1b[22m" : stream << "\x1b[22;" << static_cast<int>(weight) << "m";
+}
+
+int TDK::operator|(EffectCode code0, EffectCode code1)
+{
+    return 1 << static_cast<int>(code0) | 1 << static_cast<int>(code1);
 }
 
 void TDK::ClearCursorLine()
