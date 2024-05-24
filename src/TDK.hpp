@@ -150,4 +150,5 @@ namespace TDK
     void SetCursorCoordinate(Coordinate& coordinate);
     void SetCursorShape(CursorShape shape);
     void SetCursorVisibility(bool isToShow);
+    void SetTitle(std::string title);
 }

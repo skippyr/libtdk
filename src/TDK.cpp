@@ -316,6 +316,11 @@ void TDK::SetCursorShape(CursorShape shape)
     WriteANSISequence("\x1b[%d q", static_cast<int>(shape));
 }
 
+void TDK::SetTitle(std::string title)
+{
+    WriteANSISequence("\x1b]0;%s\7", title.c_str());
+}
+
 void TDK::SetCursorVisibility(bool isToShow)
 {
     WriteANSISequence("\x1b[?25%c", isToShow ? 'h' : 'l');
