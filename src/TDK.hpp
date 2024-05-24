@@ -30,6 +30,7 @@ namespace TDK
         WindowResize,
         Key,
         None,
+        TimeOut,
         Invalid
     };
 

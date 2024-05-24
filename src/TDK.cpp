@@ -305,6 +305,7 @@ void TDK::OpenAlternateWindow()
     WriteANSISequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
 }
 
+#ifdef _WIN32
 TDK::EventType GetWindowsEventType(INPUT_RECORD& record)
 {
     if (record.EventType == WINDOW_BUFFER_SIZE_EVENT)
@@ -320,6 +321,7 @@ TDK::EventType GetWindowsEventType(INPUT_RECORD& record)
     }
     return TDK::EventType::Invalid;
 }
+#endif
 
 TDK::Event TDK::ReadEvent()
 {
@@ -384,6 +386,37 @@ TDK::Event TDK::ReadEvent(int waitInMilliseconds)
     }
     else
     {
+        HANDLE timerHandle = CreateWaitableTimerW(nullptr, true, nullptr);
+        LARGE_INTEGER duration;
+        duration.QuadPart = -10000 * waitInMilliseconds;
+        SetWaitableTimer(timerHandle, &duration, 0, nullptr, nullptr, false);
+        HANDLE handles[] = {timerHandle, inputHandle};
+        while (true)
+        {
+            int status = WaitForMultipleObjects(2, handles, false, INFINITE);
+            if (status == WAIT_OBJECT_0)
+            {
+                SetConsoleMode(inputHandle, mode);
+                CloseHandle(timerHandle);
+                return EventType::TimeOut;
+            }
+            else if (status == WAIT_OBJECT_0 + 1)
+            {
+                ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
+                EventType type = GetWindowsEventType(record);
+                if (type == EventType::WindowResize)
+                {
+                    SetConsoleMode(inputHandle, mode);
+                    CloseHandle(timerHandle);
+                    return EventType::WindowResize;
+                }
+                else if (type == EventType::Key)
+                {
+                    CloseHandle(timerHandle);
+                    break;
+                }
+            }
+        }
     }
     SetConsoleMode(inputHandle, mode);
 #endif
