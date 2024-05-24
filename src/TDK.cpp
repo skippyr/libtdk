@@ -218,6 +218,11 @@ void TDK::ClearInputBuffer()
 #endif
 }
 
+void TDK::ClearWindow()
+{
+    WriteANSISequence("\x1b[2J\x1b[1;1H");
+}
+
 void TDK::CloseAlternateWindow()
 {
     WriteANSISequence("\x1b[?1049l");

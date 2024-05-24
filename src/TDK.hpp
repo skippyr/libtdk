@@ -139,6 +139,7 @@ namespace TDK
 
     void ClearCursorLine();
     void ClearInputBuffer();
+    void ClearWindow();
     void CloseAlternateWindow();
     int GetCursorCoordinate(Coordinate& coordinate);
     int GetWindowDimensions(Dimensions& dimensions);
