@@ -102,6 +102,10 @@ TDK::Effect::Effect(TDK::EffectCode code, bool isToEnable)
 {
 }
 
+TDK::Event::Event(EventType type) : m_type(type)
+{
+}
+
 TDK::HexColor::HexColor(unsigned int code, Layer layer)
     : m_code((std::min)(static_cast<int>(code), 0xffffff)), m_layer(layer)
 {
@@ -188,6 +192,11 @@ std::ostream& TDK::operator<<(std::ostream& stream, Weight weight)
 int TDK::operator|(EffectCode code0, EffectCode code1)
 {
     return 1 << static_cast<int>(code0) | 1 << static_cast<int>(code1);
+}
+
+bool TDK::operator==(Event event0, Event event1)
+{
+    return event0.m_type == event1.m_type;
 }
 
 void TDK::ClearCursorLine()
@@ -294,6 +303,91 @@ bool TDK::IsTTY(Stream stream)
 void TDK::OpenAlternateWindow()
 {
     WriteANSISequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
+}
+
+TDK::EventType GetWindowsEventType(INPUT_RECORD& record)
+{
+    if (record.EventType == WINDOW_BUFFER_SIZE_EVENT)
+    {
+        return TDK::EventType::WindowResize;
+    }
+    else if (record.EventType == KEY_EVENT && record.Event.KeyEvent.bKeyDown &&
+             record.Event.KeyEvent.wVirtualKeyCode != VK_CONTROL && record.Event.KeyEvent.wVirtualKeyCode != VK_SHIFT &&
+             record.Event.KeyEvent.wVirtualKeyCode != VK_MENU && record.Event.KeyEvent.wVirtualKeyCode != VK_CAPITAL &&
+             record.Event.KeyEvent.wVirtualKeyCode != VK_NUMLOCK && record.Event.KeyEvent.wVirtualKeyCode != VK_SCROLL)
+    {
+        return TDK::EventType::Key;
+    }
+    return TDK::EventType::Invalid;
+}
+
+TDK::Event TDK::ReadEvent()
+{
+    return TDK::ReadEvent(-1);
+}
+
+TDK::Event TDK::ReadEvent(int waitInMilliseconds)
+{
+    PrepareStreamsAndCache();
+    if (!IS_TTY(TDK::Stream::Input) || std::fwide(stdin, 0) > 0 ||
+        (!IS_TTY(TDK::Stream::Output) && !IS_TTY(TDK::Stream::Error)))
+    {
+        return EventType::Invalid;
+    }
+#ifdef _WIN32
+    HANDLE inputHandle = GetStdHandle(STD_INPUT_HANDLE);
+    DWORD mode;
+    DWORD totalEventsRead;
+    INPUT_RECORD record;
+    GetConsoleMode(inputHandle, &mode);
+    SetConsoleMode(inputHandle, mode & ~ENABLE_PROCESSED_INPUT);
+    if (waitInMilliseconds < 0)
+    {
+        while (true)
+        {
+            ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
+            EventType type = GetWindowsEventType(record);
+            if (type == EventType::WindowResize)
+            {
+                SetConsoleMode(inputHandle, mode);
+                return EventType::WindowResize;
+            }
+            else if (type == EventType::Key)
+            {
+                break;
+            }
+        }
+    }
+    else if (!waitInMilliseconds)
+    {
+        while (true)
+        {
+            DWORD totalEventsAvailable;
+            GetNumberOfConsoleInputEvents(inputHandle, &totalEventsAvailable);
+            if (!totalEventsAvailable)
+            {
+                SetConsoleMode(inputHandle, mode);
+                return EventType::None;
+            }
+            ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
+            EventType type = GetWindowsEventType(record);
+            if (type == EventType::WindowResize)
+            {
+                SetConsoleMode(inputHandle, mode);
+                return EventType::WindowResize;
+            }
+            else if (type == EventType::Key)
+            {
+                break;
+            }
+        }
+    }
+    else
+    {
+    }
+    SetConsoleMode(inputHandle, mode);
+#endif
+    return EventType::Key;
 }
 
 void TDK::RingBell()

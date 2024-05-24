@@ -25,6 +25,14 @@ namespace TDK
         Strikethrough
     };
 
+    enum class EventType
+    {
+        WindowResize,
+        Key,
+        None,
+        Invalid
+    };
+
     enum class Layer
     {
         Foreground = 3,
@@ -96,6 +104,17 @@ namespace TDK
         Effect(int code, bool isToEnable);
     };
 
+    class Event
+    {
+    public:
+        EventType m_type;
+        typedef union {
+            Dimensions dimensions;
+        } m_data;
+
+        Event(EventType type);
+    };
+
     class HexColor
     {
     public:
@@ -136,6 +155,7 @@ namespace TDK
     std::ostream& operator<<(std::ostream& stream, XColor color);
     std::ostream& operator<<(std::ostream& stream, Weight weight);
     int operator|(EffectCode code0, EffectCode code1);
+    bool operator==(Event event0, Event event1);
 
     void ClearCursorLine();
     void ClearInputBuffer();
@@ -145,6 +165,8 @@ namespace TDK
     int GetWindowDimensions(Dimensions& dimensions);
     bool IsTTY(Stream stream);
     void OpenAlternateWindow();
+    Event ReadEvent();
+    Event ReadEvent(int waitInMilliseconds);
     void RingBell();
     void SetCursorCoordinate(unsigned short column, unsigned short row);
     void SetCursorCoordinate(Coordinate& coordinate);
