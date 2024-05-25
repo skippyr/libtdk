@@ -247,7 +247,7 @@ namespace TDK
     void OpenAlternateWindow();
     EventInfo ReadEvent();
     EventInfo ReadTimedEvent(unsigned int waitInMilliseconds);
-    EventInfo ReadTimedEvent(unsigned int waitInMilliseconds, std::function<bool(EventInfo eventInfo)> filter);
+    EventInfo ReadTimedEvent(unsigned int waitInMilliseconds, std::function<bool(EventInfo& eventInfo)> filter);
     void RingBell();
     void SetCursorCoordinate(unsigned short column, unsigned short row);
     void SetCursorCoordinate(Coordinate& coordinate);

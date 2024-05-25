@@ -43,12 +43,77 @@ static char g_cache = 0;
      << static_cast<int>(stream))
 #endif
 
-static void PrepareStreamsAndCache();
-static int WriteANSISequence(const char* format, ...);
 #ifdef _WIN32
 static TDK::EventType GetWindowsEventType(INPUT_RECORD& record);
+static TDK::KeyEvent ParseWindowsKeyEvent(INPUT_RECORD& record, HANDLE inputHandle);
 #endif
-static TDK::EventInfo ReadEvent(int waitInMilliseconds, std::function<bool(TDK::EventInfo eventInfo)> filter);
+static void PrepareStreamsAndCache();
+static TDK::EventInfo ReadGenericEvent(int waitInMilliseconds, std::function<bool(TDK::EventInfo& eventInfo)> filter);
+static int WriteANSISequence(const char* format, ...);
+
+#ifdef _WIN32
+static TDK::EventType GetWindowsEventType(INPUT_RECORD& record)
+{
+    if (record.EventType == WINDOW_BUFFER_SIZE_EVENT)
+    {
+        return TDK::EventType::WindowResize;
+    }
+    else if (record.EventType == KEY_EVENT && record.Event.KeyEvent.bKeyDown &&
+             record.Event.KeyEvent.wVirtualKeyCode != VK_CONTROL && record.Event.KeyEvent.wVirtualKeyCode != VK_SHIFT &&
+             record.Event.KeyEvent.wVirtualKeyCode != VK_MENU && record.Event.KeyEvent.wVirtualKeyCode != VK_CAPITAL &&
+             record.Event.KeyEvent.wVirtualKeyCode != VK_NUMLOCK &&
+             record.Event.KeyEvent.wVirtualKeyCode != VK_SCROLL &&
+             (record.Event.KeyEvent.uChar.UnicodeChar ||
+              !(record.Event.KeyEvent.dwControlKeyState &
+                (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED | SHIFT_PRESSED))))
+    {
+        return TDK::EventType::Key;
+    }
+    return TDK::EventType::Invalid;
+}
+
+static TDK::KeyEvent ParseWindowsKeyEvent(INPUT_RECORD& record, HANDLE inputHandle)
+{
+    TDK::KeyEvent keyEvent = TDK::KeyEvent();
+    DWORD totalEventsRead;
+    int buffer;
+    if ((buffer = record.Event.KeyEvent.uChar.UnicodeChar))
+    {
+        if (buffer <= 26 && buffer != TDK::Key::Tab && buffer != TDK::Key::Enter)
+        {
+            keyEvent.m_key = buffer + 96;
+        }
+        else if (buffer >= HIGH_SURROGATE_START && buffer <= HIGH_SURROGATE_END)
+        {
+            ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
+            ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
+            *(reinterpret_cast<short*>(&buffer) + 1) = record.Event.KeyEvent.uChar.UnicodeChar;
+            WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<wchar_t*>(&buffer), 2,
+                                reinterpret_cast<char*>(&keyEvent.m_key), 4, NULL, NULL);
+        }
+        else
+        {
+            WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<wchar_t*>(&buffer), 1,
+                                reinterpret_cast<char*>(&keyEvent.m_key), 4, NULL, NULL);
+        }
+        keyEvent.m_hasAlt = record.Event.KeyEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED);
+        keyEvent.m_hasCtrl = record.Event.KeyEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED);
+    }
+    else
+    {
+        PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_LEFT && record.Event.KeyEvent.wVirtualKeyCode <= VK_DOWN,
+                  record.Event.KeyEvent.wVirtualKeyCode - VK_LEFT + static_cast<int>(TDK::Key::LeftArrow));
+        PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_PRIOR && record.Event.KeyEvent.wVirtualKeyCode <= VK_HOME,
+                  record.Event.KeyEvent.wVirtualKeyCode - VK_PRIOR + static_cast<int>(TDK::Key::PageUp));
+        PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_INSERT &&
+                      record.Event.KeyEvent.wVirtualKeyCode <= VK_DELETE,
+                  record.Event.KeyEvent.wVirtualKeyCode - VK_INSERT + static_cast<int>(TDK::Key::Insert));
+        PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_F1 && record.Event.KeyEvent.wVirtualKeyCode <= VK_F12,
+                  record.Event.KeyEvent.wVirtualKeyCode - VK_F1 + static_cast<int>(TDK::Key::F1));
+    }
+    return keyEvent;
+}
+#endif
 
 static void PrepareStreamsAndCache()
 {
@@ -64,6 +129,46 @@ static void PrepareStreamsAndCache()
      GetConsoleMode((handle = GetStdHandle(STD_ERROR_HANDLE)), &mode)) &&
         SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 #endif
+}
+
+static TDK::EventInfo ReadGenericEvent(int waitInMilliseconds, std::function<bool(TDK::EventInfo& eventInfo)> filter)
+{
+    PrepareStreamsAndCache();
+    if (!IS_TTY(TDK::Stream::Input) || std::fwide(stdin, 0) > 0 ||
+        (!IS_TTY(TDK::Stream::Output) && !IS_TTY(TDK::Stream::Error)))
+    {
+        return TDK::EventType::Invalid;
+    }
+#ifdef _WIN32
+    HANDLE inputHandle = GetStdHandle(STD_INPUT_HANDLE);
+    DWORD mode;
+    DWORD totalEventsRead;
+    INPUT_RECORD record;
+    HANDLE timerHandle = nullptr;
+    TDK::EventInfo eventInfo = TDK::EventType::None;
+    GetConsoleMode(inputHandle, &mode);
+    SetConsoleMode(inputHandle, mode & ~ENABLE_PROCESSED_INPUT);
+    if (waitInMilliseconds < 0)
+    {
+        while (true)
+        {
+            ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
+            TDK::EventType type = GetWindowsEventType(record);
+            if (type == TDK::EventType::WindowResize)
+            {
+                eventInfo = TDK::WindowResizeEvent();
+                break;
+            }
+            else if (type == TDK::EventType::Key)
+            {
+                eventInfo = ParseWindowsKeyEvent(record, inputHandle);
+                break;
+            }
+        }
+    }
+    SetConsoleMode(inputHandle, mode);
+#endif
+    return eventInfo;
 }
 
 static int WriteANSISequence(const char* format, ...)
@@ -274,28 +379,6 @@ void TDK::ClearInputBuffer()
 #endif
 }
 
-#ifdef _WIN32
-static TDK::EventType GetWindowsEventType(INPUT_RECORD& record)
-{
-    if (record.EventType == WINDOW_BUFFER_SIZE_EVENT)
-    {
-        return TDK::EventType::WindowResize;
-    }
-    else if (record.EventType == KEY_EVENT && record.Event.KeyEvent.bKeyDown &&
-             record.Event.KeyEvent.wVirtualKeyCode != VK_CONTROL && record.Event.KeyEvent.wVirtualKeyCode != VK_SHIFT &&
-             record.Event.KeyEvent.wVirtualKeyCode != VK_MENU && record.Event.KeyEvent.wVirtualKeyCode != VK_CAPITAL &&
-             record.Event.KeyEvent.wVirtualKeyCode != VK_NUMLOCK &&
-             record.Event.KeyEvent.wVirtualKeyCode != VK_SCROLL &&
-             (record.Event.KeyEvent.uChar.UnicodeChar ||
-              !(record.Event.KeyEvent.dwControlKeyState &
-                (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED | SHIFT_PRESSED))))
-    {
-        return TDK::EventType::Key;
-    }
-    return TDK::EventType::Invalid;
-}
-#endif
-
 void TDK::ClearWindow()
 {
     WriteANSISequence("\x1b[2J\x1b[1;1H");
@@ -372,6 +455,11 @@ bool TDK::IsTTY(Stream stream)
 void TDK::OpenAlternateWindow()
 {
     WriteANSISequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
+}
+
+TDK::EventInfo TDK::ReadEvent()
+{
+    return ReadGenericEvent(-1, [](EventInfo& eventInfo) { return true; });
 }
 
 void TDK::RingBell()
