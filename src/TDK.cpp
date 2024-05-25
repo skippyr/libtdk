@@ -189,6 +189,47 @@ static TDK::EventInfo ReadGenericEvent(int waitInMilliseconds, std::function<boo
             }
         }
     }
+    else
+    {
+        HANDLE timerHandle = CreateWaitableTimerW(nullptr, true, nullptr);
+        LARGE_INTEGER duration;
+        duration.QuadPart = -10000 * waitInMilliseconds;
+        SetWaitableTimer(timerHandle, &duration, 0, nullptr, nullptr, false);
+        HANDLE handles[] = {timerHandle, inputHandle};
+        while (true)
+        {
+            int status = WaitForMultipleObjects(2, handles, false, INFINITE);
+            if (status == WAIT_OBJECT_0)
+            {
+                CloseHandle(timerHandle);
+                eventInfo = TDK::EventType::TimeOut;
+                break;
+            }
+            else if (status == WAIT_OBJECT_0 + 1)
+            {
+                ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
+                TDK::EventType type = GetWindowsEventType(record);
+                if (type == TDK::EventType::WindowResize)
+                {
+                    eventInfo = TDK::WindowResizeEvent();
+                    if (filter(eventInfo))
+                    {
+                        CloseHandle(timerHandle);
+                        break;
+                    }
+                }
+                else if (type == TDK::EventType::Key)
+                {
+                    eventInfo = ParseWindowsKeyEvent(record, inputHandle);
+                    if (filter(eventInfo))
+                    {
+                        CloseHandle(timerHandle);
+                        break;
+                    }
+                }
+            }
+        }
+    }
     SetConsoleMode(inputHandle, mode);
 #endif
     return eventInfo;
@@ -487,7 +528,12 @@ TDK::EventInfo TDK::ReadEvent()
 
 TDK::EventInfo TDK::ReadTimedEvent(unsigned int waitInMilliseconds)
 {
-    return ReadGenericEvent(0, [](EventInfo& eventInfo) { return true; });
+    return ReadGenericEvent(waitInMilliseconds, [](EventInfo& eventInfo) { return true; });
+}
+
+TDK::EventInfo TDK::ReadTimedEvent(unsigned int waitInMilliseconds, std::function<bool(EventInfo& eventInfo)> filter)
+{
+    return ReadGenericEvent(waitInMilliseconds, filter);
 }
 
 void TDK::RingBell()
