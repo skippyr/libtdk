@@ -144,7 +144,6 @@ static TDK::EventInfo ReadGenericEvent(int waitInMilliseconds, std::function<boo
     DWORD mode;
     DWORD totalEventsRead;
     INPUT_RECORD record;
-    HANDLE timerHandle = nullptr;
     TDK::EventInfo eventInfo = TDK::EventType::None;
     GetConsoleMode(inputHandle, &mode);
     SetConsoleMode(inputHandle, mode & ~ENABLE_PROCESSED_INPUT);
@@ -152,6 +151,30 @@ static TDK::EventInfo ReadGenericEvent(int waitInMilliseconds, std::function<boo
     {
         while (true)
         {
+            ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
+            TDK::EventType type = GetWindowsEventType(record);
+            if (type == TDK::EventType::WindowResize)
+            {
+                eventInfo = TDK::WindowResizeEvent();
+                break;
+            }
+            else if (type == TDK::EventType::Key)
+            {
+                eventInfo = ParseWindowsKeyEvent(record, inputHandle);
+                break;
+            }
+        }
+    }
+    else if (!waitInMilliseconds)
+    {
+        while (true)
+        {
+            DWORD totalEventsAvailable;
+            GetNumberOfConsoleInputEvents(inputHandle, &totalEventsAvailable);
+            if (!totalEventsAvailable)
+            {
+                break;
+            }
             ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
             TDK::EventType type = GetWindowsEventType(record);
             if (type == TDK::EventType::WindowResize)
@@ -460,6 +483,11 @@ void TDK::OpenAlternateWindow()
 TDK::EventInfo TDK::ReadEvent()
 {
     return ReadGenericEvent(-1, [](EventInfo& eventInfo) { return true; });
+}
+
+TDK::EventInfo TDK::ReadTimedEvent(unsigned int waitInMilliseconds)
+{
+    return ReadGenericEvent(0, [](EventInfo& eventInfo) { return true; });
 }
 
 void TDK::RingBell()
