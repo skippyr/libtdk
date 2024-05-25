@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <iostream>
 
 namespace TDK
@@ -127,7 +128,7 @@ namespace TDK
         Dim
     };
 
-    class Coordinate
+    class Coordinate final
     {
     public:
         Coordinate();
@@ -137,7 +138,7 @@ namespace TDK
         unsigned short m_row;
     };
 
-    class Dimensions
+    class Dimensions final
     {
     public:
         Dimensions();
@@ -147,7 +148,7 @@ namespace TDK
         unsigned short m_totalRows;
     };
 
-    class Effect
+    class Effect final
     {
     public:
         int m_code;
@@ -157,7 +158,7 @@ namespace TDK
         Effect(int code, bool isToEnable);
     };
 
-    class KeyEvent
+    class KeyEvent final
     {
     public:
         int m_key;
@@ -167,7 +168,7 @@ namespace TDK
         KeyEvent();
     };
 
-    class WindowResizeEvent
+    class WindowResizeEvent final
     {
     public:
         Dimensions m_dimensions;
@@ -175,7 +176,7 @@ namespace TDK
         WindowResizeEvent();
     };
 
-    class EventInfo
+    class EventInfo final
     {
     public:
         EventType m_type;
@@ -189,7 +190,7 @@ namespace TDK
         EventInfo(WindowResizeEvent windowResizeEvent);
     };
 
-    class HexColor
+    class HexColor final
     {
     public:
         HexColor(unsigned int code, Layer layer);
@@ -199,7 +200,7 @@ namespace TDK
         Layer m_layer;
     };
 
-    class RGBColor
+    class RGBColor final
     {
     public:
         RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer);
@@ -212,7 +213,7 @@ namespace TDK
         Layer m_layer;
     };
 
-    class XColor
+    class XColor final
     {
     public:
         XColor(unsigned char code, Layer layer);
@@ -245,7 +246,8 @@ namespace TDK
     bool IsTTY(Stream stream);
     void OpenAlternateWindow();
     EventInfo ReadEvent();
-    EventInfo ReadEvent(int waitInMilliseconds);
+    EventInfo ReadTimedEvent(unsigned int waitInMilliseconds);
+    EventInfo ReadTimedEvent(unsigned int waitInMilliseconds, std::function<bool(EventInfo eventInfo)> filter);
     void RingBell();
     void SetCursorCoordinate(unsigned short column, unsigned short row);
     void SetCursorCoordinate(Coordinate& coordinate);
