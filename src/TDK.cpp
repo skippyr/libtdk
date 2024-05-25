@@ -315,7 +315,11 @@ TDK::EventType GetWindowsEventType(INPUT_RECORD& record)
     else if (record.EventType == KEY_EVENT && record.Event.KeyEvent.bKeyDown &&
              record.Event.KeyEvent.wVirtualKeyCode != VK_CONTROL && record.Event.KeyEvent.wVirtualKeyCode != VK_SHIFT &&
              record.Event.KeyEvent.wVirtualKeyCode != VK_MENU && record.Event.KeyEvent.wVirtualKeyCode != VK_CAPITAL &&
-             record.Event.KeyEvent.wVirtualKeyCode != VK_NUMLOCK && record.Event.KeyEvent.wVirtualKeyCode != VK_SCROLL)
+             record.Event.KeyEvent.wVirtualKeyCode != VK_NUMLOCK &&
+             record.Event.KeyEvent.wVirtualKeyCode != VK_SCROLL &&
+             (record.Event.KeyEvent.uChar.UnicodeChar ||
+              !(record.Event.KeyEvent.dwControlKeyState &
+                (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED | SHIFT_PRESSED))))
     {
         return TDK::EventType::Key;
     }
