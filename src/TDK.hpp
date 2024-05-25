@@ -34,6 +34,58 @@ namespace TDK
         Invalid
     };
 
+    enum class Key
+    {
+
+#ifdef _WIN32
+        LeftArrow = -23,
+        UpArrow,
+        RightArrow,
+        DownArrow,
+#else
+        UpArrow = -23,
+        DownArrow,
+        RightArrow,
+        LeftArrow,
+#endif
+        F1,
+        F2,
+        F3,
+        F4,
+        F5,
+        F6,
+        F7,
+        F8,
+        F9,
+        F10,
+        F11,
+        F12,
+#ifdef _WIN32
+        PageUp,
+        PageDown,
+        End,
+        Home,
+        Insert,
+        Delete,
+#else
+        Home,
+        Insert,
+        Delete,
+        End,
+        PageUp,
+        PageDown,
+#endif
+        Tab = 9,
+#if defined(_WIN32) || defined(__APPLE__)
+        Enter = 13,
+#else
+        Enter,
+#endif
+        Escape = 27,
+        Spacebar = 32,
+        Backspace = 127
+    };
+
     enum class Layer
     {
         Foreground = 3,
@@ -105,6 +157,16 @@ namespace TDK
         Effect(int code, bool isToEnable);
     };
 
+    class KeyEvent
+    {
+    public:
+        int m_key;
+        bool m_hasAlt;
+        bool m_hasCtrl;
+
+        KeyEvent();
+    };
+
     class WindowResizeEvent
     {
     public:
@@ -118,10 +180,12 @@ namespace TDK
     public:
         EventType m_type;
         union {
+            KeyEvent m_keyEvent;
             WindowResizeEvent m_windowResizeEvent;
         };
 
         EventInfo(EventType type);
+        EventInfo(KeyEvent keyEvent);
         EventInfo(WindowResizeEvent windowResizeEvent);
     };
 
@@ -165,6 +229,12 @@ namespace TDK
     std::ostream& operator<<(std::ostream& stream, XColor color);
     std::ostream& operator<<(std::ostream& stream, Weight weight);
     int operator|(EffectCode code0, EffectCode code1);
+    bool operator==(int code, Key key);
+    bool operator!=(int code, Key key);
+    bool operator>(int code, Key key);
+    bool operator>=(int code, Key key);
+    bool operator<(int code, Key key);
+    bool operator<=(int code, Key key);
 
     void ClearCursorLine();
     void ClearInputBuffer();
