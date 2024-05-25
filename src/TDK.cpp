@@ -102,7 +102,17 @@ TDK::Effect::Effect(TDK::EffectCode code, bool isToEnable)
 {
 }
 
-TDK::Event::Event(EventType type) : m_type(type)
+TDK::WindowResizeEvent::WindowResizeEvent()
+{
+    GetWindowDimensions(m_dimensions);
+}
+
+TDK::EventInfo::EventInfo(EventType type) : m_type(type)
+{
+}
+
+TDK::EventInfo::EventInfo(WindowResizeEvent windowResizeEvent)
+    : m_type(EventType::WindowResize), m_windowResizeEvent(windowResizeEvent)
 {
 }
 
@@ -192,11 +202,6 @@ std::ostream& TDK::operator<<(std::ostream& stream, Weight weight)
 int TDK::operator|(EffectCode code0, EffectCode code1)
 {
     return 1 << static_cast<int>(code0) | 1 << static_cast<int>(code1);
-}
-
-bool TDK::operator==(Event event0, Event event1)
-{
-    return event0.m_type == event1.m_type;
 }
 
 void TDK::ClearCursorLine()
@@ -327,12 +332,12 @@ TDK::EventType GetWindowsEventType(INPUT_RECORD& record)
 }
 #endif
 
-TDK::Event TDK::ReadEvent()
+TDK::EventInfo TDK::ReadEvent()
 {
     return TDK::ReadEvent(-1);
 }
 
-TDK::Event TDK::ReadEvent(int waitInMilliseconds)
+TDK::EventInfo TDK::ReadEvent(int waitInMilliseconds)
 {
     PrepareStreamsAndCache();
     if (!IS_TTY(TDK::Stream::Input) || std::fwide(stdin, 0) > 0 ||
@@ -356,7 +361,7 @@ TDK::Event TDK::ReadEvent(int waitInMilliseconds)
             if (type == EventType::WindowResize)
             {
                 SetConsoleMode(inputHandle, mode);
-                return EventType::WindowResize;
+                return WindowResizeEvent();
             }
             else if (type == EventType::Key)
             {
@@ -380,7 +385,7 @@ TDK::Event TDK::ReadEvent(int waitInMilliseconds)
             if (type == EventType::WindowResize)
             {
                 SetConsoleMode(inputHandle, mode);
-                return EventType::WindowResize;
+                return WindowResizeEvent();
             }
             else if (type == EventType::Key)
             {
@@ -412,7 +417,7 @@ TDK::Event TDK::ReadEvent(int waitInMilliseconds)
                 {
                     SetConsoleMode(inputHandle, mode);
                     CloseHandle(timerHandle);
-                    return EventType::WindowResize;
+                    return WindowResizeEvent();
                 }
                 else if (type == EventType::Key)
                 {

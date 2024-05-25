@@ -105,15 +105,24 @@ namespace TDK
         Effect(int code, bool isToEnable);
     };
 
-    class Event
+    class WindowResizeEvent
+    {
+    public:
+        Dimensions m_dimensions;
+
+        WindowResizeEvent();
+    };
+
+    class EventInfo
     {
     public:
         EventType m_type;
-        typedef union {
-            Dimensions dimensions;
-        } m_data;
+        union {
+            WindowResizeEvent m_windowResizeEvent;
+        };
 
-        Event(EventType type);
+        EventInfo(EventType type);
+        EventInfo(WindowResizeEvent windowResizeEvent);
     };
 
     class HexColor
@@ -156,7 +165,6 @@ namespace TDK
     std::ostream& operator<<(std::ostream& stream, XColor color);
     std::ostream& operator<<(std::ostream& stream, Weight weight);
     int operator|(EffectCode code0, EffectCode code1);
-    bool operator==(Event event0, Event event1);
 
     void ClearCursorLine();
     void ClearInputBuffer();
@@ -166,8 +174,8 @@ namespace TDK
     int GetWindowDimensions(Dimensions& dimensions);
     bool IsTTY(Stream stream);
     void OpenAlternateWindow();
-    Event ReadEvent();
-    Event ReadEvent(int waitInMilliseconds);
+    EventInfo ReadEvent();
+    EventInfo ReadEvent(int waitInMilliseconds);
     void RingBell();
     void SetCursorCoordinate(unsigned short column, unsigned short row);
     void SetCursorCoordinate(Coordinate& coordinate);
