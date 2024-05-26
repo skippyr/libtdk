@@ -101,8 +101,8 @@ tdk::Region::Region(unsigned short totalColumns, unsigned short totalRows)
       bottomLeftCoordinate_m(0, totalRows - 1),
       bottomRightCoordinate_m(totalColumns - 1, totalRows - 1) {}
 
-tdk::Region::Region(Coordinate cornerCoordinate0,
-                    Coordinate cornerCoordinate1) {
+tdk::Region::Region(Coordinate &cornerCoordinate0,
+                    Coordinate &cornerCoordinate1) {
   unsigned short maxColumn =
       (std::max)(cornerCoordinate0.column_m, cornerCoordinate1.column_m);
   unsigned short minColumn =
@@ -124,7 +124,7 @@ tdk::RGBColor::RGBColor(unsigned char red, unsigned char green,
                         unsigned char blue, Layer layer)
     : red_m(red), green_m(green), blue_m(blue), layer_m(layer) {}
 
-tdk::RGBColor::RGBColor(HexColor color)
+tdk::RGBColor::RGBColor(HexColor &color)
     : red_m(color.code_m >> 16 & 0xff), green_m(color.code_m >> 8 & 0xff),
       blue_m(color.code_m & 0xff), layer_m(color.layer_m) {}
 
@@ -159,11 +159,11 @@ std::ostream &tdk::operator<<(std::ostream &stream, Effect effect) {
   return stream;
 }
 
-std::ostream &tdk::operator<<(std::ostream &stream, HexColor color) {
+std::ostream &tdk::operator<<(std::ostream &stream, HexColor &color) {
   return stream << RGBColor(color);
 }
 
-std::ostream &tdk::operator<<(std::ostream &stream, RGBColor color) {
+std::ostream &tdk::operator<<(std::ostream &stream, RGBColor &color) {
   CHECK_STREAM_TTY_STATUS();
   return stream << "\x1b[" << static_cast<int>(color.layer_m) << "8;2;"
                 << static_cast<int>(color.red_m) << ";"
@@ -171,7 +171,7 @@ std::ostream &tdk::operator<<(std::ostream &stream, RGBColor color) {
                 << static_cast<int>(color.blue_m) << "m";
 }
 
-std::ostream &tdk::operator<<(std::ostream &stream, XColor color) {
+std::ostream &tdk::operator<<(std::ostream &stream, XColor &color) {
   CHECK_STREAM_TTY_STATUS();
   return color.code_m == static_cast<int>(tdk::XColorCode::Default)
              ? stream << "\x1b[" << static_cast<int>(color.layer_m) << "9m"

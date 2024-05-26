@@ -88,14 +88,14 @@ public:
 
   Region();
   Region(unsigned short totalColumns, unsigned short totalRows);
-  Region(Coordinate cornerCoordinate0, Coordinate cornerCoordinate1);
+  Region(Coordinate &cornerCoordinate0, Coordinate &cornerCoordinate1);
 };
 
 class RGBColor final {
 public:
   RGBColor(unsigned char red, unsigned char green, unsigned char blue,
            Layer layer);
-  RGBColor(HexColor color);
+  RGBColor(HexColor &color);
   RGBColor invert_m();
 
   unsigned char red_m;
@@ -115,9 +115,9 @@ public:
 };
 
 std::ostream &operator<<(std::ostream &stream, Effect effect);
-std::ostream &operator<<(std::ostream &stream, HexColor color);
-std::ostream &operator<<(std::ostream &stream, RGBColor color);
-std::ostream &operator<<(std::ostream &stream, XColor color);
+std::ostream &operator<<(std::ostream &stream, HexColor &color);
+std::ostream &operator<<(std::ostream &stream, RGBColor &color);
+std::ostream &operator<<(std::ostream &stream, XColor &color);
 std::ostream &operator<<(std::ostream &stream, Weight weight);
 int operator|(EffectCode code0, EffectCode code1);
 
