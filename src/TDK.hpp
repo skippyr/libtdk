@@ -100,6 +100,18 @@ namespace TDK
     class Region final
     {
     public:
+        Region();
+        Region(unsigned short totalColumns, unsigned short totalRows);
+        Region(Coordinate& cornerCoordinate0, Coordinate& cornerCoordinate1);
+        unsigned short GetTotalColumns() const;
+        unsigned short GetTotalRows() const;
+        unsigned int GetArea() const;
+        Coordinate GetTopLeftCoordinate() const;
+        Coordinate GetTopRightCoordinate() const;
+        Coordinate GetBottomLeftCoordinate() const;
+        Coordinate GetBottomRightCoordinate() const;
+
+    private:
         unsigned short m_totalColumns;
         unsigned short m_totalRows;
         unsigned int m_area;
@@ -107,10 +119,6 @@ namespace TDK
         Coordinate m_topRightCoordinate;
         Coordinate m_bottomLeftCoordinate;
         Coordinate m_bottomRightCoordinate;
-
-        Region();
-        Region(unsigned short totalColumns, unsigned short totalRows);
-        Region(Coordinate& cornerCoordinate0, Coordinate& cornerCoordinate1);
     };
 
     class RGBColor final

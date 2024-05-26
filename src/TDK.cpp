@@ -127,6 +127,41 @@ TDK::Region::Region(Coordinate& cornerCoordinate0, Coordinate& cornerCoordinate1
     m_bottomRightCoordinate = Coordinate(maxColumn, maxRow);
 }
 
+unsigned short TDK::Region::GetTotalColumns() const
+{
+    return m_totalColumns;
+}
+
+unsigned short TDK::Region::GetTotalRows() const
+{
+    return m_totalRows;
+}
+
+unsigned int TDK::Region::GetArea() const
+{
+    return m_area;
+}
+
+TDK::Coordinate TDK::Region::GetTopLeftCoordinate() const
+{
+    return m_topLeftCoordinate;
+}
+
+TDK::Coordinate TDK::Region::GetTopRightCoordinate() const
+{
+    return m_topRightCoordinate;
+}
+
+TDK::Coordinate TDK::Region::GetBottomLeftCoordinate() const
+{
+    return m_bottomLeftCoordinate;
+}
+
+TDK::Coordinate TDK::Region::GetBottomRightCoordinate() const
+{
+    return m_bottomRightCoordinate;
+}
+
 TDK::RGBColor::RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer)
     : m_red(red), m_green(green), m_blue(blue), m_layer(layer)
 {
@@ -221,10 +256,10 @@ bool TDK::operator==(Coordinate& coordinate0, Coordinate& coordinate1)
 
 bool TDK::operator==(Region& region0, Region& region1)
 {
-    return region0.m_topLeftCoordinate == region1.m_topLeftCoordinate &&
-           region0.m_topRightCoordinate == region1.m_topRightCoordinate &&
-           region0.m_bottomLeftCoordinate == region1.m_bottomLeftCoordinate &&
-           region0.m_bottomRightCoordinate == region1.m_bottomRightCoordinate;
+    return region0.GetTopLeftCoordinate() == region1.GetTopLeftCoordinate() &&
+           region0.GetTopRightCoordinate() == region1.GetTopRightCoordinate() &&
+           region0.GetBottomLeftCoordinate() == region1.GetBottomLeftCoordinate() &&
+           region0.GetBottomRightCoordinate() == region1.GetBottomRightCoordinate();
 }
 
 int TDK::operator|(EffectCode code0, EffectCode code1)
