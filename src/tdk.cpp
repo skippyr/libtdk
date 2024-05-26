@@ -72,12 +72,6 @@ tdk::Coordinate::Coordinate() : column_m(0), row_m(0) {}
 tdk::Coordinate::Coordinate(unsigned short column, unsigned short row)
     : column_m(column), row_m(row) {}
 
-tdk::Dimensions::Dimensions() : totalColumns_m(0), totalRows_m(0) {}
-
-tdk::Dimensions::Dimensions(unsigned short totalColumns,
-                            unsigned short totalRows)
-    : totalColumns_m(totalColumns), totalRows_m(totalRows) {}
-
 tdk::Effect::Effect(int code, bool isToEnable)
     : code_m(code), isToEnable_m(isToEnable) {}
 
@@ -93,6 +87,37 @@ tdk::HexColor tdk::HexColor::invert_m() {
                       ? tdk::Layer::Background
                       : tdk::Layer::Foreground;
   return color;
+}
+
+tdk::Region::Region()
+    : totalColumns_m(0), totalRows_m(0), area_m(0), topLeftCoordinate_m(),
+      topRightCoordinate_m(), bottomLeftCoordinate_m(),
+      bottomRightCoordinate_m() {}
+
+tdk::Region::Region(unsigned short totalColumns, unsigned short totalRows)
+    : totalColumns_m(totalColumns), totalRows_m(totalRows),
+      area_m(totalColumns * totalRows), topLeftCoordinate_m(0, 0),
+      topRightCoordinate_m(totalColumns - 1, 0),
+      bottomLeftCoordinate_m(0, totalRows - 1),
+      bottomRightCoordinate_m(totalColumns - 1, totalRows - 1) {}
+
+tdk::Region::Region(Coordinate cornerCoordinate0,
+                    Coordinate cornerCoordinate1) {
+  unsigned short maxColumn =
+      (std::max)(cornerCoordinate0.column_m, cornerCoordinate1.column_m);
+  unsigned short minColumn =
+      (std::min)(cornerCoordinate0.column_m, cornerCoordinate1.column_m);
+  unsigned short maxRow =
+      (std::max)(cornerCoordinate0.row_m, cornerCoordinate1.row_m);
+  unsigned short minRow =
+      (std::min)(cornerCoordinate0.row_m, cornerCoordinate1.row_m);
+  totalColumns_m = maxColumn - minColumn;
+  totalRows_m = maxRow - minRow;
+  area_m = totalColumns_m * totalRows_m;
+  topLeftCoordinate_m = Coordinate(minColumn, minRow);
+  topRightCoordinate_m = Coordinate(maxColumn, minRow);
+  bottomLeftCoordinate_m = Coordinate(minColumn, maxRow);
+  bottomRightCoordinate_m = Coordinate(maxColumn, maxRow);
 }
 
 tdk::RGBColor::RGBColor(unsigned char red, unsigned char green,
@@ -224,7 +249,7 @@ int tdk::getCursorCoordinate(Coordinate &coordinate) {
   return 0;
 }
 
-int tdk::getWindowDimensions(Dimensions &dimensions) {
+int tdk::getWindowRegion(Region &region) {
 #ifdef _WIN32
   CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
   if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE),
@@ -233,10 +258,8 @@ int tdk::getWindowDimensions(Dimensions &dimensions) {
                                   &bufferInfo)) {
     return -1;
   }
-  dimensions.totalColumns_m =
-      bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1;
-  dimensions.totalRows_m =
-      bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1;
+  region = Region(bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1,
+                  bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1);
 #else
   struct winsize size;
   if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &size) &&
@@ -244,8 +267,7 @@ int tdk::getWindowDimensions(Dimensions &dimensions) {
       ioctl(STDERR_FILENO, TIOCGWINSZ, &size)) {
     return -1;
   }
-  dimensions.totalColumns_m = size.ws_col;
-  dimensions.totalRows_m = size.ws_row;
+  region = Region(size.ws_col, size.ws_row);
 #endif
   return 0;
 }

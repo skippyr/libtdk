@@ -58,15 +58,6 @@ public:
   unsigned short row_m;
 };
 
-class Dimensions final {
-public:
-  unsigned short totalColumns_m;
-  unsigned short totalRows_m;
-
-  Dimensions();
-  Dimensions(unsigned short totalColumns, unsigned short totalRows);
-};
-
 class Effect final {
 public:
   int code_m;
@@ -83,6 +74,21 @@ public:
 
   unsigned int code_m;
   Layer layer_m;
+};
+
+class Region final {
+public:
+  unsigned short totalColumns_m;
+  unsigned short totalRows_m;
+  unsigned int area_m;
+  Coordinate topLeftCoordinate_m;
+  Coordinate topRightCoordinate_m;
+  Coordinate bottomLeftCoordinate_m;
+  Coordinate bottomRightCoordinate_m;
+
+  Region();
+  Region(unsigned short totalColumns, unsigned short totalRows);
+  Region(Coordinate cornerCoordinate0, Coordinate cornerCoordinate1);
 };
 
 class RGBColor final {
@@ -120,7 +126,7 @@ void clearInputBuffer();
 void clearWindow();
 void closeAlternateWindow();
 int getCursorCoordinate(Coordinate &coordinate);
-int getWindowDimensions(Dimensions &dimensions);
+int getWindowRegion(Region &region);
 bool isTTY(Stream stream);
 void openAlternateWindow();
 void ringBell();
