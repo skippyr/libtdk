@@ -74,7 +74,7 @@ static TDK::EventType GetWindowsEventType(INPUT_RECORD& record)
 
 static TDK::KeyEvent ParseWindowsKeyEvent(INPUT_RECORD& record, HANDLE inputHandle)
 {
-    TDK::KeyEvent keyEvent = TDK::KeyEvent();
+    TDK::KeyEvent keyEvent;
     DWORD totalEventsRead;
     int buffer;
     if ((buffer = record.Event.KeyEvent.uChar.UnicodeChar))
@@ -144,27 +144,13 @@ static TDK::EventInfo ReadGenericEvent(int waitInMilliseconds, std::function<boo
     DWORD mode;
     DWORD totalEventsRead;
     INPUT_RECORD record;
-    TDK::EventInfo eventInfo = TDK::EventType::None;
+    TDK::EventInfo eventInfo;
+    HANDLE timerHandle = nullptr;
     GetConsoleMode(inputHandle, &mode);
     SetConsoleMode(inputHandle, mode & ~ENABLE_PROCESSED_INPUT);
-    if (waitInMilliseconds < 0)
+    while (true)
     {
-        while (true)
-        {
-            ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
-            TDK::EventType type = GetWindowsEventType(record);
-            eventInfo = type == TDK::EventType::WindowResize ? TDK::EventInfo(TDK::WindowResizeEvent())
-                        : type == TDK::EventType::Key        ? TDK::EventInfo(ParseWindowsKeyEvent(record, inputHandle))
-                                                             : TDK::EventType::None;
-            if (type == TDK::EventType::WindowResize || type == TDK::EventType::Key)
-            {
-                break;
-            }
-        }
-    }
-    else if (!waitInMilliseconds)
-    {
-        while (true)
+        if (!waitInMilliseconds)
         {
             DWORD totalEventsAvailable;
             GetNumberOfConsoleInputEvents(inputHandle, &totalEventsAvailable);
@@ -172,26 +158,17 @@ static TDK::EventInfo ReadGenericEvent(int waitInMilliseconds, std::function<boo
             {
                 break;
             }
-            ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
-            TDK::EventType type = GetWindowsEventType(record);
-            eventInfo = type == TDK::EventType::WindowResize ? TDK::EventInfo(TDK::WindowResizeEvent())
-                        : type == TDK::EventType::Key        ? TDK::EventInfo(ParseWindowsKeyEvent(record, inputHandle))
-                                                             : TDK::EventType::None;
-            if (type == TDK::EventType::WindowResize || type == TDK::EventType::Key)
-            {
-                break;
-            }
         }
-    }
-    else
-    {
-        HANDLE timerHandle = CreateWaitableTimerW(nullptr, true, nullptr);
-        LARGE_INTEGER duration;
-        duration.QuadPart = -10000 * waitInMilliseconds;
-        SetWaitableTimer(timerHandle, &duration, 0, nullptr, nullptr, false);
-        HANDLE handles[] = {timerHandle, inputHandle};
-        while (true)
+        else if (waitInMilliseconds > 0)
         {
+            if (!timerHandle)
+            {
+                timerHandle = CreateWaitableTimerW(nullptr, true, nullptr);
+                LARGE_INTEGER duration;
+                duration.QuadPart = -10000 * waitInMilliseconds;
+                SetWaitableTimer(timerHandle, &duration, 0, nullptr, nullptr, false);
+            }
+            HANDLE handles[] = {timerHandle, inputHandle};
             int status = WaitForMultipleObjects(2, handles, false, INFINITE);
             if (status == WAIT_OBJECT_0)
             {
@@ -199,19 +176,19 @@ static TDK::EventInfo ReadGenericEvent(int waitInMilliseconds, std::function<boo
                 CloseHandle(timerHandle);
                 break;
             }
-            else if (status == WAIT_OBJECT_0 + 1)
+        }
+        ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
+        TDK::EventType type = GetWindowsEventType(record);
+        eventInfo = type == TDK::EventType::WindowResize ? TDK::EventInfo(TDK::WindowResizeEvent())
+                    : type == TDK::EventType::Key        ? TDK::EventInfo(ParseWindowsKeyEvent(record, inputHandle))
+                                                         : TDK::EventType::None;
+        if ((type == TDK::EventType::WindowResize || type == TDK::EventType::Key) && filter(eventInfo))
+        {
+            if (timerHandle)
             {
-                ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
-                TDK::EventType type = GetWindowsEventType(record);
-                eventInfo = type == TDK::EventType::WindowResize ? TDK::EventInfo(TDK::WindowResizeEvent())
-                            : type == TDK::EventType::Key ? TDK::EventInfo(ParseWindowsKeyEvent(record, inputHandle))
-                                                          : TDK::EventType::None;
-                if ((type == TDK::EventType::WindowResize || type == TDK::EventType::Key) && filter(eventInfo))
-                {
-                    CloseHandle(timerHandle);
-                    break;
-                }
+                CloseHandle(timerHandle);
             }
+            break;
         }
     }
     SetConsoleMode(inputHandle, mode);
@@ -266,6 +243,10 @@ TDK::KeyEvent::KeyEvent() : m_key(0), m_hasAlt(false), m_hasCtrl(false)
 TDK::WindowResizeEvent::WindowResizeEvent()
 {
     GetWindowDimensions(m_dimensions);
+}
+
+TDK::EventInfo::EventInfo() : m_type(EventType::None)
+{
 }
 
 TDK::EventInfo::EventInfo(EventType type) : m_type(type)
@@ -510,12 +491,12 @@ TDK::EventInfo TDK::ReadEvent()
     return ReadGenericEvent(-1, [](EventInfo& eventInfo) { return true; });
 }
 
-TDK::EventInfo TDK::ReadTimedEvent(unsigned int waitInMilliseconds)
+TDK::EventInfo TDK::ReadEvent(unsigned int waitInMilliseconds)
 {
     return ReadGenericEvent(waitInMilliseconds, [](EventInfo& eventInfo) { return true; });
 }
 
-TDK::EventInfo TDK::ReadTimedEvent(unsigned int waitInMilliseconds, std::function<bool(EventInfo& eventInfo)> filter)
+TDK::EventInfo TDK::ReadEvent(unsigned int waitInMilliseconds, std::function<bool(EventInfo& eventInfo)> filter)
 {
     return ReadGenericEvent(waitInMilliseconds, filter);
 }
