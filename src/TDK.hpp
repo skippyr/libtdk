@@ -166,6 +166,7 @@ namespace TDK
         bool m_hasCtrl;
 
         KeyEvent();
+        KeyEvent(int key);
     };
 
     class WindowResizeEvent final

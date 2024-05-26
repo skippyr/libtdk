@@ -26,8 +26,7 @@ static char g_cache = 0;
 #define PARSE_KEY(condition, key)                                                                                      \
     if (condition)                                                                                                     \
     {                                                                                                                  \
-        keyEvent.m_key = key;                                                                                          \
-        return keyEvent;                                                                                               \
+        return key;                                                                                                    \
     }
 #ifdef _WIN32
 #define TTY_CACHE(stream)                                                                                              \
@@ -74,12 +73,13 @@ static TDK::EventType GetWindowsEventType(INPUT_RECORD& record)
 
 static TDK::KeyEvent ParseWindowsKeyEvent(INPUT_RECORD& record, HANDLE inputHandle)
 {
-    TDK::KeyEvent keyEvent;
-    DWORD totalEventsRead;
-    int buffer;
-    if ((buffer = record.Event.KeyEvent.uChar.UnicodeChar))
+    if (record.Event.KeyEvent.uChar.UnicodeChar)
     {
-        if (buffer <= 26 && buffer != TDK::Key::Tab && buffer != TDK::Key::Enter)
+        TDK::KeyEvent keyEvent;
+        DWORD totalEventsRead;
+        int buffer;
+        if ((buffer = record.Event.KeyEvent.uChar.UnicodeChar) <= 26 && buffer != TDK::Key::Tab &&
+            buffer != TDK::Key::Enter)
         {
             keyEvent.m_key = buffer + 96;
         }
@@ -98,20 +98,17 @@ static TDK::KeyEvent ParseWindowsKeyEvent(INPUT_RECORD& record, HANDLE inputHand
         }
         keyEvent.m_hasAlt = record.Event.KeyEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED);
         keyEvent.m_hasCtrl = record.Event.KeyEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED);
+        return keyEvent;
     }
-    else
-    {
-        PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_LEFT && record.Event.KeyEvent.wVirtualKeyCode <= VK_DOWN,
-                  record.Event.KeyEvent.wVirtualKeyCode - VK_LEFT + static_cast<int>(TDK::Key::LeftArrow));
-        PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_PRIOR && record.Event.KeyEvent.wVirtualKeyCode <= VK_HOME,
-                  record.Event.KeyEvent.wVirtualKeyCode - VK_PRIOR + static_cast<int>(TDK::Key::PageUp));
-        PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_INSERT &&
-                      record.Event.KeyEvent.wVirtualKeyCode <= VK_DELETE,
-                  record.Event.KeyEvent.wVirtualKeyCode - VK_INSERT + static_cast<int>(TDK::Key::Insert));
-        PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_F1 && record.Event.KeyEvent.wVirtualKeyCode <= VK_F12,
-                  record.Event.KeyEvent.wVirtualKeyCode - VK_F1 + static_cast<int>(TDK::Key::F1));
-    }
-    return keyEvent;
+    PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_LEFT && record.Event.KeyEvent.wVirtualKeyCode <= VK_DOWN,
+              record.Event.KeyEvent.wVirtualKeyCode - VK_LEFT + static_cast<int>(TDK::Key::LeftArrow));
+    PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_PRIOR && record.Event.KeyEvent.wVirtualKeyCode <= VK_HOME,
+              record.Event.KeyEvent.wVirtualKeyCode - VK_PRIOR + static_cast<int>(TDK::Key::PageUp));
+    PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_INSERT && record.Event.KeyEvent.wVirtualKeyCode <= VK_DELETE,
+              record.Event.KeyEvent.wVirtualKeyCode - VK_INSERT + static_cast<int>(TDK::Key::Insert));
+    PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_F1 && record.Event.KeyEvent.wVirtualKeyCode <= VK_F12,
+              record.Event.KeyEvent.wVirtualKeyCode - VK_F1 + static_cast<int>(TDK::Key::F1));
+    return EOF;
 }
 #endif
 
@@ -237,6 +234,10 @@ TDK::Effect::Effect(TDK::EffectCode code, bool isToEnable)
 }
 
 TDK::KeyEvent::KeyEvent() : m_key(0), m_hasAlt(false), m_hasCtrl(false)
+{
+}
+
+TDK::KeyEvent::KeyEvent(int key) : m_key(key), m_hasAlt(false), m_hasCtrl(false)
 {
 }
 
