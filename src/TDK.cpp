@@ -23,11 +23,6 @@ static char g_cache = 0;
         return stream;                                                                                                 \
     }
 #define HAS_CACHED_TTY_FLAG (1 << 7)
-#define PARSE_KEY(condition, key)                                                                                      \
-    if (condition)                                                                                                     \
-    {                                                                                                                  \
-        return key;                                                                                                    \
-    }
 #ifdef _WIN32
 #define TTY_CACHE(stream)                                                                                              \
     (!!(_isatty(_fileno(!static_cast<int>(stream)       ? stdin                                                        \
@@ -42,75 +37,8 @@ static char g_cache = 0;
      << static_cast<int>(stream))
 #endif
 
-#ifdef _WIN32
-static TDK::EventType GetWindowsEventType(INPUT_RECORD& record);
-static TDK::KeyEvent ParseWindowsKeyEvent(INPUT_RECORD& record, HANDLE inputHandle);
-#endif
 static void PrepareStreamsAndCache();
-static TDK::EventInfo ReadGenericEvent(int waitInMilliseconds, std::function<bool(TDK::EventInfo& eventInfo)> filter);
 static int WriteANSISequence(const char* format, ...);
-
-#ifdef _WIN32
-static TDK::EventType GetWindowsEventType(INPUT_RECORD& record)
-{
-    if (record.EventType == WINDOW_BUFFER_SIZE_EVENT)
-    {
-        return TDK::EventType::WindowResize;
-    }
-    else if (record.EventType == KEY_EVENT && record.Event.KeyEvent.bKeyDown &&
-             record.Event.KeyEvent.wVirtualKeyCode != VK_CONTROL && record.Event.KeyEvent.wVirtualKeyCode != VK_SHIFT &&
-             record.Event.KeyEvent.wVirtualKeyCode != VK_MENU && record.Event.KeyEvent.wVirtualKeyCode != VK_CAPITAL &&
-             record.Event.KeyEvent.wVirtualKeyCode != VK_NUMLOCK &&
-             record.Event.KeyEvent.wVirtualKeyCode != VK_SCROLL &&
-             (record.Event.KeyEvent.uChar.UnicodeChar ||
-              !(record.Event.KeyEvent.dwControlKeyState &
-                (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED | LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED | SHIFT_PRESSED))))
-    {
-        return TDK::EventType::Key;
-    }
-    return TDK::EventType::Invalid;
-}
-
-static TDK::KeyEvent ParseWindowsKeyEvent(INPUT_RECORD& record, HANDLE inputHandle)
-{
-    if (record.Event.KeyEvent.uChar.UnicodeChar)
-    {
-        TDK::KeyEvent keyEvent;
-        DWORD totalEventsRead;
-        int buffer;
-        if ((buffer = record.Event.KeyEvent.uChar.UnicodeChar) <= 26 && buffer != TDK::Key::Tab &&
-            buffer != TDK::Key::Enter)
-        {
-            keyEvent.m_key = buffer + 96;
-        }
-        else if (buffer >= HIGH_SURROGATE_START && buffer <= HIGH_SURROGATE_END)
-        {
-            ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
-            ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
-            *(reinterpret_cast<short*>(&buffer) + 1) = record.Event.KeyEvent.uChar.UnicodeChar;
-            WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<wchar_t*>(&buffer), 2,
-                                reinterpret_cast<char*>(&keyEvent.m_key), 4, NULL, NULL);
-        }
-        else
-        {
-            WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<wchar_t*>(&buffer), 1,
-                                reinterpret_cast<char*>(&keyEvent.m_key), 4, NULL, NULL);
-        }
-        keyEvent.m_hasAlt = record.Event.KeyEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED);
-        keyEvent.m_hasCtrl = record.Event.KeyEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED);
-        return keyEvent;
-    }
-    PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_LEFT && record.Event.KeyEvent.wVirtualKeyCode <= VK_DOWN,
-              record.Event.KeyEvent.wVirtualKeyCode - VK_LEFT + static_cast<int>(TDK::Key::LeftArrow));
-    PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_PRIOR && record.Event.KeyEvent.wVirtualKeyCode <= VK_HOME,
-              record.Event.KeyEvent.wVirtualKeyCode - VK_PRIOR + static_cast<int>(TDK::Key::PageUp));
-    PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_INSERT && record.Event.KeyEvent.wVirtualKeyCode <= VK_DELETE,
-              record.Event.KeyEvent.wVirtualKeyCode - VK_INSERT + static_cast<int>(TDK::Key::Insert));
-    PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_F1 && record.Event.KeyEvent.wVirtualKeyCode <= VK_F12,
-              record.Event.KeyEvent.wVirtualKeyCode - VK_F1 + static_cast<int>(TDK::Key::F1));
-    return EOF;
-}
-#endif
 
 static void PrepareStreamsAndCache()
 {
@@ -126,71 +54,6 @@ static void PrepareStreamsAndCache()
      GetConsoleMode((handle = GetStdHandle(STD_ERROR_HANDLE)), &mode)) &&
         SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 #endif
-}
-
-static TDK::EventInfo ReadGenericEvent(int waitInMilliseconds, std::function<bool(TDK::EventInfo& eventInfo)> filter)
-{
-    PrepareStreamsAndCache();
-    if (!IS_TTY(TDK::Stream::Input) || std::fwide(stdin, 0) > 0 ||
-        (!IS_TTY(TDK::Stream::Output) && !IS_TTY(TDK::Stream::Error)))
-    {
-        return TDK::EventType::Invalid;
-    }
-#ifdef _WIN32
-    HANDLE inputHandle = GetStdHandle(STD_INPUT_HANDLE);
-    DWORD mode;
-    DWORD totalEventsRead;
-    INPUT_RECORD record;
-    TDK::EventInfo eventInfo;
-    HANDLE timerHandle = nullptr;
-    GetConsoleMode(inputHandle, &mode);
-    SetConsoleMode(inputHandle, mode & ~ENABLE_PROCESSED_INPUT);
-    while (true)
-    {
-        if (!waitInMilliseconds)
-        {
-            DWORD totalEventsAvailable;
-            GetNumberOfConsoleInputEvents(inputHandle, &totalEventsAvailable);
-            if (!totalEventsAvailable)
-            {
-                break;
-            }
-        }
-        else if (waitInMilliseconds > 0)
-        {
-            if (!timerHandle)
-            {
-                timerHandle = CreateWaitableTimerW(nullptr, true, nullptr);
-                LARGE_INTEGER duration;
-                duration.QuadPart = -10000 * waitInMilliseconds;
-                SetWaitableTimer(timerHandle, &duration, 0, nullptr, nullptr, false);
-            }
-            HANDLE handles[] = {timerHandle, inputHandle};
-            int status = WaitForMultipleObjects(2, handles, false, INFINITE);
-            if (status == WAIT_OBJECT_0)
-            {
-                eventInfo = TDK::EventType::TimeOut;
-                CloseHandle(timerHandle);
-                break;
-            }
-        }
-        ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
-        TDK::EventType type = GetWindowsEventType(record);
-        eventInfo = type == TDK::EventType::WindowResize ? TDK::EventInfo(TDK::WindowResizeEvent())
-                    : type == TDK::EventType::Key        ? TDK::EventInfo(ParseWindowsKeyEvent(record, inputHandle))
-                                                         : TDK::EventType::None;
-        if ((type == TDK::EventType::WindowResize || type == TDK::EventType::Key) && filter(eventInfo))
-        {
-            if (timerHandle)
-            {
-                CloseHandle(timerHandle);
-            }
-            break;
-        }
-    }
-    SetConsoleMode(inputHandle, mode);
-#endif
-    return eventInfo;
 }
 
 static int WriteANSISequence(const char* format, ...)
@@ -230,36 +93,6 @@ TDK::Effect::Effect(int code, bool isToEnable) : m_code(code), m_isToEnable(isTo
 
 TDK::Effect::Effect(TDK::EffectCode code, bool isToEnable)
     : m_code(1 << static_cast<int>(code)), m_isToEnable(isToEnable)
-{
-}
-
-TDK::KeyEvent::KeyEvent() : m_key(0), m_hasAlt(false), m_hasCtrl(false)
-{
-}
-
-TDK::KeyEvent::KeyEvent(int key) : m_key(key), m_hasAlt(false), m_hasCtrl(false)
-{
-}
-
-TDK::WindowResizeEvent::WindowResizeEvent()
-{
-    GetWindowDimensions(m_dimensions);
-}
-
-TDK::EventInfo::EventInfo() : m_type(EventType::None)
-{
-}
-
-TDK::EventInfo::EventInfo(EventType type) : m_type(type)
-{
-}
-
-TDK::EventInfo::EventInfo(KeyEvent keyEvent) : m_type(EventType::Key), m_keyEvent(keyEvent)
-{
-}
-
-TDK::EventInfo::EventInfo(WindowResizeEvent windowResizeEvent)
-    : m_type(EventType::WindowResize), m_windowResizeEvent(windowResizeEvent)
 {
 }
 
@@ -349,36 +182,6 @@ std::ostream& TDK::operator<<(std::ostream& stream, Weight weight)
 int TDK::operator|(EffectCode code0, EffectCode code1)
 {
     return 1 << static_cast<int>(code0) | 1 << static_cast<int>(code1);
-}
-
-bool TDK::operator==(int code, Key key)
-{
-    return code == static_cast<int>(key);
-}
-
-bool TDK::operator!=(int code, Key key)
-{
-    return code != static_cast<int>(key);
-}
-
-bool TDK::operator>(int code, Key key)
-{
-    return code > static_cast<int>(key);
-}
-
-bool TDK::operator>=(int code, Key key)
-{
-    return code >= static_cast<int>(key);
-}
-
-bool TDK::operator<(int code, Key key)
-{
-    return code < static_cast<int>(key);
-}
-
-bool TDK::operator<=(int code, Key key)
-{
-    return code <= static_cast<int>(key);
 }
 
 void TDK::ClearCursorLine()
@@ -485,21 +288,6 @@ bool TDK::IsTTY(Stream stream)
 void TDK::OpenAlternateWindow()
 {
     WriteANSISequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
-}
-
-TDK::EventInfo TDK::ReadEvent()
-{
-    return ReadGenericEvent(-1, [](EventInfo& eventInfo) { return true; });
-}
-
-TDK::EventInfo TDK::ReadEvent(unsigned int waitInMilliseconds)
-{
-    return ReadGenericEvent(waitInMilliseconds, [](EventInfo& eventInfo) { return true; });
-}
-
-TDK::EventInfo TDK::ReadEvent(unsigned int waitInMilliseconds, std::function<bool(EventInfo& eventInfo)> filter)
-{
-    return ReadGenericEvent(waitInMilliseconds, filter);
 }
 
 void TDK::RingBell()
