@@ -70,11 +70,16 @@ namespace TDK
     class Coordinate final
     {
     public:
-        unsigned short m_column;
-        unsigned short m_row;
-
         Coordinate();
         Coordinate(unsigned short column, unsigned short row);
+        unsigned short GetColumn() const;
+        unsigned short GetRow() const;
+        void SetColumn(unsigned short column);
+        void SetRow(unsigned short row);
+
+    private:
+        unsigned short m_column;
+        unsigned short m_row;
     };
 
     class Effect final

@@ -78,6 +78,26 @@ TDK::Coordinate::Coordinate(unsigned short column, unsigned short row) : m_colum
 {
 }
 
+unsigned short TDK::Coordinate::GetColumn() const
+{
+    return m_column;
+}
+
+unsigned short TDK::Coordinate::GetRow() const
+{
+    return m_row;
+}
+
+void TDK::Coordinate::SetColumn(unsigned short column)
+{
+    m_column = column;
+}
+
+void TDK::Coordinate::SetRow(unsigned short row)
+{
+    m_row = row;
+}
+
 TDK::Effect::Effect(int code, bool isToEnable) : m_code(code), m_isToEnable(isToEnable)
 {
 }
@@ -114,10 +134,10 @@ TDK::Region::Region(unsigned short totalColumns, unsigned short totalRows)
 
 TDK::Region::Region(Coordinate& cornerCoordinate0, Coordinate& cornerCoordinate1)
 {
-    unsigned short maxColumn = (std::max)(cornerCoordinate0.m_column, cornerCoordinate1.m_column);
-    unsigned short minColumn = (std::min)(cornerCoordinate0.m_column, cornerCoordinate1.m_column);
-    unsigned short maxRow = (std::max)(cornerCoordinate0.m_row, cornerCoordinate1.m_row);
-    unsigned short minRow = (std::min)(cornerCoordinate0.m_row, cornerCoordinate1.m_row);
+    unsigned short maxColumn = (std::max)(cornerCoordinate0.GetColumn(), cornerCoordinate1.GetColumn());
+    unsigned short minColumn = (std::min)(cornerCoordinate0.GetColumn(), cornerCoordinate1.GetColumn());
+    unsigned short maxRow = (std::max)(cornerCoordinate0.GetRow(), cornerCoordinate1.GetRow());
+    unsigned short minRow = (std::min)(cornerCoordinate0.GetRow(), cornerCoordinate1.GetRow());
     m_totalColumns = maxColumn - minColumn;
     m_totalRows = maxRow - minRow;
     m_area = m_totalColumns * m_totalRows;
@@ -251,7 +271,7 @@ bool TDK::operator==(RGBColor& color0, RGBColor& color1)
 
 bool TDK::operator==(Coordinate& coordinate0, Coordinate& coordinate1)
 {
-    return coordinate0.m_column == coordinate1.m_column && coordinate0.m_row == coordinate1.m_row;
+    return coordinate0.GetColumn() == coordinate1.GetColumn() && coordinate0.GetRow() == coordinate1.GetRow();
 }
 
 bool TDK::operator==(Region& region0, Region& region1)
@@ -314,8 +334,8 @@ int TDK::GetCursorCoordinate(Coordinate& coordinate)
     {
         return -1;
     }
-    coordinate.m_column = bufferInfo.dwCursorPosition.X - bufferInfo.srWindow.Left;
-    coordinate.m_row = bufferInfo.dwCursorPosition.Y - bufferInfo.srWindow.Top;
+    coordinate = Coordinate(bufferInfo.dwCursorPosition.X - bufferInfo.srWindow.Left,
+                            bufferInfo.dwCursorPosition.Y - bufferInfo.srWindow.Top);
 #else
     struct termios attributes;
     ClearInputBuffer();
@@ -384,7 +404,7 @@ void TDK::SetCursorCoordinate(unsigned short column, unsigned short row)
 
 void TDK::SetCursorCoordinate(Coordinate& coordinate)
 {
-    SetCursorCoordinate(coordinate.m_column, coordinate.m_row);
+    SetCursorCoordinate(coordinate.GetColumn(), coordinate.GetRow());
 }
 
 void TDK::SetCursorShape(CursorShape shape)
