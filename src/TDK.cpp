@@ -214,6 +214,19 @@ bool TDK::operator==(RGBColor& color0, RGBColor& color1)
            color0.m_blue == color1.m_blue;
 }
 
+bool TDK::operator==(Coordinate& coordinate0, Coordinate& coordinate1)
+{
+    return coordinate0.m_column == coordinate1.m_column && coordinate0.m_row == coordinate1.m_row;
+}
+
+bool TDK::operator==(Region& region0, Region& region1)
+{
+    return region0.m_topLeftCoordinate == region1.m_topLeftCoordinate &&
+           region0.m_topRightCoordinate == region1.m_topRightCoordinate &&
+           region0.m_bottomLeftCoordinate == region1.m_bottomLeftCoordinate &&
+           region0.m_bottomRightCoordinate == region1.m_bottomRightCoordinate;
+}
+
 int TDK::operator|(EffectCode code0, EffectCode code1)
 {
     return 1 << static_cast<int>(code0) | 1 << static_cast<int>(code1);

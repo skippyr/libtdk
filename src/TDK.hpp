@@ -145,6 +145,8 @@ namespace TDK
     bool operator==(XColor& color0, XColor& color1);
     bool operator==(HexColor& color0, HexColor& color1);
     bool operator==(RGBColor& color0, RGBColor& color1);
+    bool operator==(Coordinate& coordinate0, Coordinate& coordinate1);
+    bool operator==(Region& region0, Region& region1);
     int operator|(EffectCode code0, EffectCode code1);
 
     void ClearCursorLine();
