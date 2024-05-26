@@ -119,6 +119,9 @@ std::ostream &operator<<(std::ostream &stream, HexColor &color);
 std::ostream &operator<<(std::ostream &stream, RGBColor &color);
 std::ostream &operator<<(std::ostream &stream, XColor &color);
 std::ostream &operator<<(std::ostream &stream, Weight weight);
+bool operator==(XColor &color0, XColor &color1);
+bool operator==(HexColor &color0, HexColor &color1);
+bool operator==(RGBColor &color0, RGBColor &color1);
 int operator|(EffectCode code0, EffectCode code1);
 
 void clearCursorLine();

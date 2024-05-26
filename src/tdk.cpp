@@ -186,6 +186,19 @@ std::ostream &tdk::operator<<(std::ostream &stream, Weight weight) {
              : stream << "\x1b[22;" << static_cast<int>(weight) << "m";
 }
 
+bool tdk::operator==(XColor &color0, XColor &color1) {
+  return color0.layer_m == color1.layer_m && color0.code_m == color1.code_m;
+}
+
+bool tdk::operator==(HexColor &color0, HexColor &color1) {
+  return color0.layer_m == color1.layer_m && color0.code_m == color1.code_m;
+}
+
+bool tdk::operator==(RGBColor &color0, RGBColor &color1) {
+  return color0.layer_m == color1.layer_m && color0.red_m == color1.red_m &&
+         color0.green_m == color1.green_m && color0.blue_m == color1.blue_m;
+}
+
 int tdk::operator|(EffectCode code0, EffectCode code1) {
   return 1 << static_cast<int>(code0) | 1 << static_cast<int>(code1);
 }
