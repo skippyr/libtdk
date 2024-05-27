@@ -163,13 +163,18 @@ namespace TDK
     public:
         XColor(unsigned char code, Layer layer);
         XColor(XColorCode code, Layer layer);
-        TDK::XColor TDK::XColor::Invert() const override;
+        XColor Invert() const;
         short GetCode() const;
         Layer GetLayer() const;
+        void SetCode(unsigned char code);
+        void SetCode(XColorCode code);
+        void SetLayer(Layer layer);
 
     private:
         short m_code;
         Layer m_layer;
+
+        static short FilterCode(XColorCode code);
     };
 
     std::ostream& operator<<(std::ostream& stream, Effect effect);

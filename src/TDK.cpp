@@ -246,10 +246,13 @@ TDK::XColor::XColor(unsigned char code, Layer layer) : m_code(code), m_layer(Fil
 {
 }
 
-TDK::XColor::XColor(XColorCode code, Layer layer)
-    : m_code((std::max)((std::min)(static_cast<int>(code), 255), static_cast<int>(TDK::XColorCode::Default))),
-      m_layer(FilterLayer(layer))
+TDK::XColor::XColor(XColorCode code, Layer layer) : m_code(FilterCode(code)), m_layer(FilterLayer(layer))
 {
+}
+
+short TDK::XColor::FilterCode(XColorCode code)
+{
+    return (std::max)((std::min)(static_cast<int>(code), 255), static_cast<int>(TDK::XColorCode::Default));
 }
 
 short TDK::XColor::GetCode() const
@@ -260,6 +263,16 @@ short TDK::XColor::GetCode() const
 TDK::Layer TDK::XColor::GetLayer() const
 {
     return m_layer;
+}
+
+void TDK::XColor::SetCode(unsigned char code)
+{
+    m_code = code;
+}
+
+void TDK::XColor::SetCode(XColorCode code)
+{
+    m_code = FilterCode(code);
 }
 
 std::ostream& TDK::operator<<(std::ostream& stream, Effect effect)
