@@ -133,6 +133,8 @@ namespace TDK
         Region();
         Region(unsigned short totalColumns, unsigned short totalRows);
         Region(Coordinate cornerCoordinate0, Coordinate cornerCoordinate1);
+        bool Contains(unsigned short column, unsigned short row) const;
+        bool Contains(Coordinate coordinate) const;
         unsigned short GetTotalColumns() const;
         unsigned short GetTotalRows() const;
         unsigned int GetArea() const;

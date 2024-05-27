@@ -217,6 +217,17 @@ TDK::Region::Region(Coordinate cornerCoordinate0, Coordinate cornerCoordinate1)
     m_bottomRightCoordinate = Coordinate(maxColumn, maxRow);
 }
 
+bool TDK::Region::Contains(unsigned short column, unsigned short row) const
+{
+    return column >= m_topLeftCoordinate.GetColumn() && column <= m_topRightCoordinate.GetColumn() &&
+           row >= m_topLeftCoordinate.GetRow() && row <= m_bottomLeftCoordinate.GetRow();
+}
+
+bool TDK::Region::Contains(Coordinate coordinate) const
+{
+    return Contains(coordinate.GetColumn(), coordinate.GetRow());
+}
+
 unsigned short TDK::Region::GetTotalColumns() const
 {
     return m_totalColumns;
