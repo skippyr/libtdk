@@ -85,11 +85,17 @@ namespace TDK
     class Effect final
     {
     public:
+        Effect(EffectCode code, bool isToEnable);
+        Effect(int code, bool isToEnable);
+
+        int GetCode() const;
+        bool IsToEnable() const;
+
+    private:
         int m_code;
         bool m_isToEnable;
 
-        Effect(EffectCode code, bool isToEnable);
-        Effect(int code, bool isToEnable);
+        static int FilterCode(int code);
     };
 
     class HexColor final

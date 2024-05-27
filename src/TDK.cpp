@@ -98,13 +98,37 @@ void TDK::Coordinate::SetRow(unsigned short row)
     m_row = row;
 }
 
-TDK::Effect::Effect(int code, bool isToEnable) : m_code(code), m_isToEnable(isToEnable)
+TDK::Effect::Effect(int code, bool isToEnable) : m_code(FilterCode(code)), m_isToEnable(isToEnable)
 {
 }
 
 TDK::Effect::Effect(TDK::EffectCode code, bool isToEnable)
-    : m_code(1 << static_cast<int>(code)), m_isToEnable(isToEnable)
+    : m_code(FilterCode(1 << static_cast<int>(code))), m_isToEnable(isToEnable)
 {
+}
+
+int TDK::Effect::GetCode() const
+{
+    return m_code;
+}
+
+bool TDK::Effect::IsToEnable() const
+{
+    return m_isToEnable;
+}
+
+int TDK::Effect::FilterCode(int code)
+{
+    int filteredCodes = 0;
+    for (int ansiCode = 0; ansiCode < 10; ++ansiCode)
+
+    {
+        if (ansiCode != 6 && code & 1 << ansiCode)
+        {
+            filteredCodes |= 1 << ansiCode;
+        }
+    }
+    return filteredCodes;
 }
 
 TDK::HexColor::HexColor(unsigned int code, Layer layer)
@@ -219,9 +243,9 @@ std::ostream& TDK::operator<<(std::ostream& stream, Effect effect)
 {
     for (int code = 0; code < 10; ++code)
     {
-        if (effect.m_code & 1 << code)
+        if (effect.GetCode() & 1 << code)
         {
-            std::cout << "\x1b[" << code + (!effect.m_isToEnable * 20) << "m";
+            std::cout << "\x1b[" << code + (!effect.IsToEnable() * 20) << "m";
         }
     }
     return stream;
