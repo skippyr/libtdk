@@ -3,60 +3,184 @@
 #include <functional>
 #include <iostream>
 
+/// <summary>
+/// A simple C++ terminal manipulation library for Windows and Linux. It can handle terminal properties, colors, effects
+/// and window resize and key events readings with UTF-8 encoding.
+/// </summary>
 namespace TDK
 {
+    /// <summary>
+    /// Contains the available terminal cursor shapes.
+    /// </summary>
     enum class CursorShape
     {
+        /// <summary>
+        /// Resets the default shape.
+        /// </summary>
         Default,
+        /// <summary>
+        /// The blinking variant of the block shape.
+        /// </summary>
         BlinkingBlock,
+        /// <summary>
+        /// The non-blinking variant of the block shape.
+        /// </summary>
         Block,
+        /// <summary>
+        /// The blinking variant of the underline shape.
+        /// </summary>
         BlinkingUnderline,
+        /// <summary>
+        /// The non-blinking variant of the underline shape.
+        /// </summary>
         Underline,
+        /// <summary>
+        /// The blinking variant of the bar shape.
+        /// </summary>
         BlinkingBar,
+        /// <summary>
+        /// The non-blinking variant of the bar shape.
+        /// </summary>
         Bar
     };
 
+    /// <summary>
+    /// Contains the ANSI code of the available terminal effects.
+    /// </summary>
     enum class EffectCode
     {
+        /// <summary>
+        /// Makes the text curly.
+        /// </summary>
         Italic = 3,
+        /// <summary>
+        /// Draws a horizontal line below the text.
+        /// </summary>
         Underline,
+        /// <summary>
+        /// Makes the text blink indefinetely.
+        /// </summary>
         Blinking,
+        /// <summary>
+        /// Swaps the background and foreground colors.
+        /// </summary>
         Negative = 7,
+        /// <summary>
+        /// Makes the text hard to see or invisible.
+        /// </summary>
         Hidden,
-        Strikethrough
+        /// <summary>
+        /// Draws a horizontal line crossing through the text.
+        /// </summary>
+        CrossedOut
     };
 
+    /// <summary>
+    /// Contains the available terminal layers.
+    /// </summary>
     enum class Layer
     {
+        /// <summary>
+        /// The foreground layer.
+        /// </summary>
         Foreground = 3,
+        /// <summary>
+        /// The background layer.
+        /// </summary>
         Background
     };
 
+    /// <summary>
+    /// Contains the standard terminal data streams.
+    /// </summary>
     enum class Stream
     {
+        /// <summary>
+        /// Receives data and events.
+        /// </summary>
         Input,
+        /// <summary>
+        /// Outputs regular tense messages.
+        /// </summary>
         Output,
+        /// <summary>
+        /// Outputs error tense messages.
+        /// </summary>
         Error
     };
 
+    /// <summary>
+    /// Contains the ANSI code of the first 16 colors of the XTerm palette plus one more color intended for resets.
+    /// </summary>
     enum class XColorCode
     {
+        /// <summary>
+        /// Resets the color.
+        /// </summary>
         Default = -1,
-        Black,
-        Red,
-        Green,
-        Yellow,
-        Blue,
-        Magenta,
-        Cyan,
-        White,
+        /// <summary>
+        /// The dark variant of the black color.
+        /// </summary>
+        DarkBlack,
+        /// <summary>
+        /// The dark variant of the red color.
+        /// </summary>
+        DarkRed,
+        /// <summary>
+        /// The dark variant of the green color.
+        /// </summary>
+        DarkGreen,
+        /// <summary>
+        /// The dark variant of the yellow color.
+        /// </summary>
+        DarkYellow,
+        /// <summary>
+        /// The dark variant of the blue color.
+        /// </summary>
+        DarkBlue,
+        /// <summary>
+        /// The dark variant of the magenta color.
+        /// </summary>
+        DarkMagenta,
+        /// <summary>
+        /// The dark variant of the cyan color.
+        /// </summary>
+        DarkCyan,
+        /// <summary>
+        /// The dark variant of the white color.
+        /// </summary>
+        DarkWhite,
+        /// <summary>
+        /// The light variant of the black color.
+        /// </summary>
         LightBlack,
+        /// <summary>
+        /// The light variant of the red color.
+        /// </summary>
         LightRed,
+        /// <summary>
+        /// The light variant of the green color.
+        /// </summary>
         LightGreen,
+        /// <summary>
+        /// The light variant of the yellow color.
+        /// </summary>
         LightYellow,
+        /// <summary>
+        /// The light variant of the blue color.
+        /// </summary>
         LightBlue,
+        /// <summary>
+        /// The light variant of the magenta color.
+        /// </summary>
         LightMagenta,
+        /// <summary>
+        /// The light variant of the cyan color.
+        /// </summary>
         LightCyan,
+        /// <summary>
+        /// The light variant of the white color.
+        /// </summary>
         LightWhite
     };
 
@@ -86,6 +210,11 @@ namespace TDK
     {
     public:
         Coordinate();
+        /// <summary>
+        /// Creates a new instance of the Coordinate class.
+        /// </summary>
+        /// <param name="column">The column component of the coordinate.</param>
+        /// <param name="row">The row component of the coordinate.</param>
         Coordinate(unsigned short column, unsigned short row);
         unsigned short GetColumn() const;
         unsigned short GetRow() const;
