@@ -70,6 +70,17 @@ static int WriteANSISequence(const char* format, ...)
     return -(totalBytesWritten < 0);
 }
 
+template <typename T>
+TDK::Color<T>::Color()
+{
+}
+
+template <typename T>
+TDK::Layer TDK::Color<T>::FilterLayer(Layer layer)
+{
+    return layer == TDK::Layer::Foreground || layer == TDK::Layer::Background ? layer : TDK::Layer::Foreground;
+}
+
 TDK::Coordinate::Coordinate() : m_column(0), m_row(0)
 {
 }
@@ -105,6 +116,13 @@ TDK::Effect::Effect(int code, bool isToEnable) : m_code(FilterCode(code)), m_isT
 TDK::Effect::Effect(TDK::EffectCode code, bool isToEnable)
     : m_code(FilterCode(1 << static_cast<int>(code))), m_isToEnable(isToEnable)
 {
+}
+
+TDK::XColor TDK::XColor::Invert() const
+{
+    XColor color = *this;
+    color.m_layer = color.m_layer == TDK::Layer::Foreground ? TDK::Layer::Background : TDK::Layer::Foreground;
+    return color;
 }
 
 int TDK::Effect::GetCode() const
@@ -224,19 +242,24 @@ TDK::RGBColor TDK::RGBColor::Invert()
     return color;
 }
 
-TDK::XColor::XColor(unsigned char code, Layer layer) : m_code(code), m_layer(layer)
+TDK::XColor::XColor(unsigned char code, Layer layer) : m_code(code), m_layer(FilterLayer(layer))
 {
 }
 
-TDK::XColor::XColor(XColorCode code, Layer layer) : m_code(static_cast<int>(code)), m_layer(layer)
+TDK::XColor::XColor(XColorCode code, Layer layer)
+    : m_code((std::max)((std::min)(static_cast<int>(code), 255), static_cast<int>(TDK::XColorCode::Default))),
+      m_layer(FilterLayer(layer))
 {
 }
 
-TDK::XColor TDK::XColor::Invert()
+short TDK::XColor::GetCode() const
 {
-    XColor color = *this;
-    color.m_layer = color.m_layer == TDK::Layer::Foreground ? TDK::Layer::Background : TDK::Layer::Foreground;
-    return color;
+    return m_code;
+}
+
+TDK::Layer TDK::XColor::GetLayer() const
+{
+    return m_layer;
 }
 
 std::ostream& TDK::operator<<(std::ostream& stream, Effect effect)
@@ -266,9 +289,9 @@ std::ostream& TDK::operator<<(std::ostream& stream, RGBColor& color)
 std::ostream& TDK::operator<<(std::ostream& stream, XColor& color)
 {
     CHECK_STREAM_TTY_STATUS();
-    return color.m_code == static_cast<int>(TDK::XColorCode::Default)
-               ? stream << "\x1b[" << static_cast<int>(color.m_layer) << "9m"
-               : stream << "\x1b[" << static_cast<int>(color.m_layer) << "8;5;" << color.m_code << "m";
+    return color.GetCode() == static_cast<int>(TDK::XColorCode::Default)
+               ? stream << "\x1b[" << static_cast<int>(color.GetLayer()) << "9m"
+               : stream << "\x1b[" << static_cast<int>(color.GetLayer()) << "8;5;" << color.GetCode() << "m";
 }
 
 std::ostream& TDK::operator<<(std::ostream& stream, Weight weight)
@@ -279,7 +302,7 @@ std::ostream& TDK::operator<<(std::ostream& stream, Weight weight)
 
 bool TDK::operator==(XColor& color0, XColor& color1)
 {
-    return color0.m_layer == color1.m_layer && color0.m_code == color1.m_code;
+    return color0.GetLayer() == color1.GetLayer() && color0.GetCode() == color1.GetCode();
 }
 
 bool TDK::operator==(HexColor& color0, HexColor& color1)

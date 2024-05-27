@@ -67,6 +67,19 @@ namespace TDK
         Dim
     };
 
+    template <typename T>
+    class Color
+    {
+    public:
+        virtual T Invert() const = 0;
+
+    protected:
+        Layer m_layer;
+
+        Color();
+        static Layer FilterLayer(Layer layer);
+    };
+
     class Coordinate final
     {
     public:
@@ -145,15 +158,18 @@ namespace TDK
         RGBColor Invert();
     };
 
-    class XColor final
+    class XColor final : public Color<XColor>
     {
     public:
-        int m_code;
-        Layer m_layer;
-
         XColor(unsigned char code, Layer layer);
         XColor(XColorCode code, Layer layer);
-        XColor Invert();
+        TDK::XColor TDK::XColor::Invert() const override;
+        short GetCode() const;
+        Layer GetLayer() const;
+
+    private:
+        short m_code;
+        Layer m_layer;
     };
 
     std::ostream& operator<<(std::ostream& stream, Effect effect);
