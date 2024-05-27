@@ -238,16 +238,22 @@ namespace TDK
         /// </summary>
         Color();
         /// <summary>
-        /// Filters a layer value.
+        /// Filters a layer.
         /// </summary>
         /// <param name="layer">The layer to be filtered.</param>
         /// <returns>If valid, the layer given, otherwise, Layer::Foreground.</returns>
         static Layer FilterLayer(Layer layer);
     };
 
+    /// <summary>
+    /// Represents a terminal coordinate.
+    /// </summary>
     class Coordinate final
     {
     public:
+        /// <summary>
+        /// Creates a new instance of the Coordinate class.
+        /// </summary>
         Coordinate();
         /// <summary>
         /// Creates a new instance of the Coordinate class.
@@ -255,29 +261,83 @@ namespace TDK
         /// <param name="column">The column component of the coordinate.</param>
         /// <param name="row">The row component of the coordinate.</param>
         Coordinate(unsigned short column, unsigned short row);
+        /// <summary>
+        /// Gets the column component of the coordinate.
+        /// </summary>
+        /// <returns>The column component of the coordinate.</returns>
         unsigned short GetColumn() const;
+        /// <summary>
+        /// Gets the row component of the coordinate.
+        /// </summary>
+        /// <returns>The row component of the coordinate.</returns>
         unsigned short GetRow() const;
+        /// <summary>
+        /// Sets the column component of the coordinate.
+        /// </summary>
+        /// <param name="column">The column component to be set.</param>
         void SetColumn(unsigned short column);
+        /// <summary>
+        /// Sets the row component of the coordinate.
+        /// </summary>
+        /// <param name="column">The row component to be set.</param>
         void SetRow(unsigned short row);
 
     private:
+        /// <summary>
+        /// The column component of the coordinate.
+        /// </summary>
         unsigned short m_column;
+        /// <summary>
+        /// The row component of the coordinate.
+        /// </summary>
         unsigned short m_row;
     };
 
+    /// <summary>
+    /// Represents a terminal effect.
+    /// </summary>
     class Effect final
     {
     public:
+        /// <summary>
+        /// Creates a new instance of the Effect class.
+        /// </summary>
+        /// <param name="code">The ANSI code of the effect.</param>
+        /// <param name="isToEnable">A boolean that states the effect targeted should be enabled.</param>
         Effect(EffectCode code, bool isToEnable);
+        /// <summary>
+        /// Creates a new instance of the Effect class.
+        /// </summary>
+        /// <param name="code">A bitmask containing the ANSI code of the effects.</param>
+        /// <param name="isToEnable">A boolean that states the effects targeted should be enabled.</param>
         Effect(int code, bool isToEnable);
 
+        /// <summary>
+        /// Gets a bitmask containg the ANSI codes of the effects being targeted.
+        /// </summary>
+        /// <returns>A bitmask containg the ANSI codes of the effects being targeted</returns>
         int GetCode() const;
+        /// <summary>
+        /// Gets a boolean the states the effects targeted should be enabled.
+        /// </summary>
+        /// <returns>A boolean that states the effects targeted should be enabled.</returns>
         bool IsToEnable() const;
 
     private:
+        /// <summary>
+        /// A bitmask containg the ANSI codes of the effects being targeted.
+        /// </summary>
         int m_code;
+        /// <summary>
+        /// A boolean that states the effects targeted should be enabled.
+        /// </summary>
         bool m_isToEnable;
 
+        /// <summary>
+        /// Filters the ANSI code of effects given in a bitmask.
+        /// </summary>
+        /// <param name="code">The bitmask to be filtered.</param>
+        /// <returns>A bitmask containing only the valid effects.</returns>
         static int FilterCode(int code);
     };
 
