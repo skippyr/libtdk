@@ -83,78 +83,45 @@ namespace TDK
         Error
     };
 
-    /// <summary>
-    /// Contains the ANSI code of the first 16 colors of the XTerm palette plus one more color intended for resets.
-    /// </summary>
+    /**
+     * @brief Contains the ANSI code of the first 16 colors of the XTerm palette plus one more color intended for
+     * resets.
+     */
     enum class XColorCode
     {
-        /// <summary>
-        /// Resets the color.
-        /// </summary>
+        /** @brief Resets the color. */
         Default = -1,
-        /// <summary>
-        /// The dark variant of the black color.
-        /// </summary>
+        /** @brief The dark variant of the black color. */
         DarkBlack,
-        /// <summary>
-        /// The dark variant of the red color.
-        /// </summary>
+        /** @brief The dark variant of the red color. */
         DarkRed,
-        /// <summary>
-        /// The dark variant of the green color.
-        /// </summary>
+        /** @brief The dark variant of the green color. */
         DarkGreen,
-        /// <summary>
-        /// The dark variant of the yellow color.
-        /// </summary>
+        /** @brief The dark variant of the yellow color. */
         DarkYellow,
-        /// <summary>
-        /// The dark variant of the blue color.
-        /// </summary>
+        /** @brief The dark variant of the blue color. */
         DarkBlue,
-        /// <summary>
-        /// The dark variant of the magenta color.
-        /// </summary>
+        /** @brief The dark variant of the magenta color. */
         DarkMagenta,
-        /// <summary>
-        /// The dark variant of the cyan color.
-        /// </summary>
+        /** @brief The dark variant of the cyan color. */
         DarkCyan,
-        /// <summary>
-        /// The dark variant of the white color.
-        /// </summary>
+        /** @brief The dark variant of the white color. */
         DarkWhite,
-        /// <summary>
-        /// The light variant of the black color.
-        /// </summary>
+        /** @brief The light variant of the black color. */
         LightBlack,
-        /// <summary>
-        /// The light variant of the red color.
-        /// </summary>
+        /** @brief The light variant of the red color. */
         LightRed,
-        /// <summary>
-        /// The light variant of the green color.
-        /// </summary>
+        /** @brief The light variant of the green color. */
         LightGreen,
-        /// <summary>
-        /// The light variant of the yellow color.
-        /// </summary>
+        /** @brief The light variant of the yellow color. */
         LightYellow,
-        /// <summary>
-        /// The light variant of the blue color.
-        /// </summary>
+        /** @brief The light variant of the blue color. */
         LightBlue,
-        /// <summary>
-        /// The light variant of the magenta color.
-        /// </summary>
+        /** @brief the light variant of the magenta color. */
         LightMagenta,
-        /// <summary>
-        /// The light variant of the cyan color.
-        /// </summary>
+        /** @brief The light variant of the cyan color. */
         LightCyan,
-        /// <summary>
-        /// The light variant of the white color.
-        /// </summary>
+        /** @brief The light variant of the white color. */
         LightWhite
     };
 
