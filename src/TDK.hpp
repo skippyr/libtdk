@@ -580,72 +580,60 @@ namespace TDK
      */
     int operator|(EffectCode code0, EffectCode code1);
 
-    /// <summary>
-    /// Clears the terminal cursor line.
-    /// </summary>
+    /** @brief Clears the terminal cursor line. */
     void ClearCursorLine();
-    /// <summary>
-    /// Clears the terminal input buffer.
-    /// </summary>
+    /** @brief Clears the terminal input buffer. */
     void ClearInputBuffer();
-    /// <summary>
-    /// Clears the terminal window.
-    /// </summary>
+    /** @brief Clears the terminal window. */
     void ClearWindow();
-    /// <summary>
-    /// Closes the terminal alternate window.
-    /// </summary>
+    /** @brief Closes the terminal alternate window. */
     void CloseAlternateWindow();
-    /// <summary>
-    /// Gets the terminal cursor coordinate.
-    /// </summary>
-    /// <param name="coordinate">The address where the coordinate information will be put into.</param>
-    /// <returns>0 if successful or -1 otherwise.</returns>
+    /**
+     * @brief Gets the terminal cursor coordinate.
+     * @param coordinate The address where the coordinate information will be put into.
+     * @returns 0 if successful or -1 otherwise.
+     */
     int GetCursorCoordinate(Coordinate& coordinate);
-    /// <summary>
-    /// Gets the terminal window region.
-    /// </summary>
-    /// <param name="region">The address where the region information will be put into.</param>
-    /// <returns>0 if successful or -1 otherwise.</returns>
+    /**
+     * @brief Gets the terminal window region.
+     * @param region The address where the region information will be put into.
+     * @returns 0 if successful or -1 otherwise.
+     */
     int GetWindowRegion(Region& region);
-    /// <summary>
-    /// Checks if a standard terminal stream is connected to an interactive terminal (TTY).
-    /// </summary>
-    /// <param name="stream">The stream to be checked.</param>
-    /// <returns>A boolean that states the stream is a TTY.</returns>
+    /**
+     * @brief Checks if a standard terminal stream is connected to an interactive terminal (TTY).
+     * @param stream The stream to be checked.
+     * @returns A boolean that states the stream is a TTY.
+     */
     bool IsTTY(Stream stream);
-    /// <summary>
-    /// Opens the terminal alternate window.
-    /// </summary>
+    /** @brief Opens the terminal alternate window. */
     void OpenAlternateWindow();
-    /// <summary>
-    /// Rings the terminal bell.
-    /// </summary>
+    /** @brief Rings the terminal bell. */
     void RingBell();
-    /// <summary>
-    /// Sets the terminal cursor coordinate.
-    /// </summary>
-    /// <param name="column">The column component of the coordinate.</param>
-    /// <param name="row">The row component of the coordinate.</param>
+    /**
+     * @brief Sets the terminal cursor coordinate.
+     * @param column The column component of the coordinate.
+     * @param row The row component of the coordinate.
+     */
     void SetCursorCoordinate(unsigned short column, unsigned short row);
-    /// <summary>
-    /// Sets the terminal cursor coordinate.
-    /// </summary>
-    /// <param name="coordinate">The coordinate to be set.</param>
+    /**
+     * @brief Sets the terminal cursor coordinate.
+     * @param coordinate The coordinate to be set.
+     */
     void SetCursorCoordinate(Coordinate coordinate);
-    /// <summary>
-    /// Sets the terminal cursor shape.
-    /// </summary>
-    /// <param name="shape">The shape to be set.</param>
+    /**
+     * @brief Sets the terminal cursor shape.
+     * @param shape The shape to be set.
+     */
     void SetCursorShape(CursorShape shape);
-    /// <summary>
-    /// Sets the terminal cursor visibility.
-    /// </summary>
-    /// <param name="isToShow">A boolean that states the cursor should be visible.</param>
+    /**
+     * @brief Sets the terminal cursor visibility.
+     * @param isToShow A boolean that states the cursor should be visible.
+     */
     void SetCursorVisibility(bool isToShow);
-    /// <summary>
-    /// Sets the terminal window title.
-    /// </summary>
-    /// <param name="title">The title to be set.</param>
+    /**
+     * @brief Sets the terminal window title.
+     * @param title The title to be set.
+     */
     void SetWindowTitle(std::string title);
 }
