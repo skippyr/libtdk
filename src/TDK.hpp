@@ -391,74 +391,65 @@ namespace TDK
         Coordinate m_bottomRightCoordinate;
     };
 
-    /// <summary>
-    /// Represents a terminal RGB color.
-    /// </summary>
+    /** @brief Represents a terminal RGB color. */
     class RGBColor final : public Color<RGBColor>
     {
     public:
-        /// <summary>
-        /// Creates an instance of the RGB color class.
-        /// </summary>
-        /// <param name="red">The red component of the color.</param>
-        /// <param name="green">The green component of the color.</param>
-        /// <param name="blue">The blue component of the color.</param>
-        /// <param name="blue">The blue component of the color.</param>
-        /// <param name="layer">The layer the color applies on.</param>
+        /**
+         * @brief Creates an instance of the RGB color class.
+         * @param red The red component of the color.
+         * @param green The green component of the color.
+         * @param blue The blue component of the color.
+         * @param layer The layer the color applies on.
+         */
         RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer);
-        /// <summary>
-        /// Creates an instance of the RGB color class.
-        /// </summary>
-        /// <param name="color">The hex color to be converted.</param>
+        /**
+         * @brief Creates an instance of the RGB color class.
+         * @param color The hex color to be converted.
+         */
         RGBColor(HexColor color);
-        /// <summary>
-        /// Inverts the layer the color applies on.
-        /// </summary>
-        /// <returns>The color with its layer inverted.</returns>
+        /**
+         * @brief Inverts the layer the color applies on.
+         * @returns The color with its layer inverted.
+         */
         RGBColor Invert() const;
-        /// <summary>
-        /// Gets the red component of the coordinate.
-        /// </summary>
-        /// <returns>The red component of the coordinate.</returns>
+        /**
+         * @brief Gets the red component of the color.
+         * @returns The red component of the color.
+         */
         unsigned char GetRed() const;
-        /// <summary>
-        /// Gets the green component of the coordinate.
-        /// </summary>
-        /// <returns>The green component of the coordinate.</returns>
+        /**
+         * @brief Gets the green component of the color.
+         * @returns The green component of the color.
+         */
         unsigned char GetGreen() const;
-        /// <summary>
-        /// Gets the blue component of the coordinate.
-        /// </summary>
-        /// <returns>The blue component of the coordinate.</returns>
+        /**
+         * @brief Gets the blue component of the color.
+         * @returns The blue component of the color.
+         */
         unsigned char GetBlue() const;
-        /// <summary>
-        /// Sets the red component of the coordinate.
-        /// </summary>
-        /// <returns>The red component to be set.</returns>
+        /**
+         * @brief Sets the red component of the color.
+         * @returns The red component to be set.
+         */
         void SetRed(unsigned char red);
-        /// <summary>
-        /// Sets the green component of the coordinate.
-        /// </summary>
-        /// <returns>The green component to be set.</returns>
+        /**
+         * @brief Sets the green component of the color.
+         * @returns The green component to be set.
+         */
         void SetGreen(unsigned char green);
-        /// <summary>
-        /// Sets the blue component of the coordinate.
-        /// </summary>
-        /// <returns>The blue component to be set.</returns>
+        /**
+         * @brief Sets the blue component of the color.
+         * @returns The blue component to be set.
+         */
         void SetBlue(unsigned char blue);
 
     private:
-        /// <summary>
-        /// The red component of the coordinate.
-        /// </summary>
+        /** @brief The red component of the color. */
         unsigned char m_red;
-        /// <summary>
-        /// The green component of the coordinate.
-        /// </summary>
+        /** @brief The green component of the color. */
         unsigned char m_green;
-        /// <summary>
-        /// The blue component of the coordinate.
-        /// </summary>
+        /** @brief The blue component of the color. */
         unsigned char m_blue;
     };
 
