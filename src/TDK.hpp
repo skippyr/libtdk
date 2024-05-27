@@ -182,51 +182,43 @@ namespace TDK
         static Layer FilterLayer(Layer layer);
     };
 
-    /// <summary>
-    /// Represents a terminal coordinate.
-    /// </summary>
+    /** @brief Represents a terminal coordinate. */
     class Coordinate final
     {
     public:
-        /// <summary>
-        /// Creates a new instance of the Coordinate class.
-        /// </summary>
+        /** @brief Creates a new instance of the Coordinate class. */
         Coordinate();
-        /// <summary>
-        /// Creates a new instance of the Coordinate class.
-        /// </summary>
-        /// <param name="column">The column component of the coordinate.</param>
-        /// <param name="row">The row component of the coordinate.</param>
+        /**
+         * @brief Creates a new instance of the Coordinate class.
+         * @param column The column component of the coordinate.
+         * @param row The row component of the coordinate.
+         */
         Coordinate(unsigned short column, unsigned short row);
-        /// <summary>
-        /// Gets the column component of the coordinate.
-        /// </summary>
-        /// <returns>The column component of the coordinate.</returns>
+        /**
+         * @brief Gets the column component of the coordinate.
+         * @returns The column component of the coordinate.
+         */
         unsigned short GetColumn() const;
-        /// <summary>
-        /// Gets the row component of the coordinate.
-        /// </summary>
-        /// <returns>The row component of the coordinate.</returns>
+        /**
+         * @brief Gets the row component of the coordinate.
+         * @returns The row component of the coordinate.
+         */
         unsigned short GetRow() const;
-        /// <summary>
-        /// Sets the column component of the coordinate.
-        /// </summary>
-        /// <param name="column">The column component to be set.</param>
+        /**
+         * @brief Sets the column component of the coordinate.
+         * @param column The column component to be set.
+         */
         void SetColumn(unsigned short column);
-        /// <summary>
-        /// Sets the row component of the coordinate.
-        /// </summary>
-        /// <param name="column">The row component to be set.</param>
+        /**
+         * @brief Sets the row component of the coordinate.
+         * @param row The row component to be set.
+         */
         void SetRow(unsigned short row);
 
     private:
-        /// <summary>
-        /// The column component of the coordinate.
-        /// </summary>
+        /** @brief The column component of the coordinate. */
         unsigned short m_column;
-        /// <summary>
-        /// The row component of the coordinate.
-        /// </summary>
+        /** @brief The row component of the coordinate. */
         unsigned short m_row;
     };
 
