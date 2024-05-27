@@ -202,7 +202,7 @@ TDK::Region::Region(unsigned short totalColumns, unsigned short totalRows)
 {
 }
 
-TDK::Region::Region(Coordinate& cornerCoordinate0, Coordinate& cornerCoordinate1)
+TDK::Region::Region(Coordinate cornerCoordinate0, Coordinate cornerCoordinate1)
 {
     unsigned short maxColumn = (std::max)(cornerCoordinate0.GetColumn(), cornerCoordinate1.GetColumn());
     unsigned short minColumn = (std::min)(cornerCoordinate0.GetColumn(), cornerCoordinate1.GetColumn());
@@ -258,7 +258,7 @@ TDK::RGBColor::RGBColor(unsigned char red, unsigned char green, unsigned char bl
     m_layer = FilterLayer(layer);
 }
 
-TDK::RGBColor::RGBColor(HexColor& color)
+TDK::RGBColor::RGBColor(HexColor color)
     : m_red(color.GetCode() >> 16 & 0xff), m_green(color.GetCode() >> 8 & 0xff), m_blue(color.GetCode() & 0xff)
 
 {
@@ -347,19 +347,19 @@ std::ostream& TDK::operator<<(std::ostream& stream, Effect effect)
     return stream;
 }
 
-std::ostream& TDK::operator<<(std::ostream& stream, HexColor& color)
+std::ostream& TDK::operator<<(std::ostream& stream, HexColor color)
 {
     return stream << RGBColor(color);
 }
 
-std::ostream& TDK::operator<<(std::ostream& stream, RGBColor& color)
+std::ostream& TDK::operator<<(std::ostream& stream, RGBColor color)
 {
     CHECK_STREAM_TTY_STATUS();
     return stream << "\x1b[" << static_cast<int>(color.GetLayer()) << "8;2;" << static_cast<int>(color.GetRed()) << ";"
                   << static_cast<int>(color.GetGreen()) << ";" << static_cast<int>(color.GetBlue()) << "m";
 }
 
-std::ostream& TDK::operator<<(std::ostream& stream, XColor& color)
+std::ostream& TDK::operator<<(std::ostream& stream, XColor color)
 {
     CHECK_STREAM_TTY_STATUS();
     return color.GetCode() == static_cast<int>(TDK::XColorCode::Default)
@@ -373,28 +373,28 @@ std::ostream& TDK::operator<<(std::ostream& stream, Weight weight)
     return weight == Weight::Default ? stream << "\x1b[22m" : stream << "\x1b[22;" << static_cast<int>(weight) << "m";
 }
 
-bool TDK::operator==(XColor& color0, XColor& color1)
+bool TDK::operator==(XColor color0, XColor color1)
 {
     return color0.GetLayer() == color1.GetLayer() && color0.GetCode() == color1.GetCode();
 }
 
-bool TDK::operator==(HexColor& color0, HexColor& color1)
+bool TDK::operator==(HexColor color0, HexColor color1)
 {
     return color0.GetLayer() == color1.GetLayer() && color0.GetCode() == color1.GetCode();
 }
 
-bool TDK::operator==(RGBColor& color0, RGBColor& color1)
+bool TDK::operator==(RGBColor color0, RGBColor color1)
 {
     return color0.GetLayer() == color1.GetLayer() && color0.GetRed() == color1.GetRed() &&
            color0.GetGreen() == color1.GetGreen() && color0.GetBlue() == color1.GetBlue();
 }
 
-bool TDK::operator==(Coordinate& coordinate0, Coordinate& coordinate1)
+bool TDK::operator==(Coordinate coordinate0, Coordinate coordinate1)
 {
     return coordinate0.GetColumn() == coordinate1.GetColumn() && coordinate0.GetRow() == coordinate1.GetRow();
 }
 
-bool TDK::operator==(Region& region0, Region& region1)
+bool TDK::operator==(Region region0, Region region1)
 {
     return region0.GetTopLeftCoordinate() == region1.GetTopLeftCoordinate() &&
            region0.GetTopRightCoordinate() == region1.GetTopRightCoordinate() &&
@@ -465,15 +465,17 @@ int TDK::GetCursorCoordinate(Coordinate& coordinate)
     }
     attributes.c_lflag &= ~(ICANON | ECHO);
     tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
-    int totalMatchesRead = std::scanf("\x1b[%hu;%huR", &coordinate.m_row, &coordinate.m_column);
+    unsigned short column;
+    unsigned short row;
+    int totalMatchesRead = std::scanf("\x1b[%hu;%huR", &row, &column);
     attributes.c_lflag |= ICANON | ECHO;
     tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
     if (totalMatchesRead != 2)
     {
         return -1;
     }
-    --coordinate.m_column;
-    --coordinate.m_row;
+    coordinate.SetColumn(--column);
+    coordinate.SetRow(--row);
 #endif
     return 0;
 }
@@ -525,7 +527,7 @@ void TDK::SetCursorCoordinate(unsigned short column, unsigned short row)
     WriteANSISequence("\x1b[%hu;%huH", row + 1, column + 1);
 }
 
-void TDK::SetCursorCoordinate(Coordinate& coordinate)
+void TDK::SetCursorCoordinate(Coordinate coordinate)
 {
     SetCursorCoordinate(coordinate.GetColumn(), coordinate.GetRow());
 }

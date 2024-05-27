@@ -132,7 +132,7 @@ namespace TDK
     public:
         Region();
         Region(unsigned short totalColumns, unsigned short totalRows);
-        Region(Coordinate& cornerCoordinate0, Coordinate& cornerCoordinate1);
+        Region(Coordinate cornerCoordinate0, Coordinate cornerCoordinate1);
         unsigned short GetTotalColumns() const;
         unsigned short GetTotalRows() const;
         unsigned int GetArea() const;
@@ -155,7 +155,7 @@ namespace TDK
     {
     public:
         RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer);
-        RGBColor(HexColor& color);
+        RGBColor(HexColor color);
         RGBColor Invert() const;
         unsigned char GetRed() const;
         unsigned char GetGreen() const;
@@ -187,15 +187,15 @@ namespace TDK
     };
 
     std::ostream& operator<<(std::ostream& stream, Effect effect);
-    std::ostream& operator<<(std::ostream& stream, HexColor& color);
-    std::ostream& operator<<(std::ostream& stream, RGBColor& color);
-    std::ostream& operator<<(std::ostream& stream, XColor& color);
+    std::ostream& operator<<(std::ostream& stream, HexColor color);
+    std::ostream& operator<<(std::ostream& stream, RGBColor color);
+    std::ostream& operator<<(std::ostream& stream, XColor color);
     std::ostream& operator<<(std::ostream& stream, Weight weight);
-    bool operator==(XColor& color0, XColor& color1);
-    bool operator==(HexColor& color0, HexColor& color1);
-    bool operator==(RGBColor& color0, RGBColor& color1);
-    bool operator==(Coordinate& coordinate0, Coordinate& coordinate1);
-    bool operator==(Region& region0, Region& region1);
+    bool operator==(XColor color0, XColor color1);
+    bool operator==(HexColor color0, HexColor color1);
+    bool operator==(RGBColor color0, RGBColor color1);
+    bool operator==(Coordinate coordinate0, Coordinate coordinate1);
+    bool operator==(Region region0, Region region1);
     int operator|(EffectCode code0, EffectCode code1);
 
     void ClearCursorLine();
@@ -208,7 +208,7 @@ namespace TDK
     void OpenAlternateWindow();
     void RingBell();
     void SetCursorCoordinate(unsigned short column, unsigned short row);
-    void SetCursorCoordinate(Coordinate& coordinate);
+    void SetCursorCoordinate(Coordinate coordinate);
     void SetCursorShape(CursorShape shape);
     void SetCursorVisibility(bool isToShow);
     void SetWindowTitle(std::string title);
