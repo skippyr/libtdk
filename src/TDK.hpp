@@ -46,34 +46,20 @@ namespace TDK
         Mouse
     };
 
-    /// <summary>
-    /// Contains the ANSI code of the available terminal effects.
-    /// </summary>
+    /** @brief Contains the ANSI code of the available terminal effects. */
     enum class EffectCode
     {
-        /// <summary>
-        /// Makes the text curly.
-        /// </summary>
+        /** @brief Makes the text curly. */
         Italic = 3,
-        /// <summary>
-        /// Draws a horizontal line below the text.
-        /// </summary>
+        /** @brief Draws a horizontal line below the text. */
         Underline,
-        /// <summary>
-        /// Makes the text blink indefinetely.
-        /// </summary>
+        /** @brief Makes the text blink indefinitely. */
         Blinking,
-        /// <summary>
-        /// Swaps the background and foreground colors.
-        /// </summary>
+        /** @brief Swaps the foreground and background colors. */
         Negative = 7,
-        /// <summary>
-        /// Makes the text hard to see or invisible.
-        /// </summary>
+        /** @brief Makes the text hard to see or invisible. */
         Hidden,
-        /// <summary>
-        /// Draws a horizontal line crossing through the text.
-        /// </summary>
+        /** @brief Draws a horizontal line crossing through the text. */
         CrossedOut
     };
 
