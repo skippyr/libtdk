@@ -184,25 +184,64 @@ namespace TDK
         LightWhite
     };
 
+    /// <summary>
+    /// Contains the available terminal weights.
+    /// </summary>
     enum class Weight
     {
+        /// <summary>
+        /// Resets the weight.
+        /// </summary>
         Default,
+        /// <summary>
+        /// Usually rendered as bold weight and/or with light colors.
+        /// </summary>
         Bold,
+        /// <summary>
+        /// Usually rendered with faint colors.
+        /// </summary>
         Dim
     };
 
-    template <typename T>
+    /// <summary>
+    /// Represents a generic terminal color.
+    /// </summary>
+    /// <typeparam name="T">Represents the more specific color.</typeparam>
+    template <class T>
     class Color
     {
     public:
+        /// <summary>
+        /// Inverts the layer the color applies on.
+        /// </summary>
+        /// <returns>The color with its layer inverted.</returns>
         virtual T Invert() const = 0;
+        /// <summary>
+        /// Gets the layer the color applies on.
+        /// </summary>
+        /// <returns>The layer of the color.</returns>
         Layer GetLayer() const;
+        /// <summary>
+        /// Sets the layer the color applies on.
+        /// </summary>
+        /// <param name="layer">The layer to be set.</param>
         void SetLayer(Layer layer);
 
     protected:
+        /// <summary>
+        /// The layer the color applies on.
+        /// </summary>
         Layer m_layer;
 
+        /// <summary>
+        /// Creates a new instance of the Color class.
+        /// </summary>
         Color();
+        /// <summary>
+        /// Filters a layer value.
+        /// </summary>
+        /// <param name="layer">The layer to be filtered.</param>
+        /// <returns>If valid, the layer given, otherwise, Layer::Foreground.</returns>
         static Layer FilterLayer(Layer layer);
     };
 

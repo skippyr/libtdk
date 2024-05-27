@@ -35,14 +35,14 @@
      << static_cast<int>(stream))
 #endif
 
-template <typename T>
+template <class T>
 static T InvertColor(const T* color);
 static void PrepareStreamsAndCache();
 static int WriteANSISequence(const char* format, ...);
 
 static char g_cache = 0;
 
-template <typename T>
+template <class T>
 static T InvertColor(const T* color)
 {
     T copy = *color;
@@ -80,24 +80,24 @@ static int WriteANSISequence(const char* format, ...)
     return -(totalBytesWritten < 0);
 }
 
-template <typename T>
+template <class T>
 TDK::Color<T>::Color()
 {
 }
 
-template <typename T>
+template <class T>
 TDK::Layer TDK::Color<T>::GetLayer() const
 {
     return m_layer;
 }
 
-template <typename T>
+template <class T>
 void TDK::Color<T>::SetLayer(TDK::Layer layer)
 {
     m_layer = FilterLayer(layer);
 }
 
-template <typename T>
+template <class T>
 TDK::Layer TDK::Color<T>::FilterLayer(Layer layer)
 {
     return layer == TDK::Layer::Foreground || layer == TDK::Layer::Background ? layer : TDK::Layer::Foreground;
