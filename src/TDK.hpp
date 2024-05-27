@@ -3,45 +3,40 @@
 #include <functional>
 #include <iostream>
 
-/// <summary>
-/// A simple C++ terminal manipulation library for Windows and Linux. It can handle terminal properties, colors, effects
-/// and window resize and key events readings with UTF-8 encoding.
-/// </summary>
+/**
+ * @brief A simple C++ terminal manipulation library for Windows and Linux. It can handle terminal properties, colors,
+ * effects and events readings with UTF-8 encoding.
+ */
 namespace TDK
 {
-    /// <summary>
-    /// Contains the available terminal cursor shapes.
-    /// </summary>
+
+    /** @brief Contains the available terminal cursor shapes. */
     enum class CursorShape
     {
-        /// <summary>
-        /// Resets the default shape.
-        /// </summary>
+        /** @brief Resets the default shape. */
         Default,
-        /// <summary>
-        /// The blinking variant of the block shape.
-        /// </summary>
+        /** @brief The blinking variant of the block shape. */
         BlinkingBlock,
-        /// <summary>
-        /// The non-blinking variant of the block shape.
-        /// </summary>
-        SteadyBlock,
-        /// <summary>
-        /// The blinking variant of the underline shape.
-        /// </summary>
+        /** @brief The non-blinking variant of the block shape. */
+        NonBlinkingBlock,
+        /** @brief The blinking variant of the underline shape. */
         BlinkingUnderline,
-        /// <summary>
-        /// The non-blinking variant of the underline shape.
-        /// </summary>
-        SteadyUnderline,
-        /// <summary>
-        /// The blinking variant of the bar shape.
-        /// </summary>
+        /** @brief The non-blinking variant of the underline shape. */
+        NonBlinkingUnderline,
+        /** @brief The blinking variant of the bar shape. */
         BlinkingBar,
-        /// <summary>
-        /// The non-blinking variant of the bar shape.
-        /// </summary>
-        SteadyBar
+        /** @brief The non-blinking variant of the bar shape. */
+        NonBlinkingBar
+    };
+
+    enum class EventType
+    {
+        None,
+        TimeOut,
+        WindowResize,
+        Key,
+        Mouse,
+        Focus
     };
 
     /// <summary>
@@ -250,7 +245,7 @@ namespace TDK
         /// Filters a layer.
         /// </summary>
         /// <param name="layer">The layer to be filtered.</param>
-        /// <returns>The layer given if valid and Layer::Foreground otherwise.</returns>
+        /// <returns>The layer given if valid or Layer::Foreground otherwise.</returns>
         static Layer FilterLayer(Layer layer);
     };
 
@@ -721,13 +716,13 @@ namespace TDK
     /// Gets the terminal cursor coordinate.
     /// </summary>
     /// <param name="coordinate">The address where the coordinate information will be put into.</param>
-    /// <returns>0 if successful and -1 otherwise.</returns>
+    /// <returns>0 if successful or -1 otherwise.</returns>
     int GetCursorCoordinate(Coordinate& coordinate);
     /// <summary>
     /// Gets the terminal window region.
     /// </summary>
     /// <param name="region">The address where the region information will be put into.</param>
-    /// <returns>0 if successful and -1 otherwise.</returns>
+    /// <returns>0 if successful or -1 otherwise.</returns>
     int GetWindowRegion(Region& region);
     /// <summary>
     /// Checks if a standard terminal stream is connected to an interactive terminal (TTY).
