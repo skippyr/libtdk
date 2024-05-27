@@ -25,7 +25,7 @@ namespace TDK
         /// <summary>
         /// The non-blinking variant of the block shape.
         /// </summary>
-        Block,
+        SteadyBlock,
         /// <summary>
         /// The blinking variant of the underline shape.
         /// </summary>
@@ -33,7 +33,7 @@ namespace TDK
         /// <summary>
         /// The non-blinking variant of the underline shape.
         /// </summary>
-        Underline,
+        SteadyUnderline,
         /// <summary>
         /// The blinking variant of the bar shape.
         /// </summary>
@@ -41,7 +41,7 @@ namespace TDK
         /// <summary>
         /// The non-blinking variant of the bar shape.
         /// </summary>
-        Bar
+        SteadyBar
     };
 
     /// <summary>
@@ -56,7 +56,7 @@ namespace TDK
         /// <summary>
         /// Draws a horizontal line below the text.
         /// </summary>
-        Underline,
+        SteadyUnderline,
         /// <summary>
         /// Makes the text blink indefinetely.
         /// </summary>
@@ -294,7 +294,7 @@ namespace TDK
     };
 
     /// <summary>
-    /// Represents a terminal effect.
+    /// Represents a group of terminal effects.
     /// </summary>
     class Effect final
     {
@@ -341,17 +341,45 @@ namespace TDK
         static int FilterCode(int code);
     };
 
+    /// <summary>
+    /// Represents a terminal hex color.
+    /// </summary>
     class HexColor final : public Color<HexColor>
     {
     public:
+        /// <summary>
+        /// Creates an instance of the HexColor class.
+        /// </summary>
+        /// <param name="code">The hex code of the color.</param>
+        /// <param name="layer">The layer the color applies on.</param>
         HexColor(unsigned int code, Layer layer);
+        /// <summary>
+        /// Inverts the layer the color applies on.
+        /// </summary>
+        /// <returns>The color with its layer inverted.</returns>
         HexColor Invert() const;
+        /// <summary>
+        /// Gets the hex code of the color.
+        /// </summary>
+        /// <returns>The hex code of the color.</returns>
         unsigned int GetCode() const;
+        /// <summary>
+        /// Sets the hex code of the color.
+        /// </summary>
+        /// <param name="code">The hex code to be set.</param>
         void SetCode(unsigned int code);
 
     private:
+        /// <summary>
+        /// The hex code of the color.
+        /// </summary>
         unsigned int m_code;
 
+        /// <summary>
+        /// Filters a hex code.
+        /// </summary>
+        /// <param name="code">The hex code to be filtered.</param>
+        /// <returns>The hex code filtered within the range from 0x0 to 0xffffff.</returns>
         static unsigned int FilterCode(unsigned int code);
     };
 

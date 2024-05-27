@@ -546,7 +546,7 @@ void TDK::SetCursorShape(CursorShape shape)
 {
     WriteANSISequence("\x1b[%d q",
                       static_cast<int>(static_cast<int>(shape) >= static_cast<int>(TDK::CursorShape::Default) &&
-                                               static_cast<int>(shape) <= static_cast<int>(TDK::CursorShape::Bar)
+                                               static_cast<int>(shape) <= static_cast<int>(TDK::CursorShape::SteadyBar)
                                            ? shape
                                            : TDK::CursorShape::Default));
 }
