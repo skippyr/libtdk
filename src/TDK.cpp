@@ -225,7 +225,7 @@ TDK::Coordinate TDK::Region::GetBottomRightCoordinate() const
 }
 
 TDK::RGBColor::RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer)
-    : m_red(red), m_green(green), m_blue(blue), m_layer(layer)
+    : m_red(red), m_green(green), m_blue(blue), m_layer(FilterLayer(layer))
 {
 }
 
@@ -235,11 +235,51 @@ TDK::RGBColor::RGBColor(HexColor& color)
 {
 }
 
-TDK::RGBColor TDK::RGBColor::Invert()
+TDK::RGBColor TDK::RGBColor::Invert() const
 {
     RGBColor color = *this;
     color.m_layer = color.m_layer == TDK::Layer::Foreground ? TDK::Layer::Background : TDK::Layer::Foreground;
     return color;
+}
+
+unsigned char TDK::RGBColor::GetRed() const
+{
+    return m_red;
+}
+
+unsigned char TDK::RGBColor::GetGreen() const
+{
+    return m_green;
+}
+
+unsigned char TDK::RGBColor::GetBlue() const
+{
+    return m_blue;
+}
+
+TDK::Layer TDK::RGBColor::GetLayer() const
+{
+    return m_layer;
+}
+
+void TDK::RGBColor::SetRed(unsigned char red)
+{
+    m_red = red;
+}
+
+void TDK::RGBColor::SetGreen(unsigned char green)
+{
+    m_green = green;
+}
+
+void TDK::RGBColor::SetBlue(unsigned char blue)
+{
+    m_blue = blue;
+}
+
+void TDK::RGBColor::SetLayer(TDK::Layer layer)
+{
+    m_layer = FilterLayer(layer);
 }
 
 TDK::XColor::XColor(unsigned char code, Layer layer) : m_code(code), m_layer(FilterLayer(layer))
@@ -275,6 +315,11 @@ void TDK::XColor::SetCode(XColorCode code)
     m_code = FilterCode(code);
 }
 
+void TDK::XColor::SetLayer(Layer layer)
+{
+    m_layer = FilterLayer(layer);
+}
+
 std::ostream& TDK::operator<<(std::ostream& stream, Effect effect)
 {
     for (int code = 0; code < 10; ++code)
@@ -295,8 +340,8 @@ std::ostream& TDK::operator<<(std::ostream& stream, HexColor& color)
 std::ostream& TDK::operator<<(std::ostream& stream, RGBColor& color)
 {
     CHECK_STREAM_TTY_STATUS();
-    return stream << "\x1b[" << static_cast<int>(color.m_layer) << "8;2;" << static_cast<int>(color.m_red) << ";"
-                  << static_cast<int>(color.m_green) << ";" << static_cast<int>(color.m_blue) << "m";
+    return stream << "\x1b[" << static_cast<int>(color.GetLayer()) << "8;2;" << static_cast<int>(color.GetRed()) << ";"
+                  << static_cast<int>(color.GetGreen()) << ";" << static_cast<int>(color.GetBlue()) << "m";
 }
 
 std::ostream& TDK::operator<<(std::ostream& stream, XColor& color)
@@ -325,8 +370,8 @@ bool TDK::operator==(HexColor& color0, HexColor& color1)
 
 bool TDK::operator==(RGBColor& color0, RGBColor& color1)
 {
-    return color0.m_layer == color1.m_layer && color0.m_red == color1.m_red && color0.m_green == color1.m_green &&
-           color0.m_blue == color1.m_blue;
+    return color0.GetLayer() == color1.GetLayer() && color0.GetRed() == color1.GetRed() &&
+           color0.GetGreen() == color1.GetGreen() && color0.GetBlue() == color1.GetBlue();
 }
 
 bool TDK::operator==(Coordinate& coordinate0, Coordinate& coordinate1)

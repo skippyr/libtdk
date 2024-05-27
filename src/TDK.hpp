@@ -145,17 +145,26 @@ namespace TDK
         Coordinate m_bottomRightCoordinate;
     };
 
-    class RGBColor final
+    class RGBColor final : public Color<RGBColor>
     {
     public:
+        RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer);
+        RGBColor(HexColor& color);
+        RGBColor Invert() const;
+        unsigned char GetRed() const;
+        unsigned char GetGreen() const;
+        unsigned char GetBlue() const;
+        Layer GetLayer() const;
+        void SetRed(unsigned char red);
+        void SetGreen(unsigned char green);
+        void SetBlue(unsigned char blue);
+        void SetLayer(Layer layer);
+
+    private:
         unsigned char m_red;
         unsigned char m_green;
         unsigned char m_blue;
         Layer m_layer;
-
-        RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer);
-        RGBColor(HexColor& color);
-        RGBColor Invert();
     };
 
     class XColor final : public Color<XColor>
