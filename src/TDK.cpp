@@ -474,8 +474,7 @@ int TDK::GetCursorCoordinate(Coordinate& coordinate)
     {
         return -1;
     }
-    coordinate.SetColumn(--column);
-    coordinate.SetRow(--row);
+    coordinate = Coordinate(--column, --row);
 #endif
     return 0;
 }
