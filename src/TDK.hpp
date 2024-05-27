@@ -63,18 +63,12 @@ namespace TDK
         CrossedOut
     };
 
-    /// <summary>
-    /// Contains the available terminal layers.
-    /// </summary>
+    /** @brief Contains the available terminal layers. */
     enum class Layer
     {
-        /// <summary>
-        /// The foreground layer.
-        /// </summary>
+        /** @brief The foreground layer. */
         Foreground = 3,
-        /// <summary>
-        /// The background layer.
-        /// </summary>
+        /** @brief The background layer. */
         Background
     };
 
