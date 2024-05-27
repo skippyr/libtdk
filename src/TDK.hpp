@@ -623,16 +623,82 @@ namespace TDK
         static short FilterCode(XColorCode code);
     };
 
+    /// <summary>
+    /// Applies a group of terminal effects.
+    /// </summary>
+    /// <param name="stream">The stream to be affected.</param>
+    /// <param name="effect">The group of terminal effects to be applied.</param>
+    /// <returns>The stream affected.</returns>
     std::ostream& operator<<(std::ostream& stream, Effect effect);
+    /// <summary>
+    /// Applies a terminal hex color.
+    /// </summary>
+    /// <param name="stream">The stream to be affected.</param>
+    /// <param name="color">The hex color to be applied.</param>
+    /// <returns>The stream affected.</returns>
     std::ostream& operator<<(std::ostream& stream, HexColor color);
+    /// <summary>
+    /// Applies a terminal RGB color.
+    /// </summary>
+    /// <param name="stream">The stream to be affected.</param>
+    /// <param name="color">The RGB color to be applied.</param>
+    /// <returns>The stream affected.</returns>
     std::ostream& operator<<(std::ostream& stream, RGBColor color);
+    /// <summary>
+    /// Applies a terminal XTerm color.
+    /// </summary>
+    /// <param name="stream">The stream to be affected.</param>
+    /// <param name="color">The XTerm color to be applied.</param>
+    /// <returns>The stream affected.</returns>
     std::ostream& operator<<(std::ostream& stream, XColor color);
+    /// <summary>
+    /// Applies a terminal weight color.
+    /// </summary>
+    /// <param name="stream">The stream to be affected.</param>
+    /// <param name="color">The weight to be applied.</param>
+    /// <returns>The stream affected.</returns>
     std::ostream& operator<<(std::ostream& stream, Weight weight);
+    /// <summary>
+    /// Checks if two XTerm colors are equal.
+    /// </summary>
+    /// <param name="color0">The first color.</param>
+    /// <param name="color1">The second color.</param>
+    /// <returns>A boolean that states the two colors are equal.</returns>
     bool operator==(XColor color0, XColor color1);
+    /// <summary>
+    /// Checks if two hex colors are equal.
+    /// </summary>
+    /// <param name="color0">The first color.</param>
+    /// <param name="color1">The second color.</param>
+    /// <returns>A boolean that states the two colors are equal.</returns>
     bool operator==(HexColor color0, HexColor color1);
+    /// <summary>
+    /// Checks if two RGB colors are equal.
+    /// </summary>
+    /// <param name="color0">The first color.</param>
+    /// <param name="color1">The second color.</param>
+    /// <returns>A boolean that states the two colors are equal.</returns>
     bool operator==(RGBColor color0, RGBColor color1);
+    /// <summary>
+    /// Checks if two coordinates are equal.
+    /// </summary>
+    /// <param name="color0">The first coordinate.</param>
+    /// <param name="color1">The second coordinate.</param>
+    /// <returns>A boolean that states the two coordinates are equal.</returns>
     bool operator==(Coordinate coordinate0, Coordinate coordinate1);
+    /// <summary>
+    /// Checks if two region are equal.
+    /// </summary>
+    /// <param name="color0">The first region.</param>
+    /// <param name="color1">The second region.</param>
+    /// <returns>A boolean that states the two regions are equal.</returns>
     bool operator==(Region region0, Region region1);
+    /// <summary>
+    /// Concatenates two ANSI effect codes in order to make a bitmask.
+    /// </summary>
+    /// <param name="color0">The first ANSI effect code.</param>
+    /// <param name="color1">The second ANSI effect code.</param>
+    /// <returns>A bitmask containing both effects.</returns>
     int operator|(EffectCode code0, EffectCode code1);
 
     void ClearCursorLine();
