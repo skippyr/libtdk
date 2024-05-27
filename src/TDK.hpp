@@ -203,6 +203,15 @@ namespace TDK
         Dim
     };
 
+    template <class T>
+    class Color;
+    class Coordinate;
+    class Effect;
+    class HexColor;
+    class Region;
+    class RGBColor;
+    class XColor;
+
     /// <summary>
     /// Represents a generic terminal color.
     /// </summary>
@@ -354,6 +363,11 @@ namespace TDK
         /// <param name="layer">The layer the color applies on.</param>
         HexColor(unsigned int code, Layer layer);
         /// <summary>
+        /// Creates an instance of the HexColor class.
+        /// </summary>
+        /// <param name="color">The RGB color to be converted.</param>
+        HexColor(RGBColor color);
+        /// <summary>
         /// Inverts the layer the color applies on.
         /// </summary>
         /// <returns>The color with its layer inverted.</returns>
@@ -485,6 +499,9 @@ namespace TDK
         Coordinate m_bottomRightCoordinate;
     };
 
+    /// <summary>
+    /// Represents a terminal RGB color.
+    /// </summary>
     class RGBColor final : public Color<RGBColor>
     {
     public:

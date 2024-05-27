@@ -169,6 +169,11 @@ TDK::HexColor::HexColor(unsigned int code, Layer layer) : m_code(FilterCode(code
     m_layer = FilterLayer(layer);
 }
 
+TDK::HexColor::HexColor(RGBColor color) : m_code(color.GetRed() << 16 | color.GetGreen() << 8 | color.GetBlue())
+{
+    m_layer = color.GetLayer();
+}
+
 unsigned int TDK::HexColor::FilterCode(unsigned int code)
 {
     return (std::min)(static_cast<int>(code), 0xffffff);
