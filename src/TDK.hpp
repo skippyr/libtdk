@@ -72,6 +72,8 @@ namespace TDK
     {
     public:
         virtual T Invert() const = 0;
+        Layer GetLayer() const;
+        void SetLayer(Layer layer);
 
     protected:
         Layer m_layer;
@@ -111,14 +113,18 @@ namespace TDK
         static int FilterCode(int code);
     };
 
-    class HexColor final
+    class HexColor final : public Color<HexColor>
     {
     public:
-        unsigned int m_code;
-        Layer m_layer;
-
         HexColor(unsigned int code, Layer layer);
-        HexColor Invert();
+        HexColor Invert() const;
+        unsigned int GetCode() const;
+        void SetCode(unsigned int code);
+
+    private:
+        unsigned int m_code;
+
+        static unsigned int FilterCode(unsigned int code);
     };
 
     class Region final
@@ -154,17 +160,14 @@ namespace TDK
         unsigned char GetRed() const;
         unsigned char GetGreen() const;
         unsigned char GetBlue() const;
-        Layer GetLayer() const;
         void SetRed(unsigned char red);
         void SetGreen(unsigned char green);
         void SetBlue(unsigned char blue);
-        void SetLayer(Layer layer);
 
     private:
         unsigned char m_red;
         unsigned char m_green;
         unsigned char m_blue;
-        Layer m_layer;
     };
 
     class XColor final : public Color<XColor>
@@ -174,14 +177,11 @@ namespace TDK
         XColor(XColorCode code, Layer layer);
         XColor Invert() const;
         short GetCode() const;
-        Layer GetLayer() const;
         void SetCode(unsigned char code);
         void SetCode(XColorCode code);
-        void SetLayer(Layer layer);
 
     private:
         short m_code;
-        Layer m_layer;
 
         static short FilterCode(XColorCode code);
     };

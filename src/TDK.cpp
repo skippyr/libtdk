@@ -35,10 +35,20 @@
      << static_cast<int>(stream))
 #endif
 
+template <typename T>
+static T InvertColor(const T* color);
 static void PrepareStreamsAndCache();
 static int WriteANSISequence(const char* format, ...);
 
 static char g_cache = 0;
+
+template <typename T>
+static T InvertColor(const T* color)
+{
+    T copy = *color;
+    copy.SetLayer(copy.GetLayer() == TDK::Layer::Foreground ? TDK::Layer::Background : TDK::Layer::Foreground);
+    return copy;
+}
 
 static void PrepareStreamsAndCache()
 {
@@ -73,6 +83,18 @@ static int WriteANSISequence(const char* format, ...)
 template <typename T>
 TDK::Color<T>::Color()
 {
+}
+
+template <typename T>
+TDK::Layer TDK::Color<T>::GetLayer() const
+{
+    return m_layer;
+}
+
+template <typename T>
+void TDK::Color<T>::SetLayer(TDK::Layer layer)
+{
+    m_layer = FilterLayer(layer);
 }
 
 template <typename T>
@@ -118,13 +140,6 @@ TDK::Effect::Effect(TDK::EffectCode code, bool isToEnable)
 {
 }
 
-TDK::XColor TDK::XColor::Invert() const
-{
-    XColor color = *this;
-    color.m_layer = color.m_layer == TDK::Layer::Foreground ? TDK::Layer::Background : TDK::Layer::Foreground;
-    return color;
-}
-
 int TDK::Effect::GetCode() const
 {
     return m_code;
@@ -149,16 +164,29 @@ int TDK::Effect::FilterCode(int code)
     return filteredCodes;
 }
 
-TDK::HexColor::HexColor(unsigned int code, Layer layer)
-    : m_code((std::min)(static_cast<int>(code), 0xffffff)), m_layer(layer)
+TDK::HexColor::HexColor(unsigned int code, Layer layer) : m_code(FilterCode(code))
 {
+    m_layer = FilterLayer(layer);
 }
 
-TDK::HexColor TDK::HexColor::Invert()
+unsigned int TDK::HexColor::FilterCode(unsigned int code)
 {
-    HexColor color = *this;
-    color.m_layer = color.m_layer == TDK::Layer::Foreground ? TDK::Layer::Background : TDK::Layer::Foreground;
-    return color;
+    return (std::min)(static_cast<int>(code), 0xffffff);
+}
+
+TDK::HexColor TDK::HexColor::Invert() const
+{
+    return InvertColor(this);
+}
+
+unsigned int TDK::HexColor::GetCode() const
+{
+    return m_code;
+}
+
+void TDK::HexColor::SetCode(unsigned int code)
+{
+    m_code = FilterCode(code);
 }
 
 TDK::Region::Region()
@@ -225,21 +253,21 @@ TDK::Coordinate TDK::Region::GetBottomRightCoordinate() const
 }
 
 TDK::RGBColor::RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer)
-    : m_red(red), m_green(green), m_blue(blue), m_layer(FilterLayer(layer))
+    : m_red(red), m_green(green), m_blue(blue)
 {
+    m_layer = FilterLayer(layer);
 }
 
 TDK::RGBColor::RGBColor(HexColor& color)
-    : m_red(color.m_code >> 16 & 0xff), m_green(color.m_code >> 8 & 0xff), m_blue(color.m_code & 0xff),
-      m_layer(color.m_layer)
+    : m_red(color.GetCode() >> 16 & 0xff), m_green(color.GetCode() >> 8 & 0xff), m_blue(color.GetCode() & 0xff)
+
 {
+    m_layer = color.GetLayer();
 }
 
 TDK::RGBColor TDK::RGBColor::Invert() const
 {
-    RGBColor color = *this;
-    color.m_layer = color.m_layer == TDK::Layer::Foreground ? TDK::Layer::Background : TDK::Layer::Foreground;
-    return color;
+    return InvertColor(this);
 }
 
 unsigned char TDK::RGBColor::GetRed() const
@@ -257,11 +285,6 @@ unsigned char TDK::RGBColor::GetBlue() const
     return m_blue;
 }
 
-TDK::Layer TDK::RGBColor::GetLayer() const
-{
-    return m_layer;
-}
-
 void TDK::RGBColor::SetRed(unsigned char red)
 {
     m_red = red;
@@ -277,17 +300,19 @@ void TDK::RGBColor::SetBlue(unsigned char blue)
     m_blue = blue;
 }
 
-void TDK::RGBColor::SetLayer(TDK::Layer layer)
+TDK::XColor::XColor(unsigned char code, Layer layer) : m_code(code)
 {
     m_layer = FilterLayer(layer);
 }
 
-TDK::XColor::XColor(unsigned char code, Layer layer) : m_code(code), m_layer(FilterLayer(layer))
+TDK::XColor::XColor(XColorCode code, Layer layer) : m_code(FilterCode(code))
 {
+    m_layer = FilterLayer(layer);
 }
 
-TDK::XColor::XColor(XColorCode code, Layer layer) : m_code(FilterCode(code)), m_layer(FilterLayer(layer))
+TDK::XColor TDK::XColor::Invert() const
 {
+    return InvertColor(this);
 }
 
 short TDK::XColor::FilterCode(XColorCode code)
@@ -300,11 +325,6 @@ short TDK::XColor::GetCode() const
     return m_code;
 }
 
-TDK::Layer TDK::XColor::GetLayer() const
-{
-    return m_layer;
-}
-
 void TDK::XColor::SetCode(unsigned char code)
 {
     m_code = code;
@@ -313,11 +333,6 @@ void TDK::XColor::SetCode(unsigned char code)
 void TDK::XColor::SetCode(XColorCode code)
 {
     m_code = FilterCode(code);
-}
-
-void TDK::XColor::SetLayer(Layer layer)
-{
-    m_layer = FilterLayer(layer);
 }
 
 std::ostream& TDK::operator<<(std::ostream& stream, Effect effect)
@@ -365,7 +380,7 @@ bool TDK::operator==(XColor& color0, XColor& color1)
 
 bool TDK::operator==(HexColor& color0, HexColor& color1)
 {
-    return color0.m_layer == color1.m_layer && color0.m_code == color1.m_code;
+    return color0.GetLayer() == color1.GetLayer() && color0.GetCode() == color1.GetCode();
 }
 
 bool TDK::operator==(RGBColor& color0, RGBColor& color1)
