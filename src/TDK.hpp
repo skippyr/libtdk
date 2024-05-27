@@ -393,7 +393,7 @@ namespace TDK
         /// Filters a hex code.
         /// </summary>
         /// <param name="code">The hex code to be filtered.</param>
-        /// <returns>The hex code filtered within the range from 0x0 to 0xffffff.</returns>
+        /// <returns>The hex code filtered within a valid range.</returns>
         static unsigned int FilterCode(unsigned int code);
     };
 
@@ -505,19 +505,68 @@ namespace TDK
     class RGBColor final : public Color<RGBColor>
     {
     public:
+        /// <summary>
+        /// Creates an instance of the RGB color class.
+        /// </summary>
+        /// <param name="red">The red component of the color.</param>
+        /// <param name="green">The green component of the color.</param>
+        /// <param name="blue">The blue component of the color.</param>
+        /// <param name="blue">The blue component of the color.</param>
+        /// <param name="layer">The layer the color applies on.</param>
         RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer);
+        /// <summary>
+        /// Creates an instance of the RGB color class.
+        /// </summary>
+        /// <param name="color">The hex color to be converted.</param>
         RGBColor(HexColor color);
+        /// <summary>
+        /// Inverts the layer the color applies on.
+        /// </summary>
+        /// <returns>The color with its layer inverted.</returns>
         RGBColor Invert() const;
+        /// <summary>
+        /// Gets the red component of the coordinate.
+        /// </summary>
+        /// <returns>The red component of the coordinate.</returns>
         unsigned char GetRed() const;
+        /// <summary>
+        /// Gets the green component of the coordinate.
+        /// </summary>
+        /// <returns>The green component of the coordinate.</returns>
         unsigned char GetGreen() const;
+        /// <summary>
+        /// Gets the blue component of the coordinate.
+        /// </summary>
+        /// <returns>The blue component of the coordinate.</returns>
         unsigned char GetBlue() const;
+        /// <summary>
+        /// Sets the red component of the coordinate.
+        /// </summary>
+        /// <returns>The red component to be set.</returns>
         void SetRed(unsigned char red);
+        /// <summary>
+        /// Sets the green component of the coordinate.
+        /// </summary>
+        /// <returns>The green component to be set.</returns>
         void SetGreen(unsigned char green);
+        /// <summary>
+        /// Sets the blue component of the coordinate.
+        /// </summary>
+        /// <returns>The blue component to be set.</returns>
         void SetBlue(unsigned char blue);
 
     private:
+        /// <summary>
+        /// The red component of the coordinate.
+        /// </summary>
         unsigned char m_red;
+        /// <summary>
+        /// The green component of the coordinate.
+        /// </summary>
         unsigned char m_green;
+        /// <summary>
+        /// The blue component of the coordinate.
+        /// </summary>
         unsigned char m_blue;
     };
 
