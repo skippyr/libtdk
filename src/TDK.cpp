@@ -504,7 +504,10 @@ int TDK::GetWindowRegion(Region& region)
 bool TDK::IsTTY(Stream stream)
 {
     PrepareStreamsAndCache();
-    return IS_TTY(stream);
+    return static_cast<int>(stream) >= static_cast<int>(TDK::Stream::Input) &&
+                   static_cast<int>(stream) <= static_cast<int>(TDK::Stream::Error)
+               ? IS_TTY(stream)
+               : false;
 }
 
 void TDK::OpenAlternateWindow()
@@ -529,7 +532,11 @@ void TDK::SetCursorCoordinate(Coordinate& coordinate)
 
 void TDK::SetCursorShape(CursorShape shape)
 {
-    WriteANSISequence("\x1b[%d q", static_cast<int>(shape));
+    WriteANSISequence("\x1b[%d q",
+                      static_cast<int>(static_cast<int>(shape) >= static_cast<int>(TDK::CursorShape::Default) &&
+                                               static_cast<int>(shape) <= static_cast<int>(TDK::CursorShape::Bar)
+                                           ? shape
+                                           : TDK::CursorShape::Default));
 }
 
 void TDK::SetWindowTitle(std::string title)
