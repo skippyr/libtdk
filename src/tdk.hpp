@@ -156,17 +156,17 @@ namespace TDK
          * @brief Inverts the layer the color applies on.
          * @returns The color with its layer inverted.
          */
-        virtual T Invert() const = 0;
+        virtual T m_invert() const = 0;
         /**
          * @brief Gets the layer the color applies on.
          * @returns The layer of the color.
          */
-        Layer GetLayer() const;
+        Layer m_getLayer() const;
         /**
          * @brief Sets the layer the color applies on.
          * @param layer The layer to be set.
          */
-        void SetLayer(Layer layer);
+        void m_setLayer(Layer layer);
 
     protected:
         /** @brief The layer the color applies on. */
@@ -179,7 +179,7 @@ namespace TDK
          * @param layer The layer to be filtered.
          * @returns The layer given if valid or Layer::Foreground otherwise.
          */
-        static Layer FilterLayer(Layer layer);
+        static Layer s_filterLayer(Layer layer);
     };
 
     /** @brief Represents a terminal coordinate. */
@@ -198,22 +198,22 @@ namespace TDK
          * @brief Gets the column component of the coordinate.
          * @returns The column component of the coordinate.
          */
-        unsigned short GetColumn() const;
+        unsigned short m_getColumn() const;
         /**
          * @brief Gets the row component of the coordinate.
          * @returns The row component of the coordinate.
          */
-        unsigned short GetRow() const;
+        unsigned short m_getRow() const;
         /**
          * @brief Sets the column component of the coordinate.
          * @param column The column component to be set.
          */
-        void SetColumn(unsigned short column);
+        void m_setColumn(unsigned short column);
         /**
          * @brief Sets the row component of the coordinate.
          * @param row The row component to be set.
          */
-        void SetRow(unsigned short row);
+        void m_setRow(unsigned short row);
 
     private:
         /** @brief The column component of the coordinate. */
@@ -243,12 +243,12 @@ namespace TDK
          * @brief Gets a bitmask containing the ANSI codes of the effects being targeted.
          * @returns A bitmask containing the ANSI codes of the effects being targeted.
          */
-        int GetCode() const;
+        int m_getCode() const;
         /**
          * Gets a boolean that states the effects targeted should be enabled.
          * @returns A boolean that states the effects targeted should be enabled
          */
-        bool IsToEnable() const;
+        bool m_getIsToEnable() const;
 
     private:
         /** @brief A bitmask containing the ANSI codes of the effects being targeted. */
@@ -261,7 +261,7 @@ namespace TDK
          * @param code The bitmask to be filtered.
          * @returns A bitmask containing only the valid effects.
          */
-        static int FilterCode(int code);
+        static int s_filterCode(int code);
     };
 
     /** @brief Represents a terminal hex color. */
@@ -283,17 +283,17 @@ namespace TDK
          * @brief Inverts the layer the color applies on.
          * @returns The color with its layer inverted.
          */
-        HexColor Invert() const;
+        HexColor m_invert() const;
         /**
          * @brief Gets the hex code of the color.
          * @returns The hex code of the color.
          */
-        unsigned int GetCode() const;
+        unsigned int m_getCode() const;
         /**
          * @brief Sets the hex code of the color.
          * @param code The hex code to be set.
          */
-        void SetCode(unsigned int code);
+        void m_setCode(unsigned int code);
 
     private:
         /** @brief The hex code of the color */
@@ -304,7 +304,7 @@ namespace TDK
          * @param code The hex code to be filtered.
          * @returns The hex code filtered within a valid range.
          */
-        static unsigned int FilterCode(unsigned int code);
+        static unsigned int s_filterCode(unsigned int code);
     };
 
     /** @brief Represents a terminal region. */
@@ -331,48 +331,48 @@ namespace TDK
          * @param row The row component of the coordinate.
          * @returns A boolean that states the coordinate is contained within the region.
          */
-        bool Contains(unsigned short column, unsigned short row) const;
+        bool m_contains(unsigned short column, unsigned short row) const;
         /**
          * @brief Checks if a coordinate is contained within the region.
          * @param coordinate The coordinate to be checked.
          * @returns A boolean that states the coordinate is contained within the region.
          */
-        bool Contains(Coordinate coordinate) const;
+        bool m_contains(Coordinate coordinate) const;
         /**
          * @brief Gets the total columns of the region.
          * @returns The total columns of the region.
          */
-        unsigned short GetTotalColumns() const;
+        unsigned short m_getTotalColumns() const;
         /**
          * @brief Gets the total rows of the region.
          * @returns The total rows of the region.
          */
-        unsigned short GetTotalRows() const;
+        unsigned short m_getTotalRows() const;
         /**
          * @brief Gets the area of the region.
          * @returns The area of the region.
          */
-        unsigned int GetArea() const;
+        unsigned int m_getArea() const;
         /**
          * @brief Gets the top left coordinate of the region.
          * @returns The top left coordinate of the region.
          */
-        Coordinate GetTopLeftCoordinate() const;
+        Coordinate m_getTopLeftCoordinate() const;
         /**
          * @brief Gets the top right coordinate of the region.
          * @returns The top right coordinate of the region.
          */
-        Coordinate GetTopRightCoordinate() const;
+        Coordinate m_getTopRightCoordinate() const;
         /**
          * @brief Gets the bottom left coordinate of the region.
          * @returns The bottom left coordinate of the region.
          */
-        Coordinate GetBottomLeftCoordinate() const;
+        Coordinate m_getBottomLeftCoordinate() const;
         /**
          * @brief Gets the bottom right coordinate of the region.
          * @returns The bottom right coordinate of the region.
          */
-        Coordinate GetBottomRightCoordinate() const;
+        Coordinate m_getBottomRightCoordinate() const;
 
     private:
         /** @brief The total columns of the region. */
@@ -412,37 +412,37 @@ namespace TDK
          * @brief Inverts the layer the color applies on.
          * @returns The color with its layer inverted.
          */
-        RGBColor Invert() const;
+        RGBColor m_invert() const;
         /**
          * @brief Gets the red component of the color.
          * @returns The red component of the color.
          */
-        unsigned char GetRed() const;
+        unsigned char m_getRed() const;
         /**
          * @brief Gets the green component of the color.
          * @returns The green component of the color.
          */
-        unsigned char GetGreen() const;
+        unsigned char m_getGreen() const;
         /**
          * @brief Gets the blue component of the color.
          * @returns The blue component of the color.
          */
-        unsigned char GetBlue() const;
+        unsigned char m_getBlue() const;
         /**
          * @brief Sets the red component of the color.
          * @returns The red component to be set.
          */
-        void SetRed(unsigned char red);
+        void m_setRed(unsigned char red);
         /**
          * @brief Sets the green component of the color.
          * @returns The green component to be set.
          */
-        void SetGreen(unsigned char green);
+        void m_setGreen(unsigned char green);
         /**
          * @brief Sets the blue component of the color.
          * @returns The blue component to be set.
          */
-        void SetBlue(unsigned char blue);
+        void m_setBlue(unsigned char blue);
 
     private:
         /** @brief The red component of the color. */
@@ -473,22 +473,22 @@ namespace TDK
          * @brief Inverts the layer the color applies on.
          * @returns The color with its layer inverted.
          */
-        XColor Invert() const;
+        XColor m_invert() const;
         /**
          * @brief Gets the ANSI code of the color.
          * @returns The ANSI code of the color.
          */
-        short GetCode() const;
+        short m_getCode() const;
         /**
          * @brief Sets the ANSI code of the color.
          * @param code The ANSI code to be set.
          */
-        void SetCode(unsigned char code);
+        void m_setCode(unsigned char code);
         /**
          * @brief Sets the ANSI code of the color.
          * @param code The ANSI code to be set.
          */
-        void SetCode(XColorCode code);
+        void m_setCode(XColorCode code);
 
     private:
         /** @brief The ANSI code of the color. */
@@ -499,7 +499,7 @@ namespace TDK
          * @param code The ANSI code to be filtered.
          * @returns The ANSI code filtered within a valid range.
          */
-        static short FilterCode(XColorCode code);
+        static short s_filterCode(XColorCode code);
     };
 
     /**
@@ -581,59 +581,59 @@ namespace TDK
     int operator|(EffectCode code0, EffectCode code1);
 
     /** @brief Clears the terminal cursor line. */
-    void ClearCursorLine();
+    void clearCursorLine();
     /** @brief Clears the terminal input buffer. */
-    void ClearInputBuffer();
+    void clearInputBuffer();
     /** @brief Clears the terminal window. */
-    void ClearWindow();
+    void clearWindow();
     /** @brief Closes the terminal alternate window. */
-    void CloseAlternateWindow();
+    void closeAlternateWindow();
     /**
      * @brief Gets the terminal cursor coordinate.
      * @param coordinate The address where the coordinate information will be put into.
      * @returns 0 if successful or -1 otherwise.
      */
-    int GetCursorCoordinate(Coordinate& coordinate);
+    int getCursorCoordinate(Coordinate& coordinate);
     /**
      * @brief Gets the terminal window region.
      * @param region The address where the region information will be put into.
      * @returns 0 if successful or -1 otherwise.
      */
-    int GetWindowRegion(Region& region);
+    int getWindowRegion(Region& region);
     /**
      * @brief Checks if a standard terminal stream is connected to an interactive terminal (TTY).
      * @param stream The stream to be checked.
      * @returns A boolean that states the stream is a TTY.
      */
-    bool IsTTY(Stream stream);
+    bool isTTY(Stream stream);
     /** @brief Opens the terminal alternate window. */
-    void OpenAlternateWindow();
+    void openAlternateWindow();
     /** @brief Rings the terminal bell. */
-    void RingBell();
+    void ringBell();
     /**
      * @brief Sets the terminal cursor coordinate.
      * @param column The column component of the coordinate.
      * @param row The row component of the coordinate.
      */
-    void SetCursorCoordinate(unsigned short column, unsigned short row);
+    void setCursorCoordinate(unsigned short column, unsigned short row);
     /**
      * @brief Sets the terminal cursor coordinate.
      * @param coordinate The coordinate to be set.
      */
-    void SetCursorCoordinate(Coordinate coordinate);
+    void setCursorCoordinate(Coordinate coordinate);
     /**
      * @brief Sets the terminal cursor shape.
      * @param shape The shape to be set.
      */
-    void SetCursorShape(CursorShape shape);
+    void setCursorShape(CursorShape shape);
     /**
      * @brief Sets the terminal cursor visibility.
      * @param isToShow A boolean that states the cursor should be visible.
      */
-    void SetCursorVisibility(bool isToShow);
+    void setCursorVisibility(bool isToShow);
     /**
      * @brief Sets the terminal window title.
      * @param title The title to be set.
      */
-    void SetWindowTitle(std::string title);
+    void setWindowTitle(std::string title);
 }
