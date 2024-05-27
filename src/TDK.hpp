@@ -7,9 +7,11 @@
  * @brief A simple C++ terminal manipulation library for Windows and Linux. It can handle terminal properties, colors,
  * effects and events readings with UTF-8 encoding.
  */
-namespace TDK {
+namespace TDK
+{
     /** @brief Contains the available terminal cursor shapes. */
-    enum class CursorShape {
+    enum class CursorShape
+    {
         /** @brief Resets the default shape. */
         Default,
         /** @brief The blinking variant of the block shape. */
@@ -27,7 +29,8 @@ namespace TDK {
     };
 
     /** @brief Contains the available terminal event types. */
-    enum class EventType {
+    enum class EventType
+    {
         /** @brief No events were available. */
         None,
         /** @brief The event timer ran out. */
@@ -43,7 +46,8 @@ namespace TDK {
     };
 
     /** @brief Contains the ANSI code of the available terminal effects. */
-    enum class EffectCode {
+    enum class EffectCode
+    {
         /** @brief Makes the text curly. */
         Italic = 3,
         /** @brief Draws a horizontal line below the text. */
@@ -59,7 +63,8 @@ namespace TDK {
     };
 
     /** @brief Contains the available terminal layers. */
-    enum class Layer {
+    enum class Layer
+    {
         /** @brief The foreground layer. */
         Foreground = 3,
         /** @brief The background layer. */
@@ -67,7 +72,8 @@ namespace TDK {
     };
 
     /** @brief Contains the standard terminal streams. */
-    enum class Stream {
+    enum class Stream
+    {
         /** @brief Receives data and events */
         Input,
         /** @brief Outputs regular tense messages. */
@@ -80,7 +86,8 @@ namespace TDK {
      * @brief Contains the ANSI code of the first 16 colors of the XTerm palette plus one more color intended for
      * resets.
      */
-    enum class XColorCode {
+    enum class XColorCode
+    {
         /** @brief Resets the color. */
         Default = -1,
         /** @brief The dark variant of the black color. */
@@ -118,7 +125,8 @@ namespace TDK {
     };
 
     /** @brief Contains the available terminal weights. */
-    enum class Weight {
+    enum class Weight
+    {
         /** @brief Resets the weight */
         Default,
         /** @brief Usually rendered as bold weight and/or with light colors. */
@@ -136,51 +144,49 @@ namespace TDK {
     class RGBColor;
     class XColor;
 
-    /// <summary>
-    /// Represents a generic terminal color.
-    /// </summary>
-    /// <typeparam name="T">Represents the more specific color.</typeparam>
+    /**
+     * @brief Represents a generic terminal color.
+     * @tparam T The more specific color.
+     */
     template <class T>
-    class Color {
+    class Color
+    {
     public:
-        /// <summary>
-        /// Inverts the layer the color applies on.
-        /// </summary>
-        /// <returns>The color with its layer inverted.</returns>
+        /**
+         * @brief Inverts the layer the color applies on.
+         * @returns The color with its layer inverted.
+         */
         virtual T Invert() const = 0;
-        /// <summary>
-        /// Gets the layer the color applies on.
-        /// </summary>
-        /// <returns>The layer of the color.</returns>
+        /**
+         * @brief Gets the layer the color applies on.
+         * @returns The layer of the color.
+         */
         Layer GetLayer() const;
-        /// <summary>
-        /// Sets the layer the color applies on.
-        /// </summary>
-        /// <param name="layer">The layer to be set.</param>
+        /**
+         * @brief Sets the layer the color applies on.
+         * @param layer The layer to be set.
+         */
         void SetLayer(Layer layer);
 
     protected:
-        /// <summary>
-        /// The layer the color applies on.
-        /// </summary>
+        /** @brief The layer the color applies on. */
         Layer m_layer;
 
-        /// <summary>
-        /// Creates a new instance of the Color class.
-        /// </summary>
+        /** @brief Creates a new instance of the Color class. */
         Color();
-        /// <summary>
-        /// Filters a layer.
-        /// </summary>
-        /// <param name="layer">The layer to be filtered.</param>
-        /// <returns>The layer given if valid or Layer::Foreground otherwise.</returns>
+        /**
+         * @brief Filters a layer.
+         * @param layer The layer to be filtered.
+         * @returns The layer given if valid or Layer::Foreground otherwise.
+         */
         static Layer FilterLayer(Layer layer);
     };
 
     /// <summary>
     /// Represents a terminal coordinate.
     /// </summary>
-    class Coordinate final {
+    class Coordinate final
+    {
     public:
         /// <summary>
         /// Creates a new instance of the Coordinate class.
@@ -227,7 +233,8 @@ namespace TDK {
     /// <summary>
     /// Represents a group of terminal effects.
     /// </summary>
-    class Effect final {
+    class Effect final
+    {
     public:
         /// <summary>
         /// Creates a new instance of the Effect class.
@@ -274,7 +281,8 @@ namespace TDK {
     /// <summary>
     /// Represents a terminal hex color.
     /// </summary>
-    class HexColor final : public Color<HexColor> {
+    class HexColor final : public Color<HexColor>
+    {
     public:
         /// <summary>
         /// Creates an instance of the HexColor class.
@@ -320,7 +328,8 @@ namespace TDK {
     /// <summary>
     /// Represents a terminal region.
     /// </summary>
-    class Region final {
+    class Region final
+    {
     public:
         /// <summary>
         /// Creates a new instance of the Region class.
@@ -421,7 +430,8 @@ namespace TDK {
     /// <summary>
     /// Represents a terminal RGB color.
     /// </summary>
-    class RGBColor final : public Color<RGBColor> {
+    class RGBColor final : public Color<RGBColor>
+    {
     public:
         /// <summary>
         /// Creates an instance of the RGB color class.
@@ -491,7 +501,8 @@ namespace TDK {
     /// <summary>
     /// Represents a terminal XTerm color.
     /// </summary>
-    class XColor final : public Color<XColor> {
+    class XColor final : public Color<XColor>
+    {
     public:
         /// <summary>
         /// Creates a new instance of the XColor class.

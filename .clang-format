@@ -3,7 +3,6 @@ AlignTrailingComments: false
 AlwaysBreakTemplateDeclarations: true
 BasedOnStyle: Microsoft
 BreakAfterJavaFieldAnnotations: true
-BreakBeforeBraces: WebKit
 FixNamespaceComments: false
 NamespaceIndentation: All
 PointerAlignment: Left
