@@ -91,7 +91,7 @@ namespace TDK
     };
 
     /// <summary>
-    /// Contains the standard terminal data streams.
+    /// Contains the standard terminal streams.
     /// </summary>
     enum class Stream
     {
@@ -250,7 +250,7 @@ namespace TDK
         /// Filters a layer.
         /// </summary>
         /// <param name="layer">The layer to be filtered.</param>
-        /// <returns>If valid, the layer given, otherwise, Layer::Foreground.</returns>
+        /// <returns>The layer given if valid and Layer::Foreground otherwise.</returns>
         static Layer FilterLayer(Layer layer);
     };
 
@@ -701,18 +701,72 @@ namespace TDK
     /// <returns>A bitmask containing both effects.</returns>
     int operator|(EffectCode code0, EffectCode code1);
 
+    /// <summary>
+    /// Clears the terminal cursor line.
+    /// </summary>
     void ClearCursorLine();
+    /// <summary>
+    /// Clears the terminal input buffer.
+    /// </summary>
     void ClearInputBuffer();
+    /// <summary>
+    /// Clears the terminal window.
+    /// </summary>
     void ClearWindow();
+    /// <summary>
+    /// Closes the terminal alternate window.
+    /// </summary>
     void CloseAlternateWindow();
+    /// <summary>
+    /// Gets the terminal cursor coordinate.
+    /// </summary>
+    /// <param name="coordinate">The address where the coordinate information will be put into.</param>
+    /// <returns>0 if successful and -1 otherwise.</returns>
     int GetCursorCoordinate(Coordinate& coordinate);
+    /// <summary>
+    /// Gets the terminal window region.
+    /// </summary>
+    /// <param name="region">The address where the region information will be put into.</param>
+    /// <returns>0 if successful and -1 otherwise.</returns>
     int GetWindowRegion(Region& region);
+    /// <summary>
+    /// Checks if a standard terminal stream is connected to an interactive terminal (TTY).
+    /// </summary>
+    /// <param name="stream">The stream to be checked.</param>
+    /// <returns>A boolean that states the stream is a TTY.</returns>
     bool IsTTY(Stream stream);
+    /// <summary>
+    /// Opens the terminal alternate window.
+    /// </summary>
     void OpenAlternateWindow();
+    /// <summary>
+    /// Rings the terminal bell.
+    /// </summary>
     void RingBell();
+    /// <summary>
+    /// Sets the terminal cursor coordinate.
+    /// </summary>
+    /// <param name="column">The column component of the coordinate.</param>
+    /// <param name="row">The row component of the coordinate.</param>
     void SetCursorCoordinate(unsigned short column, unsigned short row);
+    /// <summary>
+    /// Sets the terminal cursor coordinate.
+    /// </summary>
+    /// <param name="coordinate">The coordinate to be set.</param>
     void SetCursorCoordinate(Coordinate coordinate);
+    /// <summary>
+    /// Sets the terminal cursor shape.
+    /// </summary>
+    /// <param name="shape">The shape to be set.</param>
     void SetCursorShape(CursorShape shape);
+    /// <summary>
+    /// Sets the terminal cursor visibility.
+    /// </summary>
+    /// <param name="isToShow">A boolean that states the cursor should be visible.</param>
     void SetCursorVisibility(bool isToShow);
+    /// <summary>
+    /// Sets the terminal window title.
+    /// </summary>
+    /// <param name="title">The title to be set.</param>
     void SetWindowTitle(std::string title);
 }
