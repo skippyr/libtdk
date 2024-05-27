@@ -56,7 +56,7 @@ namespace TDK
         /// <summary>
         /// Draws a horizontal line below the text.
         /// </summary>
-        SteadyUnderline,
+        Underline,
         /// <summary>
         /// Makes the text blink indefinetely.
         /// </summary>
@@ -383,29 +383,105 @@ namespace TDK
         static unsigned int FilterCode(unsigned int code);
     };
 
+    /// <summary>
+    /// Represents a terminal region.
+    /// </summary>
     class Region final
     {
     public:
+        /// <summary>
+        /// Creates a new instance of the Region class.
+        /// </summary>
         Region();
+        /// <summary>
+        /// Creates a new instance of the Region class.
+        /// </summary>
+        /// <param name="totalColumns">The total columns of the region.</param>
+        /// <param name="totalRows">The total rows of the region.</param>
         Region(unsigned short totalColumns, unsigned short totalRows);
+        /// <summary>
+        /// Creates a new instance of the Region class.
+        /// </summary>
+        /// <param name="cornerCoordinate0">A first corner coordinate of the region.</param>
+        /// <param name="cornerCoordinate1">A second corner coordinate of the region, opposite to the first one.</param>
         Region(Coordinate cornerCoordinate0, Coordinate cornerCoordinate1);
+        /// <summary>
+        /// Checks if a coordinate is contained within the region.
+        /// </summary>
+        /// <param name="column">The column component of the coordinate.</param>
+        /// <param name="row">The row component of the coordinate.</param>
+        /// <returns>A boolean that states the coordinate is contained within the region.</returns>
         bool Contains(unsigned short column, unsigned short row) const;
+        /// <summary>
+        /// Checks if a coordinate is contained within the region.
+        /// </summary>
+        /// <param name="coordinate">The coordinate to be checked.</param>
+        /// <returns>A boolean that states the coordinate is contained within the region.</returns>
         bool Contains(Coordinate coordinate) const;
+        /// <summary>
+        /// Gets the total columns of the region.
+        /// </summary>
+        /// <returns>The total columns of the region.</returns>
         unsigned short GetTotalColumns() const;
+        /// <summary>
+        /// Gets the total rows of the region.
+        /// </summary>
+        /// <returns>The total rows of the region.</returns>
         unsigned short GetTotalRows() const;
+        /// <summary>
+        /// Gets the area of the region.
+        /// </summary>
+        /// <returns>The area of the region.</returns>
         unsigned int GetArea() const;
+        /// <summary>
+        /// Gets the top left coordinate of the region.
+        /// </summary>
+        /// <returns>The top left coordinate of the region.</returns>
         Coordinate GetTopLeftCoordinate() const;
+        /// <summary>
+        /// Gets the top right coordinate of the region.
+        /// </summary>
+        /// <returns>The top right coordinate of the region.</returns>
         Coordinate GetTopRightCoordinate() const;
+        /// <summary>
+        /// Gets the bottom left coordinate of the region.
+        /// </summary>
+        /// <returns>The bottom left coordinate of the region.</returns>
         Coordinate GetBottomLeftCoordinate() const;
+        /// <summary>
+        /// Gets the bottom right coordinate of the region.
+        /// </summary>
+        /// <returns>The bottom right coordinate of the region.</returns>
         Coordinate GetBottomRightCoordinate() const;
 
     private:
+        /// <summary>
+        /// The total columns of the region.
+        /// </summary>
         unsigned short m_totalColumns;
+        /// <summary>
+        /// The total rows of the region.
+        /// </summary>
         unsigned short m_totalRows;
+        /// <summary>
+        /// The area of the region.
+        /// </summary>
         unsigned int m_area;
+        /// <summary>
+        /// The top left coordinate of the region.
+        /// </summary>
         Coordinate m_topLeftCoordinate;
+        /// <summary>
+        /// The top right coordinate of the region.
+        /// </summary>
         Coordinate m_topRightCoordinate;
+        /// <summary>
+        /// The bottom left coordinate of the region.
+        /// </summary>
         Coordinate m_bottomLeftCoordinate;
+        /// <summary>
+        /// The bottom right coordinate of the region.
+        /// </summary>
         Coordinate m_bottomRightCoordinate;
     };
 
