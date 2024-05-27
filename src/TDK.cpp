@@ -131,26 +131,26 @@ void TDK::Coordinate::SetRow(unsigned short row)
     m_row = row;
 }
 
-TDK::Effect::Effect(int code, bool isToEnable) : m_code(FilterCode(code)), m_isToEnable(isToEnable)
+TDK::Effects::Effects(int code, bool isToEnable) : m_code(FilterCode(code)), m_isToEnable(isToEnable)
 {
 }
 
-TDK::Effect::Effect(TDK::EffectCode code, bool isToEnable)
+TDK::Effects::Effects(TDK::EffectCode code, bool isToEnable)
     : m_code(FilterCode(1 << static_cast<int>(code))), m_isToEnable(isToEnable)
 {
 }
 
-int TDK::Effect::GetCode() const
+int TDK::Effects::GetCode() const
 {
     return m_code;
 }
 
-bool TDK::Effect::IsToEnable() const
+bool TDK::Effects::IsToEnable() const
 {
     return m_isToEnable;
 }
 
-int TDK::Effect::FilterCode(int code)
+int TDK::Effects::FilterCode(int code)
 {
     int filteredCodes = 0;
     for (int ansiCode = 0; ansiCode < 10; ++ansiCode)
@@ -351,7 +351,7 @@ void TDK::XColor::SetCode(XColorCode code)
     m_code = FilterCode(code);
 }
 
-std::ostream& TDK::operator<<(std::ostream& stream, Effect effect)
+std::ostream& TDK::operator<<(std::ostream& stream, Effects effect)
 {
     for (int code = 0; code < 10; ++code)
     {
@@ -549,11 +549,12 @@ void TDK::SetCursorCoordinate(Coordinate coordinate)
 
 void TDK::SetCursorShape(CursorShape shape)
 {
-    WriteANSISequence("\x1b[%d q",
-                      static_cast<int>(static_cast<int>(shape) >= static_cast<int>(TDK::CursorShape::Default) &&
-                                               static_cast<int>(shape) <= static_cast<int>(TDK::CursorShape::SteadyBar)
-                                           ? shape
-                                           : TDK::CursorShape::Default));
+    WriteANSISequence(
+        "\x1b[%d q",
+        static_cast<int>(static_cast<int>(shape) >= static_cast<int>(TDK::CursorShape::Default) &&
+                                 static_cast<int>(shape) <= static_cast<int>(TDK::CursorShape::NonBlinkingBar)
+                             ? shape
+                             : TDK::CursorShape::Default));
 }
 
 void TDK::SetWindowTitle(std::string title)

@@ -138,7 +138,7 @@ namespace TDK
     template <class T>
     class Color;
     class Coordinate;
-    class Effect;
+    class Effects;
     class HexColor;
     class Region;
     class RGBColor;
@@ -222,51 +222,45 @@ namespace TDK
         unsigned short m_row;
     };
 
-    /// <summary>
-    /// Represents a group of terminal effects.
-    /// </summary>
-    class Effect final
+    /** @brief Represents a group of terminal effects. */
+    class Effects final
     {
     public:
-        /// <summary>
-        /// Creates a new instance of the Effect class.
-        /// </summary>
-        /// <param name="code">The ANSI code of the effect.</param>
-        /// <param name="isToEnable">A boolean that states the effect targeted should be enabled.</param>
-        Effect(EffectCode code, bool isToEnable);
-        /// <summary>
-        /// Creates a new instance of the Effect class.
-        /// </summary>
-        /// <param name="code">A bitmask containing the ANSI code of the effects.</param>
-        /// <param name="isToEnable">A boolean that states the effects targeted should be enabled.</param>
-        Effect(int code, bool isToEnable);
+        /**
+         * @brief Creates a new instance of the Effects class.
+         * @param code The ANSI code of the effect.
+         * @param isToEnable A boolean that states the effect targeted should be enabled.
+         */
+        Effects(EffectCode code, bool isToEnable);
+        /**
+         * @brief Creates a new instance of the Effects class.
+         * @param code A bitmask containing the ANSI code of the effects.
+         * @param isToEnable A boolean that states the effects targeted should be enabled.
+         */
+        Effects(int code, bool isToEnable);
 
-        /// <summary>
-        /// Gets a bitmask containg the ANSI codes of the effects being targeted.
-        /// </summary>
-        /// <returns>A bitmask containg the ANSI codes of the effects being targeted</returns>
+        /**
+         * @brief Gets a bitmask containing the ANSI codes of the effects being targeted.
+         * @returns A bitmask containing the ANSI codes of the effects being targeted.
+         */
         int GetCode() const;
-        /// <summary>
-        /// Gets a boolean the states the effects targeted should be enabled.
-        /// </summary>
-        /// <returns>A boolean that states the effects targeted should be enabled.</returns>
+        /**
+         * Gets a boolean that states the effects targeted should be enabled.
+         * @returns A boolean that states the effects targeted should be enabled
+         */
         bool IsToEnable() const;
 
     private:
-        /// <summary>
-        /// A bitmask containg the ANSI codes of the effects being targeted.
-        /// </summary>
+        /** @brief A bitmask containing the ANSI codes of the effects being targeted. */
         int m_code;
-        /// <summary>
-        /// A boolean that states the effects targeted should be enabled.
-        /// </summary>
+        /** @brief A boolean that states the effects targeted should be enabled. */
         bool m_isToEnable;
 
-        /// <summary>
-        /// Filters the ANSI code of effects given in a bitmask.
-        /// </summary>
-        /// <param name="code">The bitmask to be filtered.</param>
-        /// <returns>A bitmask containing only the valid effects.</returns>
+        /**
+         * @brief Filters the ANSI code of the effects given in a bitmask.
+         * @param code The bitmask to be filtered.
+         * @returns A bitmask containing only the valid effects.
+         */
         static int FilterCode(int code);
     };
 
@@ -549,7 +543,7 @@ namespace TDK
     /// <param name="stream">The stream to be affected.</param>
     /// <param name="effect">The group of terminal effects to be applied.</param>
     /// <returns>The stream affected.</returns>
-    std::ostream& operator<<(std::ostream& stream, Effect effect);
+    std::ostream& operator<<(std::ostream& stream, Effects effect);
     /// <summary>
     /// Applies a terminal hex color.
     /// </summary>
