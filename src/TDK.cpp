@@ -351,13 +351,13 @@ void TDK::XColor::SetCode(XColorCode code)
     m_code = FilterCode(code);
 }
 
-std::ostream& TDK::operator<<(std::ostream& stream, Effects effect)
+std::ostream& TDK::operator<<(std::ostream& stream, Effects effects)
 {
     for (int code = 0; code < 10; ++code)
     {
-        if (effect.GetCode() & 1 << code)
+        if (effects.GetCode() & 1 << code)
         {
-            std::cout << "\x1b[" << code + (!effect.IsToEnable() * 20) << "m";
+            std::cout << "\x1b[" << code + (!effects.IsToEnable() * 20) << "m";
         }
     }
     return stream;
