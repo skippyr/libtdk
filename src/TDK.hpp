@@ -264,152 +264,130 @@ namespace TDK
         static int FilterCode(int code);
     };
 
-    /// <summary>
-    /// Represents a terminal hex color.
-    /// </summary>
+    /** @brief Represents a terminal hex color. */
     class HexColor final : public Color<HexColor>
     {
     public:
-        /// <summary>
-        /// Creates an instance of the HexColor class.
-        /// </summary>
-        /// <param name="code">The hex code of the color.</param>
-        /// <param name="layer">The layer the color applies on.</param>
+        /**
+         * @brief Creates an instance of the HexColor class.
+         * @param code The hex code of the color.
+         * @param layer The layer the color applies on.
+         */
         HexColor(unsigned int code, Layer layer);
-        /// <summary>
-        /// Creates an instance of the HexColor class.
-        /// </summary>
-        /// <param name="color">The RGB color to be converted.</param>
+        /**
+         * @brief Creates an instance of the HexColor class.
+         * @param color The RGB color to be converted.
+         */
         HexColor(RGBColor color);
-        /// <summary>
-        /// Inverts the layer the color applies on.
-        /// </summary>
-        /// <returns>The color with its layer inverted.</returns>
+        /**
+         * @brief Inverts the layer the color applies on.
+         * @returns The color with its layer inverted.
+         */
         HexColor Invert() const;
-        /// <summary>
-        /// Gets the hex code of the color.
-        /// </summary>
-        /// <returns>The hex code of the color.</returns>
+        /**
+         * @brief Gets the hex code of the color.
+         * @returns The hex code of the color.
+         */
         unsigned int GetCode() const;
-        /// <summary>
-        /// Sets the hex code of the color.
-        /// </summary>
-        /// <param name="code">The hex code to be set.</param>
+        /**
+         * @brief Sets the hex code of the color.
+         * @param code The hex code to be set.
+         */
         void SetCode(unsigned int code);
 
     private:
-        /// <summary>
-        /// The hex code of the color.
-        /// </summary>
+        /** @brief The hex code of the color */
         unsigned int m_code;
 
-        /// <summary>
-        /// Filters a hex code.
-        /// </summary>
-        /// <param name="code">The hex code to be filtered.</param>
-        /// <returns>The hex code filtered within a valid range.</returns>
+        /**
+         * @brief Filters a hex code.
+         * @param code The hex code to be filtered.
+         * @returns The hex code filtered within a valid range.
+         */
         static unsigned int FilterCode(unsigned int code);
     };
 
-    /// <summary>
-    /// Represents a terminal region.
-    /// </summary>
+    /** @brief Represents a terminal region. */
     class Region final
     {
     public:
-        /// <summary>
-        /// Creates a new instance of the Region class.
-        /// </summary>
+        /** @brief Creates a new instance of the Region class */
         Region();
-        /// <summary>
-        /// Creates a new instance of the Region class.
-        /// </summary>
-        /// <param name="totalColumns">The total columns of the region.</param>
-        /// <param name="totalRows">The total rows of the region.</param>
+        /**
+         * @brief Creates a new instance of the Region class.
+         * @param totalColumns The total columns of the region.
+         * @param totalRows The total rows of the region.
+         */
         Region(unsigned short totalColumns, unsigned short totalRows);
-        /// <summary>
-        /// Creates a new instance of the Region class.
-        /// </summary>
-        /// <param name="cornerCoordinate0">A first corner coordinate of the region.</param>
-        /// <param name="cornerCoordinate1">A second corner coordinate of the region, opposite to the first one.</param>
+        /**
+         * @brief Creates a new instance of the Region class.
+         * @param cornerCoordinate0 A first corner coordinate of the region.
+         * @param cornerCoordinate1 A second corner coordinate of the region, opposite to the first one.
+         */
         Region(Coordinate cornerCoordinate0, Coordinate cornerCoordinate1);
-        /// <summary>
-        /// Checks if a coordinate is contained within the region.
-        /// </summary>
-        /// <param name="column">The column component of the coordinate.</param>
-        /// <param name="row">The row component of the coordinate.</param>
-        /// <returns>A boolean that states the coordinate is contained within the region.</returns>
+        /**
+         * @brief Checks if a coordinate is contained within the region.
+         * @param column The column component of the coordinate.
+         * @param row The row component of the coordinate.
+         * @returns A boolean that states the coordinate is contained within the region.
+         */
         bool Contains(unsigned short column, unsigned short row) const;
-        /// <summary>
-        /// Checks if a coordinate is contained within the region.
-        /// </summary>
-        /// <param name="coordinate">The coordinate to be checked.</param>
-        /// <returns>A boolean that states the coordinate is contained within the region.</returns>
+        /**
+         * @brief Checks if a coordinate is contained within the region.
+         * @param coordinate The coordinate to be checked.
+         * @returns A boolean that states the coordinate is contained within the region.
+         */
         bool Contains(Coordinate coordinate) const;
-        /// <summary>
-        /// Gets the total columns of the region.
-        /// </summary>
-        /// <returns>The total columns of the region.</returns>
+        /**
+         * @brief Gets the total columns of the region.
+         * @returns The total columns of the region.
+         */
         unsigned short GetTotalColumns() const;
-        /// <summary>
-        /// Gets the total rows of the region.
-        /// </summary>
-        /// <returns>The total rows of the region.</returns>
+        /**
+         * @brief Gets the total rows of the region.
+         * @returns The total rows of the region.
+         */
         unsigned short GetTotalRows() const;
-        /// <summary>
-        /// Gets the area of the region.
-        /// </summary>
-        /// <returns>The area of the region.</returns>
+        /**
+         * @brief Gets the area of the region.
+         * @returns The area of the region.
+         */
         unsigned int GetArea() const;
-        /// <summary>
-        /// Gets the top left coordinate of the region.
-        /// </summary>
-        /// <returns>The top left coordinate of the region.</returns>
+        /**
+         * @brief Gets the top left coordinate of the region.
+         * @returns The top left coordinate of the region.
+         */
         Coordinate GetTopLeftCoordinate() const;
-        /// <summary>
-        /// Gets the top right coordinate of the region.
-        /// </summary>
-        /// <returns>The top right coordinate of the region.</returns>
+        /**
+         * @brief Gets the top right coordinate of the region.
+         * @returns The top right coordinate of the region.
+         */
         Coordinate GetTopRightCoordinate() const;
-        /// <summary>
-        /// Gets the bottom left coordinate of the region.
-        /// </summary>
-        /// <returns>The bottom left coordinate of the region.</returns>
+        /**
+         * @brief Gets the bottom left coordinate of the region.
+         * @returns The bottom left coordinate of the region.
+         */
         Coordinate GetBottomLeftCoordinate() const;
-        /// <summary>
-        /// Gets the bottom right coordinate of the region.
-        /// </summary>
-        /// <returns>The bottom right coordinate of the region.</returns>
+        /**
+         * @brief Gets the bottom right coordinate of the region.
+         * @returns The bottom right coordinate of the region.
+         */
         Coordinate GetBottomRightCoordinate() const;
 
     private:
-        /// <summary>
-        /// The total columns of the region.
-        /// </summary>
+        /** @brief The total columns of the region. */
         unsigned short m_totalColumns;
-        /// <summary>
-        /// The total rows of the region.
-        /// </summary>
+        /** @brief The total rows of the region. */
         unsigned short m_totalRows;
-        /// <summary>
-        /// The area of the region.
-        /// </summary>
+        /** @brief The area of the region. */
         unsigned int m_area;
-        /// <summary>
-        /// The top left coordinate of the region.
-        /// </summary>
+        /** @brief The top left coordinate of the region. */
         Coordinate m_topLeftCoordinate;
-        /// <summary>
-        /// The top right coordinate of the region.
-        /// </summary>
+        /** @brief The top right coordinate of the region. */
         Coordinate m_topRightCoordinate;
-        /// <summary>
-        /// The bottom left coordinate of the region.
-        /// </summary>
+        /** @brief the bottom left coordinate of the region. */
         Coordinate m_bottomLeftCoordinate;
-        /// <summary>
-        /// The bottom right coordinate of the region.
-        /// </summary>
+        /** @brief The bottom right coordinate of the region. */
         Coordinate m_bottomRightCoordinate;
     };
 
