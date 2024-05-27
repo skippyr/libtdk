@@ -72,22 +72,14 @@ namespace TDK
         Background
     };
 
-    /// <summary>
-    /// Contains the standard terminal streams.
-    /// </summary>
+    /** @brief Contains the standard terminal streams. */
     enum class Stream
     {
-        /// <summary>
-        /// Receives data and events.
-        /// </summary>
+        /** @brief Receives data and events */
         Input,
-        /// <summary>
-        /// Outputs regular tense messages.
-        /// </summary>
+        /** @brief Outputs regular tense messages. */
         Output,
-        /// <summary>
-        /// Outputs error tense messages.
-        /// </summary>
+        /** @brief Outputs error tense messages. */
         Error
     };
 
