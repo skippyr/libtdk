@@ -12,9 +12,9 @@
 
 #include "TDK.hpp"
 
-#define IS_TTY(stream) static_cast<bool>(g_cache & 1 << static_cast<int>(stream))
+#define IS_TTY(a_stream) static_cast<bool>(g_cache & 1 << static_cast<int>(a_stream))
 #define CHECK_STREAM_TTY_STATUS()                                                                                      \
-    PrepareStreamsAndCache();                                                                                          \
+    prepareStreamsAndCache();                                                                                          \
     if ((stream.rdbuf() == std::cout.rdbuf() && !IS_TTY(TDK::Stream::Output)) ||                                       \
         (stream.rdbuf() == std::cerr.rdbuf() && !IS_TTY(TDK::Stream::Error)))                                          \
     {                                                                                                                  \
@@ -22,35 +22,35 @@
     }
 #define HAS_CACHED_TTY_FLAG (1 << 7)
 #ifdef _WIN32
-#define TTY_CACHE(stream)                                                                                              \
-    (!!(_isatty(_fileno(!static_cast<int>(stream)       ? stdin                                                        \
-                        : static_cast<int>(stream) == 1 ? stdout                                                       \
-                                                        : stderr)))                                                    \
-     << static_cast<int>(stream))
+#define TTY_CACHE(a_stream)                                                                                            \
+    (!!(_isatty(_fileno(!static_cast<int>(a_stream)       ? stdin                                                      \
+                        : static_cast<int>(a_stream) == 1 ? stdout                                                     \
+                                                          : stderr)))                                                  \
+     << static_cast<int>(a_stream))
 #else
-#define TTY_CACHE(stream)                                                                                              \
-    (isatty(fileno(!static_cast<int>(stream)       ? stdin                                                             \
-                   : static_cast<int>(stream) == 1 ? stdout                                                            \
-                                                   : stderr))                                                          \
-     << static_cast<int>(stream))
+#define TTY_CACHE(a_stream)                                                                                            \
+    (isatty(fileno(!static_cast<int>(a_stream)       ? stdin                                                           \
+                   : static_cast<int>(a_stream) == 1 ? stdout                                                          \
+                                                     : stderr))                                                        \
+     << static_cast<int>(a_stream))
 #endif
 
 template <class T>
-static T InvertColor(const T* color);
-static void PrepareStreamsAndCache();
-static int WriteANSISequence(const char* format, ...);
+static T invertColor(const T* color);
+static void prepareStreamsAndCache();
+static int writeANSISequence(const char* format, ...);
 
 static char g_cache = 0;
 
 template <class T>
-static T InvertColor(const T* color)
+static T invertColor(const T* color)
 {
     T copy = *color;
     copy.m_setLayer(copy.m_getLayer() == TDK::Layer::Foreground ? TDK::Layer::Background : TDK::Layer::Foreground);
     return copy;
 }
 
-static void PrepareStreamsAndCache()
+static void prepareStreamsAndCache()
 {
     if (!(g_cache & HAS_CACHED_TTY_FLAG))
     {
@@ -66,9 +66,9 @@ static void PrepareStreamsAndCache()
 #endif
 }
 
-static int WriteANSISequence(const char* format, ...)
+static int writeANSISequence(const char* format, ...)
 {
-    PrepareStreamsAndCache();
+    prepareStreamsAndCache();
     if (!IS_TTY(TDK::Stream::Output) && !IS_TTY(TDK::Stream::Error))
     {
         return -1;
@@ -181,7 +181,7 @@ unsigned int TDK::HexColor::s_filterCode(unsigned int code)
 
 TDK::HexColor TDK::HexColor::m_invert() const
 {
-    return InvertColor(this);
+    return invertColor(this);
 }
 
 unsigned int TDK::HexColor::m_getCode() const
@@ -283,7 +283,7 @@ TDK::RGBColor::RGBColor(HexColor color)
 
 TDK::RGBColor TDK::RGBColor::m_invert() const
 {
-    return InvertColor(this);
+    return invertColor(this);
 }
 
 unsigned char TDK::RGBColor::m_getRed() const
@@ -328,7 +328,7 @@ TDK::XColor::XColor(XColorCode code, Layer layer) : m_code(s_filterCode(code))
 
 TDK::XColor TDK::XColor::m_invert() const
 {
-    return InvertColor(this);
+    return invertColor(this);
 }
 
 short TDK::XColor::s_filterCode(XColorCode code)
@@ -425,7 +425,7 @@ int TDK::operator|(EffectCode code0, EffectCode code1)
 
 void TDK::clearCursorLine()
 {
-    WriteANSISequence("\x1b[2K\x1b[1G");
+    writeANSISequence("\x1b[2K\x1b[1G");
 }
 
 void TDK::clearInputBuffer()
@@ -453,12 +453,12 @@ void TDK::clearInputBuffer()
 
 void TDK::clearWindow()
 {
-    WriteANSISequence("\x1b[2J\x1b[1;1H");
+    writeANSISequence("\x1b[2J\x1b[1;1H");
 }
 
 void TDK::closeAlternateWindow()
 {
-    WriteANSISequence("\x1b[?1049l");
+    writeANSISequence("\x1b[?1049l");
 }
 
 int TDK::getCursorCoordinate(Coordinate& coordinate)
@@ -475,7 +475,7 @@ int TDK::getCursorCoordinate(Coordinate& coordinate)
 #else
     struct termios attributes;
     clearInputBuffer();
-    if (WriteANSISequence("\x1b[6n") || tcgetattr(STDIN_FILENO, &attributes))
+    if (writeANSISequence("\x1b[6n") || tcgetattr(STDIN_FILENO, &attributes))
     {
         return -1;
     }
@@ -520,7 +520,7 @@ int TDK::getWindowRegion(Region& region)
 
 bool TDK::isTTY(Stream stream)
 {
-    PrepareStreamsAndCache();
+    prepareStreamsAndCache();
     return static_cast<int>(stream) >= static_cast<int>(TDK::Stream::Input) &&
                    static_cast<int>(stream) <= static_cast<int>(TDK::Stream::Error)
                ? IS_TTY(stream)
@@ -529,17 +529,17 @@ bool TDK::isTTY(Stream stream)
 
 void TDK::openAlternateWindow()
 {
-    WriteANSISequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
+    writeANSISequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
 }
 
 void TDK::ringBell()
 {
-    WriteANSISequence("\7");
+    writeANSISequence("\7");
 }
 
 void TDK::setCursorCoordinate(unsigned short column, unsigned short row)
 {
-    WriteANSISequence("\x1b[%hu;%huH", row + 1, column + 1);
+    writeANSISequence("\x1b[%hu;%huH", row + 1, column + 1);
 }
 
 void TDK::setCursorCoordinate(Coordinate coordinate)
@@ -549,7 +549,7 @@ void TDK::setCursorCoordinate(Coordinate coordinate)
 
 void TDK::setCursorShape(CursorShape shape)
 {
-    WriteANSISequence(
+    writeANSISequence(
         "\x1b[%d q",
         static_cast<int>(static_cast<int>(shape) >= static_cast<int>(TDK::CursorShape::Default) &&
                                  static_cast<int>(shape) <= static_cast<int>(TDK::CursorShape::NonBlinkingBar)
@@ -559,10 +559,10 @@ void TDK::setCursorShape(CursorShape shape)
 
 void TDK::setWindowTitle(std::string title)
 {
-    WriteANSISequence("\x1b]0;%s\7", title.c_str());
+    writeANSISequence("\x1b]0;%s\7", title.c_str());
 }
 
 void TDK::setCursorVisibility(bool isToShow)
 {
-    WriteANSISequence("\x1b[?25%c", isToShow ? 'h' : 'l');
+    writeANSISequence("\x1b[?25%c", isToShow ? 'h' : 'l');
 }
