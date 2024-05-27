@@ -29,14 +29,21 @@ namespace TDK
         NonBlinkingBar
     };
 
+    /** @brief Contains the available terminal event types. */
     enum class EventType
     {
+        /** @brief No events were available. */
         None,
+        /** @brief The event timer ran out. */
         TimeOut,
+        /** @brief A window resize event was read. */
         WindowResize,
+        /** @brief A windows focus event was read. */
+        WindowsFocus,
+        /** @brief A key event was read. */
         Key,
-        Mouse,
-        Focus
+        /** @brief A mouse event was read. */
+        Mouse
     };
 
     /// <summary>
