@@ -570,19 +570,56 @@ namespace TDK
         unsigned char m_blue;
     };
 
+    /// <summary>
+    /// Represents a terminal XTerm color.
+    /// </summary>
     class XColor final : public Color<XColor>
     {
     public:
+        /// <summary>
+        /// Creates a new instance of the XColor class.
+        /// </summary>
+        /// <param name="code">The ANSI code of the color.</param>
+        /// <param name="layer">The layer the color applies on.</param>
         XColor(unsigned char code, Layer layer);
+        /// <summary>
+        /// Creates a new instance of the XColor class.
+        /// </summary>
+        /// <param name="code">The ANSI code of the color.</param>
+        /// <param name="layer">The layer the color applies on.</param>
         XColor(XColorCode code, Layer layer);
+        /// <summary>
+        /// Inverts the layer the color applies on.
+        /// </summary>
+        /// <returns>The color with its layer inverted.</returns>
         XColor Invert() const;
+        /// <summary>
+        /// Gets the ANSI code of the color.
+        /// </summary>
+        /// <returns>The ANSI code of the color.</returns>
         short GetCode() const;
+        /// <summary>
+        /// Sets the ANSI code of the color.
+        /// </summary>
+        /// <param name="code">The ANSI code to be set.</param>
         void SetCode(unsigned char code);
+        /// <summary>
+        /// Sets the ANSI code of the color.
+        /// </summary>
+        /// <param name="code">The ANSI code to be set.</param>
         void SetCode(XColorCode code);
 
     private:
+        /// <summary>
+        /// The ANSI code of the color.
+        /// </summary>
         short m_code;
 
+        /// <summary>
+        /// Filters an ANSI code.
+        /// </summary>
+        /// <param name="code">The ANSI code to be filtered.</param>
+        /// <returns>The ANSI code filtered within a valid range.</returns>
         static short FilterCode(XColorCode code);
     };
 
