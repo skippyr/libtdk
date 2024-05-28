@@ -148,6 +148,18 @@ void tdk::Coordinate::setColumn(unsigned short column) { m_column = column; }
 
 void tdk::Coordinate::setRow(unsigned short row) { m_row = row; }
 
+tdk::Dimensions::Dimensions() : m_totalColumns(0), m_totalRows(0) {}
+
+tdk::Dimensions::Dimensions(unsigned short totalColumns,
+                            unsigned short totalRows)
+    : m_totalColumns(totalColumns), m_totalRows(totalRows) {}
+
+unsigned short tdk::Dimensions::getTotalColumns() const {
+  return m_totalColumns;
+}
+
+unsigned short tdk::Dimensions::getTotalRows() const { return m_totalRows; }
+
 tdk::Effects::Effects(int code, bool isToEnable)
     : m_code(filterCode(code)), m_isToEnable(isToEnable) {}
 
@@ -183,69 +195,6 @@ tdk::HexColor tdk::HexColor::invert() const { return invertColor(this); }
 unsigned int tdk::HexColor::getCode() const { return m_code; }
 
 void tdk::HexColor::setCode(unsigned int code) { m_code = filterCode(code); }
-
-tdk::Region::Region()
-    : m_totalColumns(0), m_totalRows(0), m_area(0), m_topLeftCoordinate(),
-      m_topRightCoordinate(), m_bottomLeftCoordinate(),
-      m_bottomRightCoordinate() {}
-
-tdk::Region::Region(unsigned short totalColumns, unsigned short totalRows)
-    : m_totalColumns(totalColumns), m_totalRows(totalRows),
-      m_area(totalColumns * totalRows), m_topLeftCoordinate(0, 0),
-      m_topRightCoordinate(totalColumns - 1, 0),
-      m_bottomLeftCoordinate(0, totalRows - 1),
-      m_bottomRightCoordinate(totalColumns - 1, totalRows - 1) {}
-
-tdk::Region::Region(Coordinate coordinate0, Coordinate coordinate1) {
-  unsigned short maxColumn =
-      (std::max)(coordinate0.getColumn(), coordinate1.getColumn());
-  unsigned short minColumn =
-      (std::min)(coordinate0.getColumn(), coordinate1.getColumn());
-  unsigned short maxRow =
-      (std::max)(coordinate0.getRow(), coordinate1.getRow());
-  unsigned short minRow =
-      (std::min)(coordinate0.getRow(), coordinate1.getRow());
-  m_totalColumns = maxColumn - minColumn;
-  m_totalRows = maxRow - minRow;
-  m_area = m_totalColumns * m_totalRows;
-  m_topLeftCoordinate = Coordinate(minColumn, minRow);
-  m_topRightCoordinate = Coordinate(maxColumn, minRow);
-  m_bottomLeftCoordinate = Coordinate(minColumn, maxRow);
-  m_bottomRightCoordinate = Coordinate(maxColumn, maxRow);
-}
-
-bool tdk::Region::contains(unsigned short column, unsigned short row) const {
-  return column >= m_topLeftCoordinate.getColumn() &&
-         column <= m_topRightCoordinate.getColumn() &&
-         row >= m_topLeftCoordinate.getRow() &&
-         row <= m_bottomLeftCoordinate.getRow();
-}
-
-bool tdk::Region::contains(Coordinate coordinate) const {
-  return contains(coordinate.getColumn(), coordinate.getRow());
-}
-
-unsigned short tdk::Region::getTotalColumns() const { return m_totalColumns; }
-
-unsigned short tdk::Region::getTotalRows() const { return m_totalRows; }
-
-unsigned int tdk::Region::getArea() const { return m_area; }
-
-tdk::Coordinate tdk::Region::getTopLeftCoordinate() const {
-  return m_topLeftCoordinate;
-}
-
-tdk::Coordinate tdk::Region::getTopRightCoordinate() const {
-  return m_topRightCoordinate;
-}
-
-tdk::Coordinate tdk::Region::getBottomLeftCoordinate() const {
-  return m_bottomLeftCoordinate;
-}
-
-tdk::Coordinate tdk::Region::getBottomRightCoordinate() const {
-  return m_bottomRightCoordinate;
-}
 
 tdk::RGBColor::RGBColor(unsigned char red, unsigned char green,
                         unsigned char blue, Layer layer)
@@ -352,15 +301,6 @@ bool tdk::operator==(Coordinate coordinate0, Coordinate coordinate1) {
          coordinate0.getRow() == coordinate1.getRow();
 }
 
-bool tdk::operator==(Region region0, Region region1) {
-  return region0.getTopLeftCoordinate() == region1.getTopLeftCoordinate() &&
-         region0.getTopRightCoordinate() == region1.getTopRightCoordinate() &&
-         region0.getBottomLeftCoordinate() ==
-             region1.getBottomLeftCoordinate() &&
-         region0.getBottomRightCoordinate() ==
-             region1.getBottomRightCoordinate();
-}
-
 int tdk::operator|(EffectCode code0, EffectCode code1) {
   return 1 << static_cast<int>(code0) | 1 << static_cast<int>(code1);
 }
@@ -424,7 +364,7 @@ int tdk::getCursorCoordinate(Coordinate &coordinate) {
   return 0;
 }
 
-int tdk::getWindowRegion(Region &region) {
+int tdk::getWindowDimensions(Dimensions &dimensions) {
 #ifdef _WIN32
   CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
   if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE),
@@ -433,8 +373,9 @@ int tdk::getWindowRegion(Region &region) {
                                   &bufferInfo)) {
     return -1;
   }
-  region = Region(bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1,
-                  bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1);
+  dimensions =
+      Dimensions(bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1,
+                 bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1);
 #else
   struct winsize size;
   if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &size) &&
@@ -442,7 +383,7 @@ int tdk::getWindowRegion(Region &region) {
       ioctl(STDERR_FILENO, TIOCGWINSZ, &size)) {
     return -1;
   }
-  region = Region(size.ws_col, size.ws_row);
+  dimensions = Dimensions(size.ws_col, size.ws_row);
 #endif
   return 0;
 }

@@ -130,9 +130,9 @@ enum class Weight {
 
 template <class T> class Color;
 class Coordinate;
+class Dimensions;
 class Effects;
 class HexColor;
-class Region;
 class RGBColor;
 class XColor;
 
@@ -209,6 +209,35 @@ private:
   unsigned short m_column;
   /** @brief The row component of the coordinate. */
   unsigned short m_row;
+};
+
+/** @brief Represents terminal dimensions. */
+class Dimensions final {
+public:
+  /** @brief Creates an instance of the Dimensions class. */
+  Dimensions();
+  /**
+   * @brief Creates an instance of the Dimensions class.
+   * @param totalColumns The total columns in the dimensions.
+   * @param totalRows The total rows in the dimensions.
+   */
+  Dimensions(unsigned short totalColumns, unsigned short totalRows);
+  /**
+   * @brief Gets the total columns of the dimensions.
+   * @returns The total columns of the dimensions.
+   */
+  unsigned short getTotalColumns() const;
+  /**
+   * @brief Gets the total rows of the dimensions.
+   * @returns The total rows of the dimensions.
+   */
+  unsigned short getTotalRows() const;
+
+private:
+  /** @brief The total columns in the dimensions. */
+  unsigned short m_totalColumns;
+  /** @brief The total rows in the dimensions. */
+  unsigned short m_totalRows;
 };
 
 /** @brief Represents a group of terminal effects. */
@@ -297,92 +326,6 @@ private:
    * @returns The hex code filtered within a valid range.
    */
   static unsigned int filterCode(unsigned int code);
-};
-
-/** @brief Represents a terminal region. */
-class Region final {
-public:
-  /** @brief Creates a new instance of the Region class */
-  Region();
-  /**
-   * @brief Creates a new instance of the Region class.
-   * @param totalColumns The total columns of the region.
-   * @param totalRows The total rows of the region.
-   */
-  Region(unsigned short totalColumns, unsigned short totalRows);
-  /**
-   * @brief Creates a new instance of the Region class.
-   * @param coordinate0 A first corner coordinate of the region.
-   * @param coordinate1 A second corner coordinate of the region, opposite
-   * to the first one.
-   */
-  Region(Coordinate coordinate0, Coordinate coordinate1);
-  /**
-   * @brief Checks if a coordinate is contained within the region.
-   * @param column The column component of the coordinate.
-   * @param row The row component of the coordinate.
-   * @returns A boolean that states the coordinate is contained within the
-   * region.
-   */
-  bool contains(unsigned short column, unsigned short row) const;
-  /**
-   * @brief Checks if a coordinate is contained within the region.
-   * @param coordinate The coordinate to be checked.
-   * @returns A boolean that states the coordinate is contained within the
-   * region.
-   */
-  bool contains(Coordinate coordinate) const;
-  /**
-   * @brief Gets the total columns of the region.
-   * @returns The total columns of the region.
-   */
-  unsigned short getTotalColumns() const;
-  /**
-   * @brief Gets the total rows of the region.
-   * @returns The total rows of the region.
-   */
-  unsigned short getTotalRows() const;
-  /**
-   * @brief Gets the area of the region.
-   * @returns The area of the region.
-   */
-  unsigned int getArea() const;
-  /**
-   * @brief Gets the top left coordinate of the region.
-   * @returns The top left coordinate of the region.
-   */
-  Coordinate getTopLeftCoordinate() const;
-  /**
-   * @brief Gets the top right coordinate of the region.
-   * @returns The top right coordinate of the region.
-   */
-  Coordinate getTopRightCoordinate() const;
-  /**
-   * @brief Gets the bottom left coordinate of the region.
-   * @returns The bottom left coordinate of the region.
-   */
-  Coordinate getBottomLeftCoordinate() const;
-  /**
-   * @brief Gets the bottom right coordinate of the region.
-   * @returns The bottom right coordinate of the region.
-   */
-  Coordinate getBottomRightCoordinate() const;
-
-private:
-  /** @brief The total columns of the region. */
-  unsigned short m_totalColumns;
-  /** @brief The total rows of the region. */
-  unsigned short m_totalRows;
-  /** @brief The area of the region. */
-  unsigned int m_area;
-  /** @brief The top left coordinate of the region. */
-  Coordinate m_topLeftCoordinate;
-  /** @brief The top right coordinate of the region. */
-  Coordinate m_topRightCoordinate;
-  /** @brief the bottom left coordinate of the region. */
-  Coordinate m_bottomLeftCoordinate;
-  /** @brief The bottom right coordinate of the region. */
-  Coordinate m_bottomRightCoordinate;
 };
 
 /** @brief Represents a terminal RGB color. */
@@ -559,13 +502,6 @@ bool operator==(RGBColor color0, RGBColor color1);
  */
 bool operator==(Coordinate coordinate0, Coordinate coordinate1);
 /**
- * @brief Checks if two regions are equal.
- * @param region0 The first region.
- * @param region1 The second region.
- * @returns A boolean that states the two regions are equal.
- */
-bool operator==(Region region0, Region region1);
-/**
  * @brief Concatenates two ANSI effect codes in order to make a bitmask.
  * @param code0 The first ANSI effect code.
  * @param code1 The second ANSI effect code.
@@ -589,11 +525,11 @@ void closeAlternateWindow();
  */
 int getCursorCoordinate(Coordinate &coordinate);
 /**
- * @brief Gets the terminal window region.
- * @param region The address where the region information will be put into.
+ * @brief Gets the terminal window dimensions.
+ * @param region The address where the dimensions information will be put into.
  * @returns 0 if successful or -1 otherwise.
  */
-int getWindowRegion(Region &region);
+int getWindowDimensions(Dimensions &dimensions);
 /**
  * @brief Checks if a standard terminal stream is connected to an interactive
  * terminal (TTY).
