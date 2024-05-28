@@ -1,1 +1,6 @@
-BasedOnStyle: LLVM
+AccessModifierOffset: -4
+AlwaysBreakTemplateDeclarations: true
+BasedOnStyle: Microsoft
+ColumnLimit: 100
+FixNamespaceComments: false
+NamespaceIndentation: All
