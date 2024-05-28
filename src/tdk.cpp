@@ -49,9 +49,9 @@
  * @returns The TTY status cache of the stream.
  */
 #define TTY_CACHE(a_stream)                                                                        \
-    (isatty(fileno(a_stream == tdk::Stream::Input         ? stdin                                  \
-                   : a_stream == tdk::Stream::Output == 1 ? stdout                                 \
-                                                          : stderr))                               \
+    (isatty(fileno(a_stream == tdk::Stream::Input    ? stdin                                       \
+                   : a_stream == tdk::Stream::Output ? stdout                                      \
+                                                     : stderr))                                    \
      << static_cast<int>(a_stream))
 #endif
 
