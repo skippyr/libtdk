@@ -62,7 +62,7 @@
  * @returns The color with its layer inverted.
  */
 template <class T>
-static T invertColor(const T *color);
+static T invertColor(const T* color);
 /**
  * @brief Caches information about TTY statuses of the standard terminal streams and sets the
  * ENABLE_VIRTUAL_TERMINAL_PROCESSING flag on Windows.
@@ -74,13 +74,13 @@ static void prepareStreamsAndCache();
  * @param ... The arguments to be formatted.
  * @returns 0 if successful or -1 otherwise.
  */
-static int writeANSISequence(const char *format, ...);
+static int writeANSISequence(const char* format, ...);
 
 /** @brief A cache containing the TTY statuses of the standard terminal streams. */
 static char g_cache = 0;
 
 template <class T>
-static T invertColor(const T *color)
+static T invertColor(const T* color)
 {
     T copy = *color;
     copy.m_setLayer(copy.m_getLayer() == tdk::Layer::Foreground ? tdk::Layer::Background
@@ -104,7 +104,7 @@ static void prepareStreamsAndCache()
 #endif
 }
 
-static int writeANSISequence(const char *format, ...)
+static int writeANSISequence(const char* format, ...)
 {
     prepareStreamsAndCache();
     if (!IS_TTY(tdk::Stream::Output) && !IS_TTY(tdk::Stream::Error))
@@ -414,7 +414,7 @@ void tdk::XColor::m_setCode(XColorCode code)
     m_code = s_filterCode(code);
 }
 
-std::ostream &tdk::operator<<(std::ostream &stream, Effects effects)
+std::ostream& tdk::operator<<(std::ostream& stream, Effects effects)
 {
     for (int ansiCode = 0; ansiCode < 10; ++ansiCode)
     {
@@ -426,12 +426,12 @@ std::ostream &tdk::operator<<(std::ostream &stream, Effects effects)
     return stream;
 }
 
-std::ostream &tdk::operator<<(std::ostream &stream, HexColor color)
+std::ostream& tdk::operator<<(std::ostream& stream, HexColor color)
 {
     return stream << RGBColor(color);
 }
 
-std::ostream &tdk::operator<<(std::ostream &stream, RGBColor color)
+std::ostream& tdk::operator<<(std::ostream& stream, RGBColor color)
 {
     CHECK_STREAM_TTY_STATUS();
     return stream << "\x1b[" << static_cast<int>(color.m_getLayer()) << "8;2;"
@@ -440,7 +440,7 @@ std::ostream &tdk::operator<<(std::ostream &stream, RGBColor color)
                   << static_cast<int>(color.m_getBlue()) << "m";
 }
 
-std::ostream &tdk::operator<<(std::ostream &stream, XColor color)
+std::ostream& tdk::operator<<(std::ostream& stream, XColor color)
 {
     CHECK_STREAM_TTY_STATUS();
     return color.m_getCode() == static_cast<int>(tdk::XColorCode::Default)
@@ -449,7 +449,7 @@ std::ostream &tdk::operator<<(std::ostream &stream, XColor color)
                         << color.m_getCode() << "m";
 }
 
-std::ostream &tdk::operator<<(std::ostream &stream, Weight weight)
+std::ostream& tdk::operator<<(std::ostream& stream, Weight weight)
 {
     CHECK_STREAM_TTY_STATUS();
     return weight == Weight::Default ? stream << "\x1b[22m"
@@ -529,7 +529,7 @@ void tdk::closeAlternateWindow()
     writeANSISequence("\x1b[?1049l");
 }
 
-int tdk::getCursorCoordinate(Coordinate &coordinate)
+int tdk::getCursorCoordinate(Coordinate& coordinate)
 {
 #ifdef _WIN32
     CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
@@ -563,7 +563,7 @@ int tdk::getCursorCoordinate(Coordinate &coordinate)
     return 0;
 }
 
-int tdk::getWindowRegion(Region &region)
+int tdk::getWindowRegion(Region& region)
 {
 #ifdef _WIN32
     CONSOLE_SCREEN_BUFFER_INFO bufferInfo;

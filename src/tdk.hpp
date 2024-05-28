@@ -523,35 +523,35 @@ namespace tdk
      * @param effects The group of terminal effects to be applied.
      * @returns The stream affected.
      */
-    std::ostream &operator<<(std::ostream &stream, Effects effects);
+    std::ostream& operator<<(std::ostream& stream, Effects effects);
     /**
      * @brief Applies a terminal hex color.
      * @param stream The stream to be affected.
      * @param color The color to be applied.
      * @returns The stream affected.
      */
-    std::ostream &operator<<(std::ostream &stream, HexColor color);
+    std::ostream& operator<<(std::ostream& stream, HexColor color);
     /**
      * @brief Applies a terminal RGB color.
      * @param stream The stream to be affected.
      * @param color The color to be applied.
      * @returns The stream affected.
      */
-    std::ostream &operator<<(std::ostream &stream, RGBColor color);
+    std::ostream& operator<<(std::ostream& stream, RGBColor color);
     /**
      * @brief Applies a terminal XTerm color.
      * @param stream The stream to be affected.
      * @param color The color to be applied.
      * @returns The stream affected.
      */
-    std::ostream &operator<<(std::ostream &stream, XColor color);
+    std::ostream& operator<<(std::ostream& stream, XColor color);
     /**
      * @brief Applies a terminal weight.
      * @param stream The stream to be affected.
      * @param color The color to be applied.
      * @returns The stream affected.
      */
-    std::ostream &operator<<(std::ostream &stream, Weight weight);
+    std::ostream& operator<<(std::ostream& stream, Weight weight);
     /**
      * @brief Checks if two XTerm colors are equal.
      * @param color0 The first color.
@@ -608,13 +608,13 @@ namespace tdk
      * @param coordinate The address where the coordinate information will be put into.
      * @returns 0 if successful or -1 otherwise.
      */
-    int getCursorCoordinate(Coordinate &coordinate);
+    int getCursorCoordinate(Coordinate& coordinate);
     /**
      * @brief Gets the terminal window region.
      * @param region The address where the region information will be put into.
      * @returns 0 if successful or -1 otherwise.
      */
-    int getWindowRegion(Region &region);
+    int getWindowRegion(Region& region);
     /**
      * @brief Checks if a standard terminal stream is connected to an interactive terminal (TTY).
      * @param stream The stream to be checked.
