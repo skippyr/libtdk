@@ -1,8 +1,1 @@
-AccessModifierOffset: -4
-AlignTrailingComments: false
-AlwaysBreakTemplateDeclarations: true
-BasedOnStyle: Microsoft
-BreakAfterJavaFieldAnnotations: true
-FixNamespaceComments: false
-NamespaceIndentation: All
-PointerAlignment: Left
+BasedOnStyle: LLVM
