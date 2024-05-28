@@ -69,7 +69,7 @@ enum class Layer {
 
 /** @brief Contains the standard terminal streams. */
 enum class Stream {
-  /** @brief Receives data and events */
+  /** @brief Receives data and events. */
   Input,
   /** @brief Outputs regular tense messages. */
   Output,
@@ -138,7 +138,7 @@ class XColor;
 
 /**
  * @brief Represents a generic terminal color.
- * @tparam T The more specific color type.
+ * @tparam T A more specific color type.
  */
 template <class T> class Color {
 public:
@@ -232,7 +232,7 @@ public:
   /**
    * @brief Inverts the boolean that states the effects targeted should be
    * enabled.
-   * @returns A copy of the color with the boolean inverted.
+   * @returns The effects with that boolean inverted.
    */
   tdk::Effects invert();
   /**
