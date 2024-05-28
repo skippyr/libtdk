@@ -230,6 +230,12 @@ public:
    */
   Effects(int code, bool isToEnable);
   /**
+   * @brief Inverts the boolean that states the effects targeted should be
+   * enabled.
+   * @returns A copy of the color with the boolean inverted.
+   */
+  tdk::Effects invert();
+  /**
    * @brief Gets a bitmask containing the ANSI codes of the effects being
    * targeted.
    * @returns A bitmask containing the ANSI codes of the effects being targeted.

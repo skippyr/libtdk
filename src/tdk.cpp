@@ -155,6 +155,12 @@ tdk::Effects::Effects(tdk::EffectCode code, bool isToEnable)
     : m_code(filterCode(1 << static_cast<int>(code))),
       m_isToEnable(isToEnable) {}
 
+tdk::Effects tdk::Effects::invert() {
+  tdk::Effects effects = *this;
+  effects.m_isToEnable = !effects.m_isToEnable;
+  return effects;
+}
+
 int tdk::Effects::getCode() const { return m_code; }
 
 bool tdk::Effects::getIsToEnable() const { return m_isToEnable; }
