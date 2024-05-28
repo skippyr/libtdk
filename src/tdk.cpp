@@ -15,7 +15,7 @@
 /**
  * @brief Checks the cache to see if a standard terminal stream is a TTY.
  * @param a_stream The stream to be checked. It must be a value from the
- * TDK::Stream enum class.
+ * tdk::Stream enum class.
  * @returns A boolean that states the stream is a TTY.
  */
 #define IS_TTY(a_stream)                                                       \
@@ -36,7 +36,7 @@
 /**
  * @brief Creates the TTY status cache of a standard terminal stream.
  * @param a_stream The stream to be checked. It must be a value from the
- * TDK::Stream enum class.
+ * tdk::Stream enum class.
  * @returns The TTY status cache of the stream.
  */
 #define TTY_CACHE(a_stream)                                                    \
@@ -48,7 +48,7 @@
 /**
  * @brief Creates the TTY status cache of a standard terminal stream.
  * @param a_stream The stream to be checked. It must be a value from the
- * TDK::Stream enum class.
+ * tdk::Stream enum class.
  * @returns The TTY status cache of the stream.
  */
 #define TTY_CACHE(a_stream)                                                    \
@@ -155,16 +155,6 @@ tdk::Effects::Effects(tdk::EffectCode code, bool isToEnable)
     : m_code(filterCode(1 << static_cast<int>(code))),
       m_isToEnable(isToEnable) {}
 
-tdk::Effects tdk::Effects::invert() {
-  tdk::Effects effects = *this;
-  effects.m_isToEnable = !effects.m_isToEnable;
-  return effects;
-}
-
-int tdk::Effects::getCode() const { return m_code; }
-
-bool tdk::Effects::getIsToEnable() const { return m_isToEnable; }
-
 int tdk::Effects::filterCode(int code) {
   int filteredCodes = 0;
   for (int ansiCode = 0; ansiCode < 10; ++ansiCode) {
@@ -175,18 +165,9 @@ int tdk::Effects::filterCode(int code) {
   return filteredCodes;
 }
 
-void tdk::Effects::setCode(tdk::EffectCode code) {
-  m_code = filterCode(1 << static_cast<int>(code));
-}
+int tdk::Effects::getCode() const { return m_code; }
 
-void tdk::Effects::setCode(int code) { m_code = filterCode(code); }
-
-void tdk::Effects::setIsToEnable(bool isToEnable) { m_isToEnable = isToEnable; }
-
-tdk::HexColor::HexColor(unsigned int code, Layer layer)
-    : m_code(filterCode(code)) {
-  m_layer = filterLayer(layer);
-}
+bool tdk::Effects::getIsToEnable() const { return m_isToEnable; }
 
 tdk::HexColor::HexColor(RGBColor color)
     : m_code(color.getRed() << 16 | color.getGreen() << 8 | color.getBlue()) {
@@ -215,16 +196,15 @@ tdk::Region::Region(unsigned short totalColumns, unsigned short totalRows)
       m_bottomLeftCoordinate(0, totalRows - 1),
       m_bottomRightCoordinate(totalColumns - 1, totalRows - 1) {}
 
-tdk::Region::Region(Coordinate cornerCoordinate0,
-                    Coordinate cornerCoordinate1) {
+tdk::Region::Region(Coordinate coordinate0, Coordinate coordinate1) {
   unsigned short maxColumn =
-      (std::max)(cornerCoordinate0.getColumn(), cornerCoordinate1.getColumn());
+      (std::max)(coordinate0.getColumn(), coordinate1.getColumn());
   unsigned short minColumn =
-      (std::min)(cornerCoordinate0.getColumn(), cornerCoordinate1.getColumn());
+      (std::min)(coordinate0.getColumn(), coordinate1.getColumn());
   unsigned short maxRow =
-      (std::max)(cornerCoordinate0.getRow(), cornerCoordinate1.getRow());
+      (std::max)(coordinate0.getRow(), coordinate1.getRow());
   unsigned short minRow =
-      (std::min)(cornerCoordinate0.getRow(), cornerCoordinate1.getRow());
+      (std::min)(coordinate0.getRow(), coordinate1.getRow());
   m_totalColumns = maxColumn - minColumn;
   m_totalRows = maxRow - minRow;
   m_area = m_totalColumns * m_totalRows;

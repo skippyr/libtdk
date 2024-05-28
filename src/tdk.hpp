@@ -230,12 +230,6 @@ public:
    */
   Effects(int code, bool isToEnable);
   /**
-   * @brief Inverts the boolean that states the effects targeted should be
-   * enabled.
-   * @returns The effects with that boolean inverted.
-   */
-  tdk::Effects invert();
-  /**
    * @brief Gets a bitmask containing the ANSI codes of the effects being
    * targeted.
    * @returns A bitmask containing the ANSI codes of the effects being targeted.
@@ -246,22 +240,6 @@ public:
    * @returns A boolean that states the effects targeted should be enabled
    */
   bool getIsToEnable() const;
-  /**
-   * @brief Sets the ANSI code of a effect being targeted.
-   * @param code The ANSI code to be set.
-   */
-  void setCode(EffectCode code);
-  /**
-   * @brief Sets a bitmask containing the ANSI codes of the effects being
-   * targeted.
-   * @param code The bitmask to be set.
-   */
-  void setCode(int code);
-  /**
-   * @brief Sets a boolean that states the effects targeted should be enabled.
-   * @param The boolean to be set.
-   */
-  void setIsToEnable(bool isToEnable);
 
 private:
   /**
@@ -334,11 +312,11 @@ public:
   Region(unsigned short totalColumns, unsigned short totalRows);
   /**
    * @brief Creates a new instance of the Region class.
-   * @param cornerCoordinate0 A first corner coordinate of the region.
-   * @param cornerCoordinate1 A second corner coordinate of the region, opposite
+   * @param coordinate0 A first corner coordinate of the region.
+   * @param coordinate1 A second corner coordinate of the region, opposite
    * to the first one.
    */
-  Region(Coordinate cornerCoordinate0, Coordinate cornerCoordinate1);
+  Region(Coordinate coordinate0, Coordinate coordinate1);
   /**
    * @brief Checks if a coordinate is contained within the region.
    * @param column The column component of the coordinate.
