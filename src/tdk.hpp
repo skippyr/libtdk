@@ -7,7 +7,7 @@
  * @brief A simple C++ terminal manipulation library for Windows and Linux. It can handle terminal properties, colors,
  * effects and events readings with UTF-8 encoding.
  */
-namespace TDK
+namespace tdk
 {
     /** @brief Contains the available terminal cursor shapes. */
     enum class CursorShape
@@ -146,7 +146,7 @@ namespace TDK
 
     /**
      * @brief Represents a generic terminal color.
-     * @tparam T The more specific color.
+     * @tparam T The more specific color type.
      */
     template <class T>
     class Color

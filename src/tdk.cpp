@@ -12,22 +12,39 @@
 
 #include "TDK.hpp"
 
+/**
+ * @brief Checks the cache to see if a standard terminal stream is a TTY.
+ * @param a_stream The stream to be checked. It must be a value from the TDK::Stream enum class.
+ * @returns A boolean that states the stream is a TTY.
+ */
 #define IS_TTY(a_stream) static_cast<bool>(g_cache & 1 << static_cast<int>(a_stream))
+/** @brief Checks the status a standard terminal stream being targeted and cause an early return if it is not a TTY. */
 #define CHECK_STREAM_TTY_STATUS()                                                                                      \
     prepareStreamsAndCache();                                                                                          \
-    if ((stream.rdbuf() == std::cout.rdbuf() && !IS_TTY(TDK::Stream::Output)) ||                                       \
-        (stream.rdbuf() == std::cerr.rdbuf() && !IS_TTY(TDK::Stream::Error)))                                          \
+    if ((stream.rdbuf() == std::cout.rdbuf() && !IS_TTY(tdk::Stream::Output)) ||                                       \
+        (stream.rdbuf() == std::cerr.rdbuf() && !IS_TTY(tdk::Stream::Error)))                                          \
     {                                                                                                                  \
         return stream;                                                                                                 \
     }
+/** @brief A bitmask flag that states the cache has already been filled up. */
 #define HAS_CACHED_TTY_FLAG (1 << 7)
 #ifdef _WIN32
+/**
+ * @brief Creates the TTY status cache of a standard terminal stream.
+ * @param a_stream The stream to be checked. It must be a value from the TDK::Stream enum class.
+ * @returns The TTY status cache of the stream.
+ */
 #define TTY_CACHE(a_stream)                                                                                            \
     (!!(_isatty(_fileno(!static_cast<int>(a_stream)       ? stdin                                                      \
                         : static_cast<int>(a_stream) == 1 ? stdout                                                     \
                                                           : stderr)))                                                  \
      << static_cast<int>(a_stream))
 #else
+/**
+ * @brief Creates the TTY status cache of a standard terminal stream.
+ * @param a_stream The stream to be checked. It must be a value from the TDK::Stream enum class.
+ * @returns The TTY status cache of the stream.
+ */
 #define TTY_CACHE(a_stream)                                                                                            \
     (isatty(fileno(!static_cast<int>(a_stream)       ? stdin                                                           \
                    : static_cast<int>(a_stream) == 1 ? stdout                                                          \
@@ -35,18 +52,35 @@
      << static_cast<int>(a_stream))
 #endif
 
+/**
+ * @brief Inverts the layer where a color applies on.
+ * @tparam The type of the color.
+ * @param color The color to affected.
+ * @returns The color with its layer inverted.
+ */
 template <class T>
 static T invertColor(const T* color);
+/**
+ * @brief Caches information about TTY statuses of the standard terminal streams and sets the
+ * ENABLE_VIRTUAL_TERMINAL_PROCESSING flag on Windows.
+ */
 static void prepareStreamsAndCache();
+/**
+ * @brief Formats and writes an ANSI escape to a valid TTY stream.
+ * @param format The format to be used. It uses the same specifiers as the printf function family.
+ * @param ... The arguments to be formatted.
+ * @returns 0 if successful or -1 otherwise.
+ */
 static int writeANSISequence(const char* format, ...);
 
+/** @brief A cache containing the TTY statuses of the standard terminal streams. */
 static char g_cache = 0;
 
 template <class T>
 static T invertColor(const T* color)
 {
     T copy = *color;
-    copy.m_setLayer(copy.m_getLayer() == TDK::Layer::Foreground ? TDK::Layer::Background : TDK::Layer::Foreground);
+    copy.m_setLayer(copy.m_getLayer() == tdk::Layer::Foreground ? tdk::Layer::Background : tdk::Layer::Foreground);
     return copy;
 }
 
@@ -54,7 +88,7 @@ static void prepareStreamsAndCache()
 {
     if (!(g_cache & HAS_CACHED_TTY_FLAG))
     {
-        g_cache = TTY_CACHE(TDK::Stream::Input) | TTY_CACHE(TDK::Stream::Output) | TTY_CACHE(TDK::Stream::Error) |
+        g_cache = TTY_CACHE(tdk::Stream::Input) | TTY_CACHE(tdk::Stream::Output) | TTY_CACHE(tdk::Stream::Error) |
                   HAS_CACHED_TTY_FLAG;
     }
 #ifdef _WIN32
@@ -69,88 +103,88 @@ static void prepareStreamsAndCache()
 static int writeANSISequence(const char* format, ...)
 {
     prepareStreamsAndCache();
-    if (!IS_TTY(TDK::Stream::Output) && !IS_TTY(TDK::Stream::Error))
+    if (!IS_TTY(tdk::Stream::Output) && !IS_TTY(tdk::Stream::Error))
     {
         return -1;
     }
     std::va_list arguments;
     va_start(arguments, format);
-    int totalBytesWritten = std::vfprintf(IS_TTY(TDK::Stream::Output) ? stdout : stderr, format, arguments);
+    int totalBytesWritten = std::vfprintf(IS_TTY(tdk::Stream::Output) ? stdout : stderr, format, arguments);
     va_end(arguments);
     return -(totalBytesWritten < 0);
 }
 
 template <class T>
-TDK::Color<T>::Color()
+tdk::Color<T>::Color()
 {
 }
 
 template <class T>
-TDK::Layer TDK::Color<T>::m_getLayer() const
+tdk::Layer tdk::Color<T>::m_getLayer() const
 {
     return m_layer;
 }
 
 template <class T>
-void TDK::Color<T>::m_setLayer(TDK::Layer layer)
+void tdk::Color<T>::m_setLayer(tdk::Layer layer)
 {
     m_layer = s_filterLayer(layer);
 }
 
 template <class T>
-TDK::Layer TDK::Color<T>::s_filterLayer(Layer layer)
+tdk::Layer tdk::Color<T>::s_filterLayer(Layer layer)
 {
-    return layer == TDK::Layer::Foreground || layer == TDK::Layer::Background ? layer : TDK::Layer::Foreground;
+    return layer == tdk::Layer::Foreground || layer == tdk::Layer::Background ? layer : tdk::Layer::Foreground;
 }
 
-TDK::Coordinate::Coordinate() : m_column(0), m_row(0)
-{
-}
-
-TDK::Coordinate::Coordinate(unsigned short column, unsigned short row) : m_column(column), m_row(row)
+tdk::Coordinate::Coordinate() : m_column(0), m_row(0)
 {
 }
 
-unsigned short TDK::Coordinate::m_getColumn() const
+tdk::Coordinate::Coordinate(unsigned short column, unsigned short row) : m_column(column), m_row(row)
+{
+}
+
+unsigned short tdk::Coordinate::m_getColumn() const
 {
     return m_column;
 }
 
-unsigned short TDK::Coordinate::m_getRow() const
+unsigned short tdk::Coordinate::m_getRow() const
 {
     return m_row;
 }
 
-void TDK::Coordinate::m_setColumn(unsigned short column)
+void tdk::Coordinate::m_setColumn(unsigned short column)
 {
     m_column = column;
 }
 
-void TDK::Coordinate::m_setRow(unsigned short row)
+void tdk::Coordinate::m_setRow(unsigned short row)
 {
     m_row = row;
 }
 
-TDK::Effects::Effects(int code, bool isToEnable) : m_code(s_filterCode(code)), m_isToEnable(isToEnable)
+tdk::Effects::Effects(int code, bool isToEnable) : m_code(s_filterCode(code)), m_isToEnable(isToEnable)
 {
 }
 
-TDK::Effects::Effects(TDK::EffectCode code, bool isToEnable)
+tdk::Effects::Effects(tdk::EffectCode code, bool isToEnable)
     : m_code(s_filterCode(1 << static_cast<int>(code))), m_isToEnable(isToEnable)
 {
 }
 
-int TDK::Effects::m_getCode() const
+int tdk::Effects::m_getCode() const
 {
     return m_code;
 }
 
-bool TDK::Effects::m_getIsToEnable() const
+bool tdk::Effects::m_getIsToEnable() const
 {
     return m_isToEnable;
 }
 
-int TDK::Effects::s_filterCode(int code)
+int tdk::Effects::s_filterCode(int code)
 {
     int filteredCodes = 0;
     for (int ansiCode = 0; ansiCode < 10; ++ansiCode)
@@ -164,50 +198,50 @@ int TDK::Effects::s_filterCode(int code)
     return filteredCodes;
 }
 
-TDK::HexColor::HexColor(unsigned int code, Layer layer) : m_code(s_filterCode(code))
+tdk::HexColor::HexColor(unsigned int code, Layer layer) : m_code(s_filterCode(code))
 {
     m_layer = s_filterLayer(layer);
 }
 
-TDK::HexColor::HexColor(RGBColor color) : m_code(color.m_getRed() << 16 | color.m_getGreen() << 8 | color.m_getBlue())
+tdk::HexColor::HexColor(RGBColor color) : m_code(color.m_getRed() << 16 | color.m_getGreen() << 8 | color.m_getBlue())
 {
     m_layer = color.m_getLayer();
 }
 
-unsigned int TDK::HexColor::s_filterCode(unsigned int code)
+unsigned int tdk::HexColor::s_filterCode(unsigned int code)
 {
     return (std::min)(static_cast<int>(code), 0xffffff);
 }
 
-TDK::HexColor TDK::HexColor::m_invert() const
+tdk::HexColor tdk::HexColor::m_invert() const
 {
     return invertColor(this);
 }
 
-unsigned int TDK::HexColor::m_getCode() const
+unsigned int tdk::HexColor::m_getCode() const
 {
     return m_code;
 }
 
-void TDK::HexColor::m_setCode(unsigned int code)
+void tdk::HexColor::m_setCode(unsigned int code)
 {
     m_code = s_filterCode(code);
 }
 
-TDK::Region::Region()
+tdk::Region::Region()
     : m_totalColumns(0), m_totalRows(0), m_area(0), m_topLeftCoordinate(), m_topRightCoordinate(),
       m_bottomLeftCoordinate(), m_bottomRightCoordinate()
 {
 }
 
-TDK::Region::Region(unsigned short totalColumns, unsigned short totalRows)
+tdk::Region::Region(unsigned short totalColumns, unsigned short totalRows)
     : m_totalColumns(totalColumns), m_totalRows(totalRows), m_area(totalColumns * totalRows), m_topLeftCoordinate(0, 0),
       m_topRightCoordinate(totalColumns - 1, 0), m_bottomLeftCoordinate(0, totalRows - 1),
       m_bottomRightCoordinate(totalColumns - 1, totalRows - 1)
 {
 }
 
-TDK::Region::Region(Coordinate cornerCoordinate0, Coordinate cornerCoordinate1)
+tdk::Region::Region(Coordinate cornerCoordinate0, Coordinate cornerCoordinate1)
 {
     unsigned short maxColumn = (std::max)(cornerCoordinate0.m_getColumn(), cornerCoordinate1.m_getColumn());
     unsigned short minColumn = (std::min)(cornerCoordinate0.m_getColumn(), cornerCoordinate1.m_getColumn());
@@ -222,195 +256,195 @@ TDK::Region::Region(Coordinate cornerCoordinate0, Coordinate cornerCoordinate1)
     m_bottomRightCoordinate = Coordinate(maxColumn, maxRow);
 }
 
-bool TDK::Region::m_contains(unsigned short column, unsigned short row) const
+bool tdk::Region::m_contains(unsigned short column, unsigned short row) const
 {
     return column >= m_topLeftCoordinate.m_getColumn() && column <= m_topRightCoordinate.m_getColumn() &&
            row >= m_topLeftCoordinate.m_getRow() && row <= m_bottomLeftCoordinate.m_getRow();
 }
 
-bool TDK::Region::m_contains(Coordinate coordinate) const
+bool tdk::Region::m_contains(Coordinate coordinate) const
 {
     return m_contains(coordinate.m_getColumn(), coordinate.m_getRow());
 }
 
-unsigned short TDK::Region::m_getTotalColumns() const
+unsigned short tdk::Region::m_getTotalColumns() const
 {
     return m_totalColumns;
 }
 
-unsigned short TDK::Region::m_getTotalRows() const
+unsigned short tdk::Region::m_getTotalRows() const
 {
     return m_totalRows;
 }
 
-unsigned int TDK::Region::m_getArea() const
+unsigned int tdk::Region::m_getArea() const
 {
     return m_area;
 }
 
-TDK::Coordinate TDK::Region::m_getTopLeftCoordinate() const
+tdk::Coordinate tdk::Region::m_getTopLeftCoordinate() const
 {
     return m_topLeftCoordinate;
 }
 
-TDK::Coordinate TDK::Region::m_getTopRightCoordinate() const
+tdk::Coordinate tdk::Region::m_getTopRightCoordinate() const
 {
     return m_topRightCoordinate;
 }
 
-TDK::Coordinate TDK::Region::m_getBottomLeftCoordinate() const
+tdk::Coordinate tdk::Region::m_getBottomLeftCoordinate() const
 {
     return m_bottomLeftCoordinate;
 }
 
-TDK::Coordinate TDK::Region::m_getBottomRightCoordinate() const
+tdk::Coordinate tdk::Region::m_getBottomRightCoordinate() const
 {
     return m_bottomRightCoordinate;
 }
 
-TDK::RGBColor::RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer)
+tdk::RGBColor::RGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer)
     : m_red(red), m_green(green), m_blue(blue)
 {
     m_layer = s_filterLayer(layer);
 }
 
-TDK::RGBColor::RGBColor(HexColor color)
+tdk::RGBColor::RGBColor(HexColor color)
     : m_red(color.m_getCode() >> 16 & 0xff), m_green(color.m_getCode() >> 8 & 0xff), m_blue(color.m_getCode() & 0xff)
 
 {
     m_layer = color.m_getLayer();
 }
 
-TDK::RGBColor TDK::RGBColor::m_invert() const
+tdk::RGBColor tdk::RGBColor::m_invert() const
 {
     return invertColor(this);
 }
 
-unsigned char TDK::RGBColor::m_getRed() const
+unsigned char tdk::RGBColor::m_getRed() const
 {
     return m_red;
 }
 
-unsigned char TDK::RGBColor::m_getGreen() const
+unsigned char tdk::RGBColor::m_getGreen() const
 {
     return m_green;
 }
 
-unsigned char TDK::RGBColor::m_getBlue() const
+unsigned char tdk::RGBColor::m_getBlue() const
 {
     return m_blue;
 }
 
-void TDK::RGBColor::m_setRed(unsigned char red)
+void tdk::RGBColor::m_setRed(unsigned char red)
 {
     m_red = red;
 }
 
-void TDK::RGBColor::m_setGreen(unsigned char green)
+void tdk::RGBColor::m_setGreen(unsigned char green)
 {
     m_green = green;
 }
 
-void TDK::RGBColor::m_setBlue(unsigned char blue)
+void tdk::RGBColor::m_setBlue(unsigned char blue)
 {
     m_blue = blue;
 }
 
-TDK::XColor::XColor(unsigned char code, Layer layer) : m_code(code)
+tdk::XColor::XColor(unsigned char code, Layer layer) : m_code(code)
 {
     m_layer = s_filterLayer(layer);
 }
 
-TDK::XColor::XColor(XColorCode code, Layer layer) : m_code(s_filterCode(code))
+tdk::XColor::XColor(XColorCode code, Layer layer) : m_code(s_filterCode(code))
 {
     m_layer = s_filterLayer(layer);
 }
 
-TDK::XColor TDK::XColor::m_invert() const
+tdk::XColor tdk::XColor::m_invert() const
 {
     return invertColor(this);
 }
 
-short TDK::XColor::s_filterCode(XColorCode code)
+short tdk::XColor::s_filterCode(XColorCode code)
 {
-    return (std::max)((std::min)(static_cast<int>(code), 255), static_cast<int>(TDK::XColorCode::Default));
+    return (std::max)((std::min)(static_cast<int>(code), 255), static_cast<int>(tdk::XColorCode::Default));
 }
 
-short TDK::XColor::m_getCode() const
+short tdk::XColor::m_getCode() const
 {
     return m_code;
 }
 
-void TDK::XColor::m_setCode(unsigned char code)
+void tdk::XColor::m_setCode(unsigned char code)
 {
     m_code = code;
 }
 
-void TDK::XColor::m_setCode(XColorCode code)
+void tdk::XColor::m_setCode(XColorCode code)
 {
     m_code = s_filterCode(code);
 }
 
-std::ostream& TDK::operator<<(std::ostream& stream, Effects effects)
+std::ostream& tdk::operator<<(std::ostream& stream, Effects effects)
 {
-    for (int code = 0; code < 10; ++code)
+    for (int ansiCode = 0; ansiCode < 10; ++ansiCode)
     {
-        if (effects.m_getCode() & 1 << code)
+        if (effects.m_getCode() & 1 << ansiCode)
         {
-            std::cout << "\x1b[" << code + (!effects.m_getIsToEnable() * 20) << "m";
+            std::cout << "\x1b[" << ansiCode + (!effects.m_getIsToEnable() * 20) << "m";
         }
     }
     return stream;
 }
 
-std::ostream& TDK::operator<<(std::ostream& stream, HexColor color)
+std::ostream& tdk::operator<<(std::ostream& stream, HexColor color)
 {
     return stream << RGBColor(color);
 }
 
-std::ostream& TDK::operator<<(std::ostream& stream, RGBColor color)
+std::ostream& tdk::operator<<(std::ostream& stream, RGBColor color)
 {
     CHECK_STREAM_TTY_STATUS();
     return stream << "\x1b[" << static_cast<int>(color.m_getLayer()) << "8;2;" << static_cast<int>(color.m_getRed())
                   << ";" << static_cast<int>(color.m_getGreen()) << ";" << static_cast<int>(color.m_getBlue()) << "m";
 }
 
-std::ostream& TDK::operator<<(std::ostream& stream, XColor color)
+std::ostream& tdk::operator<<(std::ostream& stream, XColor color)
 {
     CHECK_STREAM_TTY_STATUS();
-    return color.m_getCode() == static_cast<int>(TDK::XColorCode::Default)
+    return color.m_getCode() == static_cast<int>(tdk::XColorCode::Default)
                ? stream << "\x1b[" << static_cast<int>(color.m_getLayer()) << "9m"
                : stream << "\x1b[" << static_cast<int>(color.m_getLayer()) << "8;5;" << color.m_getCode() << "m";
 }
 
-std::ostream& TDK::operator<<(std::ostream& stream, Weight weight)
+std::ostream& tdk::operator<<(std::ostream& stream, Weight weight)
 {
     CHECK_STREAM_TTY_STATUS();
     return weight == Weight::Default ? stream << "\x1b[22m" : stream << "\x1b[22;" << static_cast<int>(weight) << "m";
 }
 
-bool TDK::operator==(XColor color0, XColor color1)
+bool tdk::operator==(XColor color0, XColor color1)
 {
     return color0.m_getLayer() == color1.m_getLayer() && color0.m_getCode() == color1.m_getCode();
 }
 
-bool TDK::operator==(HexColor color0, HexColor color1)
+bool tdk::operator==(HexColor color0, HexColor color1)
 {
     return color0.m_getLayer() == color1.m_getLayer() && color0.m_getCode() == color1.m_getCode();
 }
 
-bool TDK::operator==(RGBColor color0, RGBColor color1)
+bool tdk::operator==(RGBColor color0, RGBColor color1)
 {
     return color0.m_getLayer() == color1.m_getLayer() && color0.m_getRed() == color1.m_getRed() &&
            color0.m_getGreen() == color1.m_getGreen() && color0.m_getBlue() == color1.m_getBlue();
 }
 
-bool TDK::operator==(Coordinate coordinate0, Coordinate coordinate1)
+bool tdk::operator==(Coordinate coordinate0, Coordinate coordinate1)
 {
     return coordinate0.m_getColumn() == coordinate1.m_getColumn() && coordinate0.m_getRow() == coordinate1.m_getRow();
 }
 
-bool TDK::operator==(Region region0, Region region1)
+bool tdk::operator==(Region region0, Region region1)
 {
     return region0.m_getTopLeftCoordinate() == region1.m_getTopLeftCoordinate() &&
            region0.m_getTopRightCoordinate() == region1.m_getTopRightCoordinate() &&
@@ -418,17 +452,17 @@ bool TDK::operator==(Region region0, Region region1)
            region0.m_getBottomRightCoordinate() == region1.m_getBottomRightCoordinate();
 }
 
-int TDK::operator|(EffectCode code0, EffectCode code1)
+int tdk::operator|(EffectCode code0, EffectCode code1)
 {
     return 1 << static_cast<int>(code0) | 1 << static_cast<int>(code1);
 }
 
-void TDK::clearCursorLine()
+void tdk::clearCursorLine()
 {
     writeANSISequence("\x1b[2K\x1b[1G");
 }
 
-void TDK::clearInputBuffer()
+void tdk::clearInputBuffer()
 {
 #ifdef _WIN32
     FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
@@ -451,17 +485,17 @@ void TDK::clearInputBuffer()
 #endif
 }
 
-void TDK::clearWindow()
+void tdk::clearWindow()
 {
     writeANSISequence("\x1b[2J\x1b[1;1H");
 }
 
-void TDK::closeAlternateWindow()
+void tdk::closeAlternateWindow()
 {
     writeANSISequence("\x1b[?1049l");
 }
 
-int TDK::getCursorCoordinate(Coordinate& coordinate)
+int tdk::getCursorCoordinate(Coordinate& coordinate)
 {
 #ifdef _WIN32
     CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
@@ -495,7 +529,7 @@ int TDK::getCursorCoordinate(Coordinate& coordinate)
     return 0;
 }
 
-int TDK::getWindowRegion(Region& region)
+int tdk::getWindowRegion(Region& region)
 {
 #ifdef _WIN32
     CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
@@ -518,51 +552,51 @@ int TDK::getWindowRegion(Region& region)
     return 0;
 }
 
-bool TDK::isTTY(Stream stream)
+bool tdk::isTTY(Stream stream)
 {
     prepareStreamsAndCache();
-    return static_cast<int>(stream) >= static_cast<int>(TDK::Stream::Input) &&
-                   static_cast<int>(stream) <= static_cast<int>(TDK::Stream::Error)
+    return static_cast<int>(stream) >= static_cast<int>(tdk::Stream::Input) &&
+                   static_cast<int>(stream) <= static_cast<int>(tdk::Stream::Error)
                ? IS_TTY(stream)
                : false;
 }
 
-void TDK::openAlternateWindow()
+void tdk::openAlternateWindow()
 {
     writeANSISequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
 }
 
-void TDK::ringBell()
+void tdk::ringBell()
 {
     writeANSISequence("\7");
 }
 
-void TDK::setCursorCoordinate(unsigned short column, unsigned short row)
+void tdk::setCursorCoordinate(unsigned short column, unsigned short row)
 {
     writeANSISequence("\x1b[%hu;%huH", row + 1, column + 1);
 }
 
-void TDK::setCursorCoordinate(Coordinate coordinate)
+void tdk::setCursorCoordinate(Coordinate coordinate)
 {
     setCursorCoordinate(coordinate.m_getColumn(), coordinate.m_getRow());
 }
 
-void TDK::setCursorShape(CursorShape shape)
+void tdk::setCursorShape(CursorShape shape)
 {
     writeANSISequence(
         "\x1b[%d q",
-        static_cast<int>(static_cast<int>(shape) >= static_cast<int>(TDK::CursorShape::Default) &&
-                                 static_cast<int>(shape) <= static_cast<int>(TDK::CursorShape::NonBlinkingBar)
+        static_cast<int>(static_cast<int>(shape) >= static_cast<int>(tdk::CursorShape::Default) &&
+                                 static_cast<int>(shape) <= static_cast<int>(tdk::CursorShape::NonBlinkingBar)
                              ? shape
-                             : TDK::CursorShape::Default));
+                             : tdk::CursorShape::Default));
 }
 
-void TDK::setWindowTitle(std::string title)
+void tdk::setWindowTitle(std::string title)
 {
     writeANSISequence("\x1b]0;%s\7", title.c_str());
 }
 
-void TDK::setCursorVisibility(bool isToShow)
+void tdk::setCursorVisibility(bool isToShow)
 {
     writeANSISequence("\x1b[?25%c", isToShow ? 'h' : 'l');
 }
