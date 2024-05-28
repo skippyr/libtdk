@@ -216,14 +216,15 @@ class Effects final {
 public:
   /**
    * @brief Creates a new instance of the Effects class.
-   * @param code The ANSI code of the effect.
+   * @param code The ANSI code of the effect being targeted.
    * @param isToEnable A boolean that states the effect targeted should be
    * enabled.
    */
   Effects(EffectCode code, bool isToEnable);
   /**
    * @brief Creates a new instance of the Effects class.
-   * @param code A bitmask containing the ANSI code of the effects.
+   * @param code A bitmask containing the ANSI codes of the effects being
+   * targeted.
    * @param isToEnable A boolean that states the effects targeted should be
    * enabled.
    */
@@ -239,6 +240,22 @@ public:
    * @returns A boolean that states the effects targeted should be enabled
    */
   bool m_getIsToEnable() const;
+  /**
+   * @brief Sets the ANSI code of a effect being targeted.
+   * @param code The ANSI code to be set.
+   */
+  void m_setCode(EffectCode code);
+  /**
+   * @brief Sets a bitmask containing the ANSI codes of the effects being
+   * targeted.
+   * @param code The bitmask to be set.
+   */
+  void m_setCode(int code);
+  /**
+   * @brief Sets a boolean that states the effects targeted should be enabled.
+   * @param The boolean to be set.
+   */
+  void m_setIsToEnable(bool isToEnable);
 
 private:
   /**

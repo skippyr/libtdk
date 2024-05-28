@@ -169,6 +169,16 @@ int tdk::Effects::s_filterCode(int code) {
   return filteredCodes;
 }
 
+void tdk::Effects::m_setCode(tdk::EffectCode code) {
+  m_code = s_filterCode(1 << static_cast<int>(code));
+}
+
+void tdk::Effects::m_setCode(int code) { m_code = s_filterCode(code); }
+
+void tdk::Effects::m_setIsToEnable(bool isToEnable) {
+  m_isToEnable = isToEnable;
+}
+
 tdk::HexColor::HexColor(unsigned int code, Layer layer)
     : m_code(s_filterCode(code)) {
   m_layer = s_filterLayer(layer);
@@ -264,9 +274,7 @@ tdk::RGBColor::RGBColor(unsigned char red, unsigned char green,
 
 tdk::RGBColor::RGBColor(HexColor color)
     : m_red(color.m_getCode() >> 16 & 0xff),
-      m_green(color.m_getCode() >> 8 & 0xff), m_blue(color.m_getCode() & 0xff)
-
-{
+      m_green(color.m_getCode() >> 8 & 0xff), m_blue(color.m_getCode() & 0xff) {
   m_layer = color.m_getLayer();
 }
 
