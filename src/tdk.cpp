@@ -86,9 +86,9 @@ static char g_cache = 0;
 
 template <class T> static T invertColor(const T *color) {
   T copy = *color;
-  copy.m_setLayer(copy.m_getLayer() == tdk::Layer::Foreground
-                      ? tdk::Layer::Background
-                      : tdk::Layer::Foreground);
+  copy.setLayer(copy.getLayer() == tdk::Layer::Foreground
+                    ? tdk::Layer::Background
+                    : tdk::Layer::Foreground);
   return copy;
 }
 
@@ -121,15 +121,15 @@ static int writeANSISequence(const char *format, ...) {
 
 template <class T> tdk::Color<T>::Color() {}
 
-template <class T> tdk::Layer tdk::Color<T>::m_getLayer() const {
+template <class T> tdk::Layer tdk::Color<T>::getLayer() const {
   return m_layer;
 }
 
-template <class T> void tdk::Color<T>::m_setLayer(tdk::Layer layer) {
-  m_layer = s_filterLayer(layer);
+template <class T> void tdk::Color<T>::setLayer(tdk::Layer layer) {
+  m_layer = filterLayer(layer);
 }
 
-template <class T> tdk::Layer tdk::Color<T>::s_filterLayer(Layer layer) {
+template <class T> tdk::Layer tdk::Color<T>::filterLayer(Layer layer) {
   return layer == tdk::Layer::Foreground || layer == tdk::Layer::Background
              ? layer
              : tdk::Layer::Foreground;
@@ -140,26 +140,26 @@ tdk::Coordinate::Coordinate() : m_column(0), m_row(0) {}
 tdk::Coordinate::Coordinate(unsigned short column, unsigned short row)
     : m_column(column), m_row(row) {}
 
-unsigned short tdk::Coordinate::m_getColumn() const { return m_column; }
+unsigned short tdk::Coordinate::getColumn() const { return m_column; }
 
-unsigned short tdk::Coordinate::m_getRow() const { return m_row; }
+unsigned short tdk::Coordinate::getRow() const { return m_row; }
 
-void tdk::Coordinate::m_setColumn(unsigned short column) { m_column = column; }
+void tdk::Coordinate::setColumn(unsigned short column) { m_column = column; }
 
-void tdk::Coordinate::m_setRow(unsigned short row) { m_row = row; }
+void tdk::Coordinate::setRow(unsigned short row) { m_row = row; }
 
 tdk::Effects::Effects(int code, bool isToEnable)
-    : m_code(s_filterCode(code)), m_isToEnable(isToEnable) {}
+    : m_code(filterCode(code)), m_isToEnable(isToEnable) {}
 
 tdk::Effects::Effects(tdk::EffectCode code, bool isToEnable)
-    : m_code(s_filterCode(1 << static_cast<int>(code))),
+    : m_code(filterCode(1 << static_cast<int>(code))),
       m_isToEnable(isToEnable) {}
 
-int tdk::Effects::m_getCode() const { return m_code; }
+int tdk::Effects::getCode() const { return m_code; }
 
-bool tdk::Effects::m_getIsToEnable() const { return m_isToEnable; }
+bool tdk::Effects::getIsToEnable() const { return m_isToEnable; }
 
-int tdk::Effects::s_filterCode(int code) {
+int tdk::Effects::filterCode(int code) {
   int filteredCodes = 0;
   for (int ansiCode = 0; ansiCode < 10; ++ansiCode) {
     if (ansiCode != 6 && code & 1 << ansiCode) {
@@ -169,38 +169,33 @@ int tdk::Effects::s_filterCode(int code) {
   return filteredCodes;
 }
 
-void tdk::Effects::m_setCode(tdk::EffectCode code) {
-  m_code = s_filterCode(1 << static_cast<int>(code));
+void tdk::Effects::setCode(tdk::EffectCode code) {
+  m_code = filterCode(1 << static_cast<int>(code));
 }
 
-void tdk::Effects::m_setCode(int code) { m_code = s_filterCode(code); }
+void tdk::Effects::setCode(int code) { m_code = filterCode(code); }
 
-void tdk::Effects::m_setIsToEnable(bool isToEnable) {
-  m_isToEnable = isToEnable;
-}
+void tdk::Effects::setIsToEnable(bool isToEnable) { m_isToEnable = isToEnable; }
 
 tdk::HexColor::HexColor(unsigned int code, Layer layer)
-    : m_code(s_filterCode(code)) {
-  m_layer = s_filterLayer(layer);
+    : m_code(filterCode(code)) {
+  m_layer = filterLayer(layer);
 }
 
 tdk::HexColor::HexColor(RGBColor color)
-    : m_code(color.m_getRed() << 16 | color.m_getGreen() << 8 |
-             color.m_getBlue()) {
-  m_layer = color.m_getLayer();
+    : m_code(color.getRed() << 16 | color.getGreen() << 8 | color.getBlue()) {
+  m_layer = color.getLayer();
 }
 
-unsigned int tdk::HexColor::s_filterCode(unsigned int code) {
+unsigned int tdk::HexColor::filterCode(unsigned int code) {
   return (std::min)(static_cast<int>(code), 0xffffff);
 }
 
-tdk::HexColor tdk::HexColor::m_invert() const { return invertColor(this); }
+tdk::HexColor tdk::HexColor::invert() const { return invertColor(this); }
 
-unsigned int tdk::HexColor::m_getCode() const { return m_code; }
+unsigned int tdk::HexColor::getCode() const { return m_code; }
 
-void tdk::HexColor::m_setCode(unsigned int code) {
-  m_code = s_filterCode(code);
-}
+void tdk::HexColor::setCode(unsigned int code) { m_code = filterCode(code); }
 
 tdk::Region::Region()
     : m_totalColumns(0), m_totalRows(0), m_area(0), m_topLeftCoordinate(),
@@ -216,14 +211,14 @@ tdk::Region::Region(unsigned short totalColumns, unsigned short totalRows)
 
 tdk::Region::Region(Coordinate cornerCoordinate0,
                     Coordinate cornerCoordinate1) {
-  unsigned short maxColumn = (std::max)(cornerCoordinate0.m_getColumn(),
-                                        cornerCoordinate1.m_getColumn());
-  unsigned short minColumn = (std::min)(cornerCoordinate0.m_getColumn(),
-                                        cornerCoordinate1.m_getColumn());
+  unsigned short maxColumn =
+      (std::max)(cornerCoordinate0.getColumn(), cornerCoordinate1.getColumn());
+  unsigned short minColumn =
+      (std::min)(cornerCoordinate0.getColumn(), cornerCoordinate1.getColumn());
   unsigned short maxRow =
-      (std::max)(cornerCoordinate0.m_getRow(), cornerCoordinate1.m_getRow());
+      (std::max)(cornerCoordinate0.getRow(), cornerCoordinate1.getRow());
   unsigned short minRow =
-      (std::min)(cornerCoordinate0.m_getRow(), cornerCoordinate1.m_getRow());
+      (std::min)(cornerCoordinate0.getRow(), cornerCoordinate1.getRow());
   m_totalColumns = maxColumn - minColumn;
   m_totalRows = maxRow - minRow;
   m_area = m_totalColumns * m_totalRows;
@@ -233,91 +228,90 @@ tdk::Region::Region(Coordinate cornerCoordinate0,
   m_bottomRightCoordinate = Coordinate(maxColumn, maxRow);
 }
 
-bool tdk::Region::m_contains(unsigned short column, unsigned short row) const {
-  return column >= m_topLeftCoordinate.m_getColumn() &&
-         column <= m_topRightCoordinate.m_getColumn() &&
-         row >= m_topLeftCoordinate.m_getRow() &&
-         row <= m_bottomLeftCoordinate.m_getRow();
+bool tdk::Region::contains(unsigned short column, unsigned short row) const {
+  return column >= m_topLeftCoordinate.getColumn() &&
+         column <= m_topRightCoordinate.getColumn() &&
+         row >= m_topLeftCoordinate.getRow() &&
+         row <= m_bottomLeftCoordinate.getRow();
 }
 
-bool tdk::Region::m_contains(Coordinate coordinate) const {
-  return m_contains(coordinate.m_getColumn(), coordinate.m_getRow());
+bool tdk::Region::contains(Coordinate coordinate) const {
+  return contains(coordinate.getColumn(), coordinate.getRow());
 }
 
-unsigned short tdk::Region::m_getTotalColumns() const { return m_totalColumns; }
+unsigned short tdk::Region::getTotalColumns() const { return m_totalColumns; }
 
-unsigned short tdk::Region::m_getTotalRows() const { return m_totalRows; }
+unsigned short tdk::Region::getTotalRows() const { return m_totalRows; }
 
-unsigned int tdk::Region::m_getArea() const { return m_area; }
+unsigned int tdk::Region::getArea() const { return m_area; }
 
-tdk::Coordinate tdk::Region::m_getTopLeftCoordinate() const {
+tdk::Coordinate tdk::Region::getTopLeftCoordinate() const {
   return m_topLeftCoordinate;
 }
 
-tdk::Coordinate tdk::Region::m_getTopRightCoordinate() const {
+tdk::Coordinate tdk::Region::getTopRightCoordinate() const {
   return m_topRightCoordinate;
 }
 
-tdk::Coordinate tdk::Region::m_getBottomLeftCoordinate() const {
+tdk::Coordinate tdk::Region::getBottomLeftCoordinate() const {
   return m_bottomLeftCoordinate;
 }
 
-tdk::Coordinate tdk::Region::m_getBottomRightCoordinate() const {
+tdk::Coordinate tdk::Region::getBottomRightCoordinate() const {
   return m_bottomRightCoordinate;
 }
 
 tdk::RGBColor::RGBColor(unsigned char red, unsigned char green,
                         unsigned char blue, Layer layer)
     : m_red(red), m_green(green), m_blue(blue) {
-  m_layer = s_filterLayer(layer);
+  m_layer = filterLayer(layer);
 }
 
 tdk::RGBColor::RGBColor(HexColor color)
-    : m_red(color.m_getCode() >> 16 & 0xff),
-      m_green(color.m_getCode() >> 8 & 0xff), m_blue(color.m_getCode() & 0xff) {
-  m_layer = color.m_getLayer();
+    : m_red(color.getCode() >> 16 & 0xff), m_green(color.getCode() >> 8 & 0xff),
+      m_blue(color.getCode() & 0xff) {
+  m_layer = color.getLayer();
 }
 
-tdk::RGBColor tdk::RGBColor::m_invert() const { return invertColor(this); }
+tdk::RGBColor tdk::RGBColor::invert() const { return invertColor(this); }
 
-unsigned char tdk::RGBColor::m_getRed() const { return m_red; }
+unsigned char tdk::RGBColor::getRed() const { return m_red; }
 
-unsigned char tdk::RGBColor::m_getGreen() const { return m_green; }
+unsigned char tdk::RGBColor::getGreen() const { return m_green; }
 
-unsigned char tdk::RGBColor::m_getBlue() const { return m_blue; }
+unsigned char tdk::RGBColor::getBlue() const { return m_blue; }
 
-void tdk::RGBColor::m_setRed(unsigned char red) { m_red = red; }
+void tdk::RGBColor::setRed(unsigned char red) { m_red = red; }
 
-void tdk::RGBColor::m_setGreen(unsigned char green) { m_green = green; }
+void tdk::RGBColor::setGreen(unsigned char green) { m_green = green; }
 
-void tdk::RGBColor::m_setBlue(unsigned char blue) { m_blue = blue; }
+void tdk::RGBColor::setBlue(unsigned char blue) { m_blue = blue; }
 
 tdk::XColor::XColor(unsigned char code, Layer layer) : m_code(code) {
-  m_layer = s_filterLayer(layer);
+  m_layer = filterLayer(layer);
 }
 
-tdk::XColor::XColor(XColorCode code, Layer layer) : m_code(s_filterCode(code)) {
-  m_layer = s_filterLayer(layer);
+tdk::XColor::XColor(XColorCode code, Layer layer) : m_code(filterCode(code)) {
+  m_layer = filterLayer(layer);
 }
 
-tdk::XColor tdk::XColor::m_invert() const { return invertColor(this); }
+tdk::XColor tdk::XColor::invert() const { return invertColor(this); }
 
-short tdk::XColor::s_filterCode(XColorCode code) {
+short tdk::XColor::filterCode(XColorCode code) {
   return (std::max)((std::min)(static_cast<int>(code), 255),
                     static_cast<int>(tdk::XColorCode::Default));
 }
 
-short tdk::XColor::m_getCode() const { return m_code; }
+short tdk::XColor::getCode() const { return m_code; }
 
-void tdk::XColor::m_setCode(unsigned char code) { m_code = code; }
+void tdk::XColor::setCode(unsigned char code) { m_code = code; }
 
-void tdk::XColor::m_setCode(XColorCode code) { m_code = s_filterCode(code); }
+void tdk::XColor::setCode(XColorCode code) { m_code = filterCode(code); }
 
 std::ostream &tdk::operator<<(std::ostream &stream, Effects effects) {
   for (int ansiCode = 0; ansiCode < 10; ++ansiCode) {
-    if (effects.m_getCode() & 1 << ansiCode) {
-      std::cout << "\x1b[" << ansiCode + (!effects.m_getIsToEnable() * 20)
-                << "m";
+    if (effects.getCode() & 1 << ansiCode) {
+      std::cout << "\x1b[" << ansiCode + (!effects.getIsToEnable() * 20) << "m";
     }
   }
   return stream;
@@ -329,18 +323,18 @@ std::ostream &tdk::operator<<(std::ostream &stream, HexColor color) {
 
 std::ostream &tdk::operator<<(std::ostream &stream, RGBColor color) {
   CHECK_STREAM_TTY_STATUS();
-  return stream << "\x1b[" << static_cast<int>(color.m_getLayer()) << "8;2;"
-                << static_cast<int>(color.m_getRed()) << ";"
-                << static_cast<int>(color.m_getGreen()) << ";"
-                << static_cast<int>(color.m_getBlue()) << "m";
+  return stream << "\x1b[" << static_cast<int>(color.getLayer()) << "8;2;"
+                << static_cast<int>(color.getRed()) << ";"
+                << static_cast<int>(color.getGreen()) << ";"
+                << static_cast<int>(color.getBlue()) << "m";
 }
 
 std::ostream &tdk::operator<<(std::ostream &stream, XColor color) {
   CHECK_STREAM_TTY_STATUS();
-  return color.m_getCode() == static_cast<int>(tdk::XColorCode::Default)
-             ? stream << "\x1b[" << static_cast<int>(color.m_getLayer()) << "9m"
-             : stream << "\x1b[" << static_cast<int>(color.m_getLayer())
-                      << "8;5;" << color.m_getCode() << "m";
+  return color.getCode() == static_cast<int>(tdk::XColorCode::Default)
+             ? stream << "\x1b[" << static_cast<int>(color.getLayer()) << "9m"
+             : stream << "\x1b[" << static_cast<int>(color.getLayer()) << "8;5;"
+                      << color.getCode() << "m";
 }
 
 std::ostream &tdk::operator<<(std::ostream &stream, Weight weight) {
@@ -351,35 +345,34 @@ std::ostream &tdk::operator<<(std::ostream &stream, Weight weight) {
 }
 
 bool tdk::operator==(XColor color0, XColor color1) {
-  return color0.m_getLayer() == color1.m_getLayer() &&
-         color0.m_getCode() == color1.m_getCode();
+  return color0.getLayer() == color1.getLayer() &&
+         color0.getCode() == color1.getCode();
 }
 
 bool tdk::operator==(HexColor color0, HexColor color1) {
-  return color0.m_getLayer() == color1.m_getLayer() &&
-         color0.m_getCode() == color1.m_getCode();
+  return color0.getLayer() == color1.getLayer() &&
+         color0.getCode() == color1.getCode();
 }
 
 bool tdk::operator==(RGBColor color0, RGBColor color1) {
-  return color0.m_getLayer() == color1.m_getLayer() &&
-         color0.m_getRed() == color1.m_getRed() &&
-         color0.m_getGreen() == color1.m_getGreen() &&
-         color0.m_getBlue() == color1.m_getBlue();
+  return color0.getLayer() == color1.getLayer() &&
+         color0.getRed() == color1.getRed() &&
+         color0.getGreen() == color1.getGreen() &&
+         color0.getBlue() == color1.getBlue();
 }
 
 bool tdk::operator==(Coordinate coordinate0, Coordinate coordinate1) {
-  return coordinate0.m_getColumn() == coordinate1.m_getColumn() &&
-         coordinate0.m_getRow() == coordinate1.m_getRow();
+  return coordinate0.getColumn() == coordinate1.getColumn() &&
+         coordinate0.getRow() == coordinate1.getRow();
 }
 
 bool tdk::operator==(Region region0, Region region1) {
-  return region0.m_getTopLeftCoordinate() == region1.m_getTopLeftCoordinate() &&
-         region0.m_getTopRightCoordinate() ==
-             region1.m_getTopRightCoordinate() &&
-         region0.m_getBottomLeftCoordinate() ==
-             region1.m_getBottomLeftCoordinate() &&
-         region0.m_getBottomRightCoordinate() ==
-             region1.m_getBottomRightCoordinate();
+  return region0.getTopLeftCoordinate() == region1.getTopLeftCoordinate() &&
+         region0.getTopRightCoordinate() == region1.getTopRightCoordinate() &&
+         region0.getBottomLeftCoordinate() ==
+             region1.getBottomLeftCoordinate() &&
+         region0.getBottomRightCoordinate() ==
+             region1.getBottomRightCoordinate();
 }
 
 int tdk::operator|(EffectCode code0, EffectCode code1) {
@@ -488,7 +481,7 @@ void tdk::setCursorCoordinate(unsigned short column, unsigned short row) {
 }
 
 void tdk::setCursorCoordinate(Coordinate coordinate) {
-  setCursorCoordinate(coordinate.m_getColumn(), coordinate.m_getRow());
+  setCursorCoordinate(coordinate.getColumn(), coordinate.getRow());
 }
 
 void tdk::setCursorShape(CursorShape shape) {

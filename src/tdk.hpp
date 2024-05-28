@@ -146,17 +146,17 @@ public:
    * @brief Inverts the layer the color applies on.
    * @returns The color with its layer inverted.
    */
-  virtual T m_invert() const = 0;
+  virtual T invert() const = 0;
   /**
    * @brief Gets the layer the color applies on.
    * @returns The layer of the color.
    */
-  Layer m_getLayer() const;
+  Layer getLayer() const;
   /**
    * @brief Sets the layer the color applies on.
    * @param layer The layer to be set.
    */
-  void m_setLayer(Layer layer);
+  void setLayer(Layer layer);
 
 protected:
   /** @brief The layer the color applies on. */
@@ -169,7 +169,7 @@ protected:
    * @param layer The layer to be filtered.
    * @returns The layer given if valid or Layer::Foreground otherwise.
    */
-  static Layer s_filterLayer(Layer layer);
+  static Layer filterLayer(Layer layer);
 };
 
 /** @brief Represents a terminal coordinate. */
@@ -187,22 +187,22 @@ public:
    * @brief Gets the column component of the coordinate.
    * @returns The column component of the coordinate.
    */
-  unsigned short m_getColumn() const;
+  unsigned short getColumn() const;
   /**
    * @brief Gets the row component of the coordinate.
    * @returns The row component of the coordinate.
    */
-  unsigned short m_getRow() const;
+  unsigned short getRow() const;
   /**
    * @brief Sets the column component of the coordinate.
    * @param column The column component to be set.
    */
-  void m_setColumn(unsigned short column);
+  void setColumn(unsigned short column);
   /**
    * @brief Sets the row component of the coordinate.
    * @param row The row component to be set.
    */
-  void m_setRow(unsigned short row);
+  void setRow(unsigned short row);
 
 private:
   /** @brief The column component of the coordinate. */
@@ -234,28 +234,28 @@ public:
    * targeted.
    * @returns A bitmask containing the ANSI codes of the effects being targeted.
    */
-  int m_getCode() const;
+  int getCode() const;
   /**
    * Gets a boolean that states the effects targeted should be enabled.
    * @returns A boolean that states the effects targeted should be enabled
    */
-  bool m_getIsToEnable() const;
+  bool getIsToEnable() const;
   /**
    * @brief Sets the ANSI code of a effect being targeted.
    * @param code The ANSI code to be set.
    */
-  void m_setCode(EffectCode code);
+  void setCode(EffectCode code);
   /**
    * @brief Sets a bitmask containing the ANSI codes of the effects being
    * targeted.
    * @param code The bitmask to be set.
    */
-  void m_setCode(int code);
+  void setCode(int code);
   /**
    * @brief Sets a boolean that states the effects targeted should be enabled.
    * @param The boolean to be set.
    */
-  void m_setIsToEnable(bool isToEnable);
+  void setIsToEnable(bool isToEnable);
 
 private:
   /**
@@ -270,7 +270,7 @@ private:
    * @param code The bitmask to be filtered.
    * @returns A bitmask containing only the valid effects.
    */
-  static int s_filterCode(int code);
+  static int filterCode(int code);
 };
 
 /** @brief Represents a terminal hex color. */
@@ -291,17 +291,17 @@ public:
    * @brief Inverts the layer the color applies on.
    * @returns The color with its layer inverted.
    */
-  HexColor m_invert() const;
+  HexColor invert() const;
   /**
    * @brief Gets the hex code of the color.
    * @returns The hex code of the color.
    */
-  unsigned int m_getCode() const;
+  unsigned int getCode() const;
   /**
    * @brief Sets the hex code of the color.
    * @param code The hex code to be set.
    */
-  void m_setCode(unsigned int code);
+  void setCode(unsigned int code);
 
 private:
   /** @brief The hex code of the color */
@@ -312,7 +312,7 @@ private:
    * @param code The hex code to be filtered.
    * @returns The hex code filtered within a valid range.
    */
-  static unsigned int s_filterCode(unsigned int code);
+  static unsigned int filterCode(unsigned int code);
 };
 
 /** @brief Represents a terminal region. */
@@ -340,49 +340,49 @@ public:
    * @returns A boolean that states the coordinate is contained within the
    * region.
    */
-  bool m_contains(unsigned short column, unsigned short row) const;
+  bool contains(unsigned short column, unsigned short row) const;
   /**
    * @brief Checks if a coordinate is contained within the region.
    * @param coordinate The coordinate to be checked.
    * @returns A boolean that states the coordinate is contained within the
    * region.
    */
-  bool m_contains(Coordinate coordinate) const;
+  bool contains(Coordinate coordinate) const;
   /**
    * @brief Gets the total columns of the region.
    * @returns The total columns of the region.
    */
-  unsigned short m_getTotalColumns() const;
+  unsigned short getTotalColumns() const;
   /**
    * @brief Gets the total rows of the region.
    * @returns The total rows of the region.
    */
-  unsigned short m_getTotalRows() const;
+  unsigned short getTotalRows() const;
   /**
    * @brief Gets the area of the region.
    * @returns The area of the region.
    */
-  unsigned int m_getArea() const;
+  unsigned int getArea() const;
   /**
    * @brief Gets the top left coordinate of the region.
    * @returns The top left coordinate of the region.
    */
-  Coordinate m_getTopLeftCoordinate() const;
+  Coordinate getTopLeftCoordinate() const;
   /**
    * @brief Gets the top right coordinate of the region.
    * @returns The top right coordinate of the region.
    */
-  Coordinate m_getTopRightCoordinate() const;
+  Coordinate getTopRightCoordinate() const;
   /**
    * @brief Gets the bottom left coordinate of the region.
    * @returns The bottom left coordinate of the region.
    */
-  Coordinate m_getBottomLeftCoordinate() const;
+  Coordinate getBottomLeftCoordinate() const;
   /**
    * @brief Gets the bottom right coordinate of the region.
    * @returns The bottom right coordinate of the region.
    */
-  Coordinate m_getBottomRightCoordinate() const;
+  Coordinate getBottomRightCoordinate() const;
 
 private:
   /** @brief The total columns of the region. */
@@ -422,37 +422,37 @@ public:
    * @brief Inverts the layer the color applies on.
    * @returns The color with its layer inverted.
    */
-  RGBColor m_invert() const;
+  RGBColor invert() const;
   /**
    * @brief Gets the red component of the color.
    * @returns The red component of the color.
    */
-  unsigned char m_getRed() const;
+  unsigned char getRed() const;
   /**
    * @brief Gets the green component of the color.
    * @returns The green component of the color.
    */
-  unsigned char m_getGreen() const;
+  unsigned char getGreen() const;
   /**
    * @brief Gets the blue component of the color.
    * @returns The blue component of the color.
    */
-  unsigned char m_getBlue() const;
+  unsigned char getBlue() const;
   /**
    * @brief Sets the red component of the color.
    * @returns The red component to be set.
    */
-  void m_setRed(unsigned char red);
+  void setRed(unsigned char red);
   /**
    * @brief Sets the green component of the color.
    * @returns The green component to be set.
    */
-  void m_setGreen(unsigned char green);
+  void setGreen(unsigned char green);
   /**
    * @brief Sets the blue component of the color.
    * @returns The blue component to be set.
    */
-  void m_setBlue(unsigned char blue);
+  void setBlue(unsigned char blue);
 
 private:
   /** @brief The red component of the color. */
@@ -482,22 +482,22 @@ public:
    * @brief Inverts the layer the color applies on.
    * @returns The color with its layer inverted.
    */
-  XColor m_invert() const;
+  XColor invert() const;
   /**
    * @brief Gets the ANSI code of the color.
    * @returns The ANSI code of the color.
    */
-  short m_getCode() const;
+  short getCode() const;
   /**
    * @brief Sets the ANSI code of the color.
    * @param code The ANSI code to be set.
    */
-  void m_setCode(unsigned char code);
+  void setCode(unsigned char code);
   /**
    * @brief Sets the ANSI code of the color.
    * @param code The ANSI code to be set.
    */
-  void m_setCode(XColorCode code);
+  void setCode(XColorCode code);
 
 private:
   /** @brief The ANSI code of the color. */
@@ -508,7 +508,7 @@ private:
    * @param code The ANSI code to be filtered.
    * @returns The ANSI code filtered within a valid range.
    */
-  static short s_filterCode(XColorCode code);
+  static short filterCode(XColorCode code);
 };
 
 /**
