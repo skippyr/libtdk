@@ -1,4 +1,7 @@
+#include <algorithm>
 #include <cstdarg>
+#include <iomanip>
+#include <sstream>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -163,7 +166,7 @@ unsigned short tdk::Dimensions::getTotalRows() const { return m_totalRows; }
 tdk::Effects::Effects(int code, bool isToEnable)
     : m_code(filterCode(code)), m_isToEnable(isToEnable) {}
 
-tdk::Effects::Effects(tdk::EffectCode code, bool isToEnable)
+tdk::Effects::Effects(EffectCode code, bool isToEnable)
     : m_code(filterCode(1 << static_cast<int>(code))),
       m_isToEnable(isToEnable) {}
 
@@ -191,6 +194,19 @@ unsigned int tdk::HexColor::filterCode(unsigned int code) {
 }
 
 tdk::HexColor tdk::HexColor::invert() const { return invertColor(this); }
+
+std::string tdk::HexColor::toString(bool isUpper, bool hasPrefix) const {
+  std::ostringstream stringStream;
+  stringStream << std::hex << std::setw(6) << std::setfill('0') << m_code;
+  std::string string = stringStream.str();
+  if (isUpper) {
+    std::transform(string.begin(), string.end(), string.begin(), std::toupper);
+  }
+  if (hasPrefix) {
+    string = "0x" + string;
+  }
+  return string;
+}
 
 unsigned int tdk::HexColor::getCode() const { return m_code; }
 
@@ -294,6 +310,14 @@ bool tdk::operator==(RGBColor color0, RGBColor color1) {
          color0.getRed() == color1.getRed() &&
          color0.getGreen() == color1.getGreen() &&
          color0.getBlue() == color1.getBlue();
+}
+
+bool tdk::operator==(HexColor hexColor, RGBColor rgbColor) {
+  return hexColor == HexColor(rgbColor);
+}
+
+bool tdk::operator==(RGBColor rgbColor, HexColor hexColor) {
+  return HexColor(rgbColor) == hexColor;
 }
 
 bool tdk::operator==(Coordinate coordinate0, Coordinate coordinate1) {

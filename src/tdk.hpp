@@ -305,6 +305,12 @@ public:
    */
   HexColor invert() const;
   /**
+   * @brief Converts the hex code of the color into a string.
+   * @param isUpper A boolean that states the string is upper case.
+   * @param hasPrefix A boolean that states the string has the 0x prefix.
+   */
+  std::string toString(bool isUpper, bool hasPrefix) const;
+  /**
    * @brief Gets the hex code of the color.
    * @returns The hex code of the color.
    */
@@ -493,6 +499,18 @@ bool operator==(HexColor color0, HexColor color1);
  * @returns A boolean that states the two colors are equal.
  */
 bool operator==(RGBColor color0, RGBColor color1);
+/**
+ * @brief Checks if a hex color is equal to an RGB color.
+ * @param hexColor The hex color.
+ * @param rgbColor The RGB color.
+ */
+bool operator==(HexColor hexColor, RGBColor rgbColor);
+/**
+ * @brief Checks if an RGB color is equal to a hex color.
+ * @param rgbColor The RGB color.
+ * @param hexColor The hex color.
+ */
+bool operator==(RGBColor rgbColor, HexColor hexColor);
 /**
  * @brief Checks if two coordinates are equal.
  * @param coordinate0 The first coordinate.
