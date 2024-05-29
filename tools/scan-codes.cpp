@@ -51,7 +51,22 @@ int main(int totalArguments, const char** arguments)
     attributes.c_iflag &= ~IXON;
     tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
     std::cout << "Waiting for events to dump." << std::endl
-              << "Press the Escape key to exit" << std::endl;
+              << "Press the Escape key to exit" << std::endl
+              << std::endl;
+    if (allowFocus)
+    {
+        std::cout << "    - Focus events are allowed." << std::endl;
+    }
+    if (allowMouse)
+    {
+        std::cout << "    - Mouse events are allowed." << std::endl;
+    }
+    if (allowFocus || allowMouse)
+    {
+        std::cout << std::endl;
+    }
+    std::cout << "For more info, use the --help option." << std::endl << std::endl;
+
     while (true)
     {
         int character;
@@ -81,5 +96,6 @@ int main(int totalArguments, const char** arguments)
     {
         std::cout << "\x1b[?1003l\x1b[?1006l";
     }
+    std::fflush(stdout);
     return 0;
 }
