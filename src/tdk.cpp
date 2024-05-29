@@ -25,7 +25,7 @@
  * cause an early return if it is not a TTY.
  */
 #define CHECK_STREAM_TTY_STATUS()                                              \
-  prepareStreamsAndCache();                                                    \
+  prepareCacheAndStreams();                                                    \
   if ((stream.rdbuf() == std::cout.rdbuf() && !IS_TTY(tdk::Stream::Output)) || \
       (stream.rdbuf() == std::cerr.rdbuf() && !IS_TTY(tdk::Stream::Error))) {  \
     return stream;                                                             \
@@ -69,7 +69,7 @@ template <class T> static T invertColor(const T *color);
  * @brief Caches information about the TTY statuses of the standard terminal
  * streams and sets the ENABLE_VIRTUAL_TERMINAL_PROCESSING mode flag on Windows.
  */
-static void prepareStreamsAndCache();
+static void prepareCacheAndStreams();
 /**
  * @brief Formats and writes an ANSI escape to a valid TTY stream.
  * @param format The format to be used. It uses the same specifiers as the
@@ -92,7 +92,7 @@ template <class T> static T invertColor(const T *color) {
   return copy;
 }
 
-static void prepareStreamsAndCache() {
+static void prepareCacheAndStreams() {
   if (!(g_cache & HAS_CACHED_TTY_FLAG)) {
     g_cache = TTY_CACHE(tdk::Stream::Input) | TTY_CACHE(tdk::Stream::Output) |
               TTY_CACHE(tdk::Stream::Error) | HAS_CACHED_TTY_FLAG;
@@ -107,7 +107,7 @@ static void prepareStreamsAndCache() {
 }
 
 static int writeANSISequence(const char *format, ...) {
-  prepareStreamsAndCache();
+  prepareCacheAndStreams();
   if (!IS_TTY(tdk::Stream::Output) && !IS_TTY(tdk::Stream::Error)) {
     return -1;
   }
@@ -389,7 +389,7 @@ int tdk::getWindowDimensions(Dimensions &dimensions) {
 }
 
 bool tdk::isTTY(Stream stream) {
-  prepareStreamsAndCache();
+  prepareCacheAndStreams();
   return static_cast<int>(stream) >= static_cast<int>(tdk::Stream::Input) &&
                  static_cast<int>(stream) <=
                      static_cast<int>(tdk::Stream::Error)
