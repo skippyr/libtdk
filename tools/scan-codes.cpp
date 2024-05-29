@@ -42,6 +42,14 @@ int main(int totalArguments, const char** arguments)
         {
             allowMouse = true;
         }
+        else if (arguments[offset][0] == '-' && arguments[offset][1] == '-')
+        {
+            std::cerr << "\x1b[1;31m[ERROR]\x1b[22;39m Use of unrecognized flag \x1b[33m"
+                      << arguments[offset] << "\x1b[39m." << std::endl
+                      << "        For more info about options, use the \x1b[33m--help\x1b[39m flag."
+                      << std::endl;
+            return 1;
+        }
     }
     if (allowFocus)
     {
@@ -63,7 +71,7 @@ int main(int totalArguments, const char** arguments)
     std::cout << "    ~> Focus events are " << BOOLEAN_STATE(allowFocus) << "." << std::endl
               << "    ~> Mouse events are " << BOOLEAN_STATE(allowMouse) << "." << std::endl
               << std::endl;
-    std::cout << "Waiting for a event to start...";
+    std::cout << "\x1b[38;5;8mWaiting for a event to start...\x1b[39m";
     while (true)
     {
         int character;
