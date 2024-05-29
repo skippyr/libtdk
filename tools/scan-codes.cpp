@@ -27,7 +27,10 @@ int main(int totalArguments, const char** arguments)
             writeHelpPage();
             return 0;
         }
-        else if (!std::strcmp(arguments[offset], "--allow-focus"))
+    }
+    for (int offset = 0; offset < totalArguments; ++offset)
+    {
+        if (!std::strcmp(arguments[offset], "--allow-focus"))
         {
             allowFocus = true;
         }
@@ -50,7 +53,7 @@ int main(int totalArguments, const char** arguments)
     attributes.c_lflag &= ~(ICANON | ECHO | ISIG);
     attributes.c_iflag &= ~IXON;
     tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
-    std::cout << "Waiting for events to dump." << std::endl
+    std::cout << "\x1b[?25lFor more info, use the --help option." << std::endl
               << "Press the Escape key to exit" << std::endl
               << std::endl;
     if (allowFocus)
@@ -65,13 +68,12 @@ int main(int totalArguments, const char** arguments)
     {
         std::cout << std::endl;
     }
-    std::cout << "For more info, use the --help option." << std::endl << std::endl;
-
+    std::cout << "Waiting for a event to start...";
     while (true)
     {
         int character;
         bool isEscaping = (character = std::getchar()) == 27;
-        std::cout << character;
+        std::cout << "\x1b[2K\x1b[1GScanned Codes: " << character;
         fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
         int offset;
         for (offset = 0; (character = std::getchar()) != EOF; ++offset)
@@ -79,12 +81,12 @@ int main(int totalArguments, const char** arguments)
             std::cout << " " << character;
         }
         fcntl(STDIN_FILENO, F_SETFL, flags);
-        std::cout << std::endl;
         if (isEscaping && !offset)
         {
             break;
         }
     }
+    std::cout << "\x1b[?25h" << std::endl;
     attributes.c_lflag |= ICANON | ECHO | ISIG;
     attributes.c_iflag |= IXON;
     tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
@@ -96,6 +98,5 @@ int main(int totalArguments, const char** arguments)
     {
         std::cout << "\x1b[?1003l\x1b[?1006l";
     }
-    std::fflush(stdout);
     return 0;
 }
