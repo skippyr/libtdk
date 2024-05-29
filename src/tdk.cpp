@@ -71,7 +71,7 @@ template <class T> static T invertColor(const T *color);
  */
 static void prepareCacheAndStreams();
 /**
- * @brief Formats and writes an ANSI escape to a valid TTY stream.
+ * @brief Formats and writes an ANSI escape sequence to a valid TTY stream.
  * @param format The format to be used. It uses the same specifiers as the
  * printf function family.
  * @param ... The arguments to be formatted.
