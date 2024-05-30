@@ -1,16 +1,16 @@
 <p align="center">
   <img alt="" src="assets/ornament.webp" />
 </p>
-<h1 align="center">≥v≥v&ensp;libtdk&ensp;≥v≥v</h1>
-<p align="center">Terminal Development Kit - Documentation - v13.0.0</p>
+<h1 align="center">≥v≥v&ensp;libtmk&ensp;≥v≥v</h1>
+<p align="center">Terminal Manipulation Kit - Documentation - v13.0.0</p>
 <p align="center">
-  <img alt="" src="https://img.shields.io/github/license/skippyr/libtdk?style=plastic&label=%E2%89%A5%20license&labelColor=%2324130e&color=%23b8150d" />
+  <img alt="" src="https://img.shields.io/github/license/skippyr/libtmk?style=plastic&label=%E2%89%A5%20license&labelColor=%2324130e&color=%23b8150d" />
   &nbsp;
-  <img alt="" src="https://img.shields.io/github/v/tag/skippyr/libtdk?style=plastic&label=%E2%89%A5%20tag&labelColor=%2324130e&color=%23b8150d" />
+  <img alt="" src="https://img.shields.io/github/v/tag/skippyr/libtmk?style=plastic&label=%E2%89%A5%20tag&labelColor=%2324130e&color=%23b8150d" />
   &nbsp;
-  <img alt="" src="https://img.shields.io/github/commit-activity/t/skippyr/libtdk?style=plastic&label=%E2%89%A5%20commits&labelColor=%2324130e&color=%23b8150d" />
+  <img alt="" src="https://img.shields.io/github/commit-activity/t/skippyr/libtmk?style=plastic&label=%E2%89%A5%20commits&labelColor=%2324130e&color=%23b8150d" />
   &nbsp;
-  <img alt="" src="https://img.shields.io/github/stars/skippyr/libtdk?style=plastic&label=%E2%89%A5%20stars&labelColor=%2324130e&color=%23b8150d" />
+  <img alt="" src="https://img.shields.io/github/stars/skippyr/libtmk?style=plastic&label=%E2%89%A5%20stars&labelColor=%2324130e&color=%23b8150d" />
 </p>
 
 ## ❡ About
@@ -32,7 +32,7 @@ The library has some limitations over its usage. To avoid conflicts and malfunct
 
 ## ❡ Namespace
 
-The library reserves names under the `tdk` namespace. To avoid naming conflicts, it is highly recommend to not short them by using the `using namespace` keywords.
+The library reserves names under the `tmk` namespace. To avoid naming conflicts, it is highly recommend to not short them by using the `using namespace` keywords.
 
 ## ❡ Colors
 
@@ -47,12 +47,12 @@ Apply one by using the left shifting operator (`<<`) with an instance of a color
 The following example demonstrates how to apply and reset a foreground color:
 
 ```cpp
-#include <tdk.hpp>
+#include <tmk.hpp>
 
 int main() {
-  std::cout << tdk::XColor(tdk::XColorCode::Red, tdk::Layer::Foreground)
+  std::cout << tmk::XColor(tmk::XColorCode::Red, tmk::Layer::Foreground)
             << "Here Be Dragons!"
-            << tdk::XColor(tdk::XColorCode::Default, tdk::Layer::Foreground);
+            << tmk::XColor(tmk::XColorCode::Default, tmk::Layer::Foreground);
   return 0;
 }
 
@@ -65,10 +65,10 @@ Availabe text weights are contained inside of the [`Weight`](#weight-enum-class)
 The following example demonstrates how to apply and reset a weight:
 
 ```cpp
-#include <tdk.hpp>
+#include <tmk.hpp>
 
 int main() {
-  std::cout << tdk::Weight::Bold << "Here Be Dragons!" << tdk::Weight::Default;
+  std::cout << tmk::Weight::Bold << "Here Be Dragons!" << tmk::Weight::Default;
   return 0;
 }
 ```
@@ -80,11 +80,11 @@ Available text effects are contained inside of the [`Effect`](#effect-enum-class
 The following example demonstrates how to apply and remove an effect:
 
 ```cpp
-#include <tdk.hpp>
+#include <tmk.hpp>
 
 int main() {
-  std::cout << tdk::Effect::Underline << "Here Be Dragons!" >>
-      tdk::Effect::Underline << std::endl;
+  std::cout << tmk::Effect::Underline << "Here Be Dragons!" >>
+      tmk::Effect::Underline << std::endl;
   return 0;
 }
 ```
@@ -98,11 +98,11 @@ The standard input buffer can be cleared by using the [`clearInputBuffer`](#clea
 The following example demonstrates how to check the TTY status of the output stream:
 
 ```cpp
-#include <tdk.hpp>
+#include <tmk.hpp>
 
 int main() {
   std::cout << "Is Output TTY: "
-            << (tdk::isTTY(tdk::Stream::Output) ? "True" : "False")
+            << (tmk::isTTY(tmk::Stream::Output) ? "True" : "False")
             << std::endl;
   return 0;
 }
@@ -121,12 +121,12 @@ There may be some key sequences in which the function will be unable to distingu
 The following example shows demonstrates how to read and parse a key event and catch the window resize interrupt:
 
 ```cpp
-#include <tdk.hpp>
+#include <tmk.hpp>
 
 int main() {
-  tdk::KeyEvent keyEvent;
-  tdk::clearInputBuffer();
-  if (tdk::readKeyEvent(keyEvent) == tdk::EventStatus::WindowResizeInterrupt) {
+  tmk::KeyEvent keyEvent;
+  tmk::clearInputBuffer();
+  if (tmk::readKeyEvent(keyEvent) == tmk::EventStatus::WindowResizeInterrupt) {
     std::cerr << "The key reading was interrupted on Windows by a window "
                  "resize event."
               << std::endl;
@@ -143,10 +143,10 @@ int main() {
   } else if (keyEvent.m_key == 'D' && !keyEvent.m_hasCtrl &&
              keyEvent.m_hasAlt) {
     std::cout << "Alt + Shift + D.";
-  } else if (keyEvent.m_key >= tdk::Key::F1 &&
-             keyEvent.m_key <= tdk::Key::F12) {
+  } else if (keyEvent.m_key >= tmk::Key::F1 &&
+             keyEvent.m_key <= tmk::Key::F12) {
     std::cout << "a function key.";
-  } else if (keyEvent.m_key == tdk::Key::UpArrow) {
+  } else if (keyEvent.m_key == tmk::Key::UpArrow) {
     std::cout << "the up arrow key.";
   } else if (keyEvent.m_key == *reinterpret_cast<const int *>("🐉")) {
     std::cout << "the dragon emoji.";
@@ -169,13 +169,13 @@ The line the cursor is in can be cleared by using the [`clearCursorLine`](#clear
 The following example demonstrates how to apply and reset a cursor shape:
 
 ```cpp
-#include <tdk.hpp>
+#include <tmk.hpp>
 
 int main() {
-  tdk::setCursorShape(tdk::Shape::Underline);
+  tmk::setCursorShape(tmk::Shape::Underline);
   std::cout << "Here Be Dragons!" << std::endl;
   std::cin.get();
-  tdk::setCursorShape(tdk::Shape::Default);
+  tmk::setCursorShape(tmk::Shape::Default);
   return 0;
 }
 ```
@@ -187,16 +187,16 @@ The terminal window dimensions can be get by using the [`getWindowDimensions`](#
 The alternate window is an alternate buffer that creates the feeling of that a terminal applications is running in a separate environment. It can be opened and closed by using the [`setAlternateScreen`](#setalternatewindow-function) function.
 
 ```cpp
-#include <tdk.hpp>
+#include <tmk.hpp>
 
 int main() {
-  tdk::Dimensions windowDimensions;
-  tdk::setAlternateWindow(true);
-  tdk::getWindowDimensions(windowDimensions);
+  tmk::Dimensions windowDimensions;
+  tmk::setAlternateWindow(true);
+  tmk::getWindowDimensions(windowDimensions);
   std::cout << "Total Columns: " << windowDimensions.m_totalColumns << std::endl
             << "Total Rows   : " << windowDimensions.m_totalRows << std::endl;
   std::cin.get();
-  tdk::setAlternateWindow(false);
+  tmk::setAlternateWindow(false);
   return 0;
 }
 ```
@@ -216,9 +216,9 @@ The following example demonstrates how to create a simple responsive layout:
 #include <signal.h>
 #endif
 
-#include <tdk.hpp>
+#include <tmk.hpp>
 
-static tdk::Dimensions g_windowDimensions;
+static tmk::Dimensions g_windowDimensions;
 
 static void paintHeadElement();
 static void paintInterface(int signal);
@@ -226,14 +226,14 @@ static void paintFooter();
 
 static void paintHeadElement() {
   std::string center = "Center";
-  tdk::setCursorCoordinate(
+  tmk::setCursorCoordinate(
       (g_windowDimensions.m_totalColumns - center.length()) / 2, 0);
   std::cout << center;
 }
 
 static void paintInterface(int signal) {
-  tdk::setAlternateWindow(true);
-  tdk::getWindowDimensions(g_windowDimensions);
+  tmk::setAlternateWindow(true);
+  tmk::getWindowDimensions(g_windowDimensions);
   paintHeadElement();
   paintFooter();
   std::cout.flush();
@@ -243,36 +243,36 @@ static void paintFooter() {
   std::string left = "Left";
   std::string center = "Center";
   std::string right = "Right";
-  tdk::setCursorCoordinate(0, g_windowDimensions.m_totalRows - 1);
+  tmk::setCursorCoordinate(0, g_windowDimensions.m_totalRows - 1);
   std::cout << left;
-  tdk::setCursorCoordinate(
+  tmk::setCursorCoordinate(
       (g_windowDimensions.m_totalColumns - center.length()) / 2,
       g_windowDimensions.m_totalRows - 1);
   std::cout << center;
-  tdk::setCursorCoordinate(g_windowDimensions.m_totalColumns - right.length(),
+  tmk::setCursorCoordinate(g_windowDimensions.m_totalColumns - right.length(),
                            g_windowDimensions.m_totalRows - 1);
   std::cout << right;
 }
 
 int main() {
-  tdk::KeyEvent keyEvent;
+  tmk::KeyEvent keyEvent;
 #ifndef _WIN32
   struct sigaction resizeHandler;
   resizeHandler.sa_handler = paintInterface;
   sigemptyset(&resizeHandler.sa_mask);
   sigaction(SIGWINCH, &resizeHandler, nullptr);
 #endif
-  tdk::setCursorVisibility(false);
+  tmk::setCursorVisibility(false);
   paintInterface(0);
   do {
-    if (tdk::readKeyEvent(keyEvent) ==
-        tdk::EventStatus::WindowResizeInterrupt) {
+    if (tmk::readKeyEvent(keyEvent) ==
+        tmk::EventStatus::WindowResizeInterrupt) {
       paintInterface(0);
     }
-  } while (keyEvent.m_key != tdk::Key::Enter &&
-           keyEvent.m_key != tdk::Key::Escape);
-  tdk::setCursorVisibility(true);
-  tdk::setAlternateWindow(false);
+  } while (keyEvent.m_key != tmk::Key::Enter &&
+           keyEvent.m_key != tmk::Key::Escape);
+  tmk::setCursorVisibility(true);
+  tmk::setAlternateWindow(false);
   return 0;
 }
 ```
