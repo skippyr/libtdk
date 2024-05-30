@@ -8,6 +8,36 @@
 
 This documentation explains how some POSIX event types are handled at a low-level perspective and contains reference codes used to parse them internally.
 
+## ❡ Window Resize Events
+
+Window resizes are not an event, but actually the `SIGWINCH` signal send to the terminal signal stack asynchnously. The library parses that signal at the same time as other events due to the use of the `ppoll` system call, which allows it to wait for input and handle non-blocked signals at the same time.
+
+## ❡ Focus Events
+
+Focus events, in order to be parsed, must be manually enabled and disabled by using the codes `\x1b[?1004h` and `\x1b[?1004l`, respectively.
+
+When enabled, focus events are reported by using the following codes:
+
+<table align="center">
+<thead>
+  <tr>
+    <th>ANSI</th>
+    <th>Description</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td>27 91 73</td>
+    <td>The terminal window has gained focus.</td>
+  </tr>
+  <tr>
+    <td>27 91 79</td>
+    <td>The terminal window has lost focus.</td>
+  </tr>
+</tbody>
+</table>
+<p align="center"><strong>Caption:</strong> the ANSI codes of focus events.</p>
+
 ## ❡ Mouse Events
 
 ### Enable/Disable Codes
@@ -44,7 +74,7 @@ Mouse events, in order to be parsed, must be manually enabled and disabled by us
 
 ### Syntax
 
-All mouse events reported by using the `\x1b[?1006h` code use the following syntax:
+All mouse events reported by using the `\x1b[?1006h` code, which is what this library uses, use the following syntax:
 
 ```
 27 91 60 <EVENT INFO> 59 <COORDINATE COLUMN> 59 <COORDINATE ROW> <RELEASE STATE>
@@ -288,3 +318,6 @@ The `<RELEASE STATE>` field contains the current release state of a possible but
   </tbody>
 </table>
 <p align="center"><strong>Caption:</strong> The ANSI codes of release states.</p>
+
+&ensp;
+<p align="center"><sup><strong>≥v≥v&ensp;Here Be Dragons!&ensp;≥v≥</strong><br />Made with love by skippyr <3</sup></p>
