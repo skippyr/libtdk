@@ -90,73 +90,55 @@ Click events are reported as the following codes:
 
 <table align="center">
   <thead>
-    <th>ANSI</th>
-    <th>Description</th>
+    <tr>
+      <th>Button</th>
+      <th>No Modifier</th>
+      <th>Ctrl</th>
+      <th>Alt</th>
+      <th>Shift</th>
+      <th>Ctrl + Alt</th>
+      <th>Ctrl + Shift</th>
+      <th>Alt + Shift</th>
+      <th>Ctrl + Alt + Shift</th>
+    </tr>
   </thead>
   <tbody>
     <tr>
+      <td>Left</td>
       <td>48</td>
-      <td>Left Button</td>
-    </tr>
-    <tr>
-      <td>49</td>
-      <td>Middle Button</td>
-    </tr>
-    <tr>
-      <td>50</td>
-      <td>Right Button</td>
-    </tr>
-    <tr>
-      <td>56</td>
-      <td>Alt + Left Button</td>
-    </tr>
-    <tr>
-      <td>57</td>
-      <td>Alt + Middle Button</td>
-    </tr>
-    <tr>
-      <td>49 58</td>
-      <td>Alt + Right Button</td>
-    </tr>
-    <tr>
-      <td>49 50</td>
-      <td>Alt + Shift + Left Button</td>
-    </tr>
-    <tr>
-      <td>49 51</td>
-      <td>Alt + Shift + Middle Button</td>
-    </tr>
-    <tr>
-      <td>49 52</td>
-      <td>Alt + Shift + Right Button</td>
-    </tr>
-    <tr>
       <td>49 54</td>
-      <td>Ctrl + Left Button</td>
-    </tr>
-    <tr>
-      <td>49 55</td>
-      <td>Ctrl + Middle Button</td>
-    </tr>
-    <tr>
-      <td>49 56</td>
-      <td>Ctrl + Right Button</td>
-    </tr>
-    <tr>
+      <td>56</td>
+      <td>N/A</td>
       <td>50 52</td>
-      <td>Ctrl + Alt + Left Button</td>
+      <td>N/A</td>
+      <td>49 50</td>
+      <td>N/A</td>
     </tr>
     <tr>
+      <td>Middle</td>
+      <td>49</td>
+      <td>49 55</td>
+      <td>57</td>
+      <td>N/A</td>
       <td>50 53</td>
-      <td>Ctrl + Alt + Middle Button</td>
+      <td>50 49</td>
+      <td>49 51</td>
+      <td>50 57</td>
     </tr>
     <tr>
+      <td>Right</td>
+      <td>50</td>
+      <td>49 56</td>
+      <td>49 48</td>
+      <td>N/A</td>
       <td>50 54</td>
-      <td>Ctrl + Alt + Right Button</td>
+      <td>50 50</td>
+      <td>49 52</td>
+      <td>51 48</td>
     </tr>
   </tbody>
 </table>
-<p align="center"><strong>Caption:</strong> The ANSI codes of click events.</caption>
+<p align="center"><strong>Caption:</strong> The ANSI codes of click events.</p>
 
 ### Dragging Events
 
