@@ -2,7 +2,7 @@
   <img alt="" src="../assets/ornament.webp" />
 </p>
 <h1 align="center">≥v≥v&ensp;libtmk&ensp;≥v≥v</h1>
-<p align="center">Terminal Manipulation Kit - Documentation - POSIX Events Reference</p>
+<p align="center">Terminal Manipulation Kit - Documentation - POSIX Events Reference<br /><strong>Internal Use</strong></p>
 
 ## ❡ About
 
@@ -165,130 +165,65 @@ Dragging events are reported as the following codes:
 <table align="center">
   <thead>
     <tr>
-      <th>ANSI</th>
-      <th>Description</th>
+      <th>Button</th>
+      <th>No Modifier</th>
+      <th>Ctrl</th>
+      <th>Alt</th>
+      <th>Shift</th>
+      <th>Ctrl + Alt</th>
+      <th>Ctrl + Shift</th>
+      <th>Alt + Shift</th>
+      <th>Ctrl + Alt + Shift</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>51 50</td>
-      <td>Left Button</td>
-    </tr>
-    <tr>
-      <td>51 51</td>
-      <td>Middle Button</td>
-    </tr>
-    <tr>
-      <td>51 52</td>
-      <td>Right Button</td>
-    </tr>
-    <tr>
-      <td>51 53</td>
       <td>None</td>
-    </tr>
-    <tr>
-      <td>51 55</td>
-      <td>Shift + Middle Button</td>
-    </tr>
-    <tr>
-      <td>51 57</td>
-      <td>Shift</td>
-    </tr>
-    <tr>
-      <td>52 48</td>
-      <td>Alt + Left Button</td>
-    </tr>
-    <tr>
-      <td>52 49</td>
-      <td>Alt + Middle Button</td>
-    </tr>
-    <tr>
-      <td>52 50</td>
-      <td>Alt + Right Button</td>
-    </tr>
-    <tr>
-      <td>52 51</td>
-      <td>Alt</td>
-    </tr>
-    <tr>
-      <td>52 52</td>
-      <td>Alt + Shift + Left Button</td>
-    </tr>
-    <tr>
-      <td>52 53</td>
-      <td>Alt + Shift + Middle Button</td>
-    </tr>
-    <tr>
-      <td>52 54</td>
-      <td>Alt + Shift + Right Button</td>
-    </tr>
-    <tr>
-      <td>52 55</td>
-      <td>Alt + Shift</td>
-    </tr>
-    <tr>
-      <td>52 56</td>
-      <td>Ctrl + Left Button</td>
-    </tr>
-    <tr>
-      <td>52 57</td>
-      <td>Ctrl + Middle Button</td>
-    </tr>
-    <tr>
-      <td>53 48</td>
-      <td>Ctrl + Right Button</td>
-    </tr>
-    <tr>
+      <td>51 53</td>
       <td>53 49</td>
-      <td>Ctrl</td>
-    </tr>
-    <tr>
-      <td>53 50</td>
-      <td>Ctrl + Shift + Left Button</td>
-    </tr>
-    <tr>
-      <td>53 51</td>
-      <td>Ctrl + Shift + Middle Button</td>
-    </tr>
-    <tr>
-      <td>53 52</td>
-      <td>Ctrl + Shift + Right Button</td>
-    </tr>
-    <tr>
-      <td>53 53</td>
-      <td>Ctrl + Shift</td>
-    </tr>
-    <tr>
-      <td>53 54</td>
-      <td>Ctrl + Alt + Left Button</td>
-    </tr>
-    <tr>
-      <td>53 55</td>
-      <td>Ctrl + Alt + Middle Button</td>
-    </tr>
-    <tr>
-      <td>53 56</td>
-      <td>Ctrl + Alt + Right Button</td>
-    </tr>
-    <tr>
+      <td>52 51</td>
+      <td>51 57</td>
       <td>53 57</td>
-      <td>Ctrl + Alt</td>
-    </tr>
-    <tr>
-      <td>54 49</td>
-      <td>Ctrl + Alt + Shift + Middle Button</td>
-    </tr>
-    <tr>
-      <td>54 50</td>
-      <td>Ctrl + Alt + Shift + Right Button</td>
-    </tr>
-    <tr>
+      <td>53 53</td>
+      <td>52 55</td>
       <td>54 51</td>
-      <td>Ctrl + Alt + Shift</td>
+    </tr>
+    <tr>
+      <td>Left</td>
+      <td>51 50</td>
+      <td>52 56</td>
+      <td>52 48</td>
+      <td>N/A</td>
+      <td>53 54</td>
+      <td>53 50</td>
+      <td>52 52</td>
+      <td>54 48</td>
+    </tr>
+    <tr>
+      <td>Middle</td>
+      <td>51 51</td>
+      <td>52 57</td>
+      <td>52 49</td>
+      <td>51 55</td>
+      <td>53 55</td>
+      <td>53 51</td>
+      <td>52 53</td>
+      <td>52 49</td>
+    </tr>
+    <tr>
+      <td>Right</td>
+      <td>51 52</td>
+      <td>53 48</td>
+      <td>52 50</td>
+      <td>N/A</td>
+      <td>53 56</td>
+      <td>53 52</td>
+      <td>52 54</td>
+      <td>54 50</td>
     </tr>
   </tbody>
 </table>
-<p align="center"><strong>Caption:</strong> The ANSI codes of dragging events.</caption>
+<p align="center"><strong>Caption:</strong> The ANSI codes of dragging events.</p>
 
 ### Coordinates
 
@@ -318,6 +253,8 @@ The `<RELEASE STATE>` field contains the current release state of a possible but
   </tbody>
 </table>
 <p align="center"><strong>Caption:</strong> The ANSI codes of release states.</p>
+
+## ❡ Key Events
 
 &ensp;
 <p align="center"><sup><strong>≥v≥v&ensp;Here Be Dragons!&ensp;≥v≥</strong><br />Made with love by skippyr <3</sup></p>

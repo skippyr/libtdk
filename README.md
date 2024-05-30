@@ -1,16 +1,16 @@
 <p align="center">
   <img alt="" src="assets/ornament.webp" />
 </p>
-<h1 align="center">≥v≥v&ensp;libtdk&ensp;≥v≥v</h1>
+<h1 align="center">≥v≥v&ensp;libtmk&ensp;≥v≥v</h1>
 <p align="center">Terminal Development Kit</p>
 <p align="center">
-  <img alt="" src="https://img.shields.io/github/license/skippyr/libtdk?style=plastic&label=%E2%89%A5%20license&labelColor=%2324130e&color=%23b8150d" />
+  <img alt="" src="https://img.shields.io/github/license/skippyr/libtmk?style=plastic&label=%E2%89%A5%20license&labelColor=%2324130e&color=%23b8150d" />
   &nbsp;
-  <img alt="" src="https://img.shields.io/github/v/tag/skippyr/libtdk?style=plastic&label=%E2%89%A5%20tag&labelColor=%2324130e&color=%23b8150d" />
+  <img alt="" src="https://img.shields.io/github/v/tag/skippyr/libtmk?style=plastic&label=%E2%89%A5%20tag&labelColor=%2324130e&color=%23b8150d" />
   &nbsp;
-  <img alt="" src="https://img.shields.io/github/commit-activity/t/skippyr/libtdk?style=plastic&label=%E2%89%A5%20commits&labelColor=%2324130e&color=%23b8150d" />
+  <img alt="" src="https://img.shields.io/github/commit-activity/t/skippyr/libtmk?style=plastic&label=%E2%89%A5%20commits&labelColor=%2324130e&color=%23b8150d" />
   &nbsp;
-  <img alt="" src="https://img.shields.io/github/stars/skippyr/libtdk?style=plastic&label=%E2%89%A5%20stars&labelColor=%2324130e&color=%23b8150d" />
+  <img alt="" src="https://img.shields.io/github/stars/skippyr/libtmk?style=plastic&label=%E2%89%A5%20stars&labelColor=%2324130e&color=%23b8150d" />
 </p>
 
 ## ❡ About
@@ -39,11 +39,11 @@ The following dependencies must be installed before installing it:
 
 ## ❡ Help
 
-If you need help related to this project, open a new issue in its [issues pages](https://github.com/skippyr/libtdk/issues) or send me an [e-mail](mailto:skippyr.developer@gmail.com) describing what is going on.
+If you need help related to this project, open a new issue in its [issues pages](https://github.com/skippyr/libtmk/issues) or send me an [e-mail](mailto:skippyr.developer@gmail.com) describing what is going on.
 
 ## ❡ Contributing
 
-This project is open to review and possibly accept contributions, specially fixes and suggestions. If you are interested, send your contribution to its [pull requests page](https://github.com/skippyr/libtdk/pulls) or to my [e-mail](mailto:skippyr.developer@gmail.com).
+This project is open to review and possibly accept contributions, specially fixes and suggestions. If you are interested, send your contribution to its [pull requests page](https://github.com/skippyr/libtmk/pulls) or to my [e-mail](mailto:skippyr.developer@gmail.com).
 
 By contributing to this project, you agree to license your work under the same license that the project uses.
 
