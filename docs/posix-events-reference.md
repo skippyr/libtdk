@@ -238,5 +238,67 @@ The `<RELEASE STATE>` field contains the current release state of a possible but
 
 ## ❡ Key Events
 
+Key events are reported by using the following codes:
+
+<table align="center">
+  <thead>
+    <th>Button</th>
+    <th>No Modifers</th>
+    <th>Ctrl</th>
+    <th>Alt</th>
+    <th>Shift</th>
+    <th>Ctrl + Alt</th>
+    <th>Ctrl + Shift</th>
+    <th>Alt + Shift</th>
+    <th>Ctrl + Alt + Shift</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Left Arrow</td>
+      <td>27 91 65</td>
+      <td>27 91 49 59 53 65</td>
+      <td>27 91 49 59 51 65</td>
+      <td>27 91 49 59 50 65</td>
+      <td>27 91 49 59 55 65</td>
+      <td>27 91 49 59 54 65</td>
+      <td>27 91 49 59 52 65</td>
+      <td>27 91 49 59 56 65</td>
+    </tr>
+    <tr>
+      <td>Down Arrow</td>
+      <td>27 91 66</td>
+      <td>27 91 49 59 53 66</td>
+      <td>27 91 49 59 51 66</td>
+      <td>27 91 49 59 50 66</td>
+      <td>27 91 49 59 55 66</td>
+      <td>27 91 49 59 54 66</td>
+      <td>27 91 49 59 52 66</td>
+      <td>27 91 49 59 56 66</td>
+    </tr>
+    <tr>
+      <td>Right Arrow</td>
+      <td>27 91 67</td>
+      <td>27 91 49 59 53 67</td>
+      <td>27 91 49 59 51 67</td>
+      <td>27 91 49 59 50 67</td>
+      <td>27 91 49 59 55 67</td>
+      <td>27 91 49 59 54 67</td>
+      <td>27 91 49 59 52 67</td>
+      <td>27 91 49 59 56 67</td>
+    </tr>
+    <tr>
+      <td>Left Arrow</td>
+      <td>27 91 68</td>
+      <td>27 91 49 59 53 68</td>
+      <td>27 91 49 59 51 68</td>
+      <td>27 91 49 59 50 68</td>
+      <td>27 91 49 59 55 68</td>
+      <td>27 91 49 59 54 68</td>
+      <td>27 91 49 59 52 68</td>
+      <td>27 91 49 59 56 68</td>
+    </tr>
+  </tbody>
+</table>
+
 &ensp;
 <p align="center"><sup><strong>≥v≥v&ensp;Here Be Dragons!&ensp;≥v≥</strong><br />Made with love by skippyr <3</sup></p>
