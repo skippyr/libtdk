@@ -25,7 +25,7 @@
  * TTY.
  */
 #define CHECK_STREAM_TTY_STATUS()                                                                                      \
-    prepareCacheAndStreams();                                                                                          \
+    PrepareCacheAndStreams();                                                                                          \
     if ((stream.rdbuf() == std::cout.rdbuf() && !IS_TTY(TMK::Stream::Output)) ||                                       \
         (stream.rdbuf() == std::cerr.rdbuf() && !IS_TTY(TMK::Stream::Error)))                                          \
     {                                                                                                                  \
@@ -64,12 +64,12 @@
  * @returns The color with its layer inverted.
  */
 template <class T>
-static T invertColor(const T* color);
+static T InvertColor(const T* color);
 /**
  * @brief Caches information about the TTY statuses of the standard terminal
  * streams and sets the ENABLE_VIRTUAL_TERMINAL_PROCESSING mode flag on Windows.
  */
-static void prepareCacheAndStreams();
+static void PrepareCacheAndStreams();
 /**
  * @brief Formats and writes an ANSI escape sequence to a valid TTY stream.
  * @param format The format to be used. It uses the same specifiers as the
@@ -77,20 +77,20 @@ static void prepareCacheAndStreams();
  * @param ... The arguments to be formatted.
  * @returns 0 if successful or -1 otherwise.
  */
-static int writeANSISequence(const char* format, ...);
+static int WriteANSISequence(const char* format, ...);
 
 /** @brief A cache containing the TTY statuses of the standard terminal streams. */
 static char g_cache = 0;
 
 template <class T>
-static T invertColor(const T* color)
+static T InvertColor(const T* color)
 {
     T copy = *color;
     copy.SetLayer(copy.GetLayer() == TMK::Layer::Foreground ? TMK::Layer::Background : TMK::Layer::Foreground);
     return copy;
 }
 
-static void prepareCacheAndStreams()
+static void PrepareCacheAndStreams()
 {
     if (!(g_cache & HAS_CACHED_TTY_FLAG))
     {
@@ -106,9 +106,9 @@ static void prepareCacheAndStreams()
 #endif
 }
 
-static int writeANSISequence(const char* format, ...)
+static int WriteANSISequence(const char* format, ...)
 {
-    prepareCacheAndStreams();
+    PrepareCacheAndStreams();
     if (!IS_TTY(TMK::Stream::Output) && !IS_TTY(TMK::Stream::Error))
     {
         return -1;
@@ -239,7 +239,7 @@ unsigned int TMK::HexColor::FilterCode(unsigned int code)
 
 TMK::HexColor TMK::HexColor::Invert() const
 {
-    return invertColor(this);
+    return InvertColor(this);
 }
 
 std::string TMK::HexColor::ToString(bool isUpper, bool hasPrefix) const
@@ -288,7 +288,7 @@ TMK::RGBColor::RGBColor(HexColor color)
 
 TMK::RGBColor TMK::RGBColor::Invert() const
 {
-    return invertColor(this);
+    return InvertColor(this);
 }
 
 unsigned char TMK::RGBColor::GetRed() const
@@ -333,7 +333,7 @@ TMK::XColor::XColor(XColorCode code, Layer layer) : m_code(FilterCode(code))
 
 TMK::XColor TMK::XColor::Invert() const
 {
-    return invertColor(this);
+    return InvertColor(this);
 }
 
 short TMK::XColor::FilterCode(XColorCode code)
@@ -432,7 +432,7 @@ int TMK::operator|(EffectCode code0, EffectCode code1)
 
 void TMK::ClearCursorLine()
 {
-    writeANSISequence("\x1b[2K\x1b[1G");
+    WriteANSISequence("\x1b[2K\x1b[1G");
 }
 
 void TMK::ClearInputBuffer()
@@ -460,12 +460,12 @@ void TMK::ClearInputBuffer()
 
 void TMK::ClearWindow()
 {
-    writeANSISequence("\x1b[2J\x1b[1;1H");
+    WriteANSISequence("\x1b[2J\x1b[1;1H");
 }
 
 void TMK::CloseAlternateWindow()
 {
-    writeANSISequence("\x1b[?1049l");
+    WriteANSISequence("\x1b[?1049l");
 }
 
 int TMK::GetCursorCoordinate(Coordinate& coordinate)
@@ -482,7 +482,7 @@ int TMK::GetCursorCoordinate(Coordinate& coordinate)
 #else
     struct termios attributes;
     ClearInputBuffer();
-    if (writeANSISequence("\x1b[6n") || tcgetattr(STDIN_FILENO, &attributes))
+    if (WriteANSISequence("\x1b[6n") || tcgetattr(STDIN_FILENO, &attributes))
     {
         return -1;
     }
@@ -527,7 +527,7 @@ int TMK::GetWindowDimensions(Dimensions& dimensions)
 
 bool TMK::isTTY(Stream stream)
 {
-    prepareCacheAndStreams();
+    PrepareCacheAndStreams();
     return static_cast<int>(stream) >= static_cast<int>(TMK::Stream::Input) &&
                    static_cast<int>(stream) <= static_cast<int>(TMK::Stream::Error)
                ? IS_TTY(stream)
@@ -536,17 +536,17 @@ bool TMK::isTTY(Stream stream)
 
 void TMK::OpenAlternateWindow()
 {
-    writeANSISequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
+    WriteANSISequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
 }
 
 void TMK::RingBell()
 {
-    writeANSISequence("\7");
+    WriteANSISequence("\7");
 }
 
 void TMK::SetCursorCoordinate(unsigned short column, unsigned short row)
 {
-    writeANSISequence("\x1b[%hu;%huH", row + 1, column + 1);
+    WriteANSISequence("\x1b[%hu;%huH", row + 1, column + 1);
 }
 
 void TMK::SetCursorCoordinate(Coordinate coordinate)
@@ -556,7 +556,7 @@ void TMK::SetCursorCoordinate(Coordinate coordinate)
 
 void TMK::SetCursorShape(CursorShape shape)
 {
-    writeANSISequence("\x1b[%d q",
+    WriteANSISequence("\x1b[%d q",
                       static_cast<int>(static_cast<int>(shape) >= static_cast<int>(TMK::CursorShape::Default) &&
                                                static_cast<int>(shape) <= static_cast<int>(TMK::CursorShape::Bar)
                                            ? shape
@@ -565,10 +565,10 @@ void TMK::SetCursorShape(CursorShape shape)
 
 void TMK::SetWindowTitle(std::string title)
 {
-    writeANSISequence("\x1b]0;%s\7", title.c_str());
+    WriteANSISequence("\x1b]0;%s\7", title.c_str());
 }
 
 void TMK::SetCursorVisibility(bool isToShow)
 {
-    writeANSISequence("\x1b[?25%c", isToShow ? 'h' : 'l');
+    WriteANSISequence("\x1b[?25%c", isToShow ? 'h' : 'l');
 }
