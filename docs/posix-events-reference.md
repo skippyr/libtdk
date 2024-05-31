@@ -364,6 +364,17 @@ Key events are reported by using the following codes:
             <td>27 91 51 59 56 126</td>
         </tr>
         <tr>
+            <td></td>
+            <td>27 91 80 (st)</td>
+            <td>27 91 77 (st)</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
             <td>Home</td>
             <td>27 91 72</td>
             <td>27 91 49 59 53 72</td>
