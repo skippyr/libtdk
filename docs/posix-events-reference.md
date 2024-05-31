@@ -342,6 +342,17 @@ Key events are reported by using the following codes:
             <td>27 91 50 59 56 126</td>
         </tr>
         <tr>
+            <td></td>
+            <td>27 91 52 104 (st)</td>
+            <td>27 91 76 (st)</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
             <td>Delete</td>
             <td>27 91 51 126</td>
             <td>27 91 51 59 53 126</td>
