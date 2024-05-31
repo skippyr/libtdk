@@ -258,6 +258,10 @@ The `<RELEASE STATE>` field contains the current release state of a possible but
 </table>
 <p align="center"><strong>Caption:</strong> The ANSI codes of release states.</p>
 
+### Remarks
+
+Parsing mouse events using this syntax, will not work inside of the Linux console using the GPM daemon, as can be explained in this [issue](https://github.com/telmich/gpm/issues/29).
+
 ## ❡ Key Events
 
 Key events are reported by using the following codes:
@@ -387,7 +391,7 @@ Key events are reported by using the following codes:
         </tr>
         <tr>
             <td></td>
-            <td>27 91 49 126 (linux)</td>
+            <td>27 91 49 126 (linux|tmux)</td>
             <td></td>
             <td></td>
             <td></td>
@@ -409,7 +413,7 @@ Key events are reported by using the following codes:
         </tr>
         <tr>
             <td></td>
-            <td>27 91 52 126 (st|linux)</td>
+            <td>27 91 52 126 (st|linux|tmux)</td>
             <td>27 91 74 (st)</td>
             <td></td>
             <td></td>
@@ -450,6 +454,17 @@ Key events are reported by using the following codes:
             <td>27 91 49 59 54 80</td>
             <td>27 91 49 59 52 80</td>
             <td>27 91 49 59 56 80</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>27 91 91 65</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
         </tr>
         <tr>
             <td>F2</td>
@@ -604,6 +619,7 @@ Key events are reported by using the following codes:
 - alacritty
 - st
 - linux
+- tmux
 - terminator
 - xfce4-terminal
 - konsole
