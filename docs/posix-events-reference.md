@@ -397,6 +397,17 @@ Key events are reported by using the following codes:
             <td>27 91 49 59 56 70</td>
         </tr>
         <tr>
+            <td>27 91 52 126 (st)</td>
+            <td>27 91 74 (st)</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
             <td>Page Up</td>
             <td>27 91 53 126</td>
             <td>27 91 53 59 53 126</td>
@@ -553,6 +564,17 @@ Key events are reported by using the following codes:
     </tbody>
 </table>
 <p align="center"><strong>Caption:</strong> The ANSI codes of key events.</p>
+
+## ❡ Tested Terminals
+
+- kitty
+- alacritty
+- st
+- linux
+- terminator
+- xfce4-terminal
+- konsole
+- windows-terminal (wsl)
 
 &ensp;
 <p align="center"><sup><strong>≥v≥v&ensp;Here Be Dragons!&ensp;≥v≥</strong><br />Made with love by skippyr <3</sup></p>
