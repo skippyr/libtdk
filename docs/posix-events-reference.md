@@ -126,6 +126,28 @@ Click events are reported as the following codes:
       <td>50 57</td>
     </tr>
     <tr>
+      <td>Scroll Up</td>
+      <td>54 52</td>
+      <td>56 48</td>
+      <td>55 50</td>
+      <td>54 56</td>
+      <td>56 56</td>
+      <td>56 52</td>
+      <td>55 54</td>
+      <td>57 50</td>
+    </tr>
+    <tr>
+      <td>Scroll Down</td>
+      <td>54 53</td>
+      <td>56 49</td>
+      <td>55 51</td>
+      <td>54 57</td>
+      <td>56 57</td>
+      <td>56 53</td>
+      <td>55 55</td>
+      <td>57 51</td>
+    </tr>
+    <tr>
       <td>Right</td>
       <td>50</td>
       <td>49 56</td>
