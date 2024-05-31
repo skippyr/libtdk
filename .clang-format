@@ -1,6 +1,6 @@
-BasedOnStyle: Microsoft
-NamespaceIndentation: All
 AccessModifierOffset: -4
-FixNamespaceComments: false
-PointerAlignment: Left
 AlwaysBreakTemplateDeclarations: true
+BasedOnStyle: Microsoft
+FixNamespaceComments: false
+NamespaceIndentation: All
+PointerAlignment: Left
