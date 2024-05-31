@@ -397,9 +397,9 @@ Key events are reported by using the following codes:
             <td>27 91 49 59 56 70</td>
         </tr>
         <tr>
+            <td></td>
             <td>27 91 52 126 (st)</td>
             <td>27 91 74 (st)</td>
-            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -551,15 +551,15 @@ Key events are reported by using the following codes:
             <td>27 91 50 51 59 56 126</td>
         </tr>
         <tr>
-            <td>F12</td>
-            <td>27 91 50 52 126</td>
-            <td>27 91 50 52 59 53 126</td>
-            <td>27 91 50 52 59 51 126</td>
-            <td>27 91 50 52 59 50 126</td>
+            <td>Print Screen</td>
+            <td>27 91 53 55 51 54 49 117</td>
+            <td>27 91 53 55 51 54 49 59 53 117</td>
             <td>N/A</td>
-            <td>27 91 50 52 59 54 126</td>
-            <td>27 91 50 52 59 52 126</td>
-            <td>27 91 50 52 59 56 126</td>
+            <td>27 91 53 55 51 54 49 59 50 117</td>
+            <td>N/A</td>
+            <td>27 91 53 55 51 54 49 59 54 117</td>
+            <td>N/A</td>
+            <td>N/A</td>
         </tr>
     </tbody>
 </table>
