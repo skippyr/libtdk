@@ -386,6 +386,17 @@ Key events are reported by using the following codes:
             <td>27 91 49 59 56 72</td>
         </tr>
         <tr>
+            <td></td>
+            <td>27 91 49 126 (linux)</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
             <td>End</td>
             <td>27 91 70</td>
             <td>27 91 49 59 53 70</td>
@@ -398,7 +409,7 @@ Key events are reported by using the following codes:
         </tr>
         <tr>
             <td></td>
-            <td>27 91 52 126 (st)</td>
+            <td>27 91 52 126 (st|linux)</td>
             <td>27 91 74 (st)</td>
             <td></td>
             <td></td>
