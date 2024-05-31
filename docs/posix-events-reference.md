@@ -260,7 +260,7 @@ The `<RELEASE STATE>` field contains the current release state of a possible but
 
 ### Remarks
 
-Parsing mouse events using this syntax, will not work inside of the Linux console using the GPM daemon, as can be explained in this [issue](https://github.com/telmich/gpm/issues/29).
+Parsing mouse events using this syntax will not work inside of the Linux console using the GPM daemon, as can be explained in this [issue](https://github.com/telmich/gpm/issues/29).
 
 ## ❡ Key Events
 
@@ -457,7 +457,7 @@ Key events are reported by using the following codes:
         </tr>
         <tr>
             <td></td>
-            <td>27 91 91 65</td>
+            <td>27 91 91 65 (linux)</td>
             <td></td>
             <td></td>
             <td></td>
@@ -478,6 +478,17 @@ Key events are reported by using the following codes:
             <td>27 91 49 59 56 81</td>
         </tr>
         <tr>
+            <td></td>
+            <td>27 91 91 66 (linux)</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
             <td>F3</td>
             <td>27 79 82</td>
             <td>27 91 49 59 53 82</td>
@@ -487,6 +498,17 @@ Key events are reported by using the following codes:
             <td>27 91 49 51 59 54 126</td>
             <td>27 91 49 51 59 52 126</td>
             <td>27 91 49 51 59 56 126</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>27 91 91 66 (linux)</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
         </tr>
         <tr>
             <td>F4</td>
@@ -500,6 +522,17 @@ Key events are reported by using the following codes:
             <td>27 91 49 59 56 83</td>
         </tr>
         <tr>
+            <td></td>
+            <td>27 91 91 68 (linux)</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
             <td>F5</td>
             <td>27 91 49 53 126</td>
             <td>27 91 49 53 59 53 126</td>
@@ -509,6 +542,17 @@ Key events are reported by using the following codes:
             <td>27 91 49 53 59 54 126</td>
             <td>27 91 49 53 59 52 126</td>
             <td>27 91 49 53 59 56 126</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>27 91 91 69 (linux)</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
         </tr>
         <tr>
             <td>F6</td>
