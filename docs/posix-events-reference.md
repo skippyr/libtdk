@@ -297,6 +297,17 @@ Key events are reported by using the following codes:
       <td>27 91 49 59 52 68</td>
       <td>27 91 49 59 56 68</td>
     </tr>
+    <tr>
+      <td>Insert</td>
+      <td>27 91 50 126</td>
+      <td>27 91 50 59 53 126</td>
+      <td>27 91 50 59 51 126</td>
+      <td>N/A</td>
+      <td>27 91 50 59 55 126</td>
+      <td>27 91 50 59 54 126</td>
+      <td>27 91 50 59 52 126</td>
+      <td>27 91 50 59 56 126</td>
+    </tr>
   </tbody>
 </table>
 
