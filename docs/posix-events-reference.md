@@ -561,6 +561,17 @@ Key events are reported by using the following codes:
             <td>N/A</td>
             <td>N/A</td>
         </tr>
+        <tr>
+            <td>Pause</td>
+            <td>27 91 53 55 51 54 50 117</td>
+            <td>27 91 53 55 51 54 50 59 53 117</td>
+            <td>27 91 53 55 51 54 50 59 51 117</td>
+            <td>27 91 53 55 51 54 50 59 50 117</td>
+            <td>27 91 53 55 51 54 50 59 55 117</td>
+            <td>27 91 53 55 51 54 50 59 54 117</td>
+            <td>27 91 53 55 51 54 50 59 52 117</td>
+            <td>27 91 53 55 51 54 50 59 56 117</td>
+        </tr>
     </tbody>
 </table>
 <p align="center"><strong>Caption:</strong> The ANSI codes of key events.</p>
