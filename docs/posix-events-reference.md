@@ -254,6 +254,17 @@ Key events are reported by using the following codes:
   </thead>
   <tbody>
     <tr>
+      <td>[a-z]</td>
+      <td>[97-122]</td>
+      <td>[1-26]</td>
+      <td>27 [97-122]</td>
+      <td>[65-90]</td>
+      <td>27 [1-26]</td>
+      <td>[1-26]</td>
+      <td>27 [65-90]</td>
+      <td>27 [1-26]</td>
+    </tr>
+    <tr>
       <td>Left Arrow</td>
       <td>27 91 65</td>
       <td>27 91 49 59 53 65</td>
