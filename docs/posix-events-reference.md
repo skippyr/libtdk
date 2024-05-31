@@ -319,6 +319,17 @@ Key events are reported by using the following codes:
       <td>27 91 51 59 52 126</td>
       <td>27 91 51 59 56 126</td>
     </tr>
+    <tr>
+      <td>Home</td>
+      <td>27 91 72</td>
+      <td>27 91 49 59 53 72</td>
+      <td>27 91 49 59 51 72</td>
+      <td>N/A</td>
+      <td>27 91 49 59 55 72</td>
+      <td>27 91 49 59 54 72</td>
+      <td>27 91 49 59 52 72</td>
+      <td>27 91 49 59 56 72</td>
+    </tr>
     <!--
     <th>Button</th>
     <th>No Modifers</th>
@@ -331,18 +342,19 @@ Key events are reported by using the following codes:
     <th>Ctrl + Alt + Shift</th>
     -->
     <tr>
-      <td>Home</td>
-      <td>27 91 72</td>
-      <td>27 91 49 59 53 72</td>
-      <td>27 91 49 59 51 72</td>
+      <td>End</td>
+      <td>27 91 70</td>
+      <td>27 91 49 59 53 70</td>
+      <td>27 91 49 59 51 70</td>
       <td>N/A</td>
-      <td>27 91 49 59 55 72</td>
-      <td>27 91 49 59 54 72</td>
-      <td>27 91 49 59 52 72</td>
-      <td>27 91 49 59 56 72</td>
+      <td>27 91 49 59 55 70</td>
+      <td>27 91 49 59 54 70</td>
+      <td>27 91 49 59 52 70</td>
+      <td>27 91 49 59 56 70</td>
     </tr>
   </tbody>
 </table>
+<p align="center"><strong>Caption:</strong> The ANSI codes of key events.</p>
 
 &ensp;
 <p align="center"><sup><strong>≥v≥v&ensp;Here Be Dragons!&ensp;≥v≥</strong><br />Made with love by skippyr <3</sup></p>
