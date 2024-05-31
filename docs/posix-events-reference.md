@@ -72,6 +72,8 @@ Mouse events, in order to be parsed, must be manually enabled and disabled by us
 </table>
 <p align="center"><strong>Caption:</strong> the ANSI codes used to enable/disable mouse events.</p>
 
+Enabling mouse events will disable scrolling and selection without using Shift.
+
 ### Syntax
 
 All mouse events reported by using the `\x1b[?1006h` code, which is what this library uses, use the following syntax:
@@ -79,6 +81,8 @@ All mouse events reported by using the `\x1b[?1006h` code, which is what this li
 ```
 27 91 60 <EVENT INFO> 59 <COORDINATE COLUMN> 59 <COORDINATE ROW> <RELEASE STATE>
 ```
+
+Parsing mouse events using this syntax will not work inside of the Linux console using the GPM daemon, as can be explained in this [issue](https://github.com/telmich/gpm/issues/29).
 
 ### Event Info
 
@@ -257,10 +261,6 @@ The `<RELEASE STATE>` field contains the current release state of a possible but
     </tbody>
 </table>
 <p align="center"><strong>Caption:</strong> The ANSI codes of release states.</p>
-
-### Remarks
-
-Parsing mouse events using this syntax will not work inside of the Linux console using the GPM daemon, as can be explained in this [issue](https://github.com/telmich/gpm/issues/29).
 
 ## ❡ Key Events
 
@@ -670,15 +670,11 @@ Key events are reported by using the following codes:
 
 ## ❡ Tested Terminals
 
-- kitty
 - alacritty
-- st
+- kitty
 - linux
 - tmux
-- terminator
-- xfce4-terminal
-- konsole
-- windows-terminal (wsl)
+- st
 
 &ensp;
 <p align="center"><sup><strong>≥v≥v&ensp;Here Be Dragons!&ensp;≥v≥</strong><br />Made with love by skippyr <3</sup></p>
