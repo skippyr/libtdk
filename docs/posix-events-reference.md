@@ -374,6 +374,17 @@ Key events are reported by using the following codes:
       <td>27 91 54 59 52 126</td>
       <td>27 91 54 59 56 126</td>
     </tr>
+    <tr>
+      <td>F1</td>
+      <td>27 79 80</td>
+      <td>27 91 49 59 53 80</td>
+      <td>27 91 49 59 51 80</td>
+      <td>27 91 49 59 50 80</td>
+      <td>N/A</td>
+      <td>27 91 49 59 54 80</td>
+      <td>27 91 49 59 52 80</td>
+      <td>27 91 49 59 56 80</td>
+    </tr>
     <!--
     <th>Button</th>
     <th>No Modifers</th>
@@ -386,15 +397,15 @@ Key events are reported by using the following codes:
     <th>Ctrl + Alt + Shift</th>
     -->
     <tr>
-      <td>F1</td>
-      <td>27 79 80</td>
-      <td>27 91 49 59 53 80</td>
-      <td>27 91 49 59 51 80</td>
-      <td>27 91 49 59 50 80</td>
+      <td>F2</td>
+      <td>27 79 81</td>
+      <td>27 91 49 59 53 81</td>
+      <td>27 91 49 59 51 81</td>
+      <td>27 91 49 59 50 81</td>
       <td>N/A</td>
-      <td>27 91 49 59 54 80</td>
-      <td>27 91 49 59 52 80</td>
-      <td>27 91 49 59 56 80</td>
+      <td>27 91 49 59 54 81</td>
+      <td>27 91 49 59 52 81</td>
+      <td>27 91 49 59 56 81</td>
     </tr>
   </tbody>
 </table>
