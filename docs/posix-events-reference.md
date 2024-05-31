@@ -330,6 +330,17 @@ Key events are reported by using the following codes:
       <td>27 91 49 59 52 72</td>
       <td>27 91 49 59 56 72</td>
     </tr>
+    <tr>
+      <td>End</td>
+      <td>27 91 70</td>
+      <td>27 91 49 59 53 70</td>
+      <td>27 91 49 59 51 70</td>
+      <td>N/A</td>
+      <td>27 91 49 59 55 70</td>
+      <td>27 91 49 59 54 70</td>
+      <td>27 91 49 59 52 70</td>
+      <td>27 91 49 59 56 70</td>
+    </tr>
     <!--
     <th>Button</th>
     <th>No Modifers</th>
@@ -342,15 +353,15 @@ Key events are reported by using the following codes:
     <th>Ctrl + Alt + Shift</th>
     -->
     <tr>
-      <td>End</td>
-      <td>27 91 70</td>
-      <td>27 91 49 59 53 70</td>
-      <td>27 91 49 59 51 70</td>
-      <td>N/A</td>
-      <td>27 91 49 59 55 70</td>
-      <td>27 91 49 59 54 70</td>
-      <td>27 91 49 59 52 70</td>
-      <td>27 91 49 59 56 70</td>
+      <td>Page Up</td>
+      <td>27 91 53 126</td>
+      <td>27 91 53 59 53 126</td>
+      <td>27 91 53 59 51 126</td>
+      <td>27 91 53 59 50 126</td>
+      <td>27 91 53 59 55 126</td>
+      <td>27 91 53 59 54 126</td>
+      <td>27 91 53 59 52 126</td>
+      <td>27 91 53 59 56 126</td>
     </tr>
   </tbody>
 </table>
