@@ -119,7 +119,7 @@ Click events are reported as the following codes:
             <td>N/A</td>
         </tr>
         <tr>
-            <td>Middle</td>
+            <td>Wheel</td>
             <td>49</td>
             <td>49 55</td>
             <td>57</td>
@@ -130,7 +130,7 @@ Click events are reported as the following codes:
             <td>50 57</td>
         </tr>
         <tr>
-            <td>Scroll Up</td>
+            <td>Wheel Up</td>
             <td>54 52</td>
             <td>56 48</td>
             <td>55 50</td>
@@ -141,7 +141,7 @@ Click events are reported as the following codes:
             <td>57 50</td>
         </tr>
         <tr>
-            <td>Scroll Down</td>
+            <td>Wheel Down</td>
             <td>54 53</td>
             <td>56 49</td>
             <td>55 51</td>
@@ -161,6 +161,28 @@ Click events are reported as the following codes:
             <td>50 50</td>
             <td>49 52</td>
             <td>51 48</td>
+        </tr>
+        <tr>
+            <td>Side Forward</td>
+            <td>49 50 57</td>
+            <td>49 52 53</td>
+            <td>49 51 55</td>
+            <td>49 51 51</td>
+            <td>49 53 51</td>
+            <td>49 52 57</td>
+            <td>49 52 49</td>
+            <td>49 53 55</td>
+        </tr>
+        <tr>
+            <td>Side Backward</td>
+            <td>49 50 56</td>
+            <td>49 52 52</td>
+            <td>49 51 54</td>
+            <td>49 51 50</td>
+            <td>49 53 50</td>
+            <td>49 52 56</td>
+            <td>49 52 48</td>
+            <td>49 53 54</td>
         </tr>
     </tbody>
 </table>
