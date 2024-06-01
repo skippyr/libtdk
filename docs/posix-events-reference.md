@@ -230,7 +230,7 @@ Dragging events are reported as the following codes:
             <td>54 48</td>
         </tr>
         <tr>
-            <td>Middle</td>
+            <td>Wheel</td>
             <td>51 51</td>
             <td>52 57</td>
             <td>52 49</td>
@@ -250,6 +250,28 @@ Dragging events are reported as the following codes:
             <td>53 52</td>
             <td>52 54</td>
             <td>54 50</td>
+        </tr>
+        <tr>
+            <td>Side Forward</td>
+            <td>49 54 49</td>
+            <td>49 55 55</td>
+            <td>49 54 57</td>
+            <td>49 54 53</td>
+            <td>49 56 53</td>
+            <td>49 56 49</td>
+            <td>49 55 51</td>
+            <td>49 56 57</td>
+        </tr>
+        <tr>
+            <td>Side Backward</td>
+            <td>49 54 48</td>
+            <td>49 55 54</td>
+            <td>49 54 56</td>
+            <td>49 54 52</td>
+            <td>49 56 52</td>
+            <td>49 56 48</td>
+            <td>49 55 50</td>
+            <td>49 56 56</td>
         </tr>
     </tbody>
 </table>
