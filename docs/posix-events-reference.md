@@ -335,6 +335,17 @@ Key events are reported by using the following codes:
             <td>27 [1-26]</td>
         </tr>
         <tr>
+            <td>Escape</td>
+            <td>27</td>
+            <td>27</td>
+            <td>27 27</td>
+            <td>27</td>
+            <td>27 27</td>
+            <td>27</td>
+            <td>27 27</td>
+            <td>27 27</td>
+        </tr>
+        <tr>
             <td>Spacebar</td>
             <td>32</td>
             <td>0</td>
@@ -355,6 +366,28 @@ Key events are reported by using the following codes:
             <td>N/A</td>
             <td>27 27 91 90</td>
             <td>N/A</td>
+        </tr>
+        <tr>
+            <td>Enter</td>
+            <td>10</td>
+            <td>10</td>
+            <td>27 10</td>
+            <td>10</td>
+            <td>27 10</td>
+            <td>10</td>
+            <td>27 10</td>
+            <td>27 10</td>
+        </tr>
+        <tr>
+            <td>Return</td>
+            <td>127</td>
+            <td>8</td>
+            <td>27 127</td>
+            <td>127</td>
+            <td>27 8</td>
+            <td>8</td>
+            <td>27 8</td>
+            <td>27 8</td>
         </tr>
         <tr>
             <td>Left Arrow</td>
