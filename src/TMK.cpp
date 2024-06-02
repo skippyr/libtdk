@@ -120,16 +120,17 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
             }
         }
         ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
-        switch (record.EventType)
+        if (record.EventType == FOCUS_EVENT)
         {
-        case FOCUS_EVENT:
             eventInfo = TMK::FocusEvent(record.Event.FocusEvent.bSetFocus);
-            goto exit;
-        default:
-            continue;
+            break;
+        }
+        else if (record.EventType == WINDOW_BUFFER_SIZE_EVENT)
+        {
+            eventInfo = TMK::ResizeEvent();
+            break;
         }
     }
-exit:
     if (timerHandle)
     {
         CloseHandle(timerHandle);
@@ -316,11 +317,25 @@ bool TMK::FocusEvent::HasFocus() const
     return m_hasFocus;
 }
 
+TMK::ResizeEvent::ResizeEvent()
+{
+    GetWindowDimensions(m_dimensions);
+}
+
+TMK::Dimensions TMK::ResizeEvent::GetDimensions() const
+{
+    return m_dimensions;
+}
+
 TMK::EventInfo::EventInfo(EventType type) : m_type(type)
 {
 }
 
 TMK::EventInfo::EventInfo(FocusEvent focusEvent) : m_type(EventType::Focus), m_focusEvent(focusEvent)
+{
+}
+
+TMK::EventInfo::EventInfo(ResizeEvent resizeEvent) : m_type(EventType::Resize), m_resizeEvent(resizeEvent)
 {
 }
 
@@ -332,6 +347,11 @@ TMK::EventType TMK::EventInfo::GetType() const
 TMK::FocusEvent TMK::EventInfo::GetFocusEvent() const
 {
     return m_focusEvent;
+}
+
+TMK::ResizeEvent TMK::EventInfo::GetResizeEvent() const
+{
+    return m_resizeEvent;
 }
 
 TMK::Coordinate::Coordinate() : m_column(0), m_row(0)

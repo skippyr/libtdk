@@ -145,6 +145,19 @@ namespace TMK
         static short FilterCode(XColorCode code);
     };
 
+    class Dimensions final
+    {
+    public:
+        Dimensions();
+        Dimensions(unsigned short totalColumns, unsigned short totalRows);
+        unsigned short GetTotalColumns() const;
+        unsigned short GetTotalRows() const;
+
+    private:
+        unsigned short m_totalColumns;
+        unsigned short m_totalRows;
+    };
+
     class FocusEvent final
     {
     public:
@@ -155,18 +168,31 @@ namespace TMK
         bool m_hasFocus;
     };
 
+    class ResizeEvent final
+    {
+    public:
+        ResizeEvent();
+        Dimensions GetDimensions() const;
+
+    private:
+        Dimensions m_dimensions;
+    };
+
     class EventInfo final
     {
     public:
         EventInfo(EventType type);
         EventInfo(FocusEvent focusEvent);
+        EventInfo(ResizeEvent resizeEvent);
         EventType GetType() const;
         FocusEvent GetFocusEvent() const;
+        ResizeEvent GetResizeEvent() const;
 
     private:
         EventType m_type;
         union {
             FocusEvent m_focusEvent;
+            ResizeEvent m_resizeEvent;
         };
     };
 
@@ -183,19 +209,6 @@ namespace TMK
     private:
         unsigned short m_column;
         unsigned short m_row;
-    };
-
-    class Dimensions final
-    {
-    public:
-        Dimensions();
-        Dimensions(unsigned short totalColumns, unsigned short totalRows);
-        unsigned short GetTotalColumns() const;
-        unsigned short GetTotalRows() const;
-
-    private:
-        unsigned short m_totalColumns;
-        unsigned short m_totalRows;
     };
 
     class Effects final
