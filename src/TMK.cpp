@@ -308,52 +308,6 @@ TMK::Layer TMK::Color<T>::FilterLayer(Layer layer)
     return layer == TMK::Layer::Foreground || layer == TMK::Layer::Background ? layer : TMK::Layer::Foreground;
 }
 
-TMK::FocusEvent::FocusEvent(bool hasFocus) : m_hasFocus(hasFocus)
-{
-}
-
-bool TMK::FocusEvent::HasFocus() const
-{
-    return m_hasFocus;
-}
-
-TMK::ResizeEvent::ResizeEvent()
-{
-    GetWindowDimensions(m_dimensions);
-}
-
-TMK::Dimensions TMK::ResizeEvent::GetDimensions() const
-{
-    return m_dimensions;
-}
-
-TMK::EventInfo::EventInfo(EventType type) : m_type(type)
-{
-}
-
-TMK::EventInfo::EventInfo(FocusEvent focusEvent) : m_type(EventType::Focus), m_focusEvent(focusEvent)
-{
-}
-
-TMK::EventInfo::EventInfo(ResizeEvent resizeEvent) : m_type(EventType::Resize), m_resizeEvent(resizeEvent)
-{
-}
-
-TMK::EventType TMK::EventInfo::GetType() const
-{
-    return m_type;
-}
-
-TMK::FocusEvent TMK::EventInfo::GetFocusEvent() const
-{
-    return m_focusEvent;
-}
-
-TMK::ResizeEvent TMK::EventInfo::GetResizeEvent() const
-{
-    return m_resizeEvent;
-}
-
 TMK::Coordinate::Coordinate() : m_column(0), m_row(0)
 {
 }
@@ -399,6 +353,89 @@ unsigned short TMK::Dimensions::GetTotalColumns() const
 unsigned short TMK::Dimensions::GetTotalRows() const
 {
     return m_totalRows;
+}
+
+TMK::FocusEvent::FocusEvent(bool hasFocus) : m_hasFocus(hasFocus)
+{
+}
+
+bool TMK::FocusEvent::HasFocus() const
+{
+    return m_hasFocus;
+}
+
+TMK::ResizeEvent::ResizeEvent()
+{
+    GetWindowDimensions(m_dimensions);
+}
+
+TMK::Dimensions TMK::ResizeEvent::GetDimensions() const
+{
+    return m_dimensions;
+}
+
+TMK::MouseEvent::MouseEvent(Coordinate coordinate, MouseButton button, bool isButtonRelease, bool hasCtrl, bool hasAlt,
+                            bool hasShift)
+    : m_coordinate(coordinate), m_button(button), m_isButtonRelease(isButtonRelease), m_hasCtrl(hasCtrl),
+      m_hasAlt(hasAlt), m_hasShift(hasShift)
+{
+}
+
+TMK::Coordinate TMK::MouseEvent::GetCoordinate() const
+{
+    return m_coordinate;
+}
+
+TMK::MouseButton TMK::MouseEvent::GetButton() const
+{
+    return m_button;
+}
+
+bool TMK::MouseEvent::IsButtonRelease() const
+{
+    return m_isButtonRelease;
+}
+
+bool TMK::MouseEvent::HasCtrl() const
+{
+    return m_hasCtrl;
+}
+
+bool TMK::MouseEvent::HasAlt() const
+{
+    return m_hasAlt;
+}
+
+bool TMK::MouseEvent::HasShift() const
+{
+    return m_hasShift;
+}
+
+TMK::EventInfo::EventInfo(EventType type) : m_type(type)
+{
+}
+
+TMK::EventInfo::EventInfo(FocusEvent focusEvent) : m_type(EventType::Focus), m_focusEvent(focusEvent)
+{
+}
+
+TMK::EventInfo::EventInfo(ResizeEvent resizeEvent) : m_type(EventType::Resize), m_resizeEvent(resizeEvent)
+{
+}
+
+TMK::EventType TMK::EventInfo::GetType() const
+{
+    return m_type;
+}
+
+TMK::FocusEvent TMK::EventInfo::GetFocusEvent() const
+{
+    return m_focusEvent;
+}
+
+TMK::ResizeEvent TMK::EventInfo::GetResizeEvent() const
+{
+    return m_resizeEvent;
 }
 
 TMK::Effects::Effects(int code, bool isToEnable) : m_code(FilterCode(code)), m_isToEnable(isToEnable)

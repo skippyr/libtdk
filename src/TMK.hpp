@@ -43,6 +43,16 @@ namespace TMK
         Background
     };
 
+    enum class MouseButton
+    {
+        None,
+        Left,
+        Wheel,
+        WheelUp,
+        WheelDown,
+        Right
+    };
+
     enum class Stream
     {
         Input,
@@ -145,6 +155,21 @@ namespace TMK
         static short FilterCode(XColorCode code);
     };
 
+    class Coordinate final
+    {
+    public:
+        Coordinate();
+        Coordinate(unsigned short column, unsigned short row);
+        unsigned short GetColumn() const;
+        unsigned short GetRow() const;
+        void SetColumn(unsigned short column);
+        void SetRow(unsigned short row);
+
+    private:
+        unsigned short m_column;
+        unsigned short m_row;
+    };
+
     class Dimensions final
     {
     public:
@@ -178,6 +203,27 @@ namespace TMK
         Dimensions m_dimensions;
     };
 
+    class MouseEvent final
+    {
+    public:
+        MouseEvent(Coordinate coordinate, MouseButton button, bool isButtonRelease, bool hasCtrl, bool hasAlt,
+                   bool hasShift);
+        Coordinate GetCoordinate() const;
+        MouseButton GetButton() const;
+        bool IsButtonRelease() const;
+        bool HasCtrl() const;
+        bool HasAlt() const;
+        bool HasShift() const;
+
+    private:
+        Coordinate m_coordinate;
+        MouseButton m_button;
+        bool m_isButtonRelease;
+        bool m_hasCtrl;
+        bool m_hasAlt;
+        bool m_hasShift;
+    };
+
     class EventInfo final
     {
     public:
@@ -194,21 +240,6 @@ namespace TMK
             FocusEvent m_focusEvent;
             ResizeEvent m_resizeEvent;
         };
-    };
-
-    class Coordinate final
-    {
-    public:
-        Coordinate();
-        Coordinate(unsigned short column, unsigned short row);
-        unsigned short GetColumn() const;
-        unsigned short GetRow() const;
-        void SetColumn(unsigned short column);
-        void SetRow(unsigned short row);
-
-    private:
-        unsigned short m_column;
-        unsigned short m_row;
     };
 
     class Effects final
