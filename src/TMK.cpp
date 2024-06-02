@@ -14,16 +14,7 @@
 
 #include "TMK.hpp"
 
-/**
- * @brief Checks if a standard terminal stream is a TTY.
- * @param a_stream The stream to be checked. It must be a value from the TMK::Stream enum class.
- * @returns A boolean that states the stream is a TTY.
- */
 #define IS_TTY(stream) static_cast<bool>(g_cache & 1 << static_cast<int>(stream))
-/**
- * @brief Checks the TTY status of a standard terminal stream being targeted and cause an early return if it is not a
- * TTY.
- */
 #define CHECK_STREAM_TTY_STATUS()                                                                                      \
     PrepareCacheAndStreams();                                                                                          \
     if ((stream.rdbuf() == std::cout.rdbuf() && !IS_TTY(TMK::Stream::Output)) ||                                       \
@@ -31,25 +22,14 @@
     {                                                                                                                  \
         return stream;                                                                                                 \
     }
-/** @brief A bitmask flag that states the cache has already been filled up. */
 #define HAS_CACHED_TTY_FLAG (1 << 7)
 #ifdef _WIN32
-/**
- * @brief Creates the TTY status cache of a standard terminal stream.
- * @param a_stream The stream to be checked. It must be a value from the TMK::Stream enum class.
- * @returns The TTY status cache of the stream.
- */
 #define TTY_CACHE(stream)                                                                                              \
     (!!(_isatty(_fileno(stream == TMK::Stream::Input    ? stdin                                                        \
                         : stream == TMK::Stream::Output ? stdout                                                       \
                                                         : stderr)))                                                    \
      << static_cast<int>(stream))
 #else
-/**
- * @brief Creates the TTY status cache of a standard terminal stream.
- * @param a_stream The stream to be checked. It must be a value from the TMK::Stream enum class.
- * @returns The TTY status cache of the stream.
- */
 #define TTY_CACHE(stream)                                                                                              \
     (isatty(fileno(stream == TMK::Stream::Input    ? stdin                                                             \
                    : stream == TMK::Stream::Output ? stdout                                                            \
@@ -57,29 +37,11 @@
      << static_cast<int>(stream))
 #endif
 
-/**
- * @brief Inverts the layer where a color applies on.
- * @tparam The type of the color.
- * @param color The color to affected.
- * @returns The color with its layer inverted.
- */
 template <class T>
 static T InvertColor(const T* color);
-/**
- * @brief Caches information about the TTY statuses of the standard terminal
- * streams and sets the ENABLE_VIRTUAL_TERMINAL_PROCESSING mode flag on Windows.
- */
 static void PrepareCacheAndStreams();
-/**
- * @brief Formats and writes an ANSI escape sequence to a valid TTY stream.
- * @param format The format to be used. It uses the same specifiers as the
- * printf function family.
- * @param ... The arguments to be formatted.
- * @returns 0 if successful or -1 otherwise.
- */
 static int WriteANSISequence(const char* format, ...);
 
-/** @brief A cache containing the TTY statuses of the standard terminal streams. */
 static char g_cache = 0;
 
 template <class T>
@@ -217,7 +179,7 @@ int TMK::Effects::GetCode() const
     return m_code;
 }
 
-bool TMK::Effects::GetIsToEnable() const
+bool TMK::Effects::IsToEnable() const
 {
     return m_isToEnable;
 }
@@ -362,7 +324,7 @@ std::ostream& TMK::operator<<(std::ostream& stream, Effects effects)
     {
         if (effects.GetCode() & 1 << ansiCode)
         {
-            std::cout << "\x1b[" << ansiCode + (!effects.GetIsToEnable() * 20) << "m";
+            std::cout << "\x1b[" << ansiCode + (!effects.IsToEnable() * 20) << "m";
         }
     }
     return stream;
