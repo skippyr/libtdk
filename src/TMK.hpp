@@ -343,19 +343,47 @@ namespace TMK
         static unsigned int FilterCode(unsigned int code);
     };
 
+    /** @brief Represents a terminal key event. */
     class KeyEvent final
     {
     public:
+        /**
+         * @brief Creates a new instance of the KeyEvent class.
+         * @param key The key pressed.
+         * @param hasCtrl A boolean that states the Ctrl key has been pressed.
+         * @param hasAlt A boolean that states the Alt key has been pressed.
+         * @param hasShift A boolean that states the Shift key has been pressed.
+         */
         KeyEvent(int key, bool hasCtrl, bool hasAlt, bool hasShift);
+        /**
+         * @brief Gets the key pressed.
+         * @returns The key pressed.
+         */
         int GetKey() const;
+        /**
+         * @brief Gets a boolean that states the Ctrl key has been pressed.
+         * @returns A boolean that states the Ctrl key has been pressed.
+         */
         bool HasCtrl() const;
+        /**
+         * @brief Gets a boolean that states the Alt key has been pressed.
+         * @returns A boolean that states the Alt key has been pressed.
+         */
         bool HasAlt() const;
+        /**
+         * @brief Gets a boolean that states the Shift key has been pressed.
+         * @returns A boolean that states the Shift key has been pressed.
+         */
         bool HasShift() const;
 
     private:
+        /** @brief The key pressed. */
         int m_key;
+        /** @brief A boolean that states the Ctrl key has been pressed. */
         bool m_hasCtrl;
+        /** @brief A boolean that states the Alt key has been pressed. */
         bool m_hasAlt;
+        /** @brief A boolean that states the Shift key has been pressed. */
         bool m_hasShift;
     };
 
