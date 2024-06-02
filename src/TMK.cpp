@@ -40,7 +40,7 @@
 template <class T>
 static T InvertColor(const T* color);
 static void PrepareCacheAndStreams();
-static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, short waitInMilliseconds,
+static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMilliseconds,
                                        std::function<bool(TMK::EventInfo&)> filter);
 static int WriteANSISequence(const char* format, ...);
 
@@ -68,6 +68,12 @@ static void PrepareCacheAndStreams()
      GetConsoleMode((handle = GetStdHandle(STD_ERROR_HANDLE)), &mode)) &&
         SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 #endif
+}
+
+static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMilliseconds,
+                                       std::function<bool(TMK::EventInfo&)> filter)
+{
+    return TMK::EventType::None;
 }
 
 static int WriteANSISequence(const char* format, ...)
@@ -518,6 +524,22 @@ void TMK::OpenAlternateWindow()
 void TMK::RingBell()
 {
     WriteANSISequence("\7");
+}
+
+TMK::EventInfo TMK::ReadEvent(bool allowMouseCapture)
+{
+    return ReadGenericEvent(allowMouseCapture, -1, [](EventInfo&) { return true; });
+}
+
+TMK::EventInfo TMK::ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds)
+{
+    return ReadGenericEvent(allowMouseCapture, waitInMilliseconds, [](EventInfo&) { return true; });
+}
+
+TMK::EventInfo TMK::ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds,
+                              std::function<bool(EventInfo&)> filter)
+{
+    return ReadGenericEvent(allowMouseCapture, waitInMilliseconds, filter);
 }
 
 void TMK::SetCursorCoordinate(unsigned short column, unsigned short row)
