@@ -160,6 +160,8 @@ namespace TMK
     public:
         EventInfo(EventType type);
         EventInfo(FocusEvent focusEvent);
+        EventType GetType() const;
+        FocusEvent GetFocusEvent() const;
 
     private:
         EventType m_type;

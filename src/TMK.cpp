@@ -84,12 +84,14 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
     HANDLE timerHandle = nullptr;
     TMK::EventInfo eventInfo = TMK::EventType::None;
     DWORD mode;
+    INPUT_RECORD record;
+    DWORD totalEventsRead;
     GetConsoleMode(inputHandle, &mode);
-    SetConsoleMode(inputHandle, mode & ~ENABLE_PROCESSED_INPUT);
+    SetConsoleMode(inputHandle, allowMouseCapture
+                                    ? (mode | ENABLE_MOUSE_INPUT) & ~(ENABLE_PROCESSED_INPUT | ENABLE_QUICK_EDIT_MODE)
+                                    : mode & ~ENABLE_PROCESSED_INPUT);
     while (true)
     {
-        INPUT_RECORD record;
-        DWORD totalEventsRead;
         if (!waitInMilliseconds)
         {
             DWORD totalEventsAvailable;
@@ -109,16 +111,28 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
                 duration.QuadPart = -10000 * waitInMilliseconds;
                 SetWaitableTimer(timerHandle, &duration, 0, nullptr, nullptr, false);
             }
-            HANDLE handles[] = {inputHandle, timerHandle};
-            if (WaitForMultipleObjects(2, handles, false, INFINITE) == WAIT_TIMEOUT)
+            HANDLE handles[] = {timerHandle, inputHandle};
+            if (WaitForMultipleObjects(2, handles, false, INFINITE) == WAIT_OBJECT_0)
             {
                 eventInfo = TMK::EventType::TimeOut;
                 CloseHandle(timerHandle);
                 break;
             }
-            /* TODO: parse events and close timerHandle. */
         }
         ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
+        switch (record.EventType)
+        {
+        case FOCUS_EVENT:
+            eventInfo = TMK::FocusEvent(record.Event.FocusEvent.bSetFocus);
+            goto exit;
+        default:
+            continue;
+        }
+    }
+exit:
+    if (timerHandle)
+    {
+        CloseHandle(timerHandle);
     }
     SetConsoleMode(inputHandle, mode);
     return eventInfo;
@@ -308,6 +322,16 @@ TMK::EventInfo::EventInfo(EventType type) : m_type(type)
 
 TMK::EventInfo::EventInfo(FocusEvent focusEvent) : m_type(EventType::Focus), m_focusEvent(focusEvent)
 {
+}
+
+TMK::EventType TMK::EventInfo::GetType() const
+{
+    return m_type;
+}
+
+TMK::FocusEvent TMK::EventInfo::GetFocusEvent() const
+{
+    return m_focusEvent;
 }
 
 TMK::Coordinate::Coordinate() : m_column(0), m_row(0)
