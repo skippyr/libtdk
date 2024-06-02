@@ -18,6 +18,7 @@ namespace TMK
 
     enum class EventType
     {
+        Failure,
         None,
         TimeOut,
         Resize,

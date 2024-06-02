@@ -73,7 +73,36 @@ static void PrepareCacheAndStreams()
 static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMilliseconds,
                                        std::function<bool(TMK::EventInfo&)> filter)
 {
+    PrepareCacheAndStreams();
+    if (!IS_TTY(TMK::Stream::Input) || std::fwide(stdin, 0) > 0 ||
+        (!IS_TTY(TMK::Stream::Output) && !IS_TTY(TMK::Stream::Error)))
+    {
+        return TMK::EventType::Failure;
+    }
+#ifdef _WIN32
+    HANDLE inputHandle = GetStdHandle(STD_INPUT_HANDLE);
+    TMK::EventInfo eventInfo = TMK::EventType::None;
+    DWORD mode;
+    GetConsoleMode(inputHandle, &mode);
+    SetConsoleMode(inputHandle, mode & ~ENABLE_PROCESSED_INPUT);
+    while (true)
+    {
+        if (!waitInMilliseconds)
+        {
+            DWORD totalEventsAvailable;
+            GetNumberOfConsoleInputEvents(inputHandle, &totalEventsAvailable);
+            if (!totalEventsAvailable)
+            {
+                eventInfo = TMK::EventType::None;
+                break;
+            }
+        }
+    }
+    SetConsoleMode(inputHandle, mode);
+    return eventInfo;
+#else
     return TMK::EventType::None;
+#endif
 }
 
 static int WriteANSISequence(const char* format, ...)
