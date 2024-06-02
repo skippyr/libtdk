@@ -141,6 +141,7 @@ namespace TMK
     class Dimensions;
     class Effects;
     class HexColor;
+    class KeyEvent;
     class RGBColor;
     class XColor;
 
@@ -277,7 +278,7 @@ namespace TMK
          * @brief Gets a boolean that states the effects targeted should be enabled.
          * @returns A boolean that states the effects targeted should be enabled
          */
-        bool GetIsToEnable() const;
+        bool IsToEnable() const;
 
     private:
         /** @brief A bitmask containing the ANSI codes of the effects being targeted. */
@@ -340,6 +341,22 @@ namespace TMK
          * @returns The hex code filtered within a valid range.
          */
         static unsigned int FilterCode(unsigned int code);
+    };
+
+    class KeyEvent final
+    {
+    public:
+        KeyEvent(int key, bool hasCtrl, bool hasAlt, bool hasShift);
+        int GetKey() const;
+        bool HasCtrl() const;
+        bool HasAlt() const;
+        bool HasShift() const;
+
+    private:
+        int m_key;
+        bool m_hasCtrl;
+        bool m_hasAlt;
+        bool m_hasShift;
     };
 
     /** @brief Represents a terminal RGB color. */
