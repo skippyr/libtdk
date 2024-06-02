@@ -140,6 +140,7 @@ namespace TMK
     class Coordinate;
     class Dimensions;
     class Effects;
+    class FocusEvent;
     class HexColor;
     class KeyEvent;
     class RGBColor;
@@ -292,6 +293,26 @@ namespace TMK
          * @returns A bitmask containing only the valid effects.
          */
         static int FilterCode(int code);
+    };
+
+    /** @brief Represents a terminal focus event. */
+    class FocusEvent final
+    {
+    public:
+        /**
+         * @brief Creates a new instance of the FocusEvent class.
+         * @param A boolean that states the terminal has gained focus.
+         */
+        FocusEvent(bool hasFocus);
+        /**
+         * @brief Gets a boolean that states the terminal has gained focus.
+         * @returns A boolean that states the terminal has gained focus.
+         */
+        bool GetFocus() const;
+
+    private:
+        /** @brief A boolean that states the terminal has gained focus. */
+        bool m_hasFocus;
     };
 
     /** @brief Represents a terminal hex color. */
