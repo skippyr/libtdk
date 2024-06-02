@@ -83,11 +83,6 @@ static int WriteANSISequence(const char* format, ...)
 }
 
 template <class T>
-TMK::Color<T>::Color()
-{
-}
-
-template <class T>
 TMK::Layer TMK::Color<T>::GetLayer() const
 {
     return m_layer;
@@ -97,91 +92,6 @@ template <class T>
 void TMK::Color<T>::SetLayer(TMK::Layer layer)
 {
     m_layer = FilterLayer(layer);
-}
-
-template <class T>
-TMK::Layer TMK::Color<T>::FilterLayer(Layer layer)
-{
-    return layer == TMK::Layer::Foreground || layer == TMK::Layer::Background ? layer : TMK::Layer::Foreground;
-}
-
-TMK::Coordinate::Coordinate() : m_column(0), m_row(0)
-{
-}
-
-TMK::Coordinate::Coordinate(unsigned short column, unsigned short row) : m_column(column), m_row(row)
-{
-}
-
-unsigned short TMK::Coordinate::GetColumn() const
-{
-    return m_column;
-}
-
-unsigned short TMK::Coordinate::GetRow() const
-{
-    return m_row;
-}
-
-void TMK::Coordinate::SetColumn(unsigned short column)
-{
-    m_column = column;
-}
-
-void TMK::Coordinate::SetRow(unsigned short row)
-{
-    m_row = row;
-}
-
-TMK::Dimensions::Dimensions() : m_totalColumns(0), m_totalRows(0)
-{
-}
-
-TMK::Dimensions::Dimensions(unsigned short totalColumns, unsigned short totalRows)
-    : m_totalColumns(totalColumns), m_totalRows(totalRows)
-{
-}
-
-unsigned short TMK::Dimensions::GetTotalColumns() const
-{
-    return m_totalColumns;
-}
-
-unsigned short TMK::Dimensions::GetTotalRows() const
-{
-    return m_totalRows;
-}
-
-TMK::Effects::Effects(int code, bool isToEnable) : m_code(FilterCode(code)), m_isToEnable(isToEnable)
-{
-}
-
-TMK::Effects::Effects(EffectCode code, bool isToEnable)
-    : m_code(FilterCode(1 << static_cast<int>(code))), m_isToEnable(isToEnable)
-{
-}
-
-int TMK::Effects::FilterCode(int code)
-{
-    int filteredCodes = 0;
-    for (int ansiCode = 0; ansiCode < 10; ++ansiCode)
-    {
-        if (ansiCode != 6 && code & 1 << ansiCode)
-        {
-            filteredCodes |= 1 << ansiCode;
-        }
-    }
-    return filteredCodes;
-}
-
-int TMK::Effects::GetCode() const
-{
-    return m_code;
-}
-
-bool TMK::Effects::IsToEnable() const
-{
-    return m_isToEnable;
 }
 
 TMK::HexColor::HexColor(unsigned int code, Layer layer) : m_code(FilterCode(code))
@@ -316,6 +226,108 @@ void TMK::XColor::SetCode(unsigned char code)
 void TMK::XColor::SetCode(XColorCode code)
 {
     m_code = FilterCode(code);
+}
+
+template <class T>
+TMK::Layer TMK::Color<T>::FilterLayer(Layer layer)
+{
+    return layer == TMK::Layer::Foreground || layer == TMK::Layer::Background ? layer : TMK::Layer::Foreground;
+}
+
+TMK::FocusEvent::FocusEvent(bool hasFocus) : m_hasFocus(hasFocus)
+{
+}
+
+bool TMK::FocusEvent::HasFocus() const
+{
+    return m_hasFocus;
+}
+
+TMK::EventInfo::EventInfo(EventType type) : m_type(type)
+{
+}
+
+TMK::EventInfo::EventInfo(FocusEvent focusEvent) : m_type(EventType::Focus), m_focusEvent(focusEvent)
+{
+}
+
+TMK::Coordinate::Coordinate() : m_column(0), m_row(0)
+{
+}
+
+TMK::Coordinate::Coordinate(unsigned short column, unsigned short row) : m_column(column), m_row(row)
+{
+}
+
+unsigned short TMK::Coordinate::GetColumn() const
+{
+    return m_column;
+}
+
+unsigned short TMK::Coordinate::GetRow() const
+{
+    return m_row;
+}
+
+void TMK::Coordinate::SetColumn(unsigned short column)
+{
+    m_column = column;
+}
+
+void TMK::Coordinate::SetRow(unsigned short row)
+{
+    m_row = row;
+}
+
+TMK::Dimensions::Dimensions() : m_totalColumns(0), m_totalRows(0)
+{
+}
+
+TMK::Dimensions::Dimensions(unsigned short totalColumns, unsigned short totalRows)
+    : m_totalColumns(totalColumns), m_totalRows(totalRows)
+{
+}
+
+unsigned short TMK::Dimensions::GetTotalColumns() const
+{
+    return m_totalColumns;
+}
+
+unsigned short TMK::Dimensions::GetTotalRows() const
+{
+    return m_totalRows;
+}
+
+TMK::Effects::Effects(int code, bool isToEnable) : m_code(FilterCode(code)), m_isToEnable(isToEnable)
+{
+}
+
+TMK::Effects::Effects(EffectCode code, bool isToEnable)
+    : m_code(FilterCode(1 << static_cast<int>(code))), m_isToEnable(isToEnable)
+{
+}
+
+int TMK::Effects::FilterCode(int code)
+{
+    int filteredCodes = 0;
+    for (int ansiCode = 0; ansiCode < 10; ++ansiCode)
+    {
+        if (ansiCode != 6 && code & 1 << ansiCode)
+        {
+            filteredCodes |= 1 << ansiCode;
+        }
+    }
+    return filteredCodes;
+}
+
+int TMK::Effects::GetCode() const
+{
+    return m_code;
+}
+
+bool TMK::Effects::IsToEnable() const
+{
+    return m_isToEnable;
 }
 
 std::ostream& TMK::operator<<(std::ostream& stream, Effects effects)

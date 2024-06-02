@@ -77,14 +77,7 @@ namespace TMK
         Dim
     };
 
-    template <class T>
-    class Color;
-    class Coordinate;
-    class Dimensions;
-    class Effects;
-    class HexColor;
     class RGBColor;
-    class XColor;
 
     template <class T>
     class Color
@@ -97,51 +90,7 @@ namespace TMK
     protected:
         Layer m_layer;
 
-        Color();
         static Layer FilterLayer(Layer layer);
-    };
-
-    class Coordinate final
-    {
-    public:
-        Coordinate();
-        Coordinate(unsigned short column, unsigned short row);
-        unsigned short GetColumn() const;
-        unsigned short GetRow() const;
-        void SetColumn(unsigned short column);
-        void SetRow(unsigned short row);
-
-    private:
-        unsigned short m_column;
-        unsigned short m_row;
-    };
-
-    class Dimensions final
-    {
-    public:
-        Dimensions();
-        Dimensions(unsigned short totalColumns, unsigned short totalRows);
-        unsigned short GetTotalColumns() const;
-        unsigned short GetTotalRows() const;
-
-    private:
-        unsigned short m_totalColumns;
-        unsigned short m_totalRows;
-    };
-
-    class Effects final
-    {
-    public:
-        Effects(EffectCode code, bool isToEnable);
-        Effects(int code, bool isToEnable);
-        int GetCode() const;
-        bool IsToEnable() const;
-
-    private:
-        int m_code;
-        bool m_isToEnable;
-
-        static int FilterCode(int code);
     };
 
     class HexColor final : public Color<HexColor>
@@ -193,6 +142,72 @@ namespace TMK
         short m_code;
 
         static short FilterCode(XColorCode code);
+    };
+
+    class FocusEvent final
+    {
+    public:
+        FocusEvent(bool hasFocus);
+        bool HasFocus() const;
+
+    private:
+        bool m_hasFocus;
+    };
+
+    class EventInfo final
+    {
+    public:
+        EventInfo(EventType type);
+        EventInfo(FocusEvent focusEvent);
+
+    private:
+        EventType m_type;
+        union {
+            FocusEvent m_focusEvent;
+        };
+    };
+
+    class Coordinate final
+    {
+    public:
+        Coordinate();
+        Coordinate(unsigned short column, unsigned short row);
+        unsigned short GetColumn() const;
+        unsigned short GetRow() const;
+        void SetColumn(unsigned short column);
+        void SetRow(unsigned short row);
+
+    private:
+        unsigned short m_column;
+        unsigned short m_row;
+    };
+
+    class Dimensions final
+    {
+    public:
+        Dimensions();
+        Dimensions(unsigned short totalColumns, unsigned short totalRows);
+        unsigned short GetTotalColumns() const;
+        unsigned short GetTotalRows() const;
+
+    private:
+        unsigned short m_totalColumns;
+        unsigned short m_totalRows;
+    };
+
+    class Effects final
+    {
+    public:
+        Effects(EffectCode code, bool isToEnable);
+        Effects(int code, bool isToEnable);
+        int GetCode() const;
+        bool IsToEnable() const;
+
+    private:
+        int m_code;
+        bool m_isToEnable;
+
+        static int FilterCode(int code);
     };
 
     std::ostream& operator<<(std::ostream& stream, Effects effects);
