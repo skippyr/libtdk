@@ -40,6 +40,8 @@
 template <class T>
 static T InvertColor(const T* color);
 static void PrepareCacheAndStreams();
+static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, short waitInMilliseconds,
+                                       std::function<bool(TMK::EventInfo&)> filter);
 static int WriteANSISequence(const char* format, ...);
 
 static char g_cache = 0;
@@ -499,7 +501,7 @@ int TMK::GetWindowDimensions(Dimensions& dimensions)
     return 0;
 }
 
-bool TMK::isTTY(Stream stream)
+bool TMK::IsTTY(Stream stream)
 {
     PrepareCacheAndStreams();
     return static_cast<int>(stream) >= static_cast<int>(TMK::Stream::Input) &&
@@ -542,7 +544,7 @@ void TMK::SetWindowTitle(std::string title)
     WriteANSISequence("\x1b]0;%s\7", title.c_str());
 }
 
-void TMK::SetCursorVisibility(bool isToShow)
+void TMK::SetCursorVisibility(bool isVisible)
 {
-    WriteANSISequence("\x1b[?25%c", isToShow ? 'h' : 'l');
+    WriteANSISequence("\x1b[?25%c", isVisible ? 'h' : 'l');
 }

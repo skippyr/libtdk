@@ -229,12 +229,16 @@ namespace TMK
     void CloseAlternateWindow();
     int GetCursorCoordinate(Coordinate& coordinate);
     int GetWindowDimensions(Dimensions& dimensions);
-    bool isTTY(Stream stream);
+    bool IsTTY(Stream stream);
     void OpenAlternateWindow();
     void RingBell();
+    EventInfo ReadEvent(bool allowMouseCapture);
+    EventInfo ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds);
+    EventInfo ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds,
+                        std::function<bool(EventInfo&)> filter);
     void SetCursorCoordinate(unsigned short column, unsigned short row);
     void SetCursorCoordinate(Coordinate coordinate);
     void SetCursorShape(CursorShape shape);
-    void SetCursorVisibility(bool isToShow);
+    void SetCursorVisibility(bool isVisible);
     void SetWindowTitle(std::string title);
 }
