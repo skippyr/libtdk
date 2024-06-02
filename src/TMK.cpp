@@ -81,12 +81,15 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
     }
 #ifdef _WIN32
     HANDLE inputHandle = GetStdHandle(STD_INPUT_HANDLE);
+    HANDLE timerHandle = nullptr;
     TMK::EventInfo eventInfo = TMK::EventType::None;
     DWORD mode;
     GetConsoleMode(inputHandle, &mode);
     SetConsoleMode(inputHandle, mode & ~ENABLE_PROCESSED_INPUT);
     while (true)
     {
+        INPUT_RECORD record;
+        DWORD totalEventsRead;
         if (!waitInMilliseconds)
         {
             DWORD totalEventsAvailable;
@@ -97,6 +100,25 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
                 break;
             }
         }
+        else if (waitInMilliseconds > 0)
+        {
+            if (!timerHandle)
+            {
+                timerHandle = CreateWaitableTimerW(nullptr, true, nullptr);
+                LARGE_INTEGER duration;
+                duration.QuadPart = -10000 * waitInMilliseconds;
+                SetWaitableTimer(timerHandle, &duration, 0, nullptr, nullptr, false);
+            }
+            HANDLE handles[] = {inputHandle, timerHandle};
+            if (WaitForMultipleObjects(2, handles, false, INFINITE) == WAIT_TIMEOUT)
+            {
+                eventInfo = TMK::EventType::TimeOut;
+                CloseHandle(timerHandle);
+                break;
+            }
+            /* TODO: parse events and close timerHandle. */
+        }
+        ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
     }
     SetConsoleMode(inputHandle, mode);
     return eventInfo;
