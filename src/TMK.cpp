@@ -161,13 +161,32 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
             {
                 continue;
             }
+            int buffer;
             int key;
-            if ((key = record.Event.KeyEvent.uChar.UnicodeChar))
+            if ((buffer = record.Event.KeyEvent.uChar.UnicodeChar))
             {
-                if (key <= 26 && key != TMK::VirtualKey::Tab && key != TMK::VirtualKey::Enter)
+                if (buffer <= 26 && buffer != TMK::VirtualKey::Tab && buffer != TMK::VirtualKey::Enter)
                 {
-                    key += 96;
+                    key = buffer + 96;
                 }
+                else if (buffer >= HIGH_SURROGATE_START && buffer <= HIGH_SURROGATE_END)
+                {
+                    ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
+                    ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
+                    *(reinterpret_cast<short*>(&buffer) + 1) = record.Event.KeyEvent.uChar.UnicodeChar;
+                    WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<wchar_t*>(&buffer), 2,
+                                        reinterpret_cast<char*>(&key), 4, nullptr, nullptr);
+                }
+                else
+                {
+                    WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<wchar_t*>(&buffer), 1,
+                                        reinterpret_cast<char*>(&key), 4, nullptr, nullptr);
+                }
+                eventInfo = TMK::KeyEvent(
+                    key, record.Event.KeyEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED),
+                    record.Event.KeyEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED),
+                    record.Event.KeyEvent.dwControlKeyState & SHIFT_PRESSED);
+                break;
             }
         }
     }
@@ -489,6 +508,10 @@ TMK::EventInfo::EventInfo(ResizeEvent resizeEvent) : m_type(EventType::Resize), 
 }
 
 TMK::EventInfo::EventInfo(MouseEvent mouseEvent) : m_type(EventType::Mouse), m_mouseEvent(mouseEvent)
+{
+}
+
+TMK::EventInfo::EventInfo(KeyEvent keyEvent) : m_type(EventType::Key), m_keyEvent(keyEvent)
 {
 }
 

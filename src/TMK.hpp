@@ -298,6 +298,7 @@ namespace TMK
         EventInfo(FocusEvent focusEvent);
         EventInfo(ResizeEvent resizeEvent);
         EventInfo(MouseEvent mouseEvent);
+        EventInfo(KeyEvent keyEvent);
         EventType GetType() const;
         FocusEvent GetFocusEvent() const;
         ResizeEvent GetResizeEvent() const;
@@ -309,6 +310,7 @@ namespace TMK
             FocusEvent m_focusEvent;
             ResizeEvent m_resizeEvent;
             MouseEvent m_mouseEvent;
+            KeyEvent m_keyEvent;
         };
     };
 
