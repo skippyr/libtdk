@@ -206,11 +206,10 @@ namespace TMK
     class MouseEvent final
     {
     public:
-        MouseEvent(Coordinate coordinate, MouseButton button, bool isButtonRelease, bool hasCtrl, bool hasAlt,
+        MouseEvent(Coordinate coordinate, MouseButton button,  bool hasCtrl, bool hasAlt,
                    bool hasShift);
         Coordinate GetCoordinate() const;
         MouseButton GetButton() const;
-        bool IsButtonRelease() const;
         bool HasCtrl() const;
         bool HasAlt() const;
         bool HasShift() const;
@@ -218,7 +217,6 @@ namespace TMK
     private:
         Coordinate m_coordinate;
         MouseButton m_button;
-        bool m_isButtonRelease;
         bool m_hasCtrl;
         bool m_hasAlt;
         bool m_hasShift;
@@ -230,15 +228,18 @@ namespace TMK
         EventInfo(EventType type);
         EventInfo(FocusEvent focusEvent);
         EventInfo(ResizeEvent resizeEvent);
+        EventInfo(MouseEvent mouseEvent);
         EventType GetType() const;
         FocusEvent GetFocusEvent() const;
         ResizeEvent GetResizeEvent() const;
+        MouseEvent GetMouseEvent() const;
 
     private:
         EventType m_type;
         union {
             FocusEvent m_focusEvent;
             ResizeEvent m_resizeEvent;
+            MouseEvent m_mouseEvent;
         };
     };
 

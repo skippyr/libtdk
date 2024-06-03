@@ -130,6 +130,26 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
             eventInfo = TMK::ResizeEvent();
             break;
         }
+        else if (record.EventType == MOUSE_EVENT)
+        {
+            CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
+            GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) ||
+                GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo);
+            eventInfo = TMK::MouseEvent(
+                TMK::Coordinate(record.Event.MouseEvent.dwMousePosition.X - bufferInfo.srWindow.Left,
+                                record.Event.MouseEvent.dwMousePosition.Y - bufferInfo.srWindow.Top),
+                record.Event.MouseEvent.dwEventFlags & MOUSE_WHEELED
+                    ? record.Event.MouseEvent.dwButtonState & 0x80000000 ? TMK::MouseButton::WheelDown
+                                                                         : TMK::MouseButton::WheelUp
+                : record.Event.MouseEvent.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED ? TMK::MouseButton::Left
+                : record.Event.MouseEvent.dwButtonState & FROM_LEFT_2ND_BUTTON_PRESSED ? TMK::MouseButton::Wheel
+                : record.Event.MouseEvent.dwButtonState & RIGHTMOST_BUTTON_PRESSED     ? TMK::MouseButton::Right
+                                                                                       : TMK::MouseButton::None,
+                record.Event.MouseEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED),
+                record.Event.MouseEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED),
+                record.Event.MouseEvent.dwControlKeyState & SHIFT_PRESSED);
+            break;
+        }
     }
     if (timerHandle)
     {
@@ -374,10 +394,8 @@ TMK::Dimensions TMK::ResizeEvent::GetDimensions() const
     return m_dimensions;
 }
 
-TMK::MouseEvent::MouseEvent(Coordinate coordinate, MouseButton button, bool isButtonRelease, bool hasCtrl, bool hasAlt,
-                            bool hasShift)
-    : m_coordinate(coordinate), m_button(button), m_isButtonRelease(isButtonRelease), m_hasCtrl(hasCtrl),
-      m_hasAlt(hasAlt), m_hasShift(hasShift)
+TMK::MouseEvent::MouseEvent(Coordinate coordinate, MouseButton button, bool hasCtrl, bool hasAlt, bool hasShift)
+    : m_coordinate(coordinate), m_button(button), m_hasCtrl(hasCtrl), m_hasAlt(hasAlt), m_hasShift(hasShift)
 {
 }
 
@@ -389,11 +407,6 @@ TMK::Coordinate TMK::MouseEvent::GetCoordinate() const
 TMK::MouseButton TMK::MouseEvent::GetButton() const
 {
     return m_button;
-}
-
-bool TMK::MouseEvent::IsButtonRelease() const
-{
-    return m_isButtonRelease;
 }
 
 bool TMK::MouseEvent::HasCtrl() const
@@ -423,6 +436,10 @@ TMK::EventInfo::EventInfo(ResizeEvent resizeEvent) : m_type(EventType::Resize), 
 {
 }
 
+TMK::EventInfo::EventInfo(MouseEvent mouseEvent) : m_type(EventType::Mouse), m_mouseEvent(mouseEvent)
+{
+}
+
 TMK::EventType TMK::EventInfo::GetType() const
 {
     return m_type;
@@ -436,6 +453,11 @@ TMK::FocusEvent TMK::EventInfo::GetFocusEvent() const
 TMK::ResizeEvent TMK::EventInfo::GetResizeEvent() const
 {
     return m_resizeEvent;
+}
+
+TMK::MouseEvent TMK::EventInfo::GetMouseEvent() const
+{
+    return m_mouseEvent;
 }
 
 TMK::Effects::Effects(int code, bool isToEnable) : m_code(FilterCode(code)), m_isToEnable(isToEnable)
