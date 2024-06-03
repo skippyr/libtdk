@@ -206,10 +206,11 @@ namespace TMK
     class MouseEvent final
     {
     public:
-        MouseEvent(Coordinate coordinate, MouseButton button,  bool hasCtrl, bool hasAlt,
+        MouseEvent(Coordinate coordinate, MouseButton button, bool isDragging, bool hasCtrl, bool hasAlt,
                    bool hasShift);
         Coordinate GetCoordinate() const;
         MouseButton GetButton() const;
+        bool IsDragging() const;
         bool HasCtrl() const;
         bool HasAlt() const;
         bool HasShift() const;
@@ -217,6 +218,7 @@ namespace TMK
     private:
         Coordinate m_coordinate;
         MouseButton m_button;
+        bool m_isDragging;
         bool m_hasCtrl;
         bool m_hasAlt;
         bool m_hasShift;
