@@ -257,21 +257,26 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
     {
         WriteANSISequence("\x1b[?1003h\x1b[?1006h");
     }
+    struct timespec duration;
+    bool hasTimer = false;
     struct termios attributes;
     int flags = fcntl(STDIN_FILENO, F_GETFL);
+    sigset_t blockedSignals;
+    sigfillset(&blockedSignals);
+    sigdelset(&blockedSignals, SIGWINCH);
+    struct sigaction resizeHandler;
+    resizeHandler.sa_handler = [](int signal) {};
+    sigemptyset(&resizeHandler.sa_mask);
+    resizeHandler.sa_flags = 0;
+    sigaction(SIGWINCH, &resizeHandler, nullptr);
+    struct pollfd inputHandle = {STDIN_FILENO, POLLIN, 0};
     tcgetattr(STDIN_FILENO, &attributes);
     attributes.c_lflag &= ~(ICANON | ECHO | ISIG);
     attributes.c_iflag &= ~IXON;
     tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
     fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
-    struct timespec duration;
-    bool hasTimer = false;
     while (true)
     {
-        sigset_t blockedSignals;
-        sigfillset(&blockedSignals);
-        sigdelset(&blockedSignals, SIGWINCH);
-        struct pollfd inputHandle = {STDIN_FILENO, POLLIN, 0};
         if (!waitInMilliseconds)
         {
             eventInfo = ParseLinuxEventBuffer();
@@ -293,18 +298,7 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
                 }
                 status = syscall(SYS_ppoll, &inputHandle, 1, &duration, &blockedSignals, sizeof(kernel_sigset_t));
             }
-            if (!status)
-            {
-                eventInfo = TMK::EventType::TimeOut;
-            }
-            else if (status < 0)
-            {
-                eventInfo = TMK::ResizeEvent();
-            }
-            else
-            {
-                eventInfo = ParseLinuxEventBuffer();
-            }
+            eventInfo = !status ? TMK::EventType::TimeOut : status < 0 ? TMK::ResizeEvent() : ParseLinuxEventBuffer();
         }
         if (eventInfo.GetType() != TMK::EventType::Failure &&
             (eventInfo.GetType() == TMK::EventType::TimeOut || filter(eventInfo)))
@@ -316,6 +310,8 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
     attributes.c_iflag |= IXON;
     tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
     fcntl(STDIN_FILENO, F_SETFL, flags);
+    resizeHandler.sa_handler = SIG_DFL;
+    sigaction(SIGWINCH, &resizeHandler, nullptr);
     if (allowMouseCapture)
     {
         WriteANSISequence("\x1b[?1003l\x1b[?1006l");
