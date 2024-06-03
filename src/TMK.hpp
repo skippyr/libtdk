@@ -20,6 +20,7 @@ namespace TMK
         public:
             Output() = delete;
             static int WriteLine(const char* format, ...);
+            static int WriteLine();
             static bool IsTTY();
             static std::FILE* GetFile();
             static int GetFileNo();
@@ -30,6 +31,7 @@ namespace TMK
         public:
             Error() = delete;
             static int WriteLine(const char* format, ...);
+            static int WriteLine();
             static bool IsTTY();
             static std::FILE* GetFile();
             static int GetFileNo();

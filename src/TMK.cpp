@@ -6,6 +6,8 @@
 #ifdef _WIN32
 #include <Windows.h>
 #include <io.h>
+#else
+#include <unistd.h>
 #endif
 
 #ifdef _WIN32
@@ -29,6 +31,7 @@ namespace TMK
 #ifdef _WIN32
             HANDLE handle;
             DWORD mode;
+            SetConsoleOutputCP(CP_UTF8);
             (GetConsoleMode((handle = GetStdHandle(STD_OUTPUT_HANDLE)), &mode) ||
              GetConsoleMode((handle = GetStdHandle(STD_ERROR_HANDLE)), &mode)) &&
                 SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
@@ -56,12 +59,19 @@ namespace TMK
 
         int Output::WriteLine(const char* format, ...)
         {
+            CacheTTYStatus();
             std::va_list arguments;
             va_start(arguments, format);
             int totalBytesWritten = std::vprintf(format, arguments);
             std::putchar('\n');
             va_end(arguments);
             return -(totalBytesWritten < 0);
+        }
+
+        int Output::WriteLine()
+        {
+            CacheTTYStatus();
+            return -(std::putchar('\n') == EOF);
         }
 
         bool Output::IsTTY()
@@ -78,6 +88,23 @@ namespace TMK
         int Output::GetFileNo()
         {
             return 1;
+        }
+
+        int Error::WriteLine(const char* format, ...)
+        {
+            CacheTTYStatus();
+            std::va_list arguments;
+            va_start(arguments, format);
+            int totalBytesWritten = std::vfprintf(stderr, format, arguments);
+            std::fputc('\n', stderr);
+            va_end(arguments);
+            return -(totalBytesWritten < 0);
+        }
+
+        int Error::WriteLine()
+        {
+            CacheTTYStatus();
+            return -(std::fputc('\n', stderr) == EOF);
         }
 
         bool Error::IsTTY()
