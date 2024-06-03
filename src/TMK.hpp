@@ -60,6 +60,57 @@ namespace TMK
         Error
     };
 
+    enum class VirtualKey
+    {
+#ifdef _WIN32
+        LeftArrow = -23,
+        UpArrow,
+        RightArrow,
+        DownArrow,
+#else
+        UpArrow = -23,
+        DownArrow,
+        RightArrow,
+        LeftArrow,
+#endif
+        F1,
+        F2,
+        F3,
+        F4,
+        F5,
+        F6,
+        F7,
+        F8,
+        F9,
+        F10,
+        F11,
+        F12,
+#ifdef _WIN32
+        PageUp,
+        PageDown,
+        End,
+        Home,
+        Insert,
+        Delete,
+#else
+        Home,
+        Insert,
+        Delete,
+        End,
+        PageUp,
+        PageDown,
+#endif
+        Tab = 9,
+#if defined(_WIN32) || defined(__APPLE__)
+        Enter = 13,
+#else
+        Enter,
+#endif
+        Escape = 27,
+        Space = 32,
+        Backspace = 127
+    };
+
     enum class XColorCode
     {
         Default = -1,
@@ -224,6 +275,22 @@ namespace TMK
         bool m_hasShift;
     };
 
+    class KeyEvent final
+    {
+    public:
+        KeyEvent(int key, bool hasCtrl, bool hasAlt, bool hasShift);
+        int GetKey() const;
+        bool HasCtrl() const;
+        bool HasAlt() const;
+        bool HasShift() const;
+
+    private:
+        int m_key;
+        bool m_hasCtrl;
+        bool m_hasAlt;
+        bool m_hasShift;
+    };
+
     class EventInfo final
     {
     public:
@@ -265,6 +332,10 @@ namespace TMK
     std::ostream& operator<<(std::ostream& stream, RGBColor color);
     std::ostream& operator<<(std::ostream& stream, XColor color);
     std::ostream& operator<<(std::ostream& stream, Weight weight);
+    bool operator==(VirtualKey key0, VirtualKey key1);
+    bool operator!=(VirtualKey key0, VirtualKey key1);
+    bool operator==(int code, VirtualKey key);
+    bool operator!=(int code, VirtualKey key);
     bool operator==(XColor color0, XColor color1);
     bool operator==(HexColor color0, HexColor color1);
     bool operator==(RGBColor color0, RGBColor color1);

@@ -151,6 +151,25 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
                 record.Event.MouseEvent.dwControlKeyState & SHIFT_PRESSED);
             break;
         }
+        else if (record.EventType == KEY_EVENT)
+        {
+            if (!record.Event.KeyEvent.bKeyDown || record.Event.KeyEvent.wVirtualKeyCode == VK_CONTROL ||
+                record.Event.KeyEvent.wVirtualKeyCode == VK_SHIFT || record.Event.KeyEvent.wVirtualKeyCode == VK_MENU ||
+                record.Event.KeyEvent.wVirtualKeyCode == VK_CAPITAL ||
+                record.Event.KeyEvent.wVirtualKeyCode == VK_NUMLOCK ||
+                record.Event.KeyEvent.wVirtualKeyCode == VK_SCROLL)
+            {
+                continue;
+            }
+            int key;
+            if ((key = record.Event.KeyEvent.uChar.UnicodeChar))
+            {
+                if (key <= 26 && key != TMK::VirtualKey::Tab && key != TMK::VirtualKey::Enter)
+                {
+                    key += 96;
+                }
+            }
+        }
     }
     if (timerHandle)
     {
@@ -402,6 +421,31 @@ TMK::MouseEvent::MouseEvent(Coordinate coordinate, MouseButton button, bool isDr
 {
 }
 
+TMK::KeyEvent::KeyEvent(int key, bool hasCtrl, bool hasAlt, bool hasShift)
+    : m_key(key), m_hasCtrl(hasCtrl), m_hasAlt(hasAlt), m_hasShift(hasShift)
+{
+}
+
+int TMK::KeyEvent::GetKey() const
+{
+    return m_key;
+}
+
+bool TMK::KeyEvent::HasCtrl() const
+{
+    return m_hasCtrl;
+}
+
+bool TMK::KeyEvent::HasAlt() const
+{
+    return m_hasAlt;
+}
+
+bool TMK::KeyEvent::HasShift() const
+{
+    return m_hasShift;
+}
+
 TMK::Coordinate TMK::MouseEvent::GetCoordinate() const
 {
     return m_coordinate;
@@ -498,6 +542,26 @@ int TMK::Effects::GetCode() const
 bool TMK::Effects::IsToEnable() const
 {
     return m_isToEnable;
+}
+
+bool TMK::operator==(VirtualKey key0, VirtualKey key1)
+{
+    return static_cast<int>(key0) == static_cast<int>(key1);
+}
+
+bool TMK::operator!=(VirtualKey key0, VirtualKey key1)
+{
+    return static_cast<int>(key0) != static_cast<int>(key1);
+}
+
+bool TMK::operator==(int code, VirtualKey key)
+{
+    return code == static_cast<int>(key);
+}
+
+bool TMK::operator!=(int code, VirtualKey key)
+{
+    return code != static_cast<int>(key);
 }
 
 std::ostream& TMK::operator<<(std::ostream& stream, Effects effects)
