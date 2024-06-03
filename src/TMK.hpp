@@ -303,6 +303,7 @@ namespace TMK
         FocusEvent GetFocusEvent() const;
         ResizeEvent GetResizeEvent() const;
         MouseEvent GetMouseEvent() const;
+        KeyEvent GetKeyEvent() const;
 
     private:
         EventType m_type;

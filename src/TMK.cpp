@@ -36,6 +36,12 @@
                                                    : stderr))                                                          \
      << static_cast<int>(stream))
 #endif
+#define PARSE_KEY(condition, keyValue)                                                                                 \
+    if (condition)                                                                                                     \
+    {                                                                                                                  \
+        key = keyValue;                                                                                                \
+        goto keyEventExit;                                                                                             \
+    }
 
 template <class T>
 static T InvertColor(const T* color);
@@ -162,7 +168,7 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
                 continue;
             }
             int buffer;
-            int key;
+            int key = 0;
             if ((buffer = record.Event.KeyEvent.uChar.UnicodeChar))
             {
                 if (buffer <= 26 && buffer != TMK::VirtualKey::Tab && buffer != TMK::VirtualKey::Enter)
@@ -182,12 +188,31 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
                     WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<wchar_t*>(&buffer), 1,
                                         reinterpret_cast<char*>(&key), 4, nullptr, nullptr);
                 }
-                eventInfo = TMK::KeyEvent(
-                    key, record.Event.KeyEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED),
-                    record.Event.KeyEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED),
-                    record.Event.KeyEvent.dwControlKeyState & SHIFT_PRESSED);
-                break;
             }
+            else
+            {
+                PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_LEFT &&
+                              record.Event.KeyEvent.wVirtualKeyCode <= VK_DOWN,
+                          record.Event.KeyEvent.wVirtualKeyCode - VK_LEFT +
+                              static_cast<int>(TMK::VirtualKey::LeftArrow));
+                PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_PRIOR &&
+                              record.Event.KeyEvent.wVirtualKeyCode <= VK_HOME,
+                          record.Event.KeyEvent.wVirtualKeyCode - VK_PRIOR + static_cast<int>(TMK::VirtualKey::PageUp));
+                PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_INSERT &&
+                              record.Event.KeyEvent.wVirtualKeyCode <= VK_DELETE,
+                          record.Event.KeyEvent.wVirtualKeyCode - VK_INSERT +
+                              static_cast<int>(TMK::VirtualKey::Insert));
+                PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_F1 &&
+                              record.Event.KeyEvent.wVirtualKeyCode <= VK_F12,
+                          record.Event.KeyEvent.wVirtualKeyCode - VK_F1 + static_cast<int>(TMK::VirtualKey::F1));
+                continue;
+            }
+        keyEventExit:
+            eventInfo =
+                TMK::KeyEvent(key, record.Event.KeyEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED),
+                              record.Event.KeyEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED),
+                              record.Event.KeyEvent.dwControlKeyState & SHIFT_PRESSED);
+            break;
         }
     }
     if (timerHandle)
@@ -533,6 +558,11 @@ TMK::ResizeEvent TMK::EventInfo::GetResizeEvent() const
 TMK::MouseEvent TMK::EventInfo::GetMouseEvent() const
 {
     return m_mouseEvent;
+}
+
+TMK::KeyEvent TMK::EventInfo::GetKeyEvent() const
+{
+    return m_keyEvent;
 }
 
 TMK::Effects::Effects(int code, bool isToEnable) : m_code(FilterCode(code)), m_isToEnable(isToEnable)
