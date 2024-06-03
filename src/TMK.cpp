@@ -7,22 +7,17 @@
 #include <io.h>
 #else
 #include <fcntl.h>
+#include <poll.h>
+#include <signal.h>
 #include <sys/ioctl.h>
+#include <syscall.h>
 #include <termios.h>
 #include <unistd.h>
 #endif
 
 #include "TMK.hpp"
 
-#define IS_TTY(stream) static_cast<bool>(g_cache & 1 << static_cast<int>(stream))
-#define CHECK_STREAM_TTY_STATUS()                                                                                      \
-    PrepareCacheAndStreams();                                                                                          \
-    if ((stream.rdbuf() == std::cout.rdbuf() && !IS_TTY(TMK::Stream::Output)) ||                                       \
-        (stream.rdbuf() == std::cerr.rdbuf() && !IS_TTY(TMK::Stream::Error)))                                          \
-    {                                                                                                                  \
-        return stream;                                                                                                 \
-    }
-#define HAS_CACHED_TTY_FLAG (1 << 7)
+
 #ifdef _WIN32
 #define TTY_CACHE(stream)                                                                                              \
     (!!(_isatty(_fileno(stream == TMK::Stream::Input    ? stdin                                                        \
@@ -36,6 +31,15 @@
                                                    : stderr))                                                          \
      << static_cast<int>(stream))
 #endif
+#define IS_TTY(stream) static_cast<bool>(g_cache & 1 << static_cast<int>(stream))
+#define CHECK_STREAM_TTY_STATUS()                                                                                      \
+    PrepareCacheAndStreams();                                                                                          \
+    if ((stream.rdbuf() == std::cout.rdbuf() && !IS_TTY(TMK::Stream::Output)) ||                                       \
+        (stream.rdbuf() == std::cerr.rdbuf() && !IS_TTY(TMK::Stream::Error)))                                          \
+    {                                                                                                                  \
+        return stream;                                                                                                 \
+    }
+#define HAS_CACHED_TTY_FLAG (1 << 7)
 #define PARSE_KEY(condition, keyValue)                                                                                 \
     if (condition)                                                                                                     \
     {                                                                                                                  \
@@ -43,6 +47,9 @@
         goto keyEventExit;                                                                                             \
     }
 
+#ifndef _WIN32
+static TMK::EventInfo ParseLinuxEvent();
+#endif
 template <class T>
 static T InvertColor(const T* color);
 static void PrepareCacheAndStreams();
@@ -51,6 +58,17 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
 static int WriteANSISequence(const char* format, ...);
 
 static char g_cache = 0;
+
+#ifndef _WIN32
+typedef unsigned long kernel_sigset_t;
+#endif
+
+#ifndef _WIN32
+static TMK::EventInfo ParseLinuxEvent()
+{
+    return TMK::EventType::None;
+}
+#endif
 
 template <class T>
 static T InvertColor(const T* color)
@@ -86,10 +104,10 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
         return TMK::EventType::Failure;
     }
     filter = filter ? filter : [](TMK::EventInfo&) { return true; };
+    TMK::EventInfo eventInfo = TMK::EventType::None;
 #ifdef _WIN32
     HANDLE inputHandle = GetStdHandle(STD_INPUT_HANDLE);
     HANDLE timerHandle = nullptr;
-    TMK::EventInfo eventInfo = TMK::EventType::None;
     DWORD mode;
     INPUT_RECORD record;
     DWORD totalEventsRead;
@@ -235,6 +253,32 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
     SetConsoleMode(inputHandle, mode);
     return eventInfo;
 #else
+    struct termios attributes;
+    int flags = fcntl(STDIN_FILENO, F_GETFL);
+    tcgetattr(STDIN_FILENO, &attributes);
+    attributes.c_lflag &= ~(ICANON | ECHO | ISIG);
+    attributes.c_iflag &= ~IXON;
+    tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+    fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
+    while (true)
+    {
+        sigset_t blockedSignals;
+        sigfillset(&blockedSignals);
+        sigdelset(&blockedSignals, SIGWINCH);
+        struct pollfd inputHandle = {STDIN_FILENO, POLLIN, 0};
+        if (!waitInMilliseconds)
+        {
+            std::getchar();
+        }
+        else if (waitInMilliseconds < 0)
+        {
+            int status = syscall(SYS_ppoll, &inputHandle, 1, nullptr, &blockedSignals, sizeof(kernel_sigset_t));
+        }
+    }
+    attributes.c_lflag |= ICANON | ECHO | ISIG;
+    attributes.c_iflag |= IXON;
+    tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+    fcntl(STDIN_FILENO, F_SETFL, flags);
     return TMK::EventType::None;
 #endif
 }
