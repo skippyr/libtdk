@@ -252,10 +252,10 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
     }
     SetConsoleMode(inputHandle, mode);
 #else
-    std::cout << "\x1b[?1004h";
+    WriteANSISequence("\x1b[?1004h");
     if (allowMouseCapture)
     {
-        std::cout << "\x1b[?1003h\x1b[?1006h";
+        WriteANSISequence("\x1b[?1003h\x1b[?1006h");
     }
     struct termios attributes;
     int flags = fcntl(STDIN_FILENO, F_GETFL);
@@ -291,7 +291,7 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
                     duration.tv_nsec = (waitInMilliseconds % 1000) * 1000000;
                     hasTimer = true;
                 }
-                status = syscall(SYS_ppoll, &inputHandle, 1, duration, &blockedSignals, sizeof(kernel_sigset_t));
+                status = syscall(SYS_ppoll, &inputHandle, 1, &duration, &blockedSignals, sizeof(kernel_sigset_t));
             }
             if (!status)
             {
@@ -306,7 +306,8 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
                 eventInfo = ParseLinuxEventBuffer();
             }
         }
-        if (eventInfo.GetType() != TMK::EventType::Failure && filter(eventInfo))
+        if (eventInfo.GetType() != TMK::EventType::Failure &&
+            (eventInfo.GetType() == TMK::EventType::TimeOut || filter(eventInfo)))
         {
             break;
         }
@@ -315,11 +316,11 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
     attributes.c_iflag |= IXON;
     tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
     fcntl(STDIN_FILENO, F_SETFL, flags);
-    std::cout << "\x1b[?1004l";
     if (allowMouseCapture)
     {
-        std::cout << "\x1b[?1003l\x1b[?1006l";
+        WriteANSISequence("\x1b[?1003l\x1b[?1006l");
     }
+    WriteANSISequence("\x1b[?1004l");
 #endif
     return eventInfo;
 }
