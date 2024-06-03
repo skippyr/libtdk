@@ -48,7 +48,7 @@
     }
 
 #ifndef _WIN32
-static TMK::EventInfo ParseLinuxEvent();
+static TMK::EventInfo ParseLinuxEventBuffer();
 #endif
 template <class T>
 static T InvertColor(const T* color);
@@ -64,7 +64,7 @@ typedef unsigned long kernel_sigset_t;
 #endif
 
 #ifndef _WIN32
-static TMK::EventInfo ParseLinuxEvent()
+static TMK::EventInfo ParseLinuxEventBuffer()
 {
     return TMK::EventType::None;
 }
@@ -251,8 +251,12 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
         CloseHandle(timerHandle);
     }
     SetConsoleMode(inputHandle, mode);
-    return eventInfo;
 #else
+    std::cout << "\x1b[?1004h";
+    if (allowMouseCapture)
+    {
+        std::cout << "\x1b[?1003h\x1b[?1006h";
+    }
     struct termios attributes;
     int flags = fcntl(STDIN_FILENO, F_GETFL);
     tcgetattr(STDIN_FILENO, &attributes);
@@ -260,6 +264,8 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
     attributes.c_iflag &= ~IXON;
     tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
     fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
+    struct timespec duration;
+    bool hasTimer = false;
     while (true)
     {
         sigset_t blockedSignals;
@@ -268,19 +274,54 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
         struct pollfd inputHandle = {STDIN_FILENO, POLLIN, 0};
         if (!waitInMilliseconds)
         {
-            std::getchar();
+            eventInfo = ParseLinuxEventBuffer();
         }
-        else if (waitInMilliseconds < 0)
+        else
         {
-            int status = syscall(SYS_ppoll, &inputHandle, 1, nullptr, &blockedSignals, sizeof(kernel_sigset_t));
+            int status;
+            if (waitInMilliseconds < 0)
+            {
+                status = syscall(SYS_ppoll, &inputHandle, 1, nullptr, &blockedSignals, sizeof(kernel_sigset_t));
+            }
+            else if (waitInMilliseconds > 0)
+            {
+                if (!hasTimer)
+                {
+                    duration.tv_sec = waitInMilliseconds / 1000;
+                    duration.tv_nsec = (waitInMilliseconds % 1000) * 1000000;
+                    hasTimer = true;
+                }
+                status = syscall(SYS_ppoll, &inputHandle, 1, duration, &blockedSignals, sizeof(kernel_sigset_t));
+            }
+            if (!status)
+            {
+                eventInfo = TMK::EventType::TimeOut;
+            }
+            else if (status < 0)
+            {
+                eventInfo = TMK::ResizeEvent();
+            }
+            else
+            {
+                eventInfo = ParseLinuxEventBuffer();
+            }
+        }
+        if (eventInfo.GetType() != TMK::EventType::Failure && filter(eventInfo))
+        {
+            break;
         }
     }
     attributes.c_lflag |= ICANON | ECHO | ISIG;
     attributes.c_iflag |= IXON;
     tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
     fcntl(STDIN_FILENO, F_SETFL, flags);
-    return TMK::EventType::None;
+    std::cout << "\x1b[?1004l";
+    if (allowMouseCapture)
+    {
+        std::cout << "\x1b[?1003l\x1b[?1006l";
+    }
 #endif
+    return eventInfo;
 }
 
 static int WriteANSISequence(const char* format, ...)
