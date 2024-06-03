@@ -85,6 +85,7 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
     {
         return TMK::EventType::Failure;
     }
+    filter = filter ? filter : [](TMK::EventInfo&) { return true; };
 #ifdef _WIN32
     HANDLE inputHandle = GetStdHandle(STD_INPUT_HANDLE);
     HANDLE timerHandle = nullptr;
@@ -129,12 +130,18 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
         if (record.EventType == FOCUS_EVENT)
         {
             eventInfo = TMK::FocusEvent(record.Event.FocusEvent.bSetFocus);
-            break;
+            if (filter(eventInfo))
+            {
+                break;
+            }
         }
         else if (record.EventType == WINDOW_BUFFER_SIZE_EVENT)
         {
             eventInfo = TMK::ResizeEvent();
-            break;
+            if (filter(eventInfo))
+            {
+                break;
+            }
         }
         else if (record.EventType == MOUSE_EVENT)
         {
@@ -155,7 +162,10 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
                 record.Event.MouseEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED),
                 record.Event.MouseEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED),
                 record.Event.MouseEvent.dwControlKeyState & SHIFT_PRESSED);
-            break;
+            if (filter(eventInfo))
+            {
+                break;
+            }
         }
         else if (record.EventType == KEY_EVENT)
         {
@@ -212,7 +222,10 @@ static TMK::EventInfo ReadGenericEvent(bool allowMouseCapture, int waitInMillise
                 TMK::KeyEvent(key, record.Event.KeyEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED),
                               record.Event.KeyEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED),
                               record.Event.KeyEvent.dwControlKeyState & SHIFT_PRESSED);
-            break;
+            if (filter(eventInfo))
+            {
+                break;
+            }
         }
     }
     if (timerHandle)
@@ -807,12 +820,12 @@ void TMK::RingBell()
 
 TMK::EventInfo TMK::ReadEvent(bool allowMouseCapture)
 {
-    return ReadGenericEvent(allowMouseCapture, -1, [](EventInfo&) { return true; });
+    return ReadGenericEvent(allowMouseCapture, -1, nullptr);
 }
 
 TMK::EventInfo TMK::ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds)
 {
-    return ReadGenericEvent(allowMouseCapture, waitInMilliseconds, [](EventInfo&) { return true; });
+    return ReadGenericEvent(allowMouseCapture, waitInMilliseconds, nullptr);
 }
 
 TMK::EventInfo TMK::ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds,
