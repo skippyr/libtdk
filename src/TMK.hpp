@@ -50,4 +50,11 @@ namespace TMK
         Font() = delete;
         static void SetWeight(Weight weight);
     };
+
+    class Window final
+    {
+    public:
+        Window() = delete;
+        static void SetTitle(const char* title);
+    };
 }

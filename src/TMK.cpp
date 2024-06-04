@@ -20,7 +20,7 @@
 namespace TMK
 {
     static void CacheTTYStatus();
-    static int WriteANSI(const char* format, ...);
+    static int WriteANSISequence(const char* format, ...);
 
     static char g_cache = 0;
 
@@ -40,7 +40,7 @@ namespace TMK
         }
     }
 
-    static int WriteANSI(const char* format, ...)
+    static int WriteANSISequence(const char* format, ...)
     {
         CacheTTYStatus();
         if (!IS_TTY(Output) && !IS_TTY(Error))
@@ -158,6 +158,11 @@ namespace TMK
 
     void Font::SetWeight(Weight weight)
     {
-        WriteANSI(weight == Weight::Default ? "\x1b[22m" : "\x1b[22;%dm", static_cast<int>(weight));
+        WriteANSISequence(weight == Weight::Default ? "\x1b[22m" : "\x1b[22;%dm", static_cast<int>(weight));
+    }
+
+    void Window::SetTitle(const char* title)
+    {
+        WriteANSISequence("\x1b]0;%s\7", title);
     }
 }
