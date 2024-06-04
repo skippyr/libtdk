@@ -3,8 +3,8 @@
 #include <cstdio>
 
 /// <summary>
-/// A powerful and open-source C++ terminal manipulation for Windows and Linux that includes features to handle terminal
-/// properties, colors, effects, arguments and event readings with UTF-8 encoding.
+/// A powerful, basic and open-source C++ terminal manipulation for Windows and Linux that includes features to handle
+/// terminal properties, colors, effects, arguments and event readings with UTF-8 encoding.
 /// </summary>
 namespace TMK
 {
@@ -89,14 +89,14 @@ namespace TMK
     class Arguments final
     {
     public:
-        Arguments(int totalItems, char** items);
+        Arguments(int totalArguments, char** arguments);
         ~Arguments();
-        int GetTotalItems() const;
-        const char* GetItemByOffset(std::size_t offset) const;
+        int GetTotalArguments() const;
+        const char* GetArgumentByOffset(std::size_t offset) const;
 
     private:
-        int m_totalItems;
-        char** m_items;
+        int m_totalArguments;
+        char** m_arguments;
     };
 
     class Dimensions final
@@ -116,7 +116,7 @@ namespace TMK
     {
     public:
         Environment() = delete;
-        static Arguments GetArguments(int totalArguments, const char** rawArguments);
+        static Arguments GetArguments(int totalArguments, char** rawArguments);
     };
 
     class Font final

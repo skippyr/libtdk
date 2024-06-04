@@ -184,29 +184,29 @@ namespace TMK
         return 2;
     }
 
-    Arguments::Arguments(int totalItems, char** items) : m_totalItems(totalItems), m_items(items)
+    Arguments::Arguments(int totalArguments, char** arguments) : m_totalArguments(totalArguments), m_arguments(arguments)
     {
     }
 
     Arguments::~Arguments()
     {
 #ifdef _WIN32
-        for (int offset = 0; offset < m_totalItems; ++offset)
+        for (int offset = 0; offset < m_totalArguments; ++offset)
         {
-            delete[] m_items[offset];
+            delete[] m_arguments[offset];
         }
-        delete[] m_items;
+        delete[] m_arguments;
 #endif
     }
 
-    int Arguments::GetTotalItems() const
+    int Arguments::GetTotalArguments() const
     {
-        return m_totalItems;
+        return m_totalArguments;
     }
 
-    const char* Arguments::GetItemByOffset(std::size_t offset) const
+    const char* Arguments::GetArgumentByOffset(std::size_t offset) const
     {
-        return offset < m_totalItems ? m_items[offset] : nullptr;
+        return offset < m_totalArguments ? m_arguments[offset] : nullptr;
     }
 
     Dimensions::Dimensions() : m_totalColumns(0), m_totalRows(0)
@@ -228,21 +228,21 @@ namespace TMK
         return m_totalRows;
     }
 
-    Arguments Environment::GetArguments(int totalArguments, const char** rawArguments)
+    Arguments Environment::GetArguments(int rawTotalArguments, char** rawArguments)
     {
 #ifdef _WIN32
-        LPWSTR* argumentsUTF16 = CommandLineToArgvW(GetCommandLineW(), &totalArguments);
-        char** items = new char*[totalArguments];
-        for (int offset = 0; offset < totalArguments; ++offset)
+        LPWSTR* argumentsUTF16 = CommandLineToArgvW(GetCommandLineW(), &rawTotalArguments);
+        char** items = new char*[rawTotalArguments];
+        for (int offset = 0; offset < rawTotalArguments; ++offset)
         {
             int size = WideCharToMultiByte(CP_UTF8, 0, argumentsUTF16[offset], -1, nullptr, 0, nullptr, nullptr);
             items[offset] = new char[size];
             WideCharToMultiByte(CP_UTF8, 0, argumentsUTF16[offset], -1, items[offset], size, nullptr, nullptr);
         }
         LocalFree(argumentsUTF16);
-        return Arguments(totalArguments, items);
+        return Arguments(rawTotalArguments, items);
 #else
-        return Arguments(totalArguments, rawArguments);
+        return Arguments(rawTotalArguments, rawArguments);
 #endif
     }
 
