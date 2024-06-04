@@ -13,13 +13,14 @@
 #ifdef _WIN32
 #define TTY_CACHE(stream) (!!_isatty(stream::GetFileNo()) << stream::GetFileNo())
 #else
-#define TTY_CACHE(stream) isatty(fileno(stream::GetFile()))
+#define TTY_CACHE(stream) (isatty(stream::GetFileNo()) << stream::GetFileNo())
 #endif
 #define IS_TTY(stream) (g_cache & 1 << stream::GetFileNo())
 
 namespace TMK
 {
     static void CacheTTYStatus();
+    static int WriteANSI(const char* format, ...);
 
     static char g_cache = 0;
 
@@ -37,6 +38,20 @@ namespace TMK
                 SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 #endif
         }
+    }
+
+    static int WriteANSI(const char* format, ...)
+    {
+        CacheTTYStatus();
+        if (!IS_TTY(Output) && !IS_TTY(Error))
+        {
+            return -1;
+        }
+        std::va_list arguments;
+        va_start(arguments, format);
+        int totalBytesWritten = std::vfprintf(IS_TTY(Output) ? stdout : stderr, format, arguments);
+        va_end(arguments);
+        return -(totalBytesWritten < 0);
     }
 
     bool Input::IsTTY()
@@ -139,5 +154,10 @@ namespace TMK
     int Error::GetFileNo()
     {
         return 2;
+    }
+
+    void Font::SetWeight(Weight weight)
+    {
+        WriteANSI(weight == Weight::Default ? "\x1b[22m" : "\x1b[22;%dm", static_cast<int>(weight));
     }
 }

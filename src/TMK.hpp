@@ -4,6 +4,13 @@
 
 namespace TMK
 {
+    enum class Weight
+    {
+        Default,
+        Bold,
+        Dim
+    };
+
     class Input final
     {
     public:
@@ -35,5 +42,12 @@ namespace TMK
         static bool IsTTY();
         static std::FILE* GetFile();
         static int GetFileNo();
+    };
+
+    class Font final
+    {
+    public:
+        Font() = delete;
+        static void SetWeight(Weight weight);
     };
 }
