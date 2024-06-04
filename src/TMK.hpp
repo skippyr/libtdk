@@ -255,11 +255,18 @@ namespace TMK
         unsigned short m_totalRows;
     };
 
+    /** @brief Represents the environment the terminal is running on. */
     class Environment final
     {
     public:
         Environment() = delete;
-        static Arguments GetArguments(int totalArguments, char** rawArguments);
+        /**
+         * @brief Gets the command-line arguments associated with the terminal process.
+         * @param rawTotalArguments The total arguments given as parameter of the main function.
+         * @param rawArguments The arguments given as parameter of the main function.
+         * @returns The arguments associated with the terminal process.
+         */
+        static Arguments GetArguments(int rawTotalArguments, char** rawArguments);
     };
 
     class Font final
