@@ -261,24 +261,61 @@ namespace TMK
     public:
         Environment() = delete;
         /**
-         * @brief Gets the command-line arguments associated with the terminal process.
+         * @brief Gets and treats the command-line arguments associated with the terminal process.
          * @param rawTotalArguments The total arguments given as parameter of the main function.
          * @param rawArguments The arguments given as parameter of the main function.
-         * @returns The arguments associated with the terminal process.
+         * @returns The treated arguments associated with the terminal process.
          */
         static Arguments GetArguments(int rawTotalArguments, char** rawArguments);
     };
 
+    /** @brief Represents the terminal font. */
     class Font final
     {
     public:
         Font() = delete;
+        /**
+         * @brief Sets the font weight.
+         * @param weight The weight to be set.
+         */
         static void SetWeight(Weight weight);
+        /**
+         * @brief Sets a font effect.
+         * @param effect The effect to be set.
+         * @param isToEnable A boolean that state the effects should be enabled or disabled.
+         */
         static void SetEffect(Effect effect, bool isToEnable);
+        /**
+         * @brief Sets one or multiple font effects.
+         * @param effect A bitmask containing the effects to be set.
+         * @param isToEnable A boolean that state the effects should be enabled or disabled.
+         */
         static void SetEffect(int effect, bool isToEnable);
+        /**
+         * @brief Sets an XTerm font color.
+         * @param The color to be set.
+         * @param The layer where the color should be applied on.
+         */
         static void SetXColor(XColor color, Layer layer);
+        /**
+         * @brief Sets an XTerm font color.
+         * @param The color to be set.
+         * @param The layer where the color should be applied on.
+         */
         static void SetXColor(int color, Layer layer);
+        /**
+         * @brief Sets a hex font color.
+         * @param The color to be set.
+         * @param The layer where the color should be applied on.
+         */
         static void SetHexColor(int hex, Layer layer);
+        /**
+         * @brief Sets an RGB font color.
+         * @param The red component of the color.
+         * @param The green component of the color.
+         * @param The blue component of the color.
+         * @param The layer where the color should be applied on.
+         */
         static void SetRGBColor(int red, int green, int blue, Layer layer);
     };
 
