@@ -35,10 +35,14 @@ namespace TMK
         Background
     };
 
+    /** @brief Contains the available terminal font weights. */
     enum class Weight
     {
+        /** @brief Sets the weight to default. */
         Default,
+        /** @brief Usually rendered as bold and/or with bright color. */
         Bold,
+        /** @brief Usually rendered with faint color. */
         Dim
     };
 
