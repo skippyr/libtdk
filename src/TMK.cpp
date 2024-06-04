@@ -249,6 +249,21 @@ namespace TMK
         WriteANSISequence("\x1b]0;%s\7", title);
     }
 
+    void Window::OpenAlternateBuffer()
+    {
+        WriteANSISequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
+    }
+
+    void Window::CloseAlternateBuffer()
+    {
+        WriteANSISequence("\x1b[?1049l");
+    }
+
+    void Window::Clear()
+    {
+        WriteANSISequence("\x1b[2J\x1b[1;1H");
+    }
+
     int operator|(Effect effect0, Effect effect1)
     {
         return static_cast<int>(effect0) | static_cast<int>(effect1);

@@ -113,6 +113,9 @@ namespace TMK
         Window() = delete;
         static int GetDimensions(Dimensions& dimensions);
         static void SetTitle(const char* title);
+        static void OpenAlternateBuffer();
+        static void CloseAlternateBuffer();
+        static void Clear();
     };
 
     int operator|(Effect effect0, Effect effect1);
