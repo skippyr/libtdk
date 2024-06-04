@@ -103,6 +103,8 @@ namespace TMK
         static void SetEffect(int effect, bool isToEnable);
         static void SetXColor(XColor color, Layer layer);
         static void SetXColor(int color, Layer layer);
+        static void SetHexColor(int hex, Layer layer);
+        static void SetRGBColor(int red, int green, int blue, Layer layer);
     };
 
     class Window final

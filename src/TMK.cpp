@@ -211,6 +211,16 @@ namespace TMK
                           static_cast<int>(layer), color);
     }
 
+    void Font::SetHexColor(int hex, Layer layer)
+    {
+        SetRGBColor(hex >> 16 & 0xff, hex >> 8 & 0xff, hex & 0xff, layer);
+    }
+
+    void Font::SetRGBColor(int red, int green, int blue, Layer layer)
+    {
+        WriteANSISequence("\x1b[%d8;2;%d;%d;%dm", static_cast<int>(layer), red, green, blue);
+    }
+
     int Window::GetDimensions(Dimensions& dimensions)
     {
 #ifdef _WIN32
