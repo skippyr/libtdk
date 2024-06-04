@@ -4,6 +4,16 @@
 
 namespace TMK
 {
+    enum class Effect
+    {
+        Italic = 1 << 3,
+        Underline = 1 << 4,
+        Blinking = 1 << 5,
+        Negative = 1 << 7,
+        Hidden = 1 << 8,
+        CrossedOut = 1 << 9
+    };
+
     enum class Weight
     {
         Default,
@@ -62,6 +72,8 @@ namespace TMK
     public:
         Font() = delete;
         static void SetWeight(Weight weight);
+        static void SetEffect(Effect effect, bool isToEnable);
+        static void SetEffect(int effect, bool isToEnable);
     };
 
     class Window final
@@ -71,4 +83,6 @@ namespace TMK
         static int GetDimensions(Dimensions& dimensions);
         static void SetTitle(const char* title);
     };
+
+    int operator|(Effect effect0, Effect effect1);
 }

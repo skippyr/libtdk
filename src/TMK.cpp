@@ -181,6 +181,22 @@ namespace TMK
         WriteANSISequence(weight == Weight::Default ? "\x1b[22m" : "\x1b[22;%dm", static_cast<int>(weight));
     }
 
+    void Font::SetEffect(Effect effect, bool isToEnable)
+    {
+        SetEffect(static_cast<int>(effect), isToEnable);
+    }
+
+    void Font::SetEffect(int effect, bool isToEnable)
+    {
+        for (int code = 3; code < 10; ++code)
+        {
+            if (effect & 1 << code)
+            {
+                WriteANSISequence("\x1b[%dm", isToEnable ? code : code + 20);
+            }
+        }
+    }
+
     int Window::GetDimensions(Dimensions& dimensions)
     {
 #ifdef _WIN32
@@ -207,5 +223,10 @@ namespace TMK
     void Window::SetTitle(const char* title)
     {
         WriteANSISequence("\x1b]0;%s\7", title);
+    }
+
+    int operator|(Effect effect0, Effect effect1)
+    {
+        return static_cast<int>(effect0) | static_cast<int>(effect1);
     }
 }
