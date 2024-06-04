@@ -225,16 +225,33 @@ namespace TMK
         char** m_arguments;
     };
 
+    /** @brief Represents dimensions inside of the terminal window. */
     class Dimensions final
     {
     public:
+        /** @brief Creates a new instance of the Dimensions class. */
         Dimensions();
+        /**
+         * @brief Creates a new instance of the Dimensions class.
+         * @param totalColumns The total columns of the dimensions.
+         * @param totalRows The total rows of the dimensions.
+         */
         Dimensions(unsigned short totalColumns, unsigned short totalRows);
+        /**
+         * @brief Gets the total columns of the dimensions.
+         * @returns The total columns of the dimensions.
+         */
         unsigned short GetTotalColumns() const;
+        /**
+         * @brief Gets the total rows of the dimensions.
+         * @returns The total rows of the dimensions.
+         */
         unsigned short GetTotalRows() const;
 
     private:
+        /** @brief The total columns of the dimensions. */
         unsigned short m_totalColumns;
+        /** @brief The total rows of the dimensions. */
         unsigned short m_totalRows;
     };
 
