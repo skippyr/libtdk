@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdio>
+#include <string>
 
 /// <summary>
 /// A powerful, basic and open-source C++ terminal manipulation for Windows and Linux that includes features to handle
@@ -66,9 +66,9 @@ namespace TMK
     {
     public:
         Output() = delete;
-        static int WriteLine(const char* format, ...);
+        static int WriteLine(std::string format, ...);
         static int WriteLine();
-        static int Write(const char* format, ...);
+        static int Write(std::string format, ...);
         static bool IsTTY();
         static std::FILE* GetFile();
         static int GetFileNo();
@@ -78,9 +78,9 @@ namespace TMK
     {
     public:
         Error() = delete;
-        static int WriteLine(const char* format, ...);
+        static int WriteLine(std::string format, ...);
         static int WriteLine();
-        static int Write(const char* format, ...);
+        static int Write(std::string format, ...);
         static bool IsTTY();
         static std::FILE* GetFile();
         static int GetFileNo();
@@ -137,7 +137,7 @@ namespace TMK
     public:
         Window() = delete;
         static int GetDimensions(Dimensions& dimensions);
-        static void SetTitle(const char* title);
+        static void SetTitle(std::string title);
         static void OpenAlternateBuffer();
         static void CloseAlternateBuffer();
         static void Clear();

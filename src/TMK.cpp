@@ -95,12 +95,12 @@ namespace TMK
         return 0;
     }
 
-    int Output::WriteLine(const char* format, ...)
+    int Output::WriteLine(std::string format, ...)
     {
         CacheTTYStatus();
         std::va_list arguments;
         va_start(arguments, format);
-        int totalBytesWritten = std::vprintf(format, arguments);
+        int totalBytesWritten = std::vprintf(format.c_str(), arguments);
         std::putchar('\n');
         va_end(arguments);
         return -(totalBytesWritten < 0);
@@ -112,12 +112,12 @@ namespace TMK
         return -(std::putchar('\n') == EOF);
     }
 
-    int Output::Write(const char* format, ...)
+    int Output::Write(std::string format, ...)
     {
         CacheTTYStatus();
         std::va_list arguments;
         va_start(arguments, format);
-        int totalBytesWritten = std::vprintf(format, arguments);
+        int totalBytesWritten = std::vprintf(format.c_str(), arguments);
         va_end(arguments);
         return -(totalBytesWritten < 0);
     }
@@ -138,13 +138,13 @@ namespace TMK
         return 1;
     }
 
-    int Error::WriteLine(const char* format, ...)
+    int Error::WriteLine(std::string format, ...)
     {
         CacheTTYStatus();
         std::fflush(stdout);
         std::va_list arguments;
         va_start(arguments, format);
-        int totalBytesWritten = std::vfprintf(stderr, format, arguments);
+        int totalBytesWritten = std::vfprintf(stderr, format.c_str(), arguments);
         std::fputc('\n', stderr);
         va_end(arguments);
         return -(totalBytesWritten < 0);
@@ -157,13 +157,13 @@ namespace TMK
         return -(std::fputc('\n', stderr) == EOF);
     }
 
-    int Error::Write(const char* format, ...)
+    int Error::Write(std::string format, ...)
     {
         CacheTTYStatus();
         std::fflush(stdout);
         std::va_list arguments;
         va_start(arguments, format);
-        int totalBytesWritten = std::vfprintf(stderr, format, arguments);
+        int totalBytesWritten = std::vfprintf(stderr, format.c_str(), arguments);
         va_end(arguments);
         return -(totalBytesWritten < 0);
     }
@@ -311,9 +311,9 @@ namespace TMK
         return 0;
     }
 
-    void Window::SetTitle(const char* title)
+    void Window::SetTitle(std::string title)
     {
-        WriteANSISequence("\x1b]0;%s\7", title);
+        WriteANSISequence("\x1b]0;%s\7", title.c_str());
     }
 
     void Window::OpenAlternateBuffer()
