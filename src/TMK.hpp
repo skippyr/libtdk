@@ -44,6 +44,19 @@ namespace TMK
         static int GetFileNo();
     };
 
+    class Dimensions final
+    {
+    public:
+        Dimensions();
+        Dimensions(unsigned short totalColumns, unsigned short totalRows);
+        unsigned short GetTotalColumns() const;
+        unsigned short GetTotalRows() const;
+
+    private:
+        unsigned short m_totalColumns;
+        unsigned short m_totalRows;
+    };
+
     class Font final
     {
     public:
@@ -55,6 +68,7 @@ namespace TMK
     {
     public:
         Window() = delete;
+        static int GetDimensions(Dimensions& dimensions);
         static void SetTitle(const char* title);
     };
 }

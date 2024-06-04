@@ -7,6 +7,7 @@
 #include <Windows.h>
 #include <io.h>
 #else
+#include <sys/ioctl.h>
 #include <unistd.h>
 #endif
 
@@ -156,9 +157,51 @@ namespace TMK
         return 2;
     }
 
+    Dimensions::Dimensions() : m_totalColumns(0), m_totalRows(0)
+    {
+    }
+
+    Dimensions::Dimensions(unsigned short totalColumns, unsigned short totalRows)
+        : m_totalColumns(totalColumns), m_totalRows(totalRows)
+    {
+    }
+
+    unsigned short Dimensions::GetTotalColumns() const
+    {
+        return m_totalColumns;
+    }
+
+    unsigned short Dimensions::GetTotalRows() const
+    {
+        return m_totalRows;
+    }
+
     void Font::SetWeight(Weight weight)
     {
         WriteANSISequence(weight == Weight::Default ? "\x1b[22m" : "\x1b[22;%dm", static_cast<int>(weight));
+    }
+
+    int Window::GetDimensions(Dimensions& dimensions)
+    {
+#ifdef _WIN32
+        CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
+        if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) &&
+            !GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo))
+        {
+            return -1;
+        }
+        dimensions = Dimensions(bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1,
+                                bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1);
+#else
+        struct winsize size;
+        if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &size) && ioctl(STDIN_FILENO, TIOCGWINSZ, &size) &&
+            ioctl(STDERR_FILENO, TIOCGWINSZ, &size))
+        {
+            return -1;
+        }
+        dimensions = Dimensions(size.ws_col, size.ws_row);
+#endif
+        return 0;
     }
 
     void Window::SetTitle(const char* title)
