@@ -103,12 +103,12 @@ namespace TMK
         static void ClearBuffer();
         /**
          * @brief Gets the file descriptor associated with the input stream.
-         * @returns The file descriptor associated with the input stream.
+         * @returns The file descriptor associated with the stream.
          */
         static std::FILE* GetFile();
         /**
          * @brief Gets the file descriptor number associated with the input stream.
-         * @returns The file descriptor number associated with the input stream.
+         * @returns The file descriptor number associated with the stream.
          */
         static int GetFileNo();
     };
@@ -144,12 +144,12 @@ namespace TMK
         static bool IsTTY();
         /**
          * @brief Gets the file descriptor associated with the output stream.
-         * @returns The file descriptor associated with the output stream.
+         * @returns The file descriptor associated with the stream.
          */
         static std::FILE* GetFile();
         /**
          * @brief Gets the file descriptor number associated with the output stream.
-         * @returns The file descriptor number associated with the output stream.
+         * @returns The file descriptor number associated with the stream.
          */
         static int GetFileNo();
     };
@@ -185,26 +185,43 @@ namespace TMK
         static bool IsTTY();
         /**
          * @brief Gets the file descriptor associated with the error stream.
-         * @returns The file descriptor associated with the error stream.
+         * @returns The file descriptor associated with the stream.
          */
         static std::FILE* GetFile();
         /**
          * @brief Gets the file descriptor number associated with the error stream.
-         * @returns The file descriptor number associated with the error stream.
+         * @returns The file descriptor number associated with the stream.
          */
         static int GetFileNo();
     };
 
+    /** @brief Represents the terminal command-line arguments. */
     class Arguments final
     {
     public:
+        /**
+         * @brief Creates an instance of the Arguments class.
+         * @param The total of arguments.
+         * @param The arguments.
+         */
         Arguments(int totalArguments, char** arguments);
         ~Arguments();
+        /**
+         * @brief Gets the total arguments.
+         * @returns The total arguments.
+         */
         int GetTotalArguments() const;
+        /**
+         * @brief Gets an argument by its offset.
+         * @param The offset of the argument.
+         * @returns The argument if successful or nullptr otherwise.
+         */
         const char* GetArgumentByOffset(std::size_t offset) const;
 
     private:
+        /** @brief The total arguments. */
         int m_totalArguments;
+        /** @brief The arguments. */
         char** m_arguments;
     };
 
