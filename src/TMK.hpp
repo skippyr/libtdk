@@ -46,24 +46,42 @@ namespace TMK
         Dim
     };
 
+    /** @brief Contains the ANSI codes of the first 16 colors of the XTerm palette plus a default color. */
     enum class XColor
     {
+        /** @brief Sets the color to default. */
         Default = -1,
-        Black,
-        Red,
-        Green,
-        Yellow,
-        Blue,
-        Magenta,
-        Cyan,
-        White,
+        /** @brief The dark variant of the black color. */
+        DarkBlack,
+        /** @brief The dark variant of the red color. */
+        DarkRed,
+        /** @brief The dark variant of the green color. */
+        DarkGreen,
+        /** @brief The dark variant of the yellow color. */
+        DarkYellow,
+        /** @brief The dark variant of the blue color. */
+        DarkBlue,
+        /** @brief The dark variant of the magenta color. */
+        DarkMagenta,
+        /** @brief The dark variant of the cyan color. */
+        DarkCyan,
+        /** @brief The dark variant of the white color. */
+        DarkWhite,
+        /** @brief The light variant of the black color. */
         LightBlack,
+        /** @brief The light variant of the red color. */
         LightRed,
+        /** @brief The light variant of the green color. */
         LightGreen,
+        /** @brief The light variant of the yellow color. */
         LightYellow,
+        /** @brief The light variant of the blue color. */
         LightBlue,
+        /** @brief The light variant of the magenta color. */
         LightMagenta,
+        /** @brief The light variant of the cyan color. */
         LightCyan,
+        /** @brief The light variant of the white color. */
         LightWhite
     };
 
