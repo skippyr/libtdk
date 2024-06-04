@@ -3,18 +3,26 @@
 #include <string>
 
 /// <summary>
-/// A powerful, basic and open-source C++ terminal manipulation for Windows and Linux that includes features to handle
-/// terminal properties, colors, effects, arguments and event readings with UTF-8 encoding.
+/// A powerful, basic and open-source C++ terminal manipulation for Windows and Linux that includes features missing
+/// from the standard library to handle terminal properties, colors, effects, arguments and event readings with UTF-8
+/// encoding.
 /// </summary>
 namespace TMK
 {
+    /// <summary>Contains the available terminal font effects.</summary>
     enum class Effect
     {
+        /// <summary>Makes the text curly.</summary>
         Italic = 1 << 3,
+        /// <summary>Draws a horizontal line below the text.</summary>
         Underline = 1 << 4,
+        /// <summary>Makes the text blink indefinitely.</summary>
         Blinking = 1 << 5,
+        /// <summary>Swaps the foreground and background colors.</summary>
         Negative = 1 << 7,
+        /// <summary>Makes the text hard to see or invisible.</summary>
         Hidden = 1 << 8,
+        /// <summary>Draws a horizontal line crossing through the middle of the text.</summary>
         CrossedOut = 1 << 9
     };
 
