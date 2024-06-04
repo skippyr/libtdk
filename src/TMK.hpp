@@ -2,6 +2,10 @@
 
 #include <cstdio>
 
+/// <summary>
+/// A powerful and open-source C++ terminal manipulation for Windows and Linux that includes features to handle terminal
+/// properties, colors, effects, arguments and event readings with UTF-8 encoding.
+/// </summary>
 namespace TMK
 {
     enum class Effect
@@ -82,6 +86,19 @@ namespace TMK
         static int GetFileNo();
     };
 
+    class Arguments final
+    {
+    public:
+        Arguments(int totalItems, char** items);
+        ~Arguments();
+        int GetTotalItems() const;
+        const char* GetItemByOffset(std::size_t offset) const;
+
+    private:
+        int m_totalItems;
+        char** m_items;
+    };
+
     class Dimensions final
     {
     public:
@@ -93,6 +110,13 @@ namespace TMK
     private:
         unsigned short m_totalColumns;
         unsigned short m_totalRows;
+    };
+
+    class Environment final
+    {
+    public:
+        Environment() = delete;
+        static Arguments GetArguments(int totalArguments, const char** rawArguments);
     };
 
     class Font final

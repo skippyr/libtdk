@@ -1,7 +1,6 @@
 #include "TMK.hpp"
 
 #include <cstdarg>
-#include <cstdio>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -185,6 +184,31 @@ namespace TMK
         return 2;
     }
 
+    Arguments::Arguments(int totalItems, char** items) : m_totalItems(totalItems), m_items(items)
+    {
+    }
+
+    Arguments::~Arguments()
+    {
+#ifdef _WIN32
+        for (int offset = 0; offset < m_totalItems; ++offset)
+        {
+            delete[] m_items[offset];
+        }
+        delete[] m_items;
+#endif
+    }
+
+    int Arguments::GetTotalItems() const
+    {
+        return m_totalItems;
+    }
+
+    const char* Arguments::GetItemByOffset(std::size_t offset) const
+    {
+        return offset < m_totalItems ? m_items[offset] : nullptr;
+    }
+
     Dimensions::Dimensions() : m_totalColumns(0), m_totalRows(0)
     {
     }
@@ -202,6 +226,24 @@ namespace TMK
     unsigned short Dimensions::GetTotalRows() const
     {
         return m_totalRows;
+    }
+
+    Arguments Environment::GetArguments(int totalArguments, const char** rawArguments)
+    {
+#ifdef _WIN32
+        LPWSTR* argumentsUTF16 = CommandLineToArgvW(GetCommandLineW(), &totalArguments);
+        char** items = new char*[totalArguments];
+        for (int offset = 0; offset < totalArguments; ++offset)
+        {
+            int size = WideCharToMultiByte(CP_UTF8, 0, argumentsUTF16[offset], -1, nullptr, 0, nullptr, nullptr);
+            items[offset] = new char[size];
+            WideCharToMultiByte(CP_UTF8, 0, argumentsUTF16[offset], -1, items[offset], size, nullptr, nullptr);
+        }
+        LocalFree(argumentsUTF16);
+        return Arguments(totalArguments, items);
+#else
+        return Arguments(totalArguments, rawArguments);
+#endif
     }
 
     void Font::SetWeight(Weight weight)
