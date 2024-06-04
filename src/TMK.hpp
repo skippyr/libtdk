@@ -53,6 +53,7 @@ namespace TMK
     public:
         Input() = delete;
         static bool IsTTY();
+        static void ClearBuffer();
         static std::FILE* GetFile();
         static int GetFileNo();
     };

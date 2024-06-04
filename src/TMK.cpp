@@ -7,7 +7,9 @@
 #include <Windows.h>
 #include <io.h>
 #else
+#include <fcntl.h>
 #include <sys/ioctl.h>
+#include <termios.h>
 #include <unistd.h>
 #endif
 
@@ -59,6 +61,29 @@ namespace TMK
     {
         CacheTTYStatus();
         return IS_TTY(Input);
+    }
+
+    void Input::ClearBuffer()
+    {
+#ifdef _WIN32
+        FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+#else
+        struct termios attributes;
+        int flags = fcntl(STDIN_FILENO, F_GETFL);
+        if (tcgetattr(STDIN_FILENO, &attributes))
+        {
+            return;
+        }
+        attributes.c_lflag &= ~(ICANON | ECHO);
+        tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+        fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
+        while (std::getchar() != EOF)
+        {
+        }
+        attributes.c_lflag |= ICANON | ECHO;
+        tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+        fcntl(STDIN_FILENO, F_SETFL, flags);
+#endif
     }
 
     std::FILE* Input::GetFile()
