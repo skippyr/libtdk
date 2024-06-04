@@ -14,11 +14,38 @@ namespace TMK
         CrossedOut = 1 << 9
     };
 
+    enum class Layer
+    {
+        Foreground = 3,
+        Background
+    };
+
     enum class Weight
     {
         Default,
         Bold,
         Dim
+    };
+
+    enum class XColor
+    {
+        Default = -1,
+        Black,
+        Red,
+        Green,
+        Yellow,
+        Blue,
+        Magenta,
+        Cyan,
+        White,
+        LightBlack,
+        LightRed,
+        LightGreen,
+        LightYellow,
+        LightBlue,
+        LightMagenta,
+        LightCyan,
+        LightWhite
     };
 
     class Input final
@@ -74,6 +101,8 @@ namespace TMK
         static void SetWeight(Weight weight);
         static void SetEffect(Effect effect, bool isToEnable);
         static void SetEffect(int effect, bool isToEnable);
+        static void SetXColor(XColor color, Layer layer);
+        static void SetXColor(int color, Layer layer);
     };
 
     class Window final

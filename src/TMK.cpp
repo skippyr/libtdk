@@ -117,6 +117,7 @@ namespace TMK
     int Error::WriteLine(const char* format, ...)
     {
         CacheTTYStatus();
+        std::fflush(stdout);
         std::va_list arguments;
         va_start(arguments, format);
         int totalBytesWritten = std::vfprintf(stderr, format, arguments);
@@ -128,12 +129,14 @@ namespace TMK
     int Error::WriteLine()
     {
         CacheTTYStatus();
+        std::fflush(stdout);
         return -(std::fputc('\n', stderr) == EOF);
     }
 
     int Error::Write(const char* format, ...)
     {
         CacheTTYStatus();
+        std::fflush(stdout);
         std::va_list arguments;
         va_start(arguments, format);
         int totalBytesWritten = std::vfprintf(stderr, format, arguments);
@@ -195,6 +198,17 @@ namespace TMK
                 WriteANSISequence("\x1b[%dm", isToEnable ? code : code + 20);
             }
         }
+    }
+
+    void Font::SetXColor(XColor color, Layer layer)
+    {
+        SetXColor(static_cast<int>(color), layer);
+    }
+
+    void Font::SetXColor(int color, Layer layer)
+    {
+        WriteANSISequence(color == static_cast<int>(XColor::Default) ? "\x1b[%d9m" : "\x1b[%d8;5;%dm",
+                          static_cast<int>(layer), color);
     }
 
     int Window::GetDimensions(Dimensions& dimensions)
