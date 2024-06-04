@@ -92,7 +92,7 @@ namespace TMK
         Input() = delete;
         /**
          * @brief Checks if the input stream is connected to an interactive terminal (TTY).
-         * @returns A boolean that states the check result.
+         * @returns A boolean that states the stream is a TTY.
          */
         static bool IsTTY();
         /** @brief Clears the input buffer. */
@@ -109,15 +109,44 @@ namespace TMK
         static int GetFileNo();
     };
 
+    /** @brief Represents the standard terminal output stream. */
     class Output final
     {
     public:
         Output() = delete;
+        /**
+         * @brief Writes a formatted string to the output stream with a newline character appended at its end.
+         * @param format The format to be used. It uses the same specifiers as the printf function family.
+         * @param ... The arguments to be formatted.
+         * @returns 0 if successful or -1 otherwise.
+         */
         static int WriteLine(std::string format, ...);
+        /**
+         * @brief Writes a newline character to the output stream.
+         * @returns 0 if successful or -1 otherwise.
+         */
         static int WriteLine();
+        /**
+         * @brief Writes a formatted string to the output stream.
+         * @param format The format to be used. It uses the same specifiers as the printf function family.
+         * @param ... The arguments to be formatted.
+         * @returns 0 if successful or -1 otherwise.
+         */
         static int Write(std::string format, ...);
+        /**
+         * @brief Checks if the output stream is connected to an interactive terminal (TTY).
+         * @returns A boolean that states the stream is a TTY.
+         */
         static bool IsTTY();
+        /**
+         * @brief Gets the file descriptor associated with the output stream.
+         * @returns The file descriptor associated with the output stream.
+         */
         static std::FILE* GetFile();
+        /**
+         * @brief Gets the file descriptor number associated with the output stream.
+         * @returns The file descriptor number associated with the output stream.
+         */
         static int GetFileNo();
     };
 
