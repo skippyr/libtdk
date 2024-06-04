@@ -27,7 +27,7 @@ namespace TMK
     {
         if (!(g_cache & 1 << 7))
         {
-            g_cache |= TTY_CACHE(Stream::Input) | TTY_CACHE(Stream::Output) | TTY_CACHE(Stream::Error) | 1 << 7;
+            g_cache |= TTY_CACHE(Input) | TTY_CACHE(Output) | TTY_CACHE(Error) | 1 << 7;
 #ifdef _WIN32
             HANDLE handle;
             DWORD mode;
@@ -39,88 +39,93 @@ namespace TMK
         }
     }
 
-    namespace Stream
+    bool Input::IsTTY()
     {
-        bool Input::IsTTY()
-        {
-            CacheTTYStatus();
-            return IS_TTY(Input);
-        }
+        CacheTTYStatus();
+        return IS_TTY(Input);
+    }
 
-        std::FILE* Input::GetFile()
-        {
-            return stdin;
-        }
+    std::FILE* Input::GetFile()
+    {
+        return stdin;
+    }
 
-        int Input::GetFileNo()
-        {
-            return 0;
-        }
+    int Input::GetFileNo()
+    {
+        return 0;
+    }
 
-        int Output::WriteLine(const char* format, ...)
+    int Output::WriteLine(const char* format, ...)
+    {
+        if (!format)
         {
-            CacheTTYStatus();
-            std::va_list arguments;
-            va_start(arguments, format);
-            int totalBytesWritten = std::vprintf(format, arguments);
-            std::putchar('\n');
-            va_end(arguments);
-            return -(totalBytesWritten < 0);
+            return -1;
         }
+        CacheTTYStatus();
+        std::va_list arguments;
+        va_start(arguments, format);
+        int totalBytesWritten = std::vprintf(format, arguments);
+        std::putchar('\n');
+        va_end(arguments);
+        return -(totalBytesWritten < 0);
+    }
 
-        int Output::WriteLine()
-        {
-            CacheTTYStatus();
-            return -(std::putchar('\n') == EOF);
-        }
+    int Output::WriteLine()
+    {
+        CacheTTYStatus();
+        return -(std::putchar('\n') == EOF);
+    }
 
-        bool Output::IsTTY()
-        {
-            CacheTTYStatus();
-            return IS_TTY(Output);
-        }
+    bool Output::IsTTY()
+    {
+        CacheTTYStatus();
+        return IS_TTY(Output);
+    }
 
-        std::FILE* Output::GetFile()
-        {
-            return stdout;
-        }
+    std::FILE* Output::GetFile()
+    {
+        return stdout;
+    }
 
-        int Output::GetFileNo()
-        {
-            return 1;
-        }
+    int Output::GetFileNo()
+    {
+        return 1;
+    }
 
-        int Error::WriteLine(const char* format, ...)
+    int Error::WriteLine(const char* format, ...)
+    {
+        if (!format)
         {
-            CacheTTYStatus();
-            std::va_list arguments;
-            va_start(arguments, format);
-            int totalBytesWritten = std::vfprintf(stderr, format, arguments);
-            std::fputc('\n', stderr);
-            va_end(arguments);
-            return -(totalBytesWritten < 0);
+            return -1;
         }
+        CacheTTYStatus();
+        std::va_list arguments;
+        va_start(arguments, format);
+        int totalBytesWritten = std::vfprintf(stderr, format, arguments);
+        std::fputc('\n', stderr);
+        va_end(arguments);
+        return -(totalBytesWritten < 0);
+    }
 
-        int Error::WriteLine()
-        {
-            CacheTTYStatus();
-            return -(std::fputc('\n', stderr) == EOF);
-        }
+    int Error::WriteLine()
+    {
+        CacheTTYStatus();
+        return -(std::fputc('\n', stderr) == EOF);
+    }
 
-        bool Error::IsTTY()
-        {
-            CacheTTYStatus();
-            return IS_TTY(Error);
-        }
+    bool Error::IsTTY()
+    {
+        CacheTTYStatus();
+        return IS_TTY(Error);
+    }
 
-        std::FILE* Error::GetFile()
-        {
-            return stderr;
-        }
+    std::FILE* Error::GetFile()
+    {
+        return stderr;
+    }
 
-        int Error::GetFileNo()
-        {
-            return 2;
-        }
+    int Error::GetFileNo()
+    {
+        return 2;
     }
 }
