@@ -85,13 +85,27 @@ namespace TMK
         LightWhite
     };
 
+    /** @brief Represents the standard terminal input stream. */
     class Input final
     {
     public:
         Input() = delete;
+        /**
+         * @brief Checks if the input stream is connected to an interactive terminal (TTY).
+         * @returns A boolean that states the check result.
+         */
         static bool IsTTY();
+        /** @brief Clears the input buffer. */
         static void ClearBuffer();
+        /**
+         * @brief Gets the file descriptor associated with the input stream.
+         * @returns The file descriptor associated with the input stream.
+         */
         static std::FILE* GetFile();
+        /**
+         * @brief Gets the file descriptor number associated with the input stream.
+         * @returns The file descriptor number associated with the input stream.
+         */
         static int GetFileNo();
     };
 
