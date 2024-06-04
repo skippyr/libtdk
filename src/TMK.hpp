@@ -2,33 +2,36 @@
 
 #include <string>
 
-/// <summary>
-/// A powerful, basic and open-source C++ terminal manipulation for Windows and Linux that includes features missing
-/// from the standard library to handle terminal properties, colors, effects, arguments and event readings with UTF-8
-/// encoding.
-/// </summary>
+/**
+ * @brief A powerful, basic and open-source C++ terminal manipulation library for Windows and Linux that includes
+ * features the standard library lacks to handle terminal properties, colors,effects, arguments and event readings
+ * using UTF-8 encoding.
+ */
 namespace TMK
 {
-    /// <summary>Contains the available terminal font effects.</summary>
+    /** @brief Contains the available t erminal font effects. */
     enum class Effect
     {
-        /// <summary>Makes the text curly.</summary>
+        /** @brief Makes the text curly. */
         Italic = 1 << 3,
-        /// <summary>Draws a horizontal line below the text.</summary>
+        /** @brief Draws a horizontal line below the text. */
         Underline = 1 << 4,
-        /// <summary>Makes the text blink indefinitely.</summary>
+        /** @brief Makes the text blink indefinitely. */
         Blinking = 1 << 5,
-        /// <summary>Swaps the foreground and background colors.</summary>
+        /** @brief Swaps the foreground and background colors. */
         Negative = 1 << 7,
-        /// <summary>Makes the text hard to see or invisible.</summary>
+        /** @brief Makes the text hard to see or invisible. */
         Hidden = 1 << 8,
-        /// <summary>Draws a horizontal line crossing through the middle of the text.</summary>
+        /** @brief Draws a horizontal line crossing through the middle of the text. */
         CrossedOut = 1 << 9
     };
 
+    /** @brief Contains the available layers where a terminal color can be set on the font. */
     enum class Layer
     {
+        /** @brief Affects the color of the letters. */
         Foreground = 3,
+        /** @brief Affects the background color of the letters. */
         Background
     };
 
