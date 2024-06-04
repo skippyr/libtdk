@@ -57,10 +57,6 @@ namespace TMK
 
     int Output::WriteLine(const char* format, ...)
     {
-        if (!format)
-        {
-            return -1;
-        }
         CacheTTYStatus();
         std::va_list arguments;
         va_start(arguments, format);
@@ -74,6 +70,16 @@ namespace TMK
     {
         CacheTTYStatus();
         return -(std::putchar('\n') == EOF);
+    }
+
+    int Output::Write(const char* format, ...)
+    {
+        CacheTTYStatus();
+        std::va_list arguments;
+        va_start(arguments, format);
+        int totalBytesWritten = std::vprintf(format, arguments);
+        va_end(arguments);
+        return -(totalBytesWritten < 0);
     }
 
     bool Output::IsTTY()
@@ -94,10 +100,6 @@ namespace TMK
 
     int Error::WriteLine(const char* format, ...)
     {
-        if (!format)
-        {
-            return -1;
-        }
         CacheTTYStatus();
         std::va_list arguments;
         va_start(arguments, format);
@@ -111,6 +113,16 @@ namespace TMK
     {
         CacheTTYStatus();
         return -(std::fputc('\n', stderr) == EOF);
+    }
+
+    int Error::Write(const char* format, ...)
+    {
+        CacheTTYStatus();
+        std::va_list arguments;
+        va_start(arguments, format);
+        int totalBytesWritten = std::vfprintf(stderr, format, arguments);
+        va_end(arguments);
+        return -(totalBytesWritten < 0);
     }
 
     bool Error::IsTTY()
