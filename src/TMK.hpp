@@ -290,14 +290,16 @@ namespace TMK
          * @param effect The effect to be set.
          * @param isToEnable A boolean that state the effects should be enabled or disabled.
          */
-        static void SetEffect(Effect effect, bool isToEnable);
+        static void SetEffect(Effect effect);
         /**
          * @brief Sets one or multiple font effects.
          * @param effect A bitmask containing the effects to be set. It must be composed by enumerators from the Effect
          * enum class.
          * @param isToEnable A boolean that state the effects should be enabled or disabled.
          */
-        static void SetEffect(int effect, bool isToEnable);
+        static void SetEffect(int effect);
+        /** @brief Disables all font effects. */
+        static void ResetEffects();
         /**
          * @brief Sets an XTerm font color.
          * @param color The color to be set.
@@ -324,6 +326,7 @@ namespace TMK
          * @param layer The layer where the color should be applied on.
          */
         static void SetRGBColor(int red, int green, int blue, Layer layer);
+        /** @brief Sets the font foreground and background colors to default. */
         static void ResetColors();
 
     private:

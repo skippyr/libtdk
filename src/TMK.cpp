@@ -252,18 +252,29 @@ namespace TMK
         WriteANSISequence(weight == Weight::Default ? "\x1b[22m" : "\x1b[22;%dm", static_cast<int>(weight));
     }
 
-    void Font::SetEffect(Effect effect, bool isToEnable)
+    void Font::SetEffect(Effect effect)
     {
-        SetEffect(static_cast<int>(effect), isToEnable);
+        SetEffect(static_cast<int>(effect));
     }
 
-    void Font::SetEffect(int effect, bool isToEnable)
+    void Font::SetEffect(int effect)
     {
         for (int code = 3; code < 10; ++code)
         {
             if (effect & 1 << code)
             {
-                WriteANSISequence("\x1b[%dm", isToEnable ? code : code + 20);
+                WriteANSISequence("\x1b[%dm", code);
+            }
+        }
+    }
+
+    void Font::ResetEffects()
+    {
+        for (int code = 23; code < 30; ++code)
+        {
+            if (code != 26)
+            {
+                WriteANSISequence("\x1b[%dm", code);
             }
         }
     }
