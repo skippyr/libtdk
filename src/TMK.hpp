@@ -343,5 +343,20 @@ namespace TMK
         static void Clear();
     };
 
+    /** @brief Represents the terminal bell. */
+    class Bell
+    {
+    public:
+        Bell() = delete;
+        /** @brief Rings the terminal bell. */
+        static void Ring();
+    };
+
+    /**
+     * @brief Concatenates two font effects together in order to create a bitmask containing both.
+     * @param effect0 The first effect.
+     * @param effect1 The second effect.
+     * @returns A bitmask containing both effects.
+     */
     int operator|(Effect effect0, Effect effect1);
 }

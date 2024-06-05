@@ -184,7 +184,8 @@ namespace TMK
         return 2;
     }
 
-    Arguments::Arguments(int totalArguments, char** arguments) : m_totalArguments(totalArguments), m_arguments(arguments)
+    Arguments::Arguments(int totalArguments, char** arguments)
+        : m_totalArguments(totalArguments), m_arguments(arguments)
     {
     }
 
@@ -329,6 +330,11 @@ namespace TMK
     void Window::Clear()
     {
         WriteANSISequence("\x1b[2J\x1b[1;1H");
+    }
+
+    void Bell::Ring()
+    {
+        WriteANSISequence("\7");
     }
 
     int operator|(Effect effect0, Effect effect1)
