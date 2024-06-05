@@ -265,7 +265,6 @@ namespace TMK
     class Environment final
     {
     public:
-        Environment() = delete;
         /**
          * @brief Gets and treats the command-line arguments associated with the terminal process.
          * @param rawTotalArguments The total arguments given as parameter of the main function.
@@ -273,6 +272,9 @@ namespace TMK
          * @returns The treated arguments associated with the terminal process.
          */
         static Arguments GetArguments(int rawTotalArguments, char** rawArguments);
+
+    private:
+        Environment() = delete;
     };
 
     /** @brief Represents the terminal font. */
