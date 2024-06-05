@@ -139,6 +139,8 @@ namespace TMK
          * @returns A boolean that states the stream is a TTY.
          */
         static bool IsTTY();
+        /** @brief Flushes the output buffer. */
+        static void FlushBuffer();
         /**
          * @brief Gets the file descriptor associated with the output stream.
          * @returns The file descriptor associated with the stream.

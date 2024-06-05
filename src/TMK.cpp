@@ -128,6 +128,11 @@ namespace TMK
         return IS_TTY(Output);
     }
 
+    void Output::FlushBuffer()
+    {
+        std::fflush(stdout);
+    }
+
     std::FILE* Output::GetFile()
     {
         return stdout;
