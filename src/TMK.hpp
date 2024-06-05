@@ -287,7 +287,8 @@ namespace TMK
         static void SetEffect(Effect effect, bool isToEnable);
         /**
          * @brief Sets one or multiple font effects.
-         * @param effect A bitmask containing the effects to be set.
+         * @param effect A bitmask containing the effects to be set. It must be composed by enumerators from the Effect
+         * enum class.
          * @param isToEnable A boolean that state the effects should be enabled or disabled.
          */
         static void SetEffect(int effect, bool isToEnable);
@@ -299,34 +300,46 @@ namespace TMK
         static void SetXColor(XColor color, Layer layer);
         /**
          * @brief Sets an XTerm font color.
-         * @param The color to be set.
+         * @param The color to be set. It must be a value in range from 0 to 255.
          * @param The layer where the color should be applied on.
          */
         static void SetXColor(int color, Layer layer);
         /**
          * @brief Sets a hex font color.
-         * @param The color to be set.
+         * @param The color to be set. It must be a value in range from 0 to 0xffffff.
          * @param The layer where the color should be applied on.
          */
         static void SetHexColor(int hex, Layer layer);
         /**
          * @brief Sets an RGB font color.
-         * @param The red component of the color.
-         * @param The green component of the color.
-         * @param The blue component of the color.
+         * @param The red component of the color. It must be a value in range from 0 to 255.
+         * @param The green component of the color. It must be a value in range from 0 to 255.
+         * @param The blue component of the color. It must be a value in range from 0 to 255.
          * @param The layer where the color should be applied on.
          */
         static void SetRGBColor(int red, int green, int blue, Layer layer);
     };
 
+    /** @brief Represents the terminal window. */
     class Window final
     {
     public:
         Window() = delete;
+        /**
+         * @brief Gets the terminal window dimensions.
+         * @param dimensions The address where the dimensions information will be put into.
+         */
         static int GetDimensions(Dimensions& dimensions);
+        /**
+         * @brief Sets the terminal window title.
+         * @param The title to be set.
+         */
         static void SetTitle(std::string title);
+        /** @brief Opens the terminal alternate window buffer. */
         static void OpenAlternateBuffer();
+        /** @brief Closes the terminal alternate window buffer. */
         static void CloseAlternateBuffer();
+        /** @brief Clears the terminal window. */
         static void Clear();
     };
 
