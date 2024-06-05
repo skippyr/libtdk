@@ -50,27 +50,25 @@ namespace TMK
         Dim
     };
 
-    /** @brief Contains the ANSI codes of the first 16 colors of the XTerm palette plus a default color. */
+    /** @brief Contains the ANSI codes of the first 16 colors of the XTerm palette. */
     enum class XColor
     {
-        /** @brief Sets the color to default. */
-        Default = -1,
-        /** @brief The dark variant of the black color. */
-        DarkBlack,
-        /** @brief The dark variant of the red color. */
-        DarkRed,
-        /** @brief The dark variant of the green color. */
-        DarkGreen,
-        /** @brief The dark variant of the yellow color. */
-        DarkYellow,
-        /** @brief The dark variant of the blue color. */
-        DarkBlue,
-        /** @brief The dark variant of the magenta color. */
-        DarkMagenta,
-        /** @brief The dark variant of the cyan color. */
-        DarkCyan,
-        /** @brief The dark variant of the white color. */
-        DarkWhite,
+        /** @brief The regular variant of the black color. */
+        Black,
+        /** @brief The regular variant of the red color. */
+        Red,
+        /** @brief The regular variant of the green color. */
+        Green,
+        /** @brief The regular variant of the yellow color. */
+        Yellow,
+        /** @brief The regular variant of the blue color. */
+        Blue,
+        /** @brief The regular variant of the magenta color. */
+        Magenta,
+        /** @brief The regular variant of the cyan color. */
+        Cyan,
+        /** @brief The regular variant of the white color. */
+        White,
         /** @brief The light variant of the black color. */
         LightBlack,
         /** @brief The light variant of the red color. */
@@ -326,6 +324,7 @@ namespace TMK
          * @param layer The layer where the color should be applied on.
          */
         static void SetRGBColor(int red, int green, int blue, Layer layer);
+        static void ResetColors();
 
     private:
         Font() = delete;

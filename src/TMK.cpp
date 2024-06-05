@@ -275,8 +275,7 @@ namespace TMK
 
     void Font::SetXColor(int color, Layer layer)
     {
-        WriteANSISequence(color == static_cast<int>(XColor::Default) ? "\x1b[%d9m" : "\x1b[%d8;5;%dm",
-                          static_cast<int>(layer), color);
+        WriteANSISequence("\x1b[%d8;5;%dm", static_cast<int>(layer), color);
     }
 
     void Font::SetHexColor(int hex, Layer layer)
@@ -287,6 +286,11 @@ namespace TMK
     void Font::SetRGBColor(int red, int green, int blue, Layer layer)
     {
         WriteANSISequence("\x1b[%d8;2;%d;%d;%dm", static_cast<int>(layer), red, green, blue);
+    }
+
+    void Font::ResetColors()
+    {
+        WriteANSISequence("\x1b[39;49m");
     }
 
     int Window::GetDimensions(Dimensions& dimensions)
