@@ -207,8 +207,8 @@ namespace TMK
     public:
         /**
          * @brief Creates an instance of the Arguments class.
-         * @param The total of arguments.
-         * @param The arguments.
+         * @param totalArguments The total of arguments.
+         * @param arguments The arguments.
          */
         Arguments(int totalArguments, char** arguments);
         /** @brief Destroys an instance of the Arguments class. */
@@ -220,7 +220,7 @@ namespace TMK
         int GetTotalArguments() const;
         /**
          * @brief Gets an argument by its offset.
-         * @param The offset of the argument.
+         * @param offset The offset of the argument.
          * @returns The argument if successful or nullptr otherwise.
          */
         const char* GetArgumentByOffset(std::size_t offset) const;
@@ -302,28 +302,28 @@ namespace TMK
         static void SetEffect(int effect, bool isToEnable);
         /**
          * @brief Sets an XTerm font color.
-         * @param The color to be set.
-         * @param The layer where the color should be applied on.
+         * @param color The color to be set.
+         * @param layer The layer where the color should be applied on.
          */
         static void SetXColor(XColor color, Layer layer);
         /**
          * @brief Sets an XTerm font color.
-         * @param The color to be set. It must be a value in range from 0 to 255.
-         * @param The layer where the color should be applied on.
+         * @param color The color to be set. It must be a value in range from 0 to 255.
+         * @param layer The layer where the color should be applied on.
          */
         static void SetXColor(int color, Layer layer);
         /**
          * @brief Sets a hex font color.
-         * @param The color to be set. It must be a value in range from 0 to 0xffffff.
-         * @param The layer where the color should be applied on.
+         * @param hex The color to be set. It must be a value in range from 0 to 0xffffff.
+         * @param layer The layer where the color should be applied on.
          */
         static void SetHexColor(int hex, Layer layer);
         /**
          * @brief Sets an RGB font color.
-         * @param The red component of the color. It must be a value in range from 0 to 255.
-         * @param The green component of the color. It must be a value in range from 0 to 255.
-         * @param The blue component of the color. It must be a value in range from 0 to 255.
-         * @param The layer where the color should be applied on.
+         * @param red The red component of the color. It must be a value in range from 0 to 255.
+         * @param green The green component of the color. It must be a value in range from 0 to 255.
+         * @param blue The blue component of the color. It must be a value in range from 0 to 255.
+         * @param layer The layer where the color should be applied on.
          */
         static void SetRGBColor(int red, int green, int blue, Layer layer);
 
@@ -342,7 +342,7 @@ namespace TMK
         static int GetDimensions(Dimensions& dimensions);
         /**
          * @brief Sets the terminal window title.
-         * @param The title to be set.
+         * @param title The title to be set.
          */
         static void SetTitle(std::string title);
         /** @brief Opens the terminal alternate window buffer. */
