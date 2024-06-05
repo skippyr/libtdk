@@ -249,7 +249,12 @@ namespace TMK
 
     void Font::SetWeight(Weight weight)
     {
-        WriteANSISequence(weight == Weight::Default ? "\x1b[22m" : "\x1b[22;%dm", static_cast<int>(weight));
+        WriteANSISequence("\x1b[22;%dm", static_cast<int>(weight));
+    }
+
+    void Font::ResetWeight()
+    {
+        WriteANSISequence("\x1b[22m");
     }
 
     void Font::SetEffect(Effect effect)

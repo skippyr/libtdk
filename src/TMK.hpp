@@ -42,12 +42,10 @@ namespace TMK
     /** @brief Contains the available terminal font weights. */
     enum class Weight
     {
-        /** @brief Sets the weight to default. */
-        Default,
         /** @brief Usually rendered as bold and/or with bright color. */
-        Bold,
+        Bold = 1,
         /** @brief Usually rendered with faint color. */
-        Dim
+        Light
     };
 
     /** @brief Contains the ANSI codes of the first 16 colors of the XTerm palette. */
@@ -285,6 +283,8 @@ namespace TMK
          * @param weight The weight to be set.
          */
         static void SetWeight(Weight weight);
+        /** @brief Sets the font weight to default. */
+        static void ResetWeight();
         /**
          * @brief Sets a font effect.
          * @param effect The effect to be set.
