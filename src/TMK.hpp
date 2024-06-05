@@ -93,7 +93,6 @@ namespace TMK
     class Input final
     {
     public:
-        Input() = delete;
         /**
          * @brief Checks if the input stream is connected to an interactive terminal (TTY).
          * @returns A boolean that states the stream is a TTY.
@@ -111,13 +110,15 @@ namespace TMK
          * @returns The file descriptor number associated with the stream.
          */
         static int GetFileNo();
+
+    private:
+        Input() = delete;
     };
 
     /** @brief Represents the standard terminal output stream. */
     class Output final
     {
     public:
-        Output() = delete;
         /**
          * @brief Writes a formatted string to the output stream with a newline character appended at its end.
          * @param format The format to be used. It uses the same specifiers as the printf function family.
@@ -152,13 +153,15 @@ namespace TMK
          * @returns The file descriptor number associated with the stream.
          */
         static int GetFileNo();
+
+    private:
+        Output() = delete;
     };
 
     /** @brief Represents the standard terminal error stream. */
     class Error final
     {
     public:
-        Error() = delete;
         /**
          * @brief Writes a formatted string to the error stream with a newline character appended at its end.
          * @param format The format to be used. It uses the same specifiers as the printf function family.
@@ -193,6 +196,9 @@ namespace TMK
          * @returns The file descriptor number associated with the stream.
          */
         static int GetFileNo();
+
+    private:
+        Error() = delete;
     };
 
     /** @brief Represents the terminal command-line arguments. */
@@ -273,7 +279,6 @@ namespace TMK
     class Font final
     {
     public:
-        Font() = delete;
         /**
          * @brief Sets the font weight.
          * @param weight The weight to be set.
@@ -318,13 +323,15 @@ namespace TMK
          * @param The layer where the color should be applied on.
          */
         static void SetRGBColor(int red, int green, int blue, Layer layer);
+
+    private:
+        Font() = delete;
     };
 
     /** @brief Represents the terminal window. */
     class Window final
     {
     public:
-        Window() = delete;
         /**
          * @brief Gets the terminal window dimensions.
          * @param dimensions The address where the dimensions information will be put into.
@@ -341,15 +348,20 @@ namespace TMK
         static void CloseAlternateBuffer();
         /** @brief Clears the terminal window. */
         static void Clear();
+
+    private:
+        Window() = delete;
     };
 
     /** @brief Represents the terminal bell. */
-    class Bell
+    class Bell final
     {
     public:
-        Bell() = delete;
         /** @brief Rings the terminal bell. */
         static void Ring();
+
+    private:
+        Bell() = delete;
     };
 
     /**
