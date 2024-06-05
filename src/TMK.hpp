@@ -211,6 +211,7 @@ namespace TMK
          * @param The arguments.
          */
         Arguments(int totalArguments, char** arguments);
+        /** @brief Destroys an instance of the Arguments class. */
         ~Arguments();
         /**
          * @brief Gets the total arguments.
