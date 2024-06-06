@@ -60,6 +60,8 @@ namespace TMK
                 char** m_arguments;
             };
 
+            static Arguments GetArguments(int rawTotalArguments, char** rawArguments);
+
         private:
             Process() = delete;
         };

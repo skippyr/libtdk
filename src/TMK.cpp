@@ -170,6 +170,24 @@ namespace TMK
         return offset < m_totalArguments ? m_arguments[offset] : "";
     }
 
+    Terminal::Process::Arguments Terminal::Process::GetArguments(int rawTotalArguments, char** rawArguments)
+    {
+#ifdef _WIN32
+        LPWSTR* utf16Arguments = CommandLineToArgvW(GetCommandLineW(), &rawTotalArguments);
+        char** arguments = new char*[rawTotalArguments];
+        for (int offset = 0; offset < rawTotalArguments; ++offset)
+        {
+            int size = WideCharToMultiByte(CP_UTF8, 0, utf16Arguments[offset], -1, nullptr, 0, nullptr, nullptr);
+            arguments[offset] = new char[size];
+            WideCharToMultiByte(CP_UTF8, 0, utf16Arguments[offset], -1, arguments[offset], size, nullptr, nullptr);
+        }
+        LocalFree(utf16Arguments);
+        return Arguments(rawTotalArguments, arguments);
+#else
+        return Arguments(rawTotalArguments, rawArguments);
+#endif
+    }
+
     std::FILE* Terminal::Error::GetFile()
     {
         return stderr;
