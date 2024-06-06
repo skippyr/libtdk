@@ -27,17 +27,17 @@ namespace TMK
         {
             if (!(g_cache & CACHE_HAS_BEEN_FILLED_FLAG))
             {
+#ifdef _WIN32
+                HANDLE handle;
+                DWORD mode;
+                SetConsoleOutputCP(CP_UTF8);
+                (GetConsoleMode((handle = GetStdHandle(STD_OUTPUT_HANDLE)), &mode) ||
+                 GetConsoleMode((handle = GetStdHandle(STD_ERROR_HANDLE)), &mode)) &&
+                    SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+#endif
                 g_cache |= TTY_CACHE(Terminal::Input) | TTY_CACHE(Terminal::Output) | TTY_CACHE(Terminal::Error) |
                            CACHE_HAS_BEEN_FILLED_FLAG;
             }
-#ifdef _WIN32
-            HANDLE handle;
-            DWORD mode;
-            SetConsoleOutputCP(CP_UTF8);
-            (GetConsoleMode((handle = GetStdHandle(STD_OUTPUT_HANDLE)), &mode) ||
-             GetConsoleMode((handle = GetStdHandle(STD_ERROR_HANDLE)), &mode)) &&
-                SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-#endif
         }
 
     private:
@@ -50,6 +50,23 @@ namespace TMK
     }
 
     int Terminal::Output::WriteLine(std::string format, ...)
+    {
+        Setup::InitEnvironment();
+        std::va_list arguments;
+        va_start(arguments, format);
+        int totalBytesWritten = std::vprintf(format.c_str(), arguments);
+        std::putchar('\n');
+        va_end(arguments);
+        return -(totalBytesWritten < 0);
+    }
+
+    int Terminal::Output::WriteLine()
+    {
+        Setup::InitEnvironment();
+        return -(std::putchar('\n') == EOF);
+    }
+
+    int Terminal::Output::Write(std::string format, ...)
     {
         Setup::InitEnvironment();
         std::va_list arguments;

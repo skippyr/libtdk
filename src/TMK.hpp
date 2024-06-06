@@ -20,6 +20,8 @@ namespace TMK
         {
         public:
             static int WriteLine(std::string format, ...);
+            static int WriteLine();
+            static int Write(std::string format, ...);
             static int GetFileNumber();
 
         private:
