@@ -81,6 +81,33 @@ namespace TMK
         return 1;
     }
 
+    int Terminal::Error::WriteLine(std::string format, ...)
+    {
+        Setup::InitEnvironment();
+        std::va_list arguments;
+        va_start(arguments, format);
+        int totalBytesWritten = std::vfprintf(stderr, format.c_str(), arguments);
+        std::fputc('\n', stderr);
+        va_end(arguments);
+        return -(totalBytesWritten < 0);
+    }
+
+    int Terminal::Error::WriteLine()
+    {
+        Setup::InitEnvironment();
+        return -(std::fputc('\n', stderr) == EOF);
+    }
+
+    int Terminal::Error::Write(std::string format, ...)
+    {
+        Setup::InitEnvironment();
+        std::va_list arguments;
+        va_start(arguments, format);
+        int totalBytesWritten = std::vfprintf(stderr, format.c_str(), arguments);
+        va_end(arguments);
+        return -(totalBytesWritten < 0);
+    }
+
     int Terminal::Error::GetFileNumber()
     {
         return 2;
