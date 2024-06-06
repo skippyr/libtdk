@@ -44,6 +44,26 @@ namespace TMK
             Error() = delete;
         };
 
+        class Process
+        {
+        public:
+            class Arguments
+            {
+            public:
+                Arguments(int totalArguments, char** arguments);
+                ~Arguments();
+                int GetTotalArguments() const;
+                std::string operator[](std::size_t offset);
+
+            private:
+                int m_totalArguments;
+                char** m_arguments;
+            };
+
+        private:
+            Process() = delete;
+        };
+
         class Dimensions
         {
         public:

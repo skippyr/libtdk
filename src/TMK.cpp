@@ -144,6 +144,32 @@ namespace TMK
         return -(totalBytesWritten < 0);
     }
 
+    Terminal::Process::Arguments::Arguments(int totalArguments, char** arguments)
+        : m_totalArguments(totalArguments), m_arguments(arguments)
+    {
+    }
+
+    Terminal::Process::Arguments::~Arguments()
+    {
+#ifdef _WIN32
+        for (int offset = 0; offset < m_totalArguments; ++offset)
+        {
+            delete[] m_arguments[offset];
+        }
+        delete[] m_arguments;
+#endif
+    }
+
+    int Terminal::Process::Arguments::GetTotalArguments() const
+    {
+        return m_totalArguments;
+    }
+
+    std::string Terminal::Process::Arguments::operator[](std::size_t offset)
+    {
+        return offset < m_totalArguments ? m_arguments[offset] : "";
+    }
+
     std::FILE* Terminal::Error::GetFile()
     {
         return stderr;
