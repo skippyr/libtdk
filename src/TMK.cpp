@@ -7,6 +7,7 @@
 #include <io.h>
 #else
 #include <unistd.h>
+#include <sys/ioctl.h>
 #endif
 
 #ifdef _WIN32
@@ -44,6 +45,11 @@ namespace TMK
         Setup() = delete;
     };
 
+    std::FILE* Terminal::Input::GetFile()
+    {
+        return stdin;
+    }
+
     int Terminal::Input::GetFileNumber()
     {
         return 0;
@@ -74,6 +80,11 @@ namespace TMK
         int totalBytesWritten = std::vprintf(format.c_str(), arguments);
         va_end(arguments);
         return -(totalBytesWritten < 0);
+    }
+
+    std::FILE* Terminal::Output::GetFile()
+    {
+        return stdout;
     }
 
     int Terminal::Output::GetFileNumber()
@@ -108,8 +119,54 @@ namespace TMK
         return -(totalBytesWritten < 0);
     }
 
+    std::FILE* Terminal::Error::GetFile()
+    {
+        return stderr;
+    }
+
     int Terminal::Error::GetFileNumber()
     {
         return 2;
+    }
+
+    Terminal::Dimensions::Dimensions() : m_width(0), m_height(0)
+    {
+    }
+
+    Terminal::Dimensions::Dimensions(unsigned short width, unsigned short height) : m_width(width), m_height(height)
+    {
+    }
+
+    unsigned short Terminal::Dimensions::GetWidth() const
+    {
+        return m_width;
+    }
+
+    unsigned short Terminal::Dimensions::GetHeight() const
+    {
+        return m_height;
+    }
+
+    int Terminal::Window::GetDimensions(Dimensions& dimensions)
+    {
+#ifdef _WIN32
+        CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
+        if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) &&
+            !GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo))
+        {
+            return -1;
+        }
+        dimensions = Dimensions(bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1,
+                                bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1);
+#else
+        struct winsize size;
+        if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &size) && ioctl(STDIN_FILENO, TIOCGWINSZ, &size) &&
+            ioctl(STDERR_FILENO, TIOCGWINSZ, &size))
+        {
+            return -1;
+        }
+        dimensions = Dimensions(size.ws_col, size.ws_row);
+#endif
+        return 0;
     }
 }
