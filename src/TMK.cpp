@@ -6,8 +6,8 @@
 #include <Windows.h>
 #include <io.h>
 #else
-#include <unistd.h>
 #include <sys/ioctl.h>
+#include <unistd.h>
 #endif
 
 #ifdef _WIN32
@@ -15,6 +15,7 @@
 #else
 #define TTY_CACHE(a_stream) (isatty(a_stream::GetFileNumber()) << a_stream::GetFileNumber())
 #endif
+#define IS_TTY(a_stream) (g_cache & 1 << a_stream::GetFileNumber())
 #define CACHE_HAS_BEEN_FILLED_FLAG (1 << 7)
 
 namespace TMK
@@ -41,6 +42,22 @@ namespace TMK
             }
         }
 
+        static int WriteEscapeSequence(std::string format, ...)
+        {
+            Setup::InitEnvironment();
+            if (!IS_TTY(Terminal::Output) && !IS_TTY(Terminal::Error))
+            {
+                return -1;
+            }
+            std::va_list arguments;
+            va_start(arguments, format);
+            int totalBytesWritten =
+                std::vfprintf(IS_TTY(Terminal::Output) ? Terminal::Output::GetFile() : Terminal::Error::GetFile(),
+                              format.c_str(), arguments);
+            va_end(arguments);
+            return -(totalBytesWritten < 0);
+        }
+
     private:
         Setup() = delete;
     };
@@ -53,6 +70,11 @@ namespace TMK
     int Terminal::Input::GetFileNumber()
     {
         return 0;
+    }
+
+    void Terminal::Output::Flush()
+    {
+        std::fflush(GetFile());
     }
 
     int Terminal::Output::WriteLine(std::string format, ...)
@@ -95,10 +117,11 @@ namespace TMK
     int Terminal::Error::WriteLine(std::string format, ...)
     {
         Setup::InitEnvironment();
+        Terminal::Output::Flush();
         std::va_list arguments;
         va_start(arguments, format);
-        int totalBytesWritten = std::vfprintf(stderr, format.c_str(), arguments);
-        std::fputc('\n', stderr);
+        int totalBytesWritten = std::vfprintf(GetFile(), format.c_str(), arguments);
+        std::fputc('\n', GetFile());
         va_end(arguments);
         return -(totalBytesWritten < 0);
     }
@@ -106,15 +129,17 @@ namespace TMK
     int Terminal::Error::WriteLine()
     {
         Setup::InitEnvironment();
-        return -(std::fputc('\n', stderr) == EOF);
+        Terminal::Output::Flush();
+        return -(std::fputc('\n', GetFile()) == EOF);
     }
 
     int Terminal::Error::Write(std::string format, ...)
     {
         Setup::InitEnvironment();
+        Terminal::Output::Flush();
         std::va_list arguments;
         va_start(arguments, format);
-        int totalBytesWritten = std::vfprintf(stderr, format.c_str(), arguments);
+        int totalBytesWritten = std::vfprintf(GetFile(), format.c_str(), arguments);
         va_end(arguments);
         return -(totalBytesWritten < 0);
     }
@@ -168,5 +193,10 @@ namespace TMK
         dimensions = Dimensions(size.ws_col, size.ws_row);
 #endif
         return 0;
+    }
+
+    void Terminal::Bell::Ring()
+    {
+        Setup::WriteEscapeSequence("\7");
     }
 }

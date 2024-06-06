@@ -20,6 +20,7 @@ namespace TMK
         class Output
         {
         public:
+            static void Flush();
             static int WriteLine(std::string format, ...);
             static int WriteLine();
             static int Write(std::string format, ...);
@@ -63,6 +64,15 @@ namespace TMK
 
         private:
             Window() = delete;
+        };
+
+        class Bell
+        {
+        public:
+            static void Ring();
+
+        private:
+            Bell() = delete;
         };
 
     private:
