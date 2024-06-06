@@ -144,19 +144,32 @@ namespace TMK
         return -(totalBytesWritten < 0);
     }
 
-    Terminal::Process::Arguments::Arguments(int totalArguments, char** arguments)
-        : m_totalArguments(totalArguments), m_arguments(arguments)
+#ifdef _WIN32
+    Terminal::Process::Arguments::Arguments(int totalArguments, char** utf8Arguments, wchar_t** utf16Arguments)
+        : m_totalArguments(totalArguments), m_utf8Arguments(utf8Arguments), m_utf16Arguments(utf16Arguments)
     {
     }
+
+    std::wstring Terminal::Process::Arguments::GetUTF16ArgumentByOffset(std::size_t offset) const
+    {
+        return offset < m_totalArguments ? m_utf16Arguments[offset] : L"";
+    }
+#else
+    Terminal::Process::Arguments::Arguments(int totalArguments, char** utf8Arguments)
+        : m_totalArguments(totalArguments), m_utf8Arguments(utf8Arguments)
+    {
+    }
+#endif
 
     Terminal::Process::Arguments::~Arguments()
     {
 #ifdef _WIN32
+        LocalFree(m_utf16Arguments);
         for (int offset = 0; offset < m_totalArguments; ++offset)
         {
-            delete[] m_arguments[offset];
+            delete[] m_utf8Arguments[offset];
         }
-        delete[] m_arguments;
+        delete[] m_utf8Arguments;
 #endif
     }
 
@@ -165,24 +178,23 @@ namespace TMK
         return m_totalArguments;
     }
 
-    std::string Terminal::Process::Arguments::operator[](std::size_t offset)
+    std::string Terminal::Process::Arguments::GetUTF8ArgumentByOffset(std::size_t offset) const
     {
-        return offset < m_totalArguments ? m_arguments[offset] : "";
+        return offset < m_totalArguments ? m_utf8Arguments[offset] : "";
     }
 
     Terminal::Process::Arguments Terminal::Process::GetArguments(int rawTotalArguments, char** rawArguments)
     {
 #ifdef _WIN32
         LPWSTR* utf16Arguments = CommandLineToArgvW(GetCommandLineW(), &rawTotalArguments);
-        char** arguments = new char*[rawTotalArguments];
+        char** utf8Arguments = new char*[rawTotalArguments];
         for (int offset = 0; offset < rawTotalArguments; ++offset)
         {
             int size = WideCharToMultiByte(CP_UTF8, 0, utf16Arguments[offset], -1, nullptr, 0, nullptr, nullptr);
-            arguments[offset] = new char[size];
-            WideCharToMultiByte(CP_UTF8, 0, utf16Arguments[offset], -1, arguments[offset], size, nullptr, nullptr);
+            utf8Arguments[offset] = new char[size];
+            WideCharToMultiByte(CP_UTF8, 0, utf16Arguments[offset], -1, utf8Arguments[offset], size, nullptr, nullptr);
         }
-        LocalFree(utf16Arguments);
-        return Arguments(rawTotalArguments, arguments);
+        return Arguments(rawTotalArguments, utf8Arguments, utf16Arguments);
 #else
         return Arguments(rawTotalArguments, rawArguments);
 #endif
