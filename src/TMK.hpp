@@ -7,6 +7,12 @@ namespace TMK
     class Terminal
     {
     public:
+        enum class FontWeight
+        {
+            Bold = 1,
+            Dim
+        };
+
         class Input
         {
         public:
@@ -106,6 +112,16 @@ namespace TMK
 
         private:
             Bell() = delete;
+        };
+
+        class Font
+        {
+        public:
+            static void SetWeight(FontWeight weight);
+            static void ResetWeight();
+
+        private:
+            Font() = delete;
         };
 
     private:

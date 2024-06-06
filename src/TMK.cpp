@@ -276,4 +276,14 @@ namespace TMK
     {
         Setup::WriteEscapeSequence("\7");
     }
+
+    void Terminal::Font::SetWeight(FontWeight weight)
+    {
+        Setup::WriteEscapeSequence("\x1b[22;%dm", static_cast<int>(weight));
+    }
+
+    void Terminal::Font::ResetWeight()
+    {
+        Setup::WriteEscapeSequence("\x1b[22m");
+    }
 }
