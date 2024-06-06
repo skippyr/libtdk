@@ -72,6 +72,11 @@ namespace TMK
         return 0;
     }
 
+    bool Terminal::Input::IsTTY()
+    {
+        return IS_TTY(Input);
+    }
+
     void Terminal::Output::Flush()
     {
         std::fflush(GetFile());
@@ -114,6 +119,12 @@ namespace TMK
         return 1;
     }
 
+    bool Terminal::Output::IsTTY()
+    {
+        Setup::InitEnvironment();
+        return IS_TTY(Output);
+    }
+
     int Terminal::Error::WriteLine(std::string format, ...)
     {
         Setup::InitEnvironment();
@@ -142,6 +153,21 @@ namespace TMK
         int totalBytesWritten = std::vfprintf(GetFile(), format.c_str(), arguments);
         va_end(arguments);
         return -(totalBytesWritten < 0);
+    }
+
+    std::FILE* Terminal::Error::GetFile()
+    {
+        return stderr;
+    }
+
+    int Terminal::Error::GetFileNumber()
+    {
+        return 2;
+    }
+
+    bool Terminal::Error::IsTTY()
+    {
+        return IS_TTY(Error);
     }
 
 #ifdef _WIN32
@@ -200,14 +226,9 @@ namespace TMK
 #endif
     }
 
-    std::FILE* Terminal::Error::GetFile()
+    void Terminal::Process::Exit(int exitCode)
     {
-        return stderr;
-    }
-
-    int Terminal::Error::GetFileNumber()
-    {
-        return 2;
+        std::exit(exitCode);
     }
 
     Terminal::Dimensions::Dimensions() : m_width(0), m_height(0)

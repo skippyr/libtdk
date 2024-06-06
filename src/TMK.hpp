@@ -12,6 +12,7 @@ namespace TMK
         public:
             static std::FILE* GetFile();
             static int GetFileNumber();
+            static bool IsTTY();
 
         private:
             Input() = delete;
@@ -26,6 +27,7 @@ namespace TMK
             static int Write(std::string format, ...);
             static std::FILE* GetFile();
             static int GetFileNumber();
+            static bool IsTTY();
 
         private:
             Output() = delete;
@@ -39,6 +41,7 @@ namespace TMK
             static int Write(std::string format, ...);
             static std::FILE* GetFile();
             static int GetFileNumber();
+            static bool IsTTY();
 
         private:
             Error() = delete;
@@ -58,7 +61,6 @@ namespace TMK
                 ~Arguments();
                 int GetTotalArguments() const;
                 std::string GetUTF8ArgumentByOffset(std::size_t offset) const;
-                std::string operator[](std::size_t offset);
 
             private:
 #ifdef _WIN32
@@ -69,6 +71,7 @@ namespace TMK
             };
 
             static Arguments GetArguments(int rawTotalArguments, char** rawArguments);
+            static void Exit(int exitCode);
 
         private:
             Process() = delete;
