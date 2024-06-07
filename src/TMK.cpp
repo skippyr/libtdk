@@ -62,6 +62,45 @@ namespace TMK
         Setup() = delete;
     };
 
+#ifdef _WIN32
+    Arguments::Arguments(int totalArguments, char** utf8Arguments, wchar_t** utf16Arguments)
+        : m_totalArguments(totalArguments), m_utf8Arguments(utf8Arguments), m_utf16Arguments(utf16Arguments)
+    {
+    }
+
+    std::wstring Arguments::GetUTF16ArgumentByOffset(std::size_t offset) const
+    {
+        return offset < m_totalArguments ? m_utf16Arguments[offset] : L"";
+    }
+#else
+    Arguments(int totalArguments, char** utf8Arguments)
+        : m_totalArguments(totalArguments), m_utf8Arguments(utf8Arguments)
+    {
+    }
+#endif
+
+    Arguments::~Arguments()
+    {
+#ifdef _WIN32
+        LocalFree(m_utf16Arguments);
+        for (int offset = 0; offset < m_totalArguments; ++offset)
+        {
+            delete[] m_utf8Arguments[offset];
+        }
+        delete[] m_utf8Arguments;
+#endif
+    }
+
+    int Arguments::GetTotalArguments() const
+    {
+        return m_totalArguments;
+    }
+
+    std::string Arguments::GetUTF8ArgumentByOffset(std::size_t offset) const
+    {
+        return offset < m_totalArguments ? m_utf8Arguments[offset] : "";
+    }
+
     std::FILE* Terminal::Input::GetFile()
     {
         return stdin;
@@ -170,46 +209,7 @@ namespace TMK
         return IS_TTY(Error);
     }
 
-#ifdef _WIN32
-    Terminal::Process::Arguments::Arguments(int totalArguments, char** utf8Arguments, wchar_t** utf16Arguments)
-        : m_totalArguments(totalArguments), m_utf8Arguments(utf8Arguments), m_utf16Arguments(utf16Arguments)
-    {
-    }
-
-    std::wstring Terminal::Process::Arguments::GetUTF16ArgumentByOffset(std::size_t offset) const
-    {
-        return offset < m_totalArguments ? m_utf16Arguments[offset] : L"";
-    }
-#else
-    Terminal::Process::Arguments::Arguments(int totalArguments, char** utf8Arguments)
-        : m_totalArguments(totalArguments), m_utf8Arguments(utf8Arguments)
-    {
-    }
-#endif
-
-    Terminal::Process::Arguments::~Arguments()
-    {
-#ifdef _WIN32
-        LocalFree(m_utf16Arguments);
-        for (int offset = 0; offset < m_totalArguments; ++offset)
-        {
-            delete[] m_utf8Arguments[offset];
-        }
-        delete[] m_utf8Arguments;
-#endif
-    }
-
-    int Terminal::Process::Arguments::GetTotalArguments() const
-    {
-        return m_totalArguments;
-    }
-
-    std::string Terminal::Process::Arguments::GetUTF8ArgumentByOffset(std::size_t offset) const
-    {
-        return offset < m_totalArguments ? m_utf8Arguments[offset] : "";
-    }
-
-    Terminal::Process::Arguments Terminal::Process::GetArguments(int rawTotalArguments, char** rawArguments)
+    Arguments Terminal::Process::GetArguments(int rawTotalArguments, char** rawArguments)
     {
 #ifdef _WIN32
         LPWSTR* utf16Arguments = CommandLineToArgvW(GetCommandLineW(), &rawTotalArguments);

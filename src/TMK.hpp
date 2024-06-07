@@ -4,6 +4,26 @@
 
 namespace TMK
 {
+    class Arguments
+    {
+    public:
+#ifdef _WIN32
+        Arguments(int totalArguments, char** utf8Arguments, wchar_t** utf16Arguments);
+        std::wstring GetUTF16ArgumentByOffset(std::size_t offset) const;
+#endif
+        Arguments(int totalArguments, char** utf8Arguments);
+        ~Arguments();
+        int GetTotalArguments() const;
+        std::string GetUTF8ArgumentByOffset(std::size_t offset) const;
+
+    private:
+#ifdef _WIN32
+        wchar_t** m_utf16Arguments;
+#endif
+        int m_totalArguments;
+        char** m_utf8Arguments;
+    };
+
     class Terminal
     {
     public:
@@ -56,26 +76,6 @@ namespace TMK
         class Process
         {
         public:
-            class Arguments
-            {
-            public:
-#ifdef _WIN32
-                Arguments(int totalArguments, char** utf8Arguments, wchar_t** utf16Arguments);
-                std::wstring GetUTF16ArgumentByOffset(std::size_t offset) const;
-#endif
-                Arguments(int totalArguments, char** utf8Arguments);
-                ~Arguments();
-                int GetTotalArguments() const;
-                std::string GetUTF8ArgumentByOffset(std::size_t offset) const;
-
-            private:
-#ifdef _WIN32
-                wchar_t** m_utf16Arguments;
-#endif
-                int m_totalArguments;
-                char** m_utf8Arguments;
-            };
-
             static Arguments GetArguments(int rawTotalArguments, char** rawArguments);
             static void Exit(int exitCode);
 
