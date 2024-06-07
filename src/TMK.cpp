@@ -119,8 +119,26 @@ namespace TMK
         return m_height;
     }
 
+    HexColor::HexColor(unsigned int code) : m_code((std::min)(static_cast<int>(code), 0xffffff))
+    {
+    }
+
+    HexColor::HexColor(RGBColor color) : m_code(color.GetRed() << 16 | color.GetGreen() << 8 | color.GetBlue())
+    {
+    }
+
+    unsigned int HexColor::HexColor::GetCode() const
+    {
+        return m_code;
+    }
+
     RGBColor::RGBColor(unsigned char red, unsigned char green, unsigned char blue)
         : m_red(red), m_green(green), m_blue(blue)
+    {
+    }
+
+    RGBColor::RGBColor(HexColor color)
+        : m_red(color.GetCode() >> 16 & 0xff), m_green(color.GetCode() >> 8 & 0xff), m_blue(color.GetCode() & 0xff)
     {
     }
 
@@ -320,6 +338,16 @@ namespace TMK
     void Terminal::Font::SetRGBColor(RGBColor color, Layer layer)
     {
         SetRGBColor(color.GetRed(), color.GetGreen(), color.GetBlue(), layer);
+    }
+
+    void Terminal::Font::SetHexColor(unsigned int hex, Layer layer)
+    {
+        SetRGBColor(RGBColor(HexColor(hex)), layer);
+    }
+
+    void Terminal::Font::SetHexColor(HexColor color, Layer layer)
+    {
+        SetRGBColor(RGBColor(color), layer);
     }
 
     void Terminal::Font::ResetColors()

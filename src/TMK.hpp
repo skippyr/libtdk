@@ -36,6 +36,8 @@ namespace TMK
         LightWhite
     };
 
+    class RGBColor;
+
     class Arguments
     {
     public:
@@ -69,10 +71,22 @@ namespace TMK
         unsigned short m_height;
     };
 
+    class HexColor
+    {
+    public:
+        HexColor(unsigned int code);
+        HexColor(RGBColor color);
+        unsigned int GetCode() const;
+
+    private:
+        unsigned int m_code;
+    };
+
     class RGBColor
     {
     public:
         RGBColor(unsigned char red, unsigned char green, unsigned char blue);
+        RGBColor(HexColor color);
         unsigned char GetRed() const;
         unsigned char GetGreen() const;
         unsigned char GetBlue() const;
@@ -162,6 +176,8 @@ namespace TMK
             static void SetXColor(XColor color, Layer layer);
             static void SetRGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer);
             static void SetRGBColor(RGBColor color, Layer layer);
+            static void SetHexColor(unsigned int hex, Layer layer);
+            static void SetHexColor(HexColor color, Layer layer);
             static void ResetColors();
             static void ResetWeight();
 
