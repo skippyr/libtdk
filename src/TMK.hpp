@@ -4,6 +4,12 @@
 
 namespace TMK
 {
+    enum class FontWeight
+    {
+        Bold = 1,
+        Dim
+    };
+
     class Arguments
     {
     public:
@@ -40,12 +46,6 @@ namespace TMK
     class Terminal
     {
     public:
-        enum class FontWeight
-        {
-            Bold = 1,
-            Dim
-        };
-
         class Input
         {
         public:
