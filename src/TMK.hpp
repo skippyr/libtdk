@@ -2,44 +2,75 @@
 
 #include <iostream>
 
+/**
+ * @brief A powerful and open-source C++ terminal manipulation library for Windows and Linux. It is capable of handling
+ * terminal attributes, colors, effects, arguments and event readings targetting UTF-8 and UTF-16 encodings.
+ */
 namespace TMK
 {
+    /** @brief Contains the available terminal font weights. */
     enum class FontWeight
     {
+        /** @brief Usually rendered as bold weight and/or with bright colors. */
         Bold = 1,
+        /** @brief Usually rendered with faded colors. */
         Dim
     };
 
+    /** @brief Contains the available terminal font layers. */
     enum class FontLayer
     {
+        /** @brief Refers to the letters. */
         Foreground = 3,
+        /** @brief Refers to the background of the letters. */
         Background
     };
 
+    /** @brief Contains the available terminal cursor shapes. */
     enum class CursorShape
     {
+        /** @brief Fills the whole character cell. */
         Block = 2,
+        /** @brief Fills a small region at the bottom of the character cell. */
         Underline = 4,
+        /** @brief Fills a small region at the left of the character cell. */
         Bar = 6
     };
-
+    
+    /** @brief Contains the ANSI codes of the first 16 colors of the XTerm color palette. */
     enum class XColor
     {
-        Black,
-        Red,
-        Green,
-        Yellow,
-        Blue,
-        Magenta,
-        Cyan,
-        White,
+        /** @brief The dark variant of the black color. */
+        DarkBlack,
+        /** @brief The dark variant of the red color. */
+        DarkRed,
+        /** @brief The dark variant of the green color. */
+        DarkGreen,
+        /** @brief The dark variant of the yellow color. */
+        DarkYellow,
+        /** @brief The dark variant of the blue color. */
+        DarkBlue,
+        /** @brief The dark variant of the magenta color. */
+        DarkMagenta,
+        /** @brief The dark variant of the cyan color. */
+        DarkCyan,
+        /** @brief The dark variant of the white color. */
+        DarkWhite,
+        /** @brief The light variant of the black color. */
         LightBlack,
+        /** @brief The light variant of the red color. */
         LightRed,
+        /** @brief The light variant of the green color. */
         LightGreen,
+        /** @brief The light variant of the yellow color. */
         LightYellow,
+        /** @brief The light variant of the blue color. */
         LightBlue,
+        /** @brief The light variant of the magenta color. */
         LightMagenta,
+        /** @brief The light variant of the cyan color. */
         LightCyan,
+        /** @brief The light variant of the white color. */
         LightWhite
     };
 
@@ -104,6 +135,10 @@ namespace TMK
         unsigned char m_blue;
     };
 
+    class NoValidTTYException
+    {
+    };
+
     class Terminal
     {
     public:
@@ -161,7 +196,12 @@ namespace TMK
         class Window
         {
         public:
-            static int GetDimensions(Dimensions& dimensions);
+            /**
+             * @brief Gets the terminal window dimensions.
+             * @returns The terminal window dimensions.
+             * @exception NoValidTTYException If no standard stream connected to a terminal window is found.
+             */
+            static Dimensions GetDimensions();
             static void OpenAlternateWindow();
             static void CloseAlternateWindow();
 

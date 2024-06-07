@@ -292,27 +292,26 @@ namespace TMK
         std::exit(exitCode);
     }
 
-    int Terminal::Window::GetDimensions(Dimensions& dimensions)
+    Dimensions Terminal::Window::GetDimensions()
     {
 #ifdef _WIN32
         CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
         if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) &&
             !GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo))
         {
-            return -1;
+            throw NoValidTTYException();
         }
-        dimensions = Dimensions(bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1,
-                                bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1);
+        return Dimensions(bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1,
+                          bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1);
 #else
         struct winsize size;
         if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &size) && ioctl(STDIN_FILENO, TIOCGWINSZ, &size) &&
             ioctl(STDERR_FILENO, TIOCGWINSZ, &size))
         {
-            return -1;
+            throw NoValidTTYException();
         }
-        dimensions = Dimensions(size.ws_col, size.ws_row);
+        return Dimensions(size.ws_col, size.ws_row);
 #endif
-        return 0;
     }
 
     void Terminal::Window::OpenAlternateWindow()
