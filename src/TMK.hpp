@@ -4,16 +4,23 @@
 
 namespace TMK
 {
-    enum class Weight
+    enum class FontWeight
     {
         Bold = 1,
         Dim
     };
 
-    enum class Layer
+    enum class FontLayer
     {
         Foreground = 3,
         Background
+    };
+
+    enum class CursorShape
+    {
+        Block = 2,
+        Underline = 4,
+        Bar = 6
     };
 
     enum class XColor
@@ -171,18 +178,28 @@ namespace TMK
         class Font
         {
         public:
-            static void SetWeight(Weight weight);
-            static void SetXColor(unsigned char color, Layer layer);
-            static void SetXColor(XColor color, Layer layer);
-            static void SetRGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer);
-            static void SetRGBColor(RGBColor color, Layer layer);
-            static void SetHexColor(unsigned int hex, Layer layer);
-            static void SetHexColor(HexColor color, Layer layer);
+            static void SetWeight(FontWeight weight);
+            static void SetXColor(unsigned char color, FontLayer layer);
+            static void SetXColor(XColor color, FontLayer layer);
+            static void SetRGBColor(unsigned char red, unsigned char green, unsigned char blue, FontLayer layer);
+            static void SetRGBColor(RGBColor color, FontLayer layer);
+            static void SetHexColor(unsigned int hex, FontLayer layer);
+            static void SetHexColor(HexColor color, FontLayer layer);
             static void ResetColors();
             static void ResetWeight();
 
         private:
             Font() = delete;
+        };
+
+        class Cursor
+        {
+        public:
+            static void SetShape(CursorShape shape, bool isBlinking);
+            static void ResetShape();
+
+        private:
+            Cursor() = delete;
         };
 
     private:

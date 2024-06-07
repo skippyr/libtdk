@@ -315,37 +315,37 @@ namespace TMK
         Setup::WriteEscapeSequence("\7");
     }
 
-    void Terminal::Font::SetWeight(Weight weight)
+    void Terminal::Font::SetWeight(FontWeight weight)
     {
         Setup::WriteEscapeSequence("\x1b[22;%dm", static_cast<int>(weight));
     }
 
-    void Terminal::Font::SetXColor(unsigned char color, Layer layer)
+    void Terminal::Font::SetXColor(unsigned char color, FontLayer layer)
     {
         Setup::WriteEscapeSequence("\x1b[%d8;5;%hum", static_cast<int>(layer), color);
     }
 
-    void Terminal::Font::SetXColor(XColor color, Layer layer)
+    void Terminal::Font::SetXColor(XColor color, FontLayer layer)
     {
         Terminal::Font::SetXColor(static_cast<unsigned char>(color), layer);
     }
 
-    void Terminal::Font::SetRGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer)
+    void Terminal::Font::SetRGBColor(unsigned char red, unsigned char green, unsigned char blue, FontLayer layer)
     {
         Setup::WriteEscapeSequence("\x1b[%d8;2;%hu;%hu;%hum", static_cast<int>(layer), red, green, blue);
     }
 
-    void Terminal::Font::SetRGBColor(RGBColor color, Layer layer)
+    void Terminal::Font::SetRGBColor(RGBColor color, FontLayer layer)
     {
         SetRGBColor(color.GetRed(), color.GetGreen(), color.GetBlue(), layer);
     }
 
-    void Terminal::Font::SetHexColor(unsigned int hex, Layer layer)
+    void Terminal::Font::SetHexColor(unsigned int hex, FontLayer layer)
     {
         SetRGBColor(RGBColor(HexColor(hex)), layer);
     }
 
-    void Terminal::Font::SetHexColor(HexColor color, Layer layer)
+    void Terminal::Font::SetHexColor(HexColor color, FontLayer layer)
     {
         SetRGBColor(RGBColor(color), layer);
     }
@@ -358,5 +358,15 @@ namespace TMK
     void Terminal::Font::ResetWeight()
     {
         Setup::WriteEscapeSequence("\x1b[22m");
+    }
+
+    void Terminal::Cursor::SetShape(CursorShape shape, bool isBlinking)
+    {
+        Setup::WriteEscapeSequence("\x1b[%d q", static_cast<int>(shape) - isBlinking);
+    }
+
+    void Terminal::Cursor::ResetShape()
+    {
+        Setup::WriteEscapeSequence("\x1b[0 q");
     }
 }
