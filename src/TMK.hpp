@@ -94,14 +94,14 @@ namespace TMK
         /**
          * @brief Creates a new instance of the Arguments class. It is only available on Windows.
          * @param totalArguments The total arguments.
-         * @param utf8Arguments The arguments in UTF8 encoding.
-         * @param utf16Arguments The arguments in UTF16 encoding.
+         * @param utf8Arguments The arguments in UTF-8 encoding.
+         * @param utf16Arguments The arguments in UTF-16 encoding.
          */
         Arguments(int totalArguments, char** utf8Arguments, wchar_t** utf16Arguments);
         /**
-         * @brief Gets an argument in UTF16 encoding by using its offset. It is only available on Windows.
+         * @brief Gets an argument in UTF-16 encoding by using its offset. It is only available on Windows.
          * @param offset The offset to be used.
-         * @returns The argument in UTF16 encoding.
+         * @returns The argument in UTF-16 encoding.
          * @exception OutOfRangeException Gets throws whenever the offset is out of the valid range of arguments.
          */
         std::wstring GetUTF16ArgumentByOffset(std::size_t offset) const;
@@ -121,19 +121,19 @@ namespace TMK
          */
         int GetTotalArguments() const;
         /**
-         * @brief Gets an argument in UTF8 encoding by using its offset.
+         * @brief Gets an argument in UTF-8 encoding by using its offset.
          * @param offset The offset to be used.
-         * @returns The argument in UTF8 encoding.
-         * @exception OutOfRangeException Gets throws whenever the offset is out of the valid range of arguments.
+         * @returns The argument in UTF-8 encoding.
+         * @throws OutOfRangeException Gets thrown whenever the offset is out of the valid range of arguments.
          */
         std::string GetUTF8ArgumentByOffset(std::size_t offset) const;
 
     private:
 #ifdef _WIN32
-        /** @brief The arguments in UTF16 encoding. It is only available on Windows. */
+        /** @brief The arguments in UTF-16 encoding. It is only available on Windows. */
         wchar_t** m_utf16Arguments;
 #endif
-        /** @brief The arguments in UTF8 encoding. */
+        /** @brief The arguments in UTF-8 encoding. */
         char** m_utf8Arguments;
         /** @brief The total arguments. */
         int m_totalArguments;
@@ -169,41 +169,98 @@ namespace TMK
         unsigned short m_totalRows;
     };
 
+    /** @brief Represents a color in hex format. */
     class HexColor
     {
     public:
+        /**
+         * @brief Creates an instance of the HexColor class.
+         * @param The hex code of the color. It must be a value in range from 0x0 to 0xffffff.
+         * @throws OutOfRangeException Gets thrown whenever the hex code is out of the valid range.
+         */
         HexColor(unsigned int code);
+        /**
+         * @brief Creates an instance of the HexColor class.
+         * @param A color in RGB format to be converted.
+         */
         HexColor(RGBColor color);
-        unsigned int GetCode() const;
+
+        /** @brief Gets the hex code of the color as a number. */
+        unsigned int GetCodeAsNumber() const;
 
     private:
+        /** @brief The hex code of the color. */
         unsigned int m_code;
     };
 
+    /** @brief Represents a color in RGB format. */
     class RGBColor
     {
     public:
+        /**
+         * @brief Creates an instance of the RGBColor class.
+         * @param red The red component of the color.
+         * @param green The green component of the color.
+         * @param blue The blue component of the color.
+         */
         RGBColor(unsigned char red, unsigned char green, unsigned char blue);
+        /**
+         * @brief Creates an instance of the RGBColor class.
+         * @param color A color in hex format to be converted.
+         */
         RGBColor(HexColor color);
+        /**
+         * @brief Gets the red component of the color.
+         * @returns The red component of the color.
+         */
         unsigned char GetRed() const;
+        /**
+         * @brief Gets the green component of the color.
+         * @returns The green component of the color.
+         */
         unsigned char GetGreen() const;
+        /**
+         * @brief Gets the blue component of the color.
+         * @returns The blue component of the color.
+         */
         unsigned char GetBlue() const;
 
     private:
+        /** @brief The red component of the color. */
         unsigned char m_red;
+        /** @brief The green component of the color. */
         unsigned char m_green;
+        /** @brief The blue component of the color. */
         unsigned char m_blue;
     };
 
+    /** @brief Represents the terminal. */
     class Terminal
     {
     public:
+        /** @brief Represents the standard input stream. */
         class Input
         {
         public:
+            /**
+             * @brief Gets the file descriptor associated with the stream.
+             * @param The file descriptor associated with the stream.
+             */
             static std::FILE* GetFile();
+            /**
+             * @brief Gets the file descriptor number associated with the stream.
+             * @param The file descriptor number associated with the stream.
+             */
             static int GetFileNumber();
+            /**
+             * @brief Checks if the stream is connected to a window (TTY).
+             * @param A boolean that states the stream is a TTY.
+             */
             static bool IsTTY();
+            /**
+             * @brief Reads a byte.
+             * @returns The byte read.
+             */
             static char ReadByte();
 
         private:

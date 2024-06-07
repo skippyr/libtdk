@@ -113,7 +113,8 @@ namespace TMK
     {
     }
 
-    Dimensions::Dimensions(unsigned short totalColumns, unsigned short totalRows) : m_totalColumns(totalColumns), m_totalRows(totalRows)
+    Dimensions::Dimensions(unsigned short totalColumns, unsigned short totalRows)
+        : m_totalColumns(totalColumns), m_totalRows(totalRows)
     {
     }
 
@@ -127,15 +128,20 @@ namespace TMK
         return m_totalRows;
     }
 
-    HexColor::HexColor(unsigned int code) : m_code((std::min)(static_cast<int>(code), 0xffffff))
+    HexColor::HexColor(unsigned int code)
     {
+        if (code > 0xffffff)
+        {
+            throw OutOfRangeException();
+        }
+        m_code = code;
     }
 
     HexColor::HexColor(RGBColor color) : m_code(color.GetRed() << 16 | color.GetGreen() << 8 | color.GetBlue())
     {
     }
 
-    unsigned int HexColor::HexColor::GetCode() const
+    unsigned int HexColor::HexColor::GetCodeAsNumber() const
     {
         return m_code;
     }
@@ -146,7 +152,8 @@ namespace TMK
     }
 
     RGBColor::RGBColor(HexColor color)
-        : m_red(color.GetCode() >> 16 & 0xff), m_green(color.GetCode() >> 8 & 0xff), m_blue(color.GetCode() & 0xff)
+        : m_red(color.GetCodeAsNumber() >> 16 & 0xff), m_green(color.GetCodeAsNumber() >> 8 & 0xff),
+          m_blue(color.GetCodeAsNumber() & 0xff)
     {
     }
 
