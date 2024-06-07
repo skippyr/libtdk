@@ -101,6 +101,44 @@ namespace TMK
         return offset < m_totalArguments ? m_utf8Arguments[offset] : "";
     }
 
+    Dimensions::Dimensions() : m_width(0), m_height(0)
+    {
+    }
+
+    Dimensions::Dimensions(unsigned short width, unsigned short height) : m_width(width), m_height(height)
+    {
+    }
+
+    unsigned short Dimensions::GetWidth() const
+    {
+        return m_width;
+    }
+
+    unsigned short Dimensions::GetHeight() const
+    {
+        return m_height;
+    }
+
+    RGBColor::RGBColor(unsigned char red, unsigned char green, unsigned char blue)
+        : m_red(red), m_green(green), m_blue(blue)
+    {
+    }
+
+    unsigned char RGBColor::GetRed() const
+    {
+        return m_red;
+    }
+
+    unsigned char RGBColor::GetGreen() const
+    {
+        return m_green;
+    }
+
+    unsigned char RGBColor::GetBlue() const
+    {
+        return m_blue;
+    }
+
     std::FILE* Terminal::Input::GetFile()
     {
         return stdin;
@@ -231,24 +269,6 @@ namespace TMK
         std::exit(exitCode);
     }
 
-    Dimensions::Dimensions() : m_width(0), m_height(0)
-    {
-    }
-
-    Dimensions::Dimensions(unsigned short width, unsigned short height) : m_width(width), m_height(height)
-    {
-    }
-
-    unsigned short Dimensions::GetWidth() const
-    {
-        return m_width;
-    }
-
-    unsigned short Dimensions::GetHeight() const
-    {
-        return m_height;
-    }
-
     int Terminal::Window::GetDimensions(Dimensions& dimensions)
     {
 #ifdef _WIN32
@@ -277,9 +297,34 @@ namespace TMK
         Setup::WriteEscapeSequence("\7");
     }
 
-    void Terminal::Font::SetWeight(FontWeight weight)
+    void Terminal::Font::SetWeight(Weight weight)
     {
         Setup::WriteEscapeSequence("\x1b[22;%dm", static_cast<int>(weight));
+    }
+
+    void Terminal::Font::SetXColor(unsigned char color, Layer layer)
+    {
+        Setup::WriteEscapeSequence("\x1b[%d8;5;%hum", static_cast<int>(layer), color);
+    }
+
+    void Terminal::Font::SetXColor(XColor color, Layer layer)
+    {
+        Terminal::Font::SetXColor(static_cast<unsigned char>(color), layer);
+    }
+
+    void Terminal::Font::SetRGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer)
+    {
+        Setup::WriteEscapeSequence("\x1b[%d8;2;%hu;%hu;%hum", static_cast<int>(layer), red, green, blue);
+    }
+
+    void Terminal::Font::SetRGBColor(RGBColor color, Layer layer)
+    {
+        SetRGBColor(color.GetRed(), color.GetGreen(), color.GetBlue(), layer);
+    }
+
+    void Terminal::Font::ResetColors()
+    {
+        Setup::WriteEscapeSequence("\x1b[39;49m");
     }
 
     void Terminal::Font::ResetWeight()

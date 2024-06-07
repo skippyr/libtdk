@@ -4,10 +4,36 @@
 
 namespace TMK
 {
-    enum class FontWeight
+    enum class Weight
     {
         Bold = 1,
         Dim
+    };
+
+    enum class Layer
+    {
+        Foreground = 3,
+        Background
+    };
+
+    enum class XColor
+    {
+        Black,
+        Red,
+        Green,
+        Yellow,
+        Blue,
+        Magenta,
+        Cyan,
+        White,
+        LightBlack,
+        LightRed,
+        LightGreen,
+        LightYellow,
+        LightBlue,
+        LightMagenta,
+        LightCyan,
+        LightWhite
     };
 
     class Arguments
@@ -26,8 +52,8 @@ namespace TMK
 #ifdef _WIN32
         wchar_t** m_utf16Arguments;
 #endif
-        int m_totalArguments;
         char** m_utf8Arguments;
+        int m_totalArguments;
     };
 
     class Dimensions
@@ -41,6 +67,20 @@ namespace TMK
     private:
         unsigned short m_width;
         unsigned short m_height;
+    };
+
+    class RGBColor
+    {
+    public:
+        RGBColor(unsigned char red, unsigned char green, unsigned char blue);
+        unsigned char GetRed() const;
+        unsigned char GetGreen() const;
+        unsigned char GetBlue() const;
+
+    private:
+        unsigned char m_red;
+        unsigned char m_green;
+        unsigned char m_blue;
     };
 
     class Terminal
@@ -117,7 +157,12 @@ namespace TMK
         class Font
         {
         public:
-            static void SetWeight(FontWeight weight);
+            static void SetWeight(Weight weight);
+            static void SetXColor(unsigned char color, Layer layer);
+            static void SetXColor(XColor color, Layer layer);
+            static void SetRGBColor(unsigned char red, unsigned char green, unsigned char blue, Layer layer);
+            static void SetRGBColor(RGBColor color, Layer layer);
+            static void ResetColors();
             static void ResetWeight();
 
         private:
