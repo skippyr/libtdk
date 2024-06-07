@@ -172,6 +172,11 @@ namespace TMK
         return IS_TTY(Input);
     }
 
+    char Terminal::Input::ReadByte()
+    {
+        return std::getchar();
+    }
+
     void Terminal::Output::Flush()
     {
         std::fflush(GetFile());
@@ -308,6 +313,16 @@ namespace TMK
         dimensions = Dimensions(size.ws_col, size.ws_row);
 #endif
         return 0;
+    }
+
+    void Terminal::Window::OpenAlternateWindow()
+    {
+        Setup::WriteEscapeSequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
+    }
+
+    void Terminal::Window::CloseAlternateWindow()
+    {
+        Setup::WriteEscapeSequence("\x1b[?1049l");
     }
 
     void Terminal::Bell::Ring()

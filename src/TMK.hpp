@@ -113,6 +113,7 @@ namespace TMK
             static std::FILE* GetFile();
             static int GetFileNumber();
             static bool IsTTY();
+            static char ReadByte();
 
         private:
             Input() = delete;
@@ -161,6 +162,8 @@ namespace TMK
         {
         public:
             static int GetDimensions(Dimensions& dimensions);
+            static void OpenAlternateWindow();
+            static void CloseAlternateWindow();
 
         private:
             Window() = delete;
