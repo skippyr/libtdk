@@ -101,6 +101,7 @@ namespace TMK
         /**
          * @brief Gets an argument in UTF16 encoding by using its offset. It is only available on Windows.
          * @param offset The offset to be used.
+         * @returns The argument in UTF16 encoding.
          * @exception OutOfRangeException Gets throws whenever the offset is out of the valid range of arguments.
          */
         std::wstring GetUTF16ArgumentByOffset(std::size_t offset) const;
@@ -122,6 +123,7 @@ namespace TMK
         /**
          * @brief Gets an argument in UTF8 encoding by using its offset.
          * @param offset The offset to be used.
+         * @returns The argument in UTF8 encoding.
          * @exception OutOfRangeException Gets throws whenever the offset is out of the valid range of arguments.
          */
         std::string GetUTF8ArgumentByOffset(std::size_t offset) const;
@@ -137,17 +139,34 @@ namespace TMK
         int m_totalArguments;
     };
 
+    /** @brief Represents terminal dimensions. */
     class Dimensions
     {
     public:
+        /** @brief Creates an instance of the Dimensions class. */
         Dimensions();
-        Dimensions(unsigned short width, unsigned short height);
-        unsigned short GetWidth() const;
-        unsigned short GetHeight() const;
+        /**
+         * @brief Creates an instance of the Dimensions class.
+         * @param totalColumns The total columns of the dimensions.
+         * @param totalRows The total rows of the dimensions.
+         */
+        Dimensions(unsigned short totalColumns, unsigned short totalRows);
+        /**
+         * @brief Gets the total columns of the dimensions.
+         * @returns The total columns of the dimensions.
+         */
+        unsigned short GetTotalColumns() const;
+        /**
+         * @brief Gets the total rows of the dimensions.
+         * @returns The total rows of the dimensions.
+         */
+        unsigned short GetTotalRows() const;
 
     private:
-        unsigned short m_width;
-        unsigned short m_height;
+        /** @brief The total columns of the dimensions. */
+        unsigned short m_totalColumns;
+        /** @brief The total rows of the dimensions. */
+        unsigned short m_totalRows;
     };
 
     class HexColor

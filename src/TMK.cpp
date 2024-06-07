@@ -109,22 +109,22 @@ namespace TMK
         return m_utf8Arguments[offset];
     }
 
-    Dimensions::Dimensions() : m_width(0), m_height(0)
+    Dimensions::Dimensions() : m_totalColumns(0), m_totalRows(0)
     {
     }
 
-    Dimensions::Dimensions(unsigned short width, unsigned short height) : m_width(width), m_height(height)
+    Dimensions::Dimensions(unsigned short totalColumns, unsigned short totalRows) : m_totalColumns(totalColumns), m_totalRows(totalRows)
     {
     }
 
-    unsigned short Dimensions::GetWidth() const
+    unsigned short Dimensions::GetTotalColumns() const
     {
-        return m_width;
+        return m_totalColumns;
     }
 
-    unsigned short Dimensions::GetHeight() const
+    unsigned short Dimensions::GetTotalRows() const
     {
-        return m_height;
+        return m_totalRows;
     }
 
     HexColor::HexColor(unsigned int code) : m_code((std::min)(static_cast<int>(code), 0xffffff))
