@@ -36,7 +36,7 @@ namespace TMK
         /** @brief Fills a small region at the left of the character cell. */
         Bar = 6
     };
-    
+
     /** @brief Contains the ANSI codes of the first 16 colors of the XTerm color palette. */
     enum class XColor
     {
@@ -76,23 +76,64 @@ namespace TMK
 
     class RGBColor;
 
+    /** @brief Represents an exception throw whenever a group of streams do not match a TTY criteria. */
+    class NoValidTTYException
+    {
+    };
+
+    /** @brief Represents an exception throw whenever a value is out of range. */
+    class OutOfRangeException
+    {
+    };
+
+    /** @brief Represents the terminal process command-line arguments in both UTF-8 and UTF-16 encodings. */
     class Arguments
     {
     public:
 #ifdef _WIN32
+        /**
+         * @brief Creates a new instance of the Arguments class. It is only available on Windows.
+         * @param totalArguments The total arguments.
+         * @param utf8Arguments The arguments in UTF8 encoding.
+         * @param utf16Arguments The arguments in UTF16 encoding.
+         */
         Arguments(int totalArguments, char** utf8Arguments, wchar_t** utf16Arguments);
+        /**
+         * @brief Gets an argument in UTF16 encoding by using its offset. It is only available on Windows.
+         * @param offset The offset to be used.
+         * @exception OutOfRangeException Gets throws whenever the offset is out of the valid range of arguments.
+         */
         std::wstring GetUTF16ArgumentByOffset(std::size_t offset) const;
-#endif
+#else
+        /**
+         * @brief Creates a new instance of the Arguments class. It is only available on Linux.
+         * @param totalArguments The total arguments.
+         * @param utf8Arguments The arguments in UTF8 encoding.
+         */
         Arguments(int totalArguments, char** utf8Arguments);
+#endif
+        /** @brief Destroys an instance of the Arguments class. */
         ~Arguments();
+        /**
+         * @brief Gets the total arguments.
+         * @returns The total arguments.
+         */
         int GetTotalArguments() const;
+        /**
+         * @brief Gets an argument in UTF8 encoding by using its offset.
+         * @param offset The offset to be used.
+         * @exception OutOfRangeException Gets throws whenever the offset is out of the valid range of arguments.
+         */
         std::string GetUTF8ArgumentByOffset(std::size_t offset) const;
 
     private:
 #ifdef _WIN32
+        /** @brief The arguments in UTF16 encoding. It is only available on Windows. */
         wchar_t** m_utf16Arguments;
 #endif
+        /** @brief The arguments in UTF8 encoding. */
         char** m_utf8Arguments;
+        /** @brief The total arguments. */
         int m_totalArguments;
     };
 
@@ -133,10 +174,6 @@ namespace TMK
         unsigned char m_red;
         unsigned char m_green;
         unsigned char m_blue;
-    };
-
-    class NoValidTTYException
-    {
     };
 
     class Terminal

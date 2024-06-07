@@ -70,7 +70,11 @@ namespace TMK
 
     std::wstring Arguments::GetUTF16ArgumentByOffset(std::size_t offset) const
     {
-        return offset < m_totalArguments ? m_utf16Arguments[offset] : L"";
+        if (offset >= m_totalArguments)
+        {
+            throw OutOfRangeException();
+        }
+        return m_utf16Arguments[offset];
     }
 #else
     Arguments::Arguments(int totalArguments, char** utf8Arguments)
@@ -98,7 +102,11 @@ namespace TMK
 
     std::string Arguments::GetUTF8ArgumentByOffset(std::size_t offset) const
     {
-        return offset < m_totalArguments ? m_utf8Arguments[offset] : "";
+        if (offset >= m_totalArguments)
+        {
+            throw OutOfRangeException();
+        }
+        return m_utf8Arguments[offset];
     }
 
     Dimensions::Dimensions() : m_width(0), m_height(0)
