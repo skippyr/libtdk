@@ -231,20 +231,20 @@ namespace TMK
         std::exit(exitCode);
     }
 
-    Terminal::Dimensions::Dimensions() : m_width(0), m_height(0)
+    Dimensions::Dimensions() : m_width(0), m_height(0)
     {
     }
 
-    Terminal::Dimensions::Dimensions(unsigned short width, unsigned short height) : m_width(width), m_height(height)
+    Dimensions::Dimensions(unsigned short width, unsigned short height) : m_width(width), m_height(height)
     {
     }
 
-    unsigned short Terminal::Dimensions::GetWidth() const
+    unsigned short Dimensions::GetWidth() const
     {
         return m_width;
     }
 
-    unsigned short Terminal::Dimensions::GetHeight() const
+    unsigned short Dimensions::GetHeight() const
     {
         return m_height;
     }

@@ -24,6 +24,19 @@ namespace TMK
         char** m_utf8Arguments;
     };
 
+    class Dimensions
+    {
+    public:
+        Dimensions();
+        Dimensions(unsigned short width, unsigned short height);
+        unsigned short GetWidth() const;
+        unsigned short GetHeight() const;
+
+    private:
+        unsigned short m_width;
+        unsigned short m_height;
+    };
+
     class Terminal
     {
     public:
@@ -81,19 +94,6 @@ namespace TMK
 
         private:
             Process() = delete;
-        };
-
-        class Dimensions
-        {
-        public:
-            Dimensions();
-            Dimensions(unsigned short width, unsigned short height);
-            unsigned short GetWidth() const;
-            unsigned short GetHeight() const;
-
-        private:
-            unsigned short m_width;
-            unsigned short m_height;
         };
 
         class Window
