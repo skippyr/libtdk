@@ -73,7 +73,7 @@ namespace TMK
         return offset < m_totalArguments ? m_utf16Arguments[offset] : L"";
     }
 #else
-    Arguments(int totalArguments, char** utf8Arguments)
+    Arguments::Arguments(int totalArguments, char** utf8Arguments)
         : m_totalArguments(totalArguments), m_utf8Arguments(utf8Arguments)
     {
     }
