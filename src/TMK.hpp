@@ -98,12 +98,12 @@ namespace TMK
     {
     };
 
-    /** @brief Represents an exception thrown whenever a group of streams do not match a TTY criteria. */
+    /** @brief Represents an exception thrown whenever a group of streams are being redirected/piped. */
     class NoValidTTYException
     {
     };
 
-    /** @brief Represents an exception thrown whenever a value is out of range. */
+    /** @brief Represents an exception thrown whenever a value is out of a certain range. */
     class OutOfRangeException
     {
     };
@@ -474,7 +474,8 @@ namespace TMK
             /**
              * @brief Gets the terminal window dimensions.
              * @returns The terminal window dimensions.
-             * @exception NoValidTTYException Gets thrown whenever no valid standard stream is a TTY.
+             * @exception NoValidTTYException Gets thrown whenever the standard output and error streams are being
+             * redirected/piped.
              */
             static Dimensions GetDimensions();
             /** @brief Opens the alternate window. */
@@ -579,7 +580,9 @@ namespace TMK
              * @brief Gets the terminal cursor coordinate. On Linux, as it parses a terminal answer given through the
              * standard input stream, its buffer will always be cleared.
              * @returns The terminal cursor coordinate.
-             * @throws NoValidTTYException Gets thrown whenever no valid standard stream is a TTY.
+             * @throws NoValidTTYException Gets thrown, on Windows, whenever the standard output and error streams are
+             * being redirected/piped; and, on Linux, whenever the standard input or the standard output and error
+             * streams are being redirected/piped.
              */
             static Coordinate GetCoordinate();
             /**
