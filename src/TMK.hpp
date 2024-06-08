@@ -389,16 +389,19 @@ namespace TMK
             Process() = delete;
         };
 
+        /** @brief Represents the terminal window. */
         class Window
         {
         public:
             /**
              * @brief Gets the terminal window dimensions.
              * @returns The terminal window dimensions.
-             * @exception NoValidTTYException If no standard stream connected to a terminal window is found.
+             * @exception NoValidTTYException Gets thrown whenever no valid standard stream is a TTY.
              */
             static Dimensions GetDimensions();
+            /** @brief Opens the alternate window. */
             static void OpenAlternateWindow();
+            /** @brief Closes the alternate window. */
             static void CloseAlternateWindow();
 
         private:
