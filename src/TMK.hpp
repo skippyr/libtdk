@@ -76,12 +76,17 @@ namespace TMK
 
     class RGBColor;
 
-    /** @brief Represents an exception throw whenever a group of streams do not match a TTY criteria. */
+    /** @brief Represents an exception thrown whenever a group of streams are oriented to wide characters. */
+    class WideCharacterOrientationException
+    {
+    };
+
+    /** @brief Represents an exception thrown whenever a group of streams do not match a TTY criteria. */
     class NoValidTTYException
     {
     };
 
-    /** @brief Represents an exception throw whenever a value is out of range. */
+    /** @brief Represents an exception thrown whenever a value is out of range. */
     class OutOfRangeException
     {
     };
@@ -267,13 +272,21 @@ namespace TMK
             Input() = delete;
         };
 
+        /** @brief Represents the standard output stream. */
         class Output
         {
         public:
+            /** @brief Flushes the stream buffer. */
             static void Flush();
-            static int WriteLine(std::string format, ...);
-            static int WriteLine();
-            static int Write(std::string format, ...);
+            /**
+             * @brief Formats and writes arguments to the stream with a newline character appended at its end.
+             * @param format The format to be used. It accepts the same specifiers as the printf function family.
+             * @param ... The arguments to be formatted.
+             * @throws WideCharacterOrientationException Gets thrown whenever the stream is oriented to wide character.
+             */
+            static void WriteLine(std::string format, ...);
+            static void WriteLine();
+            static void Write(std::string format, ...);
             static std::FILE* GetFile();
             static int GetFileNumber();
             static bool IsTTY();

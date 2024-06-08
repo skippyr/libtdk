@@ -197,31 +197,38 @@ namespace TMK
         std::fflush(GetFile());
     }
 
-    int Terminal::Output::WriteLine(std::string format, ...)
+    void Terminal::Output::WriteLine(std::string format, ...)
     {
         Setup::InitEnvironment();
         std::va_list arguments;
         va_start(arguments, format);
-        int totalBytesWritten = std::vprintf(format.c_str(), arguments);
+        if (std::vprintf(format.c_str(), arguments) < 0)
+        {
+            throw WideCharacterOrientationException();
+        }
         std::putchar('\n');
         va_end(arguments);
-        return -(totalBytesWritten < 0);
     }
 
-    int Terminal::Output::WriteLine()
+    void Terminal::Output::WriteLine()
     {
         Setup::InitEnvironment();
-        return -(std::putchar('\n') == EOF);
+        if (std::putchar('\n') == EOF)
+        {
+            throw WideCharacterOrientationException();
+        }
     }
 
-    int Terminal::Output::Write(std::string format, ...)
+    void Terminal::Output::Write(std::string format, ...)
     {
         Setup::InitEnvironment();
         std::va_list arguments;
         va_start(arguments, format);
-        int totalBytesWritten = std::vprintf(format.c_str(), arguments);
+        if (std::vprintf(format.c_str(), arguments) < 0)
+        {
+            throw WideCharacterOrientationException();
+        }
         va_end(arguments);
-        return -(totalBytesWritten < 0);
     }
 
     std::FILE* Terminal::Output::GetFile()
