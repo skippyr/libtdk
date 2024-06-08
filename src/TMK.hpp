@@ -356,7 +356,7 @@ namespace TMK
         EventInfo(FocusEvent focusEvent);
         /**
          * @brief Gets the event type.
-         * @param The event type.
+         * @returns The event type.
          */
         EventType GetType() const;
         /**
@@ -426,11 +426,47 @@ namespace TMK
              * @returns The byte read or EOF if the standard input stream is closed or it is wide character oriented.
              */
             static char ReadByte();
+            /**
+             * @brief Reads a terminal event.
+             * @returns The information about the event read.
+             */
             static EventInfo ReadEvent();
+            /**
+             * @brief Reads a terminal event.
+             * @param waitInMilliseconds The time to wait for an event. If zero, it returns immediately.
+             * @returns The information about the event read.
+             */
             static EventInfo ReadEvent(unsigned short waitInMilliseconds);
+            /**
+             * @brief Reads a terminal event.
+             * @param waitInMilliseconds The time to wait for an event. If zero, it returns immediately.
+             * @param filter A function used to filter events while the timer is running.
+             * @returns The information about the event read.
+             */
             static EventInfo ReadEvent(unsigned short waitInMilliseconds, std::function<bool(EventInfo&)> filter);
+            /**
+             * @brief Reads a terminal event.
+             * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse
+             * selection will be disabled until it returns.
+             * @returns The information about the event read.
+             */
             static EventInfo ReadEvent(bool allowMouseCapture);
+            /**
+             * @brief Reads a terminal event.
+             * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse
+             * selection will be disabled until it returns.
+             * @param waitInMilliseconds The time to wait for an event. If zero, it returns immediately.
+             * @returns The information about the event read.
+             */
             static EventInfo ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds);
+            /**
+             * @brief Reads a terminal event.
+             * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse
+             * selection will be disabled until it returns.
+             * @param waitInMilliseconds The time to wait for an event. If zero, it returns immediately.
+             * @param filter A function used to filter events while the timer is running.
+             * @returns The information about the event read.
+             */
             static EventInfo ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds,
                                        std::function<bool(EventInfo&)> filter);
 
