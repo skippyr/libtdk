@@ -258,7 +258,7 @@ namespace TMK
              */
             static int GetFileNumber();
             /**
-             * @brief Checks if the stream is connected to a window (TTY).
+             * @brief Checks if the stream is connected to an interactive terminal (TTY).
              * @param A boolean that states the stream is a TTY.
              */
             static bool IsTTY();
@@ -285,10 +285,32 @@ namespace TMK
              * @throws WideCharacterOrientationException Gets thrown whenever the stream is oriented to wide character.
              */
             static void WriteLine(std::string format, ...);
+            /**
+             * @brief Writes a newline character to the stream.
+             * @throws WideCharacterOrientationException Gets thrown whenever the stream is oriented to wide character.
+             */
             static void WriteLine();
+            /**
+             * @brief Formats and writes arguments to the stream.
+             * @param format The format to be used. It accepts the same specifiers as the printf function family.
+             * @param ... The arguments to be formatted.
+             * @throws WideCharacterOrientationException Gets thrown whenever the stream is oriented to wide character.
+             */
             static void Write(std::string format, ...);
+            /**
+             * @brief Gets the file descriptor associated with the stream.
+             * @param The file descriptor associated with the stream.
+             */
             static std::FILE* GetFile();
+            /**
+             * @brief Gets the file descriptor number associated with the stream.
+             * @param The file descriptor number associated with the stream.
+             */
             static int GetFileNumber();
+            /**
+             * @brief Checks if the stream is connected to an interactive terminal (TTY).
+             * @param A boolean that states the stream is a TTY.
+             */
             static bool IsTTY();
 
         private:
