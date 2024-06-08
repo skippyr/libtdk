@@ -54,7 +54,7 @@ namespace TMK
             va_end(arguments);
         }
 
-        static EventInfo ReadEvent(int waitInMilliseconds, bool allowMouseCapture,
+        static EventInfo ReadEvent(bool allowMouseCapture, int waitInMilliseconds,
                                    std::function<bool(EventInfo&)> filter)
         {
             InitEnvironment();
@@ -72,9 +72,9 @@ namespace TMK
             HANDLE timerHandle = nullptr;
             DWORD inputMode;
             GetConsoleMode(inputHandle, &inputMode);
-            SetConsoleMode(inputHandle, allowMouseCapture ? (inputMode | ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT) &
-                                                                ~ENABLE_QUICK_EDIT_MODE
-                                                          : inputMode | ENABLE_PROCESSED_INPUT);
+            SetConsoleMode(inputHandle, allowMouseCapture ? (inputMode | ENABLE_MOUSE_INPUT) &
+                                                                ~(ENABLE_QUICK_EDIT_MODE | ENABLE_PROCESSED_INPUT)
+                                                          : inputMode & ~ENABLE_PROCESSED_INPUT);
             while (true)
             {
                 if (!waitInMilliseconds)
@@ -106,6 +106,18 @@ namespace TMK
                 INPUT_RECORD record;
                 DWORD totalEventsRead;
                 ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
+                if (record.EventType == FOCUS_EVENT)
+                {
+                    eventInfo = FocusEvent(record.Event.FocusEvent.bSetFocus);
+                }
+                if (eventInfo.GetType() != EventType::None && eventInfo.GetType() != EventType::TimeOut)
+                {
+                    if (filter && !filter(eventInfo))
+                    {
+                        continue;
+                    }
+                    break;
+                }
             }
             if (timerHandle)
             {
@@ -230,8 +242,30 @@ namespace TMK
         return m_blue;
     }
 
+    FocusEvent::FocusEvent(bool hasFocus) : m_hasFocus(hasFocus)
+    {
+    }
+
+    bool FocusEvent::HasFocus() const
+    {
+        return m_hasFocus;
+    }
+
     EventInfo::EventInfo(EventType type) : m_type(type)
     {
+    }
+
+    EventInfo::EventInfo(FocusEvent focusEvent) : m_type(EventType::Focus), m_focusEvent(focusEvent)
+    {
+    }
+
+    FocusEvent EventInfo::GetFocusEvent() const
+    {
+        if (m_type == EventType::Focus)
+        {
+            return m_focusEvent;
+        }
+        throw InvalidEventTypeException();
     }
 
     EventType EventInfo::GetType() const
@@ -303,6 +337,37 @@ namespace TMK
     char Terminal::Input::ReadByte()
     {
         return std::getchar();
+    }
+
+    EventInfo Terminal::Input::ReadEvent()
+    {
+        return Setup::ReadEvent(false, -1, nullptr);
+    }
+
+    EventInfo Terminal::Input::ReadEvent(unsigned short waitInMilliseconds)
+    {
+        return Setup::ReadEvent(false, waitInMilliseconds, nullptr);
+    }
+
+    EventInfo Terminal::Input::ReadEvent(unsigned short waitInMilliseconds, std::function<bool(EventInfo&)> filter)
+    {
+        return Setup::ReadEvent(false, waitInMilliseconds, filter);
+    }
+
+    EventInfo Terminal::Input::ReadEvent(bool allowMouseCapture)
+    {
+        return Setup::ReadEvent(allowMouseCapture, -1, nullptr);
+    }
+
+    EventInfo Terminal::Input::ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds)
+    {
+        return Setup::ReadEvent(allowMouseCapture, waitInMilliseconds, nullptr);
+    }
+
+    EventInfo Terminal::Input::ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds,
+                                         std::function<bool(EventInfo&)> filter)
+    {
+        return Setup::ReadEvent(allowMouseCapture, waitInMilliseconds, filter);
     }
 
     void Terminal::Output::Flush()

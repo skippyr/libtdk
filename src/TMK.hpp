@@ -1,8 +1,8 @@
 #pragma once
 
-#include <iostream>
-#include <functional>
 #include <cstdarg>
+#include <functional>
+#include <iostream>
 
 /**
  * @brief A powerful and open-source C++ terminal manipulation library for Windows and Linux. It is capable of handling
@@ -124,6 +124,11 @@ namespace TMK
 
     /** @brief Represents an exception thrown whenever a value is out of a certain range. */
     class OutOfRangeException
+    {
+    };
+
+    /** @brief Represents an exception thrown whenever an invalid event type data tries to be read. */
+    class InvalidEventTypeException
     {
     };
 
@@ -315,6 +320,26 @@ namespace TMK
         unsigned short m_row;
     };
 
+    /** @brief Represents a terminal focus event. */
+    class FocusEvent
+    {
+    public:
+        /**
+         * @brief Creates a new instance of the FocusEvent class.
+         * @param hasFocus A boolean that states the terminal window has gained focus.
+         */
+        FocusEvent(bool hasFocus);
+        /**
+         * @brief Checks if the terminal window has gained focus.
+         * @returns A boolean that states the terminal window has gained focus.
+         */
+        bool HasFocus() const;
+
+    private:
+        /** @brief A boolean that states the terminal window has gained focus. */
+        bool m_hasFocus;
+    };
+
     /** @brief Represents the information of a terminal event. */
     class EventInfo
     {
@@ -325,14 +350,29 @@ namespace TMK
          */
         EventInfo(EventType type);
         /**
+         * @brief Creates a new instance of the EventInfo class.
+         * @param focusEvent A focus event to be converted.
+         */
+        EventInfo(FocusEvent focusEvent);
+        /**
          * @brief Gets the event type.
          * @param The event type.
          */
         EventType GetType() const;
+        /**
+         * @brief Gets the focus event read.
+         * @returns The focus event read.
+         * @throws InvalidEventTypeException Gets thrown whenever the event type is not a focus event.
+         */
+        FocusEvent GetFocusEvent() const;
 
     private:
         /** @brief The event type. */
         EventType m_type;
+        union {
+            /** @brief The focus event read. */
+            FocusEvent m_focusEvent;
+        };
     };
 
     /** @brief Represents the terminal. */
@@ -386,6 +426,9 @@ namespace TMK
              * @returns The byte read or EOF if the standard input stream is closed or it is wide character oriented.
              */
             static char ReadByte();
+            static EventInfo ReadEvent();
+            static EventInfo ReadEvent(unsigned short waitInMilliseconds);
+            static EventInfo ReadEvent(unsigned short waitInMilliseconds, std::function<bool(EventInfo&)> filter);
             static EventInfo ReadEvent(bool allowMouseCapture);
             static EventInfo ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds);
             static EventInfo ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds,
