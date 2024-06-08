@@ -74,6 +74,23 @@ namespace TMK
         LightWhite
     };
 
+    /** @brief Represents the available terminal effects. */
+    enum class Effect
+    {
+        /** @brief Makes the text curly. */
+        Italic = 1 << 3,
+        /** @brief Draws a horizontal line crossing below the text. */
+        Underlined = 1 << 4,
+        /** @brief Makes the text blink indefinitely. */
+        Blinking = 1 << 5,
+        /** @brief Swaps the background and foreground colors. */
+        Negative = 1 << 7,
+        /** @brief Makes the text hard to see or invisible. */
+        Hidden = 1 << 8,
+        /** @brief Draws a horizontal line crossing through the middle of the text. */
+        CrossedOut = 1 << 9
+    };
+
     class RGBColor;
 
     /** @brief Represents an exception thrown whenever a group of streams are wide character oriented. */
@@ -494,10 +511,23 @@ namespace TMK
              * @param layer The layer of the font to be affected.
              */
             static void SetHexColor(HexColor color, FontLayer layer);
+            /**
+             * @brief Sets the terminal effects flagged in a bitmask.
+             * @param effect The bitmask containing the effects. It must be composed by value inside of the Effect enum.
+             * @throws OutOfRangeException Gets thrown whenever an invalid effect is used to compose the bitmask.
+             */
+            static void SetEffect(int effect);
+            /**
+             * @brief Sets a terminal effect.
+             * @param effect The effect to be set.
+             */
+            static void SetEffect(Effect effect);
             /** @brief Resets the terminal font colors. */
             static void ResetColors();
             /** @brief Resets the terminal font weight. */
             static void ResetWeight();
+            /** @brief Resets the terminal effects. */
+            static void ResetEffects();
 
         private:
             Font() = delete;
@@ -527,4 +557,12 @@ namespace TMK
     private:
         Terminal() = delete;
     };
+
+    /**
+     * @brief Concatenates two effects together in order to create a bitmask.
+     * @param effect0 The first effect.
+     * @param effect1 The second effect.
+     * @returns A bitmask containing both effects.
+     */
+    int operator|(Effect effect0, Effect effect1);
 }

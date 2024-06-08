@@ -426,6 +426,44 @@ namespace TMK
         Setup::WriteEscapeSequence("\x1b[22m");
     }
 
+    void Terminal::Font::SetEffect(int effects)
+    {
+        for (int offset = 6; offset < 32; ++offset)
+        {
+            if (effects & 1 << offset)
+            {
+                throw OutOfRangeException();
+            }
+            if (offset == 6)
+            {
+                offset = 9;
+            }
+        }
+        for (int code = 3; code < 10; ++code)
+        {
+            if (effects & 1 << code)
+            {
+                Setup::WriteEscapeSequence("\x1b[%dm", code);
+            }
+        }
+    }
+
+    void Terminal::Font::SetEffect(Effect effect)
+    {
+        SetEffect(static_cast<int>(effect));
+    }
+
+    void Terminal::Font::ResetEffects()
+    {
+        for (int code = 23; code < 30; ++code)
+        {
+            if (code != 26)
+            {
+                Setup::WriteEscapeSequence("\x1b[%dm", code);
+            }
+        }
+    }
+
     void Terminal::Cursor::SetShape(CursorShape shape, bool isBlinking)
     {
         Setup::WriteEscapeSequence("\x1b[%d q", static_cast<int>(shape) - isBlinking);
@@ -439,5 +477,10 @@ namespace TMK
     void Terminal::Cursor::ResetShape()
     {
         Setup::WriteEscapeSequence("\x1b[0 q");
+    }
+
+    int TMK::operator|(Effect effect0, Effect effect1)
+    {
+        return static_cast<int>(effect0) | static_cast<int>(effect1);
     }
 }
