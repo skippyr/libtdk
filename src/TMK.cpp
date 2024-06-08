@@ -31,12 +31,10 @@ namespace TMK
                 HANDLE handle;
                 DWORD mode;
                 SetConsoleOutputCP(CP_UTF8);
-                (GetConsoleMode((handle = GetStdHandle(STD_OUTPUT_HANDLE)), &mode) ||
-                 GetConsoleMode((handle = GetStdHandle(STD_ERROR_HANDLE)), &mode)) &&
+                (GetConsoleMode((handle = GetStdHandle(STD_OUTPUT_HANDLE)), &mode) || GetConsoleMode((handle = GetStdHandle(STD_ERROR_HANDLE)), &mode)) &&
                     SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 #endif
-                g_cache |= TTY_CACHE(Terminal::Input) | TTY_CACHE(Terminal::Output) | TTY_CACHE(Terminal::Error) |
-                           CACHE_HAS_BEEN_FILLED_FLAG;
+                g_cache |= TTY_CACHE(Terminal::Input) | TTY_CACHE(Terminal::Output) | TTY_CACHE(Terminal::Error) | CACHE_HAS_BEEN_FILLED_FLAG;
             }
         }
 
@@ -49,13 +47,11 @@ namespace TMK
             }
             std::va_list arguments;
             va_start(arguments, format);
-            std::vfprintf(IS_TTY(Terminal::Output) ? Terminal::Output::GetFile() : Terminal::Error::GetFile(),
-                          format.c_str(), arguments);
+            std::vfprintf(IS_TTY(Terminal::Output) ? Terminal::Output::GetFile() : Terminal::Error::GetFile(), format.c_str(), arguments);
             va_end(arguments);
         }
 
-        static EventInfo ReadEvent(bool allowMouseCapture, int waitInMilliseconds,
-                                   std::function<bool(EventInfo&)> filter)
+        static EventInfo ReadEvent(bool allowMouseCapture, int waitInMilliseconds, std::function<bool(EventInfo&)> filter)
         {
             InitEnvironment();
             if (!IS_TTY(Terminal::Input) || (!IS_TTY(Terminal::Output) && !IS_TTY(Terminal::Error)))
@@ -72,8 +68,7 @@ namespace TMK
             HANDLE timerHandle = nullptr;
             DWORD inputMode;
             GetConsoleMode(inputHandle, &inputMode);
-            SetConsoleMode(inputHandle, allowMouseCapture ? (inputMode | ENABLE_MOUSE_INPUT) &
-                                                                ~(ENABLE_QUICK_EDIT_MODE | ENABLE_PROCESSED_INPUT)
+            SetConsoleMode(inputHandle, allowMouseCapture ? (inputMode | ENABLE_MOUSE_INPUT) & ~(ENABLE_QUICK_EDIT_MODE | ENABLE_PROCESSED_INPUT)
                                                           : inputMode & ~ENABLE_PROCESSED_INPUT);
             while (true)
             {
@@ -114,6 +109,19 @@ namespace TMK
                 {
                     eventInfo = ResizeEvent();
                 }
+                else if (record.EventType == MOUSE_EVENT)
+                {
+                    eventInfo = MouseEvent(record.Event.MouseEvent.dwEventFlags & MOUSE_WHEELED
+                                               ? record.Event.MouseEvent.dwButtonState & 800000 ? MouseButton::WheelUp : MouseButton::WheelDown
+                                           : record.Event.MouseEvent.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED ? MouseButton::Left
+                                           : record.Event.MouseEvent.dwButtonState & FROM_LEFT_2ND_BUTTON_PRESSED ? MouseButton::Wheel
+                                           : record.Event.MouseEvent.dwButtonState & RIGHTMOST_BUTTON_PRESSED     ? MouseButton::Right
+                                                                                                                  : MouseButton::None,
+                                           record.Event.MouseEvent.dwEventFlags & MOUSE_MOVED,
+                                           record.Event.MouseEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED),
+                                           record.Event.MouseEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED),
+                                           record.Event.MouseEvent.dwControlKeyState & SHIFT_PRESSED);
+                }
                 if (eventInfo.GetType() != EventType::None && eventInfo.GetType() != EventType::TimeOut)
                 {
                     if (filter && !filter(eventInfo))
@@ -151,8 +159,7 @@ namespace TMK
         return m_utf16Arguments[offset];
     }
 #else
-    Arguments::Arguments(int totalArguments, char** utf8Arguments)
-        : m_totalArguments(totalArguments), m_utf8Arguments(utf8Arguments)
+    Arguments::Arguments(int totalArguments, char** utf8Arguments) : m_totalArguments(totalArguments), m_utf8Arguments(utf8Arguments)
     {
     }
 #endif
@@ -187,8 +194,7 @@ namespace TMK
     {
     }
 
-    Dimensions::Dimensions(unsigned short totalColumns, unsigned short totalRows)
-        : m_totalColumns(totalColumns), m_totalRows(totalRows)
+    Dimensions::Dimensions(unsigned short totalColumns, unsigned short totalRows) : m_totalColumns(totalColumns), m_totalRows(totalRows)
     {
     }
 
@@ -220,14 +226,12 @@ namespace TMK
         return m_code;
     }
 
-    RGBColor::RGBColor(unsigned char red, unsigned char green, unsigned char blue)
-        : m_red(red), m_green(green), m_blue(blue)
+    RGBColor::RGBColor(unsigned char red, unsigned char green, unsigned char blue) : m_red(red), m_green(green), m_blue(blue)
     {
     }
 
     RGBColor::RGBColor(HexColor color)
-        : m_red(color.GetCodeAsNumber() >> 16 & 0xff), m_green(color.GetCodeAsNumber() >> 8 & 0xff),
-          m_blue(color.GetCodeAsNumber() & 0xff)
+        : m_red(color.GetCodeAsNumber() >> 16 & 0xff), m_green(color.GetCodeAsNumber() >> 8 & 0xff), m_blue(color.GetCodeAsNumber() & 0xff)
     {
     }
 
@@ -306,6 +310,10 @@ namespace TMK
     {
     }
 
+    EventInfo::EventInfo(MouseEvent mouseEvent) : m_type(EventType::Mouse), m_mouseEvent(mouseEvent)
+    {
+    }
+
     FocusEvent EventInfo::GetFocusEvent() const
     {
         if (m_type == EventType::Focus)
@@ -320,6 +328,15 @@ namespace TMK
         if (m_type == EventType::Resize)
         {
             return m_resizeEvent;
+        }
+        throw InvalidEventTypeException();
+    }
+
+    MouseEvent EventInfo::GetMouseEvent() const
+    {
+        if (m_type == EventType::Mouse)
+        {
+            return m_mouseEvent;
         }
         throw InvalidEventTypeException();
     }
@@ -405,8 +422,7 @@ namespace TMK
         return Setup::ReadEvent(allowMouseCapture, waitInMilliseconds, nullptr);
     }
 
-    EventInfo Terminal::Input::ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds,
-                                         std::function<bool(EventInfo&)> filter)
+    EventInfo Terminal::Input::ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds, std::function<bool(EventInfo&)> filter)
     {
         return Setup::ReadEvent(allowMouseCapture, waitInMilliseconds, filter);
     }
@@ -549,8 +565,7 @@ namespace TMK
         {
             throw NoValidTTYException();
         }
-        return Dimensions(bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1,
-                          bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1);
+        return Dimensions(bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1, bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1);
 #else
         struct winsize size;
         if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &size) && ioctl(STDERR_FILENO, TIOCGWINSZ, &size))
@@ -673,8 +688,7 @@ namespace TMK
         {
             throw NoValidTTYException();
         }
-        return Coordinate(bufferInfo.dwCursorPosition.X - bufferInfo.srWindow.Left,
-                          bufferInfo.dwCursorPosition.Y - bufferInfo.srWindow.Top);
+        return Coordinate(bufferInfo.dwCursorPosition.X - bufferInfo.srWindow.Left, bufferInfo.dwCursorPosition.Y - bufferInfo.srWindow.Top);
 #else
         struct termios attributes;
         ClearInputBuffer();

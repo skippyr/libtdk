@@ -5,9 +5,8 @@
 #include <iostream>
 
 /**
- * @brief A blazing and open-source C++ terminal manipulation library for Windows and Linux. It is capable of handling
- * terminal attributes, colors, effects, arguments and event readings targetting UTF-8 and UTF-16 encodings. It has a an
- * object oriented philosophy for those who love a touch of complexity.
+ * @brief A blazing and open-source C++ terminal manipulation library for Windows and Linux. It is capable of handling terminal attributes, colors, effects,
+ * arguments and event readings targetting UTF-8 and UTF-16 encodings. It has a an object oriented philosophy for those who love a touch of complexity.
  */
 namespace TMK
 {
@@ -447,6 +446,11 @@ namespace TMK
          */
         EventInfo(ResizeEvent resizeEvent);
         /**
+         * @brief Creates a new instance of the EventInfo class.
+         * @param mouseEvent A mouse event to be converted.
+         */
+        EventInfo(MouseEvent mouseEvent);
+        /**
          * @brief Gets the event type.
          * @returns The event type.
          */
@@ -463,6 +467,12 @@ namespace TMK
          * @throws InvalidEventTypeException Gets thrown whenever the event type is not a resize event.
          */
         ResizeEvent GetResizeEvent() const;
+        /**
+         * @brief Gets the mouse event read.
+         * @returns The mouse event read.
+         * @throws InvalidEventTypeException Gets thrown whenever the event type is not a mouse event.
+         */
+        MouseEvent GetMouseEvent() const;
 
     private:
         /** @brief The event type. */
@@ -472,6 +482,8 @@ namespace TMK
             FocusEvent m_focusEvent;
             /** @brief The resize event read. */
             ResizeEvent m_resizeEvent;
+            /** @brief The mouse event read. */
+            MouseEvent m_mouseEvent;
         };
     };
 
@@ -528,29 +540,25 @@ namespace TMK
             static char ReadByte();
             /**
              * @brief Reads a terminal event.
-             * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse
-             * selection will be disabled until it returns.
+             * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
              * @returns The information about the event read.
              */
             static EventInfo ReadEvent(bool allowMouseCapture);
             /**
              * @brief Reads a terminal event.
-             * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse
-             * selection will be disabled until it returns.
+             * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
              * @param waitInMilliseconds The time to wait for an event. If zero, it returns immediately.
              * @returns The information about the event read.
              */
             static EventInfo ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds);
             /**
              * @brief Reads a terminal event.
-             * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse
-             * selection will be disabled until it returns.
+             * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
              * @param waitInMilliseconds The time to wait for an event. If zero, it returns immediately.
              * @param filter A function used to filter events while the timer is running.
              * @returns The information about the event read.
              */
-            static EventInfo ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds,
-                                       std::function<bool(EventInfo&)> filter);
+            static EventInfo ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds, std::function<bool(EventInfo&)> filter);
 
         private:
             Input() = delete;
@@ -563,26 +571,22 @@ namespace TMK
             /** @brief Flushes the stream buffer. */
             static void Flush();
             /**
-             * @brief Formats and writes arguments to the standard output stream with a newline character appended at
-             * its end.
+             * @brief Formats and writes arguments to the standard output stream with a newline character appended at its end.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
-             * @throws WideCharacterOrientationException Gets thrown whenever the standard output stream is wide
-             * character oriented.
+             * @throws WideCharacterOrientationException Gets thrown whenever the standard output stream is wide character oriented.
              */
             static void WriteLine(std::string format, ...);
             /**
              * @brief Writes a newline character to the standard output stream.
-             * @throws WideCharacterOrientationException Gets thrown whenever the standard output stream is wide
-             * character oriented.
+             * @throws WideCharacterOrientationException Gets thrown whenever the standard output stream is wide character oriented.
              */
             static void WriteLine();
             /**
              * @brief Formats and writes arguments to the standard output stream.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
-             * @throws WideCharacterOrientationException Gets thrown whenever the standard output stream is wide
-             * character oriented.
+             * @throws WideCharacterOrientationException Gets thrown whenever the standard output stream is wide character oriented.
              */
             static void Write(std::string format, ...);
             /**
@@ -610,26 +614,22 @@ namespace TMK
         {
         public:
             /**
-             * @brief Formats and writes arguments to the standard error stream with a newline character appended at its
-             * end.
+             * @brief Formats and writes arguments to the standard error stream with a newline character appended at its end.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
-             * @throws WideCharacterOrientationException Gets thrown whenever the standard error stream is wide
-             * character oriented.
+             * @throws WideCharacterOrientationException Gets thrown whenever the standard error stream is wide character oriented.
              */
             static void WriteLine(std::string format, ...);
             /**
              * @brief Writes a newline character to the standard error stream.
-             * @throws WideCharacterOrientationException Gets thrown whenever the standard error stream is wide
-             * character oriented.
+             * @throws WideCharacterOrientationException Gets thrown whenever the standard error stream is wide character oriented.
              */
             static void WriteLine();
             /**
              * @brief Formats and writes arguments to the standard error stream.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
-             * @throws WideCharacterOrientationException Gets thrown whenever the standard error stream is wide
-             * character oriented.
+             * @throws WideCharacterOrientationException Gets thrown whenever the standard error stream is wide character oriented.
              */
             static void Write(std::string format, ...);
             /**
@@ -680,8 +680,7 @@ namespace TMK
             /**
              * @brief Gets the terminal window dimensions.
              * @returns The terminal window dimensions.
-             * @exception NoValidTTYException Gets thrown whenever the standard output and error streams are being
-             * redirected/piped.
+             * @exception NoValidTTYException Gets thrown whenever the standard output and error streams are being redirected/piped.
              */
             static Dimensions GetDimensions();
             /** @brief Opens the alternate window. */
@@ -783,27 +782,24 @@ namespace TMK
         {
         public:
             /**
-             * @brief Gets the terminal cursor coordinate. On Linux, as it parses a terminal answer given through the
-             * standard input stream, its buffer will always be cleared.
+             * @brief Gets the terminal cursor coordinate. On Linux, as it parses a terminal answer given through the standard input stream, its buffer will
+             * always be cleared.
              * @returns The terminal cursor coordinate.
-             * @throws NoValidTTYException Gets thrown, on Windows, whenever the standard output and error streams are
-             * being redirected/piped; and, on Linux, whenever the standard input or the standard output and error
-             * streams are being redirected/piped.
+             * @throws NoValidTTYException Gets thrown, on Windows, whenever the standard output and error streams are being redirected/piped; and, on Linux,
+             * whenever the standard input or the standard output and error streams are being redirected/piped.
              */
             static Coordinate GetCoordinate();
             /**
              * @brief Sets the terminal cursor coordinate.
              * @param column The column component of the coordinate.
              * @param row The row component of the coordinate.
-             * @throws OutOfRangeException Gets thrown whenever the coordinate given is outside of the terminal window
-             * boundaries.
+             * @throws OutOfRangeException Gets thrown whenever the coordinate given is outside of the terminal window boundaries.
              */
             static void SetCoordinate(unsigned short column, unsigned short row);
             /**
              * @brief Sets the terminal cursor coordinate.
              * @param coordinate The coordinate to be set.
-             * @throws OutOfRangeException Gets thrown whenever the coordinate given is outside of the terminal window
-             * boundaries.
+             * @throws OutOfRangeException Gets thrown whenever the coordinate given is outside of the terminal window boundaries.
              */
             static void SetCoordinate(Coordinate coordinate);
             /**
