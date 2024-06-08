@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include <functional>
+#include <cstdarg>
 
 /**
  * @brief A powerful and open-source C++ terminal manipulation library for Windows and Linux. It is capable of handling
@@ -384,6 +386,10 @@ namespace TMK
              * @returns The byte read or EOF if the standard input stream is closed or it is wide character oriented.
              */
             static char ReadByte();
+            static EventInfo ReadEvent(bool allowMouseCapture);
+            static EventInfo ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds);
+            static EventInfo ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds,
+                                       std::function<bool(EventInfo&)> filter);
 
         private:
             Input() = delete;

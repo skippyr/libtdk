@@ -1,8 +1,5 @@
 #include "TMK.hpp"
 
-#include <cstdarg>
-#include <functional>
-
 #ifdef _WIN32
 #include <Windows.h>
 #include <io.h>
@@ -71,6 +68,50 @@ namespace TMK
             }
             EventInfo eventInfo = EventType::None;
 #ifdef _WIN32
+            HANDLE inputHandle = GetStdHandle(STD_INPUT_HANDLE);
+            HANDLE timerHandle = nullptr;
+            DWORD inputMode;
+            GetConsoleMode(inputHandle, &inputMode);
+            SetConsoleMode(inputHandle, allowMouseCapture ? (inputMode | ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT) &
+                                                                ~ENABLE_QUICK_EDIT_MODE
+                                                          : inputMode | ENABLE_PROCESSED_INPUT);
+            while (true)
+            {
+                if (!waitInMilliseconds)
+                {
+                    DWORD totalEventsAvailable;
+                    GetNumberOfConsoleInputEvents(inputHandle, &totalEventsAvailable);
+                    if (!totalEventsAvailable)
+                    {
+                        eventInfo = EventType::None;
+                        break;
+                    }
+                }
+                if (waitInMilliseconds > 0)
+                {
+                    if (!timerHandle)
+                    {
+                        timerHandle = CreateWaitableTimerW(nullptr, true, nullptr);
+                        LARGE_INTEGER duration;
+                        duration.QuadPart = -10000 * waitInMilliseconds;
+                        SetWaitableTimer(timerHandle, &duration, 1, nullptr, nullptr, false);
+                    }
+                    HANDLE handles[] = {timerHandle, inputHandle};
+                    if (WaitForMultipleObjects(2, handles, false, INFINITE) == WAIT_OBJECT_0)
+                    {
+                        eventInfo = EventType::TimeOut;
+                        break;
+                    }
+                }
+                INPUT_RECORD record;
+                DWORD totalEventsRead;
+                ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
+            }
+            if (timerHandle)
+            {
+                CloseHandle(timerHandle);
+            }
+            SetConsoleMode(inputHandle, inputMode);
 #endif
             return eventInfo;
         }
