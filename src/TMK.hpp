@@ -576,6 +576,12 @@ namespace TMK
         {
         public:
             /**
+             * @brief Gets the terminal cursor coordinate. On Linux, it will clear the input stream.
+             * @returns The terminal cursor coordinate.
+             * @throws NoValidTTYException Gets thrown whenever no valid standard stream is a TTY.
+             */
+            static Coordinate GetCoordinate();
+            /**
              * @brief Sets the terminal cursor shape.
              * @param shape The shape to be set.
              */

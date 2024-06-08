@@ -492,6 +492,39 @@ namespace TMK
         }
     }
 
+    Coordinate Terminal::Cursor::GetCoordinate()
+    {
+#ifdef _WIN32
+        CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
+        if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) &&
+            !GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo))
+        {
+            throw NoValidTTYException();
+        }
+        return Coordinate(bufferInfo.dwCursorPosition.X - bufferInfo.srWindow.Left,
+                          bufferInfo.dwCursorPosition.Y - bufferInfo.srWindow.Top);
+#else
+        struct termios attributes;
+        ClearInputBuffer();
+        if (WriteANSISequence("\x1b[6n") || tcgetattr(STDIN_FILENO, &attributes))
+        {
+            throw NoValidTTYException();
+        }
+        attributes.c_lflag &= ~(ICANON | ECHO);
+        tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+        unsigned short column;
+        unsigned short row;
+        int totalMatchesRead = std::scanf("\x1b[%hu;%huR", &row, &column);
+        attributes.c_lflag |= ICANON | ECHO;
+        tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+        if (totalMatchesRead != 2)
+        {
+            throw NoValidTTYException();
+        }
+        return Coordinate(--column, --row);
+#endif
+    }
+
     void Terminal::Cursor::SetShape(CursorShape shape, bool isBlinking)
     {
         Setup::WriteEscapeSequence("\x1b[%d q", static_cast<int>(shape) - isBlinking);
