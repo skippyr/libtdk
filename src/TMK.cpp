@@ -42,7 +42,7 @@ namespace TMK
             }
         }
 
-        static int WriteEscapeSequence(std::string format, ...)
+        static int WriteANSISequence(std::string format, ...)
         {
             Setup::InitEnvironment();
             if (!IS_TTY(Terminal::Output) && !IS_TTY(Terminal::Error))
@@ -380,8 +380,7 @@ namespace TMK
                           bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1);
 #else
         struct winsize size;
-        if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &size) && ioctl(STDIN_FILENO, TIOCGWINSZ, &size) &&
-            ioctl(STDERR_FILENO, TIOCGWINSZ, &size))
+        if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &size) && ioctl(STDERR_FILENO, TIOCGWINSZ, &size))
         {
             throw NoValidTTYException();
         }
@@ -391,32 +390,32 @@ namespace TMK
 
     void Terminal::Window::OpenAlternateWindow()
     {
-        Setup::WriteEscapeSequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
+        Setup::WriteANSISequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
     }
 
     void Terminal::Window::CloseAlternateWindow()
     {
-        Setup::WriteEscapeSequence("\x1b[?1049l");
+        Setup::WriteANSISequence("\x1b[?1049l");
     }
 
     void Terminal::Window::SetTitle(std::string title)
     {
-        Setup::WriteEscapeSequence("\x1b]0;%s\7", title.c_str());
+        Setup::WriteANSISequence("\x1b]0;%s\7", title.c_str());
     }
 
     void Terminal::Bell::Ring()
     {
-        Setup::WriteEscapeSequence("\7");
+        Setup::WriteANSISequence("\7");
     }
 
     void Terminal::Font::SetWeight(FontWeight weight)
     {
-        Setup::WriteEscapeSequence("\x1b[22;%dm", static_cast<int>(weight));
+        Setup::WriteANSISequence("\x1b[22;%dm", static_cast<int>(weight));
     }
 
     void Terminal::Font::SetXColor(unsigned char color, FontLayer layer)
     {
-        Setup::WriteEscapeSequence("\x1b[%d8;5;%hum", static_cast<int>(layer), color);
+        Setup::WriteANSISequence("\x1b[%d8;5;%hum", static_cast<int>(layer), color);
     }
 
     void Terminal::Font::SetXColor(XColor color, FontLayer layer)
@@ -426,7 +425,7 @@ namespace TMK
 
     void Terminal::Font::SetRGBColor(unsigned char red, unsigned char green, unsigned char blue, FontLayer layer)
     {
-        Setup::WriteEscapeSequence("\x1b[%d8;2;%hu;%hu;%hum", static_cast<int>(layer), red, green, blue);
+        Setup::WriteANSISequence("\x1b[%d8;2;%hu;%hu;%hum", static_cast<int>(layer), red, green, blue);
     }
 
     void Terminal::Font::SetRGBColor(RGBColor color, FontLayer layer)
@@ -446,12 +445,12 @@ namespace TMK
 
     void Terminal::Font::ResetColors()
     {
-        Setup::WriteEscapeSequence("\x1b[39;49m");
+        Setup::WriteANSISequence("\x1b[39;49m");
     }
 
     void Terminal::Font::ResetWeight()
     {
-        Setup::WriteEscapeSequence("\x1b[22m");
+        Setup::WriteANSISequence("\x1b[22m");
     }
 
     void Terminal::Font::SetEffect(int effects)
@@ -471,7 +470,7 @@ namespace TMK
         {
             if (effects & 1 << code)
             {
-                Setup::WriteEscapeSequence("\x1b[%dm", code);
+                Setup::WriteANSISequence("\x1b[%dm", code);
             }
         }
     }
@@ -487,7 +486,7 @@ namespace TMK
         {
             if (code != 26)
             {
-                Setup::WriteEscapeSequence("\x1b[%dm", code);
+                Setup::WriteANSISequence("\x1b[%dm", code);
             }
         }
     }
@@ -525,19 +524,42 @@ namespace TMK
 #endif
     }
 
+    void Terminal::Cursor::SetCoordinate(unsigned short column, unsigned short row)
+    {
+        TMK::Dimensions dimensions;
+        try
+        {
+            dimensions = TMK::Terminal::Window::GetDimensions();
+        }
+        catch (TMK::NoValidTTYException&)
+        {
+            return;
+        }
+        if (column >= dimensions.GetTotalColumns() || row >= dimensions.GetTotalRows())
+        {
+            throw OutOfRangeException();
+        }
+        Setup::WriteANSISequence("\x1b[%hu;%huH", row + 1, column + 1);
+    }
+
+    void Terminal::Cursor::SetCoordinate(Coordinate coordinate)
+    {
+        SetCoordinate(coordinate.GetColumn(), coordinate.GetRow());
+    }
+
     void Terminal::Cursor::SetShape(CursorShape shape, bool isBlinking)
     {
-        Setup::WriteEscapeSequence("\x1b[%d q", static_cast<int>(shape) - isBlinking);
+        Setup::WriteANSISequence("\x1b[%d q", static_cast<int>(shape) - isBlinking);
     }
 
     void Terminal::Cursor::SetVisibility(bool isVisible)
     {
-        Setup::WriteEscapeSequence("\x1b[?25%c", isVisible ? 'h' : 'l');
+        Setup::WriteANSISequence("\x1b[?25%c", isVisible ? 'h' : 'l');
     }
 
     void Terminal::Cursor::ResetShape()
     {
-        Setup::WriteEscapeSequence("\x1b[0 q");
+        Setup::WriteANSISequence("\x1b[0 q");
     }
 
     int TMK::operator|(Effect effect0, Effect effect1)
