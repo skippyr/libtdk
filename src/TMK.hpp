@@ -307,13 +307,29 @@ namespace TMK
         void SetRow(unsigned short row);
 
     private:
+        /** @brief The column component of the coordinate. */
         unsigned short m_column;
+        /** @brief The row component of the coordinate. */
         unsigned short m_row;
     };
 
+    /** @brief Represents the information of a terminal event. */
     class EventInfo
     {
+    public:
+        /**
+         * @brief Creates a new instance of the EventInfo class.
+         * @param type The event type.
+         */
+        EventInfo(EventType type);
+        /**
+         * @brief Gets the event type.
+         * @param The event type.
+         */
+        EventType GetType() const;
+
     private:
+        /** @brief The event type. */
         EventType m_type;
     };
 

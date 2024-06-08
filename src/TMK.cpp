@@ -1,6 +1,7 @@
 #include "TMK.hpp"
 
 #include <cstdarg>
+#include <functional>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -54,6 +55,24 @@ namespace TMK
             std::vfprintf(IS_TTY(Terminal::Output) ? Terminal::Output::GetFile() : Terminal::Error::GetFile(),
                           format.c_str(), arguments);
             va_end(arguments);
+        }
+
+        static EventInfo ReadEvent(int waitInMilliseconds, bool allowMouseCapture,
+                                   std::function<bool(EventInfo&)> filter)
+        {
+            InitEnvironment();
+            if (!IS_TTY(Terminal::Input) || (!IS_TTY(Terminal::Output) && !IS_TTY(Terminal::Error)))
+            {
+                throw NoValidTTYException();
+            }
+            if (std::fwide(Terminal::Input::GetFile(), 0) > 0)
+            {
+                throw WideCharacterOrientationException();
+            }
+            EventInfo eventInfo = EventType::None;
+#ifdef _WIN32
+#endif
+            return eventInfo;
         }
 
     private:
@@ -168,6 +187,15 @@ namespace TMK
     unsigned char RGBColor::GetBlue() const
     {
         return m_blue;
+    }
+
+    EventInfo::EventInfo(EventType type) : m_type(type)
+    {
+    }
+
+    EventType EventInfo::GetType() const
+    {
+        return m_type;
     }
 
 #ifdef _WIN32
