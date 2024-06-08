@@ -248,18 +248,18 @@ namespace TMK
         {
         public:
             /**
-             * @brief Gets the file descriptor associated with the stream.
-             * @param The file descriptor associated with the stream.
+             * @brief Gets the file descriptor associated with the standard input stream.
+             * @param The file descriptor associated with the standard input stream.
              */
             static std::FILE* GetFile();
             /**
-             * @brief Gets the file descriptor number associated with the stream.
-             * @param The file descriptor number associated with the stream.
+             * @brief Gets the file descriptor number associated with the standard input stream.
+             * @param The file descriptor number associated with the standard input stream.
              */
             static int GetFileNumber();
             /**
-             * @brief Checks if the stream is connected to an interactive terminal (TTY).
-             * @param A boolean that states the stream is a TTY.
+             * @brief Checks if the standard input stream is connected to an interactive terminal (TTY).
+             * @param A boolean that states the standard input stream is a TTY.
              */
             static bool IsTTY();
             /**
@@ -279,37 +279,38 @@ namespace TMK
             /** @brief Flushes the stream buffer. */
             static void Flush();
             /**
-             * @brief Formats and writes arguments to the stream with a newline character appended at its end.
+             * @brief Formats and writes arguments to the standard output stream with a newline character appended at
+             * its end.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
              * @throws WideCharacterOrientationException Gets thrown whenever the stream is oriented to wide character.
              */
             static void WriteLine(std::string format, ...);
             /**
-             * @brief Writes a newline character to the stream.
+             * @brief Writes a newline character to the standard output stream.
              * @throws WideCharacterOrientationException Gets thrown whenever the stream is oriented to wide character.
              */
             static void WriteLine();
             /**
-             * @brief Formats and writes arguments to the stream.
+             * @brief Formats and writes arguments to the standard output stream.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
              * @throws WideCharacterOrientationException Gets thrown whenever the stream is oriented to wide character.
              */
             static void Write(std::string format, ...);
             /**
-             * @brief Gets the file descriptor associated with the stream.
-             * @param The file descriptor associated with the stream.
+             * @brief Gets the file descriptor associated with the standard output stream.
+             * @param The file descriptor associated with the standard output stream.
              */
             static std::FILE* GetFile();
             /**
-             * @brief Gets the file descriptor number associated with the stream.
-             * @param The file descriptor number associated with the stream.
+             * @brief Gets the file descriptor number associated with the standard output stream.
+             * @param The file descriptor number associated with the standard output stream.
              */
             static int GetFileNumber();
             /**
-             * @brief Checks if the stream is connected to an interactive terminal (TTY).
-             * @param A boolean that states the stream is a TTY.
+             * @brief Checks if the standard output stream is connected to an interactive terminal (TTY).
+             * @param A boolean that states the standard output stream is a TTY.
              */
             static bool IsTTY();
 
