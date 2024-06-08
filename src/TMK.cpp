@@ -339,21 +339,6 @@ namespace TMK
         return std::getchar();
     }
 
-    EventInfo Terminal::Input::ReadEvent()
-    {
-        return Setup::ReadEvent(false, -1, nullptr);
-    }
-
-    EventInfo Terminal::Input::ReadEvent(unsigned short waitInMilliseconds)
-    {
-        return Setup::ReadEvent(false, waitInMilliseconds, nullptr);
-    }
-
-    EventInfo Terminal::Input::ReadEvent(unsigned short waitInMilliseconds, std::function<bool(EventInfo&)> filter)
-    {
-        return Setup::ReadEvent(false, waitInMilliseconds, filter);
-    }
-
     EventInfo Terminal::Input::ReadEvent(bool allowMouseCapture)
     {
         return Setup::ReadEvent(allowMouseCapture, -1, nullptr);

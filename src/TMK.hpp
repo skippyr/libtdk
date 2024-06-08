@@ -428,24 +428,6 @@ namespace TMK
             static char ReadByte();
             /**
              * @brief Reads a terminal event.
-             * @returns The information about the event read.
-             */
-            static EventInfo ReadEvent();
-            /**
-             * @brief Reads a terminal event.
-             * @param waitInMilliseconds The time to wait for an event. If zero, it returns immediately.
-             * @returns The information about the event read.
-             */
-            static EventInfo ReadEvent(unsigned short waitInMilliseconds);
-            /**
-             * @brief Reads a terminal event.
-             * @param waitInMilliseconds The time to wait for an event. If zero, it returns immediately.
-             * @param filter A function used to filter events while the timer is running.
-             * @returns The information about the event read.
-             */
-            static EventInfo ReadEvent(unsigned short waitInMilliseconds, std::function<bool(EventInfo&)> filter);
-            /**
-             * @brief Reads a terminal event.
              * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse
              * selection will be disabled until it returns.
              * @returns The information about the event read.
