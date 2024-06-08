@@ -612,6 +612,8 @@ namespace TMK
             static void SetVisibility(bool isVisible);
             /** @brief Resets the terminal cursor shape. */
             static void ResetShape();
+            /** @brief Clears the terminal cursor line. */
+            static void ClearLine();
 
         private:
             Cursor() = delete;

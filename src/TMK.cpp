@@ -42,20 +42,18 @@ namespace TMK
             }
         }
 
-        static int WriteANSISequence(std::string format, ...)
+        static void WriteANSISequence(std::string format, ...)
         {
-            Setup::InitEnvironment();
+            InitEnvironment();
             if (!IS_TTY(Terminal::Output) && !IS_TTY(Terminal::Error))
             {
-                return -1;
+                return;
             }
             std::va_list arguments;
             va_start(arguments, format);
-            int totalBytesWritten =
-                std::vfprintf(IS_TTY(Terminal::Output) ? Terminal::Output::GetFile() : Terminal::Error::GetFile(),
-                              format.c_str(), arguments);
+            std::vfprintf(IS_TTY(Terminal::Output) ? Terminal::Output::GetFile() : Terminal::Error::GetFile(),
+                          format.c_str(), arguments);
             va_end(arguments);
-            return -(totalBytesWritten < 0);
         }
 
     private:
@@ -560,6 +558,11 @@ namespace TMK
     void Terminal::Cursor::ResetShape()
     {
         Setup::WriteANSISequence("\x1b[0 q");
+    }
+
+    void Terminal::Cursor::ClearLine()
+    {
+        Setup::WriteANSISequence("\x1b[2K\x1b[1G");
     }
 
     int TMK::operator|(Effect effect0, Effect effect1)
