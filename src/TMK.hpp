@@ -76,7 +76,7 @@ namespace TMK
 
     class RGBColor;
 
-    /** @brief Represents an exception thrown whenever a group of streams are oriented to wide characters. */
+    /** @brief Represents an exception thrown whenever a group of streams are wide character oriented. */
     class WideCharacterOrientationException
     {
     };
@@ -91,7 +91,7 @@ namespace TMK
     {
     };
 
-    /** @brief Represents the terminal process command-line arguments in both UTF-8 and UTF-16 encodings. */
+    /** @brief Represents the command line arguments in both UTF-8 and UTF-16 encodings. */
     class Arguments
     {
     public:
@@ -264,7 +264,7 @@ namespace TMK
             static bool IsTTY();
             /**
              * @brief Reads a byte.
-             * @returns The byte read.
+             * @returns The byte read or EOF if the standard input stream is closed or it is wide character oriented.
              */
             static char ReadByte();
 
@@ -283,19 +283,22 @@ namespace TMK
              * its end.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
-             * @throws WideCharacterOrientationException Gets thrown whenever the stream is oriented to wide character.
+             * @throws WideCharacterOrientationException Gets thrown whenever the standard output stream is wide
+             * character oriented.
              */
             static void WriteLine(std::string format, ...);
             /**
              * @brief Writes a newline character to the standard output stream.
-             * @throws WideCharacterOrientationException Gets thrown whenever the stream is oriented to wide character.
+             * @throws WideCharacterOrientationException Gets thrown whenever the standard output stream is wide
+             * character oriented.
              */
             static void WriteLine();
             /**
              * @brief Formats and writes arguments to the standard output stream.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
-             * @throws WideCharacterOrientationException Gets thrown whenever the stream is oriented to wide character.
+             * @throws WideCharacterOrientationException Gets thrown whenever the standard output stream is wide
+             * character oriented.
              */
             static void Write(std::string format, ...);
             /**
@@ -318,24 +321,68 @@ namespace TMK
             Output() = delete;
         };
 
+        /** @brief Represents the standard error stream. */
         class Error
         {
         public:
-            static int WriteLine(std::string format, ...);
-            static int WriteLine();
-            static int Write(std::string format, ...);
+            /**
+             * @brief Formats and writes arguments to the standard error stream with a newline character appended at its
+             * end.
+             * @param format The format to be used. It accepts the same specifiers as the printf function family.
+             * @param ... The arguments to be formatted.
+             * @throws WideCharacterOrientationException Gets thrown whenever the standard error stream is wide
+             * character oriented.
+             */
+            static void WriteLine(std::string format, ...);
+            /**
+             * @brief Writes a newline character to the standard error stream.
+             * @throws WideCharacterOrientationException Gets thrown whenever the standard error stream is wide
+             * character oriented.
+             */
+            static void WriteLine();
+            /**
+             * @brief Formats and writes arguments to the standard error stream.
+             * @param format The format to be used. It accepts the same specifiers as the printf function family.
+             * @param ... The arguments to be formatted.
+             * @throws WideCharacterOrientationException Gets thrown whenever the standard error stream is wide
+             * character oriented.
+             */
+            static void Write(std::string format, ...);
+            /**
+             * @brief Gets the file descriptor associated with the standard error stream.
+             * @param The file descriptor associated with the standard error stream.
+             */
             static std::FILE* GetFile();
+            /**
+             * @brief Gets the file descriptor number associated with the standard error stream.
+             * @param The file descriptor number associated with the standard error stream.
+             */
             static int GetFileNumber();
+            /**
+             * @brief Checks if the standard error stream is connected to an interactive terminal (TTY).
+             * @param A boolean that states the standard error stream is a TTY.
+             */
             static bool IsTTY();
 
         private:
             Error() = delete;
         };
 
+        /** @brief Represents the terminal process. */
         class Process
         {
         public:
+            /**
+             * @brief Gets and treats the command line arguments.
+             * @param rawTotalArguments The total arguments given as first parameter of the main function.
+             * @param rawArguments The arguments given as second parameter of the main function.
+             * @returns The treated arguments.
+             */
             static Arguments GetArguments(int rawTotalArguments, char** rawArguments);
+            /**
+             * @brief Exits the process.
+             * @param exitCode The exit code to be used.
+             */
             static void Exit(int exitCode);
 
         private:
