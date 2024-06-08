@@ -384,10 +384,10 @@ namespace TMK
          * @param button The mouse button pressed.
          * @param isDragging A boolean that states the mouse was being dragged.
          * @param hasCtrl A boolean that states the Ctrl key was being holded.
-         * @param hasShift A boolean that states the Shift key was being holded.
          * @param hasAlt A boolean that states the Alt key was being holded.
+         * @param hasShift A boolean that states the Shift key was being holded.
          */
-        MouseEvent(Coordinate coordinate, MouseButton button, bool isDragging, bool hasCtrl, bool hasShift, bool hasAlt);
+        MouseEvent(Coordinate coordinate, MouseButton button, bool isDragging, bool hasCtrl, bool hasAlt, bool hasShift);
         /**
          * @brief Gets the mouse coordinate.
          * @returns The mouse coordinate.
@@ -409,15 +409,15 @@ namespace TMK
          */
         bool HasCtrl() const;
         /**
-         * @brief Checks if the Shift was being holded.
-         * @returns A boolean that states the Shift key was being holded.
-         */
-        bool HasShift() const;
-        /**
          * @brief Checks if the Alt was being holded.
          * @returns A boolean that states the Alt key was being holded.
          */
         bool HasAlt() const;
+        /**
+         * @brief Checks if the Shift was being holded.
+         * @returns A boolean that states the Shift key was being holded.
+         */
+        bool HasShift() const;
 
     private:
         /** @brief The mouse coordinate. */
@@ -428,10 +428,10 @@ namespace TMK
         bool m_isDragging;
         /** @brief A boolean that states the Ctrl key was being holded. */
         bool m_hasCtrl;
-        /** @brief A boolean that states the Shift key was being holded. */
-        bool m_hasShift;
         /** @brief A boolean that states the Alt key was being holded. */
         bool m_hasAlt;
+        /** @brief A boolean that states the Shift key was being holded. */
+        bool m_hasShift;
     };
 
     /** @brief Represents the information of a terminal event. */

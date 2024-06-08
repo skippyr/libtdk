@@ -111,6 +111,7 @@ namespace TMK
                 }
                 else if (record.EventType == MOUSE_EVENT)
                 {
+
                     CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
                     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) ||
                         GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo);
@@ -273,8 +274,8 @@ namespace TMK
         return m_dimensions;
     }
 
-    MouseEvent::MouseEvent(Coordinate coordinate, MouseButton button, bool isDragging, bool hasCtrl, bool hasShift, bool hasAlt)
-        : m_coordinate(coordinate), m_button(button), m_isDragging(isDragging), m_hasCtrl(hasCtrl), m_hasShift(hasShift), m_hasAlt(hasAlt)
+    MouseEvent::MouseEvent(Coordinate coordinate, MouseButton button, bool isDragging, bool hasCtrl, bool hasAlt, bool hasShift)
+        : m_coordinate(coordinate), m_button(button), m_isDragging(isDragging), m_hasCtrl(hasCtrl), m_hasAlt(hasAlt), m_hasShift(hasShift)
     {
     }
 
@@ -298,14 +299,14 @@ namespace TMK
         return m_hasCtrl;
     }
 
-    bool MouseEvent::HasShift() const
-    {
-        return m_hasShift;
-    }
-
     bool MouseEvent::HasAlt() const
     {
         return m_hasAlt;
+    }
+
+    bool MouseEvent::HasShift() const
+    {
+        return m_hasShift;
     }
 
     EventInfo::EventInfo(EventType type) : m_type(type)
