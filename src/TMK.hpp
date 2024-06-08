@@ -426,6 +426,11 @@ namespace TMK
             static void OpenAlternateWindow();
             /** @brief Closes the alternate window. */
             static void CloseAlternateWindow();
+            /**
+             * @brief Sets the terminal window title.
+             * @param title The title to be set.
+             */
+            static void SetTitle(std::string title);
 
         private:
             Window() = delete;

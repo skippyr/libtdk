@@ -371,6 +371,11 @@ namespace TMK
         Setup::WriteEscapeSequence("\x1b[?1049l");
     }
 
+    void Terminal::Window::SetTitle(std::string title)
+    {
+        Setup::WriteEscapeSequence("\x1b]0;%s\7", title.c_str());
+    }
+
     void Terminal::Bell::Ring()
     {
         Setup::WriteEscapeSequence("\7");
