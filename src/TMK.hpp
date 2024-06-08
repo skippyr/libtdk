@@ -408,26 +408,67 @@ namespace TMK
             Window() = delete;
         };
 
+        /** @brief Represents the terminal bell. */
         class Bell
         {
         public:
+            /** @brief Rings the terminal bell. */
             static void Ring();
 
         private:
             Bell() = delete;
         };
 
+        /** @brief Represents the terminal font. */
         class Font
         {
         public:
+            /**
+             * @brief Sets the terminal font weight.
+             * @param weight The weight to be set.
+             */
             static void SetWeight(FontWeight weight);
+            /**
+             * @brief Sets an XTerm color into the terminal font.
+             * @param color The ANSI code of the color.
+             * @param layer The layer of the font to be affected.
+             */
             static void SetXColor(unsigned char color, FontLayer layer);
+            /**
+             * @brief Sets an XTerm color into the terminal font.
+             * @param color The ANSI code of the color.
+             * @param layer The layer of the font to be affected.
+             */
             static void SetXColor(XColor color, FontLayer layer);
+            /**
+             * @brief Sets an RGB color into the terminal font.
+             * @param red The red component of the color.
+             * @param green The green component of the color.
+             * @param blue The blue component of the color.
+             * @param layer The layer of the font to be affected.
+             */
             static void SetRGBColor(unsigned char red, unsigned char green, unsigned char blue, FontLayer layer);
+            /**
+             * @brief Sets an RGB color into the terminal font.
+             * @param color The color to be applied.
+             * @param layer The layer of the font to be affected.
+             */
             static void SetRGBColor(RGBColor color, FontLayer layer);
+            /**
+             * @brief Sets a hex color into the terminal font.
+             * @param color The hex code of the color.
+             * @param layer The layer of the font to be affected.
+             */
             static void SetHexColor(unsigned int hex, FontLayer layer);
+            /**
+             * @brief Sets a hex color into the terminal font.
+             * @param color The color to be applied.
+             * @param layer The layer of the font to be affected.
+             */
             static void SetHexColor(HexColor color, FontLayer layer);
+            /** @brief Resets the terminal font colors. */
             static void ResetColors();
+            /** @brief Resets the terminal font weight. */
             static void ResetWeight();
 
         private:
