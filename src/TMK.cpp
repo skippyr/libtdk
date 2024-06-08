@@ -111,8 +111,13 @@ namespace TMK
                 }
                 else if (record.EventType == MOUSE_EVENT)
                 {
-                    eventInfo = MouseEvent(record.Event.MouseEvent.dwEventFlags & MOUSE_WHEELED
-                                               ? record.Event.MouseEvent.dwButtonState & 800000 ? MouseButton::WheelUp : MouseButton::WheelDown
+                    CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
+                    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) ||
+                        GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo);
+                    eventInfo = MouseEvent(Coordinate(record.Event.MouseEvent.dwMousePosition.X - bufferInfo.srWindow.Left,
+                                                      record.Event.MouseEvent.dwMousePosition.Y - bufferInfo.srWindow.Top),
+                                           record.Event.MouseEvent.dwEventFlags & MOUSE_WHEELED
+                                               ? record.Event.MouseEvent.dwButtonState & 0x1000000 ? MouseButton::WheelDown : MouseButton::WheelUp
                                            : record.Event.MouseEvent.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED ? MouseButton::Left
                                            : record.Event.MouseEvent.dwButtonState & FROM_LEFT_2ND_BUTTON_PRESSED ? MouseButton::Wheel
                                            : record.Event.MouseEvent.dwButtonState & RIGHTMOST_BUTTON_PRESSED     ? MouseButton::Right
@@ -268,9 +273,14 @@ namespace TMK
         return m_dimensions;
     }
 
-    MouseEvent::MouseEvent(MouseButton button, bool isDragging, bool hasCtrl, bool hasShift, bool hasAlt)
-        : m_button(button), m_isDragging(isDragging), m_hasCtrl(hasCtrl), m_hasShift(hasShift), m_hasAlt(hasAlt)
+    MouseEvent::MouseEvent(Coordinate coordinate, MouseButton button, bool isDragging, bool hasCtrl, bool hasShift, bool hasAlt)
+        : m_coordinate(coordinate), m_button(button), m_isDragging(isDragging), m_hasCtrl(hasCtrl), m_hasShift(hasShift), m_hasAlt(hasAlt)
     {
+    }
+
+    Coordinate MouseEvent::GetCoordinate() const
+    {
+        return m_coordinate;
     }
 
     MouseButton MouseEvent::GetButton() const

@@ -380,13 +380,19 @@ namespace TMK
     public:
         /**
          * @brief Creates a new instance of the MouseEvent class.
+         * @param coordinate The mouse coordinate.
          * @param button The mouse button pressed.
          * @param isDragging A boolean that states the mouse was being dragged.
          * @param hasCtrl A boolean that states the Ctrl key was being holded.
          * @param hasShift A boolean that states the Shift key was being holded.
          * @param hasAlt A boolean that states the Alt key was being holded.
          */
-        MouseEvent(MouseButton button, bool isDragging, bool hasCtrl, bool hasShift, bool hasAlt);
+        MouseEvent(Coordinate coordinate, MouseButton button, bool isDragging, bool hasCtrl, bool hasShift, bool hasAlt);
+        /**
+         * @brief Gets the mouse coordinate.
+         * @returns The mouse coordinate.
+         */
+        Coordinate GetCoordinate() const;
         /**
          * @brief Gets the mouse button pressed.
          * @returns The mouse button pressed.
@@ -414,6 +420,8 @@ namespace TMK
         bool HasAlt() const;
 
     private:
+        /** @brief The mouse coordinate. */
+        Coordinate m_coordinate;
         /** @brief The mouse button pressed. */
         MouseButton m_button;
         /** @brief A boolean that states the mouse was being dragged. */
