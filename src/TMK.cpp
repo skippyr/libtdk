@@ -264,6 +264,36 @@ namespace TMK
         return m_dimensions;
     }
 
+    MouseEvent::MouseEvent(MouseButton button, bool isDragging, bool hasCtrl, bool hasShift, bool hasAlt)
+        : m_button(button), m_isDragging(isDragging), m_hasCtrl(hasCtrl), m_hasShift(hasShift), m_hasAlt(hasAlt)
+    {
+    }
+
+    MouseButton MouseEvent::GetButton() const
+    {
+        return m_button;
+    }
+
+    bool MouseEvent::IsDragging() const
+    {
+        return m_isDragging;
+    }
+
+    bool MouseEvent::HasCtrl() const
+    {
+        return m_hasCtrl;
+    }
+
+    bool MouseEvent::HasShift() const
+    {
+        return m_hasShift;
+    }
+
+    bool MouseEvent::HasAlt() const
+    {
+        return m_hasAlt;
+    }
+
     EventInfo::EventInfo(EventType type) : m_type(type)
     {
     }

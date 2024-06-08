@@ -5,8 +5,9 @@
 #include <iostream>
 
 /**
- * @brief A powerful and open-source C++ terminal manipulation library for Windows and Linux. It is capable of handling
- * terminal attributes, colors, effects, arguments and event readings targetting UTF-8 and UTF-16 encodings.
+ * @brief A blazing and open-source C++ terminal manipulation library for Windows and Linux. It is capable of handling
+ * terminal attributes, colors, effects, arguments and event readings targetting UTF-8 and UTF-16 encodings. It has a an
+ * object oriented philosophy for those who love a touch of complexity.
  */
 namespace TMK
 {
@@ -108,6 +109,23 @@ namespace TMK
         Mouse,
         /** @brief A keyboard key was pressed. */
         Key
+    };
+
+    /** @brief Contains the available mouse buttons. */
+    enum class MouseButton
+    {
+        /** @brief No button. */
+        None,
+        /** @brief Left mouse button. */
+        Left,
+        /** @brief Mouse wheel button. */
+        Wheel,
+        /** @brief Mouse wheel scroll upwards. */
+        WheelUp,
+        /** @brief Mouse wheel scroll downwards. */
+        WheelDown,
+        /** @brief Right mouse button. */
+        Right
     };
 
     class RGBColor;
@@ -355,6 +373,58 @@ namespace TMK
     private:
         /** @brief The terminal window dimensions. */
         Dimensions m_dimensions;
+    };
+
+    /** @brief Represents a terminal mouse event. */
+    class MouseEvent final
+    {
+    public:
+        /**
+         * @brief Creates a new instance of the MouseEvent class.
+         * @param button The mouse button pressed.
+         * @param isDragging A boolean that states the mouse was being dragged.
+         * @param hasCtrl A boolean that states the Ctrl key was being holded.
+         * @param hasShift A boolean that states the Shift key was being holded.
+         * @param hasAlt A boolean that states the Alt key was being holded.
+         */
+        MouseEvent(MouseButton button, bool isDragging, bool hasCtrl, bool hasShift, bool hasAlt);
+        /**
+         * @brief Gets the mouse button pressed.
+         * @returns The mouse button pressed.
+         */
+        MouseButton GetButton() const;
+        /**
+         * @brief Checks if the mouse was being dragged.
+         * @returns A boolean that states the mouse was being dragged.
+         */
+        bool IsDragging() const;
+        /**
+         * @brief Checks if the Ctrl was being holded.
+         * @returns A boolean that states the Ctrl key was being holded.
+         */
+        bool HasCtrl() const;
+        /**
+         * @brief Checks if the Shift was being holded.
+         * @returns A boolean that states the Shift key was being holded.
+         */
+        bool HasShift() const;
+        /**
+         * @brief Checks if the Alt was being holded.
+         * @returns A boolean that states the Alt key was being holded.
+         */
+        bool HasAlt() const;
+
+    private:
+        /** @brief The mouse button pressed. */
+        MouseButton m_button;
+        /** @brief A boolean that states the mouse was being dragged. */
+        bool m_isDragging;
+        /** @brief A boolean that states the Ctrl key was being holded. */
+        bool m_hasCtrl;
+        /** @brief A boolean that states the Shift key was being holded. */
+        bool m_hasShift;
+        /** @brief A boolean that states the Alt key was being holded. */
+        bool m_hasAlt;
     };
 
     /** @brief Represents the information of a terminal event. */
