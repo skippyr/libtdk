@@ -110,6 +110,10 @@ namespace TMK
                 {
                     eventInfo = FocusEvent(record.Event.FocusEvent.bSetFocus);
                 }
+                else if (record.EventType == WINDOW_BUFFER_SIZE_EVENT)
+                {
+                    eventInfo = ResizeEvent();
+                }
                 if (eventInfo.GetType() != EventType::None && eventInfo.GetType() != EventType::TimeOut)
                 {
                     if (filter && !filter(eventInfo))
@@ -251,6 +255,15 @@ namespace TMK
         return m_hasFocus;
     }
 
+    ResizeEvent::ResizeEvent() : m_dimensions(Terminal::Window::GetDimensions())
+    {
+    }
+
+    Dimensions ResizeEvent::GetDimensions() const
+    {
+        return m_dimensions;
+    }
+
     EventInfo::EventInfo(EventType type) : m_type(type)
     {
     }
@@ -259,11 +272,24 @@ namespace TMK
     {
     }
 
+    EventInfo::EventInfo(ResizeEvent resizeEvent) : m_type(EventType::Resize), m_resizeEvent(resizeEvent)
+    {
+    }
+
     FocusEvent EventInfo::GetFocusEvent() const
     {
         if (m_type == EventType::Focus)
         {
             return m_focusEvent;
+        }
+        throw InvalidEventTypeException();
+    }
+
+    ResizeEvent EventInfo::GetResizeEvent() const
+    {
+        if (m_type == EventType::Resize)
+        {
+            return m_resizeEvent;
         }
         throw InvalidEventTypeException();
     }

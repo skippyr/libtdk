@@ -113,27 +113,27 @@ namespace TMK
     class RGBColor;
 
     /** @brief Represents an exception thrown whenever a group of streams are wide character oriented. */
-    class WideCharacterOrientationException
+    class WideCharacterOrientationException final
     {
     };
 
     /** @brief Represents an exception thrown whenever a group of streams are being redirected/piped. */
-    class NoValidTTYException
+    class NoValidTTYException final
     {
     };
 
     /** @brief Represents an exception thrown whenever a value is out of a certain range. */
-    class OutOfRangeException
+    class OutOfRangeException final
     {
     };
 
     /** @brief Represents an exception thrown whenever an invalid event type data tries to be read. */
-    class InvalidEventTypeException
+    class InvalidEventTypeException final
     {
     };
 
     /** @brief Represents the command line arguments in both UTF-8 and UTF-16 encodings. */
-    class Arguments
+    class Arguments final
     {
     public:
 #ifdef _WIN32
@@ -186,7 +186,7 @@ namespace TMK
     };
 
     /** @brief Represents terminal dimensions. */
-    class Dimensions
+    class Dimensions final
     {
     public:
         /** @brief Creates an instance of the Dimensions class. */
@@ -216,7 +216,7 @@ namespace TMK
     };
 
     /** @brief Represents a color in hex format. */
-    class HexColor
+    class HexColor final
     {
     public:
         /**
@@ -240,7 +240,7 @@ namespace TMK
     };
 
     /** @brief Represents a color in RGB format. */
-    class RGBColor
+    class RGBColor final
     {
     public:
         /**
@@ -281,7 +281,7 @@ namespace TMK
     };
 
     /** @brief Represents a terminal coordinate. */
-    class Coordinate
+    class Coordinate final
     {
     public:
         /** @brief Creates a new instance of the Coordinate class. */
@@ -321,7 +321,7 @@ namespace TMK
     };
 
     /** @brief Represents a terminal focus event. */
-    class FocusEvent
+    class FocusEvent final
     {
     public:
         /**
@@ -340,8 +340,25 @@ namespace TMK
         bool m_hasFocus;
     };
 
+    /** @brief Represents a terminal window resize event. */
+    class ResizeEvent final
+    {
+    public:
+        /** @brief Creates a new instance of the ResizeEvent class. */
+        ResizeEvent();
+        /**
+         * @brief Gets the terminal window dimensions.
+         * @returns The terminal window dimensions.
+         */
+        Dimensions GetDimensions() const;
+
+    private:
+        /** @brief The terminal window dimensions. */
+        Dimensions m_dimensions;
+    };
+
     /** @brief Represents the information of a terminal event. */
-    class EventInfo
+    class EventInfo final
     {
     public:
         /**
@@ -355,6 +372,11 @@ namespace TMK
          */
         EventInfo(FocusEvent focusEvent);
         /**
+         * @brief Creates a new instance of the EventInfo class.
+         * @param resizeEvent A resize event to be converted.
+         */
+        EventInfo(ResizeEvent resizeEvent);
+        /**
          * @brief Gets the event type.
          * @returns The event type.
          */
@@ -365,6 +387,12 @@ namespace TMK
          * @throws InvalidEventTypeException Gets thrown whenever the event type is not a focus event.
          */
         FocusEvent GetFocusEvent() const;
+        /**
+         * @brief Gets the resize event read.
+         * @returns The resize event read.
+         * @throws InvalidEventTypeException Gets thrown whenever the event type is not a resize event.
+         */
+        ResizeEvent GetResizeEvent() const;
 
     private:
         /** @brief The event type. */
@@ -372,16 +400,18 @@ namespace TMK
         union {
             /** @brief The focus event read. */
             FocusEvent m_focusEvent;
+            /** @brief The resize event read. */
+            ResizeEvent m_resizeEvent;
         };
     };
 
     /** @brief Represents the terminal. */
-    class Terminal
+    class Terminal final
     {
     public:
 #ifdef _WIN32
         /** @brief Represents the terminal encoding converter. It is only available on Windows. */
-        class Encoding
+        class Encoding final
         {
         public:
             /**
@@ -403,7 +433,7 @@ namespace TMK
 #endif
 
         /** @brief Represents the standard input stream. */
-        class Input
+        class Input final
         {
         public:
             /**
@@ -457,7 +487,7 @@ namespace TMK
         };
 
         /** @brief Represents the standard output stream. */
-        class Output
+        class Output final
         {
         public:
             /** @brief Flushes the stream buffer. */
@@ -506,7 +536,7 @@ namespace TMK
         };
 
         /** @brief Represents the standard error stream. */
-        class Error
+        class Error final
         {
         public:
             /**
@@ -553,7 +583,7 @@ namespace TMK
         };
 
         /** @brief Represents the terminal process. */
-        class Process
+        class Process final
         {
         public:
             /**
@@ -574,7 +604,7 @@ namespace TMK
         };
 
         /** @brief Represents the terminal window. */
-        class Window
+        class Window final
         {
         public:
             /**
@@ -599,7 +629,7 @@ namespace TMK
         };
 
         /** @brief Represents the terminal bell. */
-        class Bell
+        class Bell final
         {
         public:
             /** @brief Rings the terminal bell. */
@@ -610,7 +640,7 @@ namespace TMK
         };
 
         /** @brief Represents the terminal font. */
-        class Font
+        class Font final
         {
         public:
             /**
@@ -679,7 +709,7 @@ namespace TMK
         };
 
         /** @brief Represents the terminal cursor. */
-        class Cursor
+        class Cursor final
         {
         public:
             /**
