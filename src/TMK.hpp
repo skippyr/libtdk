@@ -247,18 +247,22 @@ namespace TMK
         /** @brief Represents the terminal encoding converter. It is only available on Windows. */
         class Encoding
         {
+        public:
             /**
              * @brief Converts an UTF-16 encoded string to UTF-8.
              * @param utf16String The UTF-16 encoded string to be converted.
              * @returns The converted UTF-8 encoded string.
              */
-            std::string ConvertUTF16ToUTF8(std::wstring utf16String);
+            static std::string ConvertUTF16ToUTF8(std::wstring utf16String);
             /**
              * @brief Converts an UTF-8 encoded string to UTF-16.
              * @param utf8String The UTF-8 encoded string to be converted.
              * @returns The converted UTF-16 encoded string.
              */
-            std::wstring ConvertUTF8ToUTF16(std::string utf8String);
+            static std::wstring ConvertUTF8ToUTF16(std::string utf8String);
+
+        private:
+            Encoding() = delete;
         };
 #endif
 
@@ -503,6 +507,11 @@ namespace TMK
              * @param shape The shape to be set.
              */
             static void SetShape(CursorShape shape, bool isBlinking);
+            /**
+             * @brief Sets the terminal cursor visibility.
+             * @param isVisible A boolean that states the cursor should be visible.
+             */
+            static void SetVisibility(bool isVisible);
             /** @brief Resets the terminal cursor shape. */
             static void ResetShape();
 

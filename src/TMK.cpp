@@ -426,6 +426,11 @@ namespace TMK
         Setup::WriteEscapeSequence("\x1b[%d q", static_cast<int>(shape) - isBlinking);
     }
 
+    void Terminal::Cursor::SetVisibility(bool isVisible)
+    {
+        Setup::WriteEscapeSequence("\x1b[?25%c", isVisible ? 'h' : 'l');
+    }
+
     void Terminal::Cursor::ResetShape()
     {
         Setup::WriteEscapeSequence("\x1b[0 q");
