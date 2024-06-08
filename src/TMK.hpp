@@ -475,10 +475,16 @@ namespace TMK
             Font() = delete;
         };
 
+        /** @brief Represents the terminal cursor. */
         class Cursor
         {
         public:
+            /**
+             * @brief Sets the terminal cursor shape.
+             * @param shape The shape to be set.
+             */
             static void SetShape(CursorShape shape, bool isBlinking);
+            /** @brief Resets the terminal cursor shape. */
             static void ResetShape();
 
         private:

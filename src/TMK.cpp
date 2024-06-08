@@ -247,34 +247,41 @@ namespace TMK
         return IS_TTY(Output);
     }
 
-    int Terminal::Error::WriteLine(std::string format, ...)
+    void Terminal::Error::WriteLine(std::string format, ...)
     {
         Setup::InitEnvironment();
         Terminal::Output::Flush();
         std::va_list arguments;
         va_start(arguments, format);
-        int totalBytesWritten = std::vfprintf(GetFile(), format.c_str(), arguments);
+        if (std::vfprintf(GetFile(), format.c_str(), arguments) < 0)
+        {
+            throw WideCharacterOrientationException();
+        }
         std::fputc('\n', GetFile());
         va_end(arguments);
-        return -(totalBytesWritten < 0);
     }
 
-    int Terminal::Error::WriteLine()
+    void Terminal::Error::WriteLine()
     {
         Setup::InitEnvironment();
         Terminal::Output::Flush();
-        return -(std::fputc('\n', GetFile()) == EOF);
+        if (std::fputc('\n', GetFile()) == EOF)
+        {
+            throw WideCharacterOrientationException();
+        }
     }
 
-    int Terminal::Error::Write(std::string format, ...)
+    void Terminal::Error::Write(std::string format, ...)
     {
         Setup::InitEnvironment();
         Terminal::Output::Flush();
         std::va_list arguments;
         va_start(arguments, format);
-        int totalBytesWritten = std::vfprintf(GetFile(), format.c_str(), arguments);
+        if (std::vfprintf(GetFile(), format.c_str(), arguments) < 0)
+        {
+            throw WideCharacterOrientationException();
+        }
         va_end(arguments);
-        return -(totalBytesWritten < 0);
     }
 
     std::FILE* Terminal::Error::GetFile()
