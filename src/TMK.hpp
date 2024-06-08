@@ -256,6 +256,44 @@ namespace TMK
         unsigned char m_blue;
     };
 
+    /** @brief Represents a terminal coordinate. */
+    class Coordinate
+    {
+    public:
+        /** @brief Creates a new instance of the Coordinate class. */
+        Coordinate();
+        /**
+         * @brief Creates a new instance of the Coordinate class.
+         * @param column The column component of the coordinate.
+         * @param row The row component of the coordinate.
+         */
+        Coordinate(unsigned short column, unsigned short row);
+        /**
+         * @brief Gets the column component of the coordinate.
+         * @returns The column component of the coordinate.
+         */
+        unsigned short GetColumn() const;
+        /**
+         * @brief Gets the row component of the coordinate.
+         * @returns The row component of the coordinate.
+         */
+        unsigned short GetRow() const;
+        /**
+         * @brief Sets the column component of the coordinate.
+         * @param column The column component of the coordinate to be set.
+         */
+        void SetColumn(unsigned short column);
+        /**
+         * @brief Sets the row component of the coordinate.
+         * @param row The row component of the coordinate to be set.
+         */
+        void SetRow(unsigned short row);
+
+    private:
+        unsigned short m_column;
+        unsigned short m_row;
+    };
+
     /** @brief Represents the terminal. */
     class Terminal
     {

@@ -190,6 +190,34 @@ namespace TMK
     }
 #endif
 
+    Coordinate::Coordinate() : m_column(0), m_row(0)
+    {
+    }
+
+    Coordinate::Coordinate(unsigned short column, unsigned short row) : m_column(column), m_row(row)
+    {
+    }
+
+    unsigned short Coordinate::GetColumn() const
+    {
+        return m_column;
+    }
+
+    unsigned short Coordinate::GetRow() const
+    {
+        return m_row;
+    }
+
+    void Coordinate::SetColumn(unsigned short column)
+    {
+        m_column = column;
+    }
+
+    void Coordinate::SetRow(unsigned short row)
+    {
+        m_row = row;
+    }
+
     std::FILE* Terminal::Input::GetFile()
     {
         return stdin;
