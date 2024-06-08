@@ -91,6 +91,23 @@ namespace TMK
         CrossedOut = 1 << 9
     };
 
+    /** @brief Represents the available terminal event types. */
+    enum class EventType
+    {
+        /** @brief No event is available. */
+        None,
+        /** @brief The event timer ran out. */
+        TimeOut,
+        /** @brief The terminal window was resized. */
+        Resize,
+        /** @brief The terminal window gained/lost focus. */
+        Focus,
+        /** @brief The mouse was moved or clicked. */
+        Mouse,
+        /** @brief A keyboard key was pressed. */
+        Key
+    };
+
     class RGBColor;
 
     /** @brief Represents an exception thrown whenever a group of streams are wide character oriented. */
@@ -292,6 +309,12 @@ namespace TMK
     private:
         unsigned short m_column;
         unsigned short m_row;
+    };
+
+    class EventInfo
+    {
+    private:
+        EventType m_type;
     };
 
     /** @brief Represents the terminal. */
