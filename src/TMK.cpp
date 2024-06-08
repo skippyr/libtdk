@@ -172,6 +172,24 @@ namespace TMK
         return m_blue;
     }
 
+#ifdef _WIN32
+    std::string Terminal::Encoding::ConvertUTF16ToUTF8(std::wstring utf16String)
+    {
+        int utf8Size = WideCharToMultiByte(CP_UTF8, 0, utf16String.c_str(), -1, nullptr, 0, nullptr, nullptr);
+        std::unique_ptr<char[]> utf8Buffer = std::make_unique<char[]>(utf8Size);
+        WideCharToMultiByte(CP_UTF8, 0, utf16String.c_str(), -1, utf8Buffer.get(), utf8Size, nullptr, nullptr);
+        return utf8Buffer.get();
+    }
+
+    std::wstring Terminal::Encoding::ConvertUTF8ToUTF16(std::string utf8String)
+    {
+        int utf16Size = MultiByteToWideChar(CP_UTF8, 0, utf8String.c_str(), -1, nullptr, 0);
+        std::unique_ptr<WCHAR[]> utf16Buffer = std::make_unique<WCHAR[]>(utf16Size);
+        MultiByteToWideChar(CP_UTF8, 0, utf8String.c_str(), -1, utf16Buffer.get(), utf16Size);
+        return utf16Buffer.get();
+    }
+#endif
+
     std::FILE* Terminal::Input::GetFile()
     {
         return stdin;
