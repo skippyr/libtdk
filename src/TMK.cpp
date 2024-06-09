@@ -195,8 +195,8 @@ namespace TMK
     };
 
 #ifdef _WIN32
-    CMDArguments::CMDArguments(int totalArguments, char** utf8Arguments, wchar_t** utf16Arguments)
-        : m_totalArguments(totalArguments), m_utf8Arguments(utf8Arguments), m_utf16Arguments(utf16Arguments)
+    CMDArguments::CMDArguments(int totalArguments, wchar_t** utf16Arguments, char** utf8Arguments)
+        : m_totalArguments(totalArguments), m_utf16Arguments(utf16Arguments), m_utf8Arguments(utf8Arguments)
     {
     }
 
@@ -700,7 +700,7 @@ namespace TMK
             utf8Arguments[offset] = new char[size];
             WideCharToMultiByte(CP_UTF8, 0, utf16Arguments[offset], -1, utf8Arguments[offset], size, nullptr, nullptr);
         }
-        return CMDArguments(rawTotalCMDArguments, utf8Arguments, utf16Arguments);
+        return CMDArguments(rawTotalCMDArguments, utf16Arguments, utf8Arguments);
 #else
         return CMDArguments(rawTotalCMDArguments, rawCMDArguments);
 #endif

@@ -433,10 +433,11 @@ namespace TMK
         /**
          * @brief Creates a new instance of the CMDArguments class.
          * @param totalArguments The total arguments.
-         * @param utf8Arguments The arguments in UTF-8 encoding.
          * @param utf16Arguments The arguments in UTF-16 encoding.
+         * @param utf8Arguments The arguments in UTF-8 encoding.
+         * @returns An instance of the CMDArguments class.
          */
-        CMDArguments(int totalArguments, char** utf8Arguments, wchar_t** utf16Arguments);
+        CMDArguments(int totalArguments, wchar_t** utf16Arguments, char** utf8Arguments);
         /**
          * @brief Destroys an instance of the CMDArguments class.
          */
@@ -453,6 +454,7 @@ namespace TMK
          * @brief Creates a new instance of the CMDArguments class.
          * @param totalArguments The total arguments.
          * @param utf8Arguments The arguments in UTF8 encoding.
+         * @returns An instance of the CMDArguments class.
          */
         CMDArguments(int totalArguments, char** utf8Arguments);
 #endif
@@ -494,12 +496,14 @@ namespace TMK
     public:
         /**
          * @brief Creates a new instance of the Coordinate class.
+         * @returns An instance of the Coordinate class.
          */
         Coordinate();
         /**
          * @brief Creates a new instance of the Coordinate class.
          * @param column The column component of the coordinate.
          * @param row The row component of the coordinate.
+         * @returns An instance of the Coordinate class.
          */
         Coordinate(unsigned short column, unsigned short row);
         /**
@@ -547,18 +551,21 @@ namespace TMK
     public:
         /**
          * @brief Creates an instance of the Geometry class.
+         * @returns An instance of the Geometry class.
          */
         Geometry();
         /**
          * @brief Creates an instance of the Geometry class.
          * @param totalColumns The total columns of the geometry.
          * @param totalRows The total rows of the geometry.
+         * @returns An instance of the Geometry class.
          */
         Geometry(unsigned short totalColumns, unsigned short totalRows);
         /**
          * @brief Creates an instance of the Geometry class.
          * @param coordinateI The first coordinate of the geometry.
          * @param coordinateII The second coordinate of the geometry. It must be opposite to the first one.
+         * @returns An instance of the Geometry class.
          */
         Geometry(Coordinate coordinateI, Coordinate coordinateII);
         /**
@@ -651,11 +658,13 @@ namespace TMK
          * @brief Creates an instance of the HexColor class.
          * @param code The hex code of the color. It must be a value in range from 0x0 to 0xffffff.
          * @throws OutOfRangeException Thrown whenever the hex code is out of the valid range.
+         * @returns An instance of the HexColor class.
          */
         HexColor(unsigned int code);
         /**
          * @brief Creates an instance of the HexColor class.
          * @param color A color in RGB format to be converted.
+         * @returns An instance of the HexColor class.
          */
         HexColor(RGBColor color);
         /**
@@ -665,7 +674,7 @@ namespace TMK
         /**
          * @brief Gets the string representation of the hex code of the color.
          * @param hasPrefix A boolean that states the string has the 0x prefix.
-         * @param hasZeroPadding A boolean that states the string has zero padding.
+         * @param hasZeroPadding A boolean that states the string has a left padding filled by the number zero.
          * @param isUpperCase A boolean that states the string is upper case.
          */
         std::string GetCodeAsString(bool hasPrefix, bool hasZeroPadding, bool isUpperCase) const;
@@ -688,6 +697,7 @@ namespace TMK
          * @param red The red component of the color.
          * @param green The green component of the color.
          * @param blue The blue component of the color.
+         * @returns An instance of the RGBColor class.
          */
         RGBColor(unsigned char red, unsigned char green, unsigned char blue);
         /**
@@ -735,6 +745,7 @@ namespace TMK
         /**
          * @brief Creates a new instance of the FocusEvent class.
          * @param hasFocus A boolean that states the terminal window has gained focus.
+         * @returns An instance of the FocusEvent class.
          */
         FocusEvent(bool hasFocus);
         /**
@@ -758,6 +769,7 @@ namespace TMK
     public:
         /**
          * @brief Creates a new instance of the ResizeEvent class.
+         * @returns An instance of the ResizeEvent class.
          */
         ResizeEvent();
         /**
@@ -787,6 +799,7 @@ namespace TMK
          * @param hasCtrl A boolean that states the Ctrl key was being holded.
          * @param hasAlt A boolean that states the Alt key was being holded.
          * @param hasShift A boolean that states the Shift key was being holded.
+         * @returns An instance of the MouseEvent class.
          */
         MouseEvent(Coordinate coordinate, MouseButton button, bool isDragging, bool hasCtrl, bool hasAlt, bool hasShift);
         /**
@@ -855,14 +868,16 @@ namespace TMK
     public:
         /**
          * @brief Creates a new instance of the KeyEvent class.
-         * @param key The key pressed.
+         * @param key The key pressed. It may be an UTF-8 grapheme or an enumerator from the KeyboardKey enum class.
          * @param hasCtrl A boolean that states the Ctrl key was being holded.
          * @param hasAlt A boolean that states the Alt key was being holded.
          * @param hasShift A boolean that states the Shift key was being holded.
+         * @returns An instance of the KeyEvent class.
          */
         KeyEvent(int key, bool hasCtrl, bool hasAlt, bool hasShift);
         /**
          * @brief Gets the key pressed.
+         * @returns The key pressed. It may be an UTF-8 grapheme or an enumerator from the KeyboardKey enum class.
          */
         int GetKey() const;
         /**
@@ -883,7 +898,7 @@ namespace TMK
 
     private:
         /**
-         * @brief The key pressed.
+         * @brief The key pressed. It may be an UTF-8 grapheme or an enumerator from the KeyboardKey enum class.
          */
         int m_key;
         /**
@@ -909,26 +924,31 @@ namespace TMK
         /**
          * @brief Creates a new instance of the EventInfo class.
          * @param type The event type.
+         * @returns An instance of the EventInfo class.
          */
         EventInfo(EventType type);
         /**
          * @brief Creates a new instance of the EventInfo class.
          * @param focusEvent A focus event to be converted.
+         * @returns An instance of the EventInfo class.
          */
         EventInfo(FocusEvent focusEvent);
         /**
          * @brief Creates a new instance of the EventInfo class.
          * @param resizeEvent A resize event to be converted.
+         * @returns An instance of the EventInfo class.
          */
         EventInfo(ResizeEvent resizeEvent);
         /**
          * @brief Creates a new instance of the EventInfo class.
          * @param mouseEvent A mouse event to be converted.
+         * @returns An instance of the EventInfo class.
          */
         EventInfo(MouseEvent mouseEvent);
         /**
          * @brief Creates a new instance of the EventInfo class.
          * @param keyEvent A key event to be converted.
+         * @returns An instance of the EventInfo class.
          */
         EventInfo(KeyEvent keyEvent);
         /**
@@ -939,26 +959,25 @@ namespace TMK
         /**
          * @brief Gets the focus event read.
          * @returns The focus event read.
-         * @throws InvalidEventTypeException Gets thrown whenever the event type is not a focus event.
+         * @throws InvalidEventTypeException Thrown whenever the event type is not a focus event.
          */
         FocusEvent GetFocusEvent() const;
         /**
          * @brief Gets the resize event read.
          * @returns The resize event read.
-         * @throws InvalidEventTypeException Gets thrown whenever the event type is not a resize event.
+         * @throws InvalidEventTypeException Thrown whenever the event type is not a resize event.
          */
         ResizeEvent GetResizeEvent() const;
         /**
          * @brief Gets the mouse event read.
          * @returns The mouse event read.
-         * @throws InvalidEventTypeException Gets thrown whenever the event type is not a mouse event.
+         * @throws InvalidEventTypeException Thrown whenever the event type is not a mouse event.
          */
         MouseEvent GetMouseEvent() const;
         /**
          * @brief Gets the key event read.
          * @returns The key event read.
-         * @throws InvalidEventTypeException Gets thrown whenever the event type is not a key event.
-         * @throws InvalidEventTypeException Gets thrown whenever the event type is not a key event.
+         * @throws InvalidEventTypeException Thrown whenever the event type is not a key event.
          */
         KeyEvent GetKeyEvent() const;
 
