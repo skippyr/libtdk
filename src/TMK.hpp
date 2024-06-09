@@ -223,6 +223,174 @@ namespace TMK
         Right
     };
 
+    /**
+     * @brief Contains the available virtual keys.
+     */
+    enum class VirtualKey
+    {
+#ifdef _WIN32
+        /**
+         * @brief The left arrow key.
+         */
+        LeftArrow = -23,
+        /**
+         * @brief The up arrow key.
+         */
+        UpArrow,
+        /**
+         * @brief The right arrow key.
+         */
+        RightArrow,
+        /**
+         * @brief The down arrow key.
+         */
+        DownArrow,
+#else
+        /**
+         * @brief The up arrow key.
+         */
+        UpArrow = -23,
+        /**
+         * @brief The down arrow key.
+         */
+        DownArrow,
+        /**
+         * @brief The right arrow key.
+         */
+        RightArrow,
+        /**
+         * @brief The left arrow key.
+         */
+        LeftArrow,
+#endif
+        /**
+         * @brief The F1 key.
+         */
+        F1,
+        /**
+         * @brief The F2 key.
+         */
+        F2,
+        /**
+         * @brief The F3 key.
+         */
+        F3,
+        /**
+         * @brief The F4 key.
+         */
+        F4,
+        /**
+         * @brief The F5 key.
+         */
+        F5,
+        /**
+         * @brief The F6 key.
+         */
+        F6,
+        /**
+         * @brief The F7 key.
+         */
+        F7,
+        /**
+         * @brief The F8 key.
+         */
+        F8,
+        /**
+         * @brief The F9 key.
+         */
+        F9,
+        /**
+         * @brief The F10 key.
+         */
+        F10,
+        /**
+         * @brief The F11 key.
+         */
+        F11,
+        /**
+         * @brief The F12 key.
+         */
+        F12,
+#ifdef _WIN32
+        /**
+         * @brief The PageUp key.
+         */
+        PageUp,
+        /**
+         * @brief The PageDown key.
+         */
+        PageDown,
+        /**
+         * @brief The End key.
+         */
+        End,
+        /**
+         * @brief The Home key.
+         */
+        Home,
+        /**
+         * @brief The Insert key.
+         */
+        Insert,
+        /**
+         * @brief The Delete key.
+         */
+        Delete,
+#else
+        /**
+         * @brief The Home key.
+         */
+        Home,
+        /**
+         * @brief The Insert key.
+         */
+        Insert,
+        /**
+         * @brief The Delete key.
+         */
+        Delete,
+        /**
+         * @brief The End key.
+         */
+        End,
+        /**
+         * @brief The PageUp key.
+         */
+        PageUp,
+        /**
+         * @brief The PageDown key.
+         */
+        PageDown,
+#endif
+        /**
+         * @brief The Tab key.
+         */
+        Tab = 9,
+#if defined(_WIN32) || defined(__APPLE__)
+        /**
+         * @brief The Enter key.
+         */
+        Enter = 13,
+#else
+        /**
+         * @brief The Enter key.
+         */
+        Enter,
+#endif
+        /**
+         * @brief The Escape key.
+         */
+        Escape = 27,
+        /**
+         * @brief The Space bar key.
+         */
+        SpaceBar = 32,
+        /**
+         * @brief The Backspace key.
+         */
+        Backspace = 127
+    };
+
     class RGBColor;
 
     /**
@@ -1109,4 +1277,25 @@ namespace TMK
      * @returns A bitmask containing both effects.
      */
     int operator|(Effect effect0, Effect effect1);
+    /**
+     * @brief Checks if a code and a virtual key are equal.
+     * @param A boolean that states both are equal.
+     */
+    bool operator==(int code, VirtualKey key);
+    /**
+     * @brief Checks if a virtual key and a code are equal.
+     * @param A boolean that states both are equal.
+     */
+    bool operator==(VirtualKey key, int code);
+    /**
+     * @brief Checks if a code and a virtual key are different.
+     * @param A boolean that states both are different.
+     */
+    bool operator!=(int code, VirtualKey key);
+    /**
+     * @brief Checks if a virtual key and a code are different.
+     * @param A boolean that states both are different.
+     */
+    bool operator!=(VirtualKey key, int code);
+
 }

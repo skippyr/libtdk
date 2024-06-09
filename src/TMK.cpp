@@ -128,6 +128,38 @@ namespace TMK
                                            record.Event.MouseEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED),
                                            record.Event.MouseEvent.dwControlKeyState & SHIFT_PRESSED);
                 }
+                else if (record.EventType == KEY_EVENT)
+                {
+                    if (!record.Event.KeyEvent.bKeyDown || record.Event.KeyEvent.wVirtualKeyCode == VK_CONTROL ||
+                        record.Event.KeyEvent.wVirtualKeyCode == VK_SHIFT || record.Event.KeyEvent.wVirtualKeyCode == VK_MENU ||
+                        record.Event.KeyEvent.wVirtualKeyCode == VK_CAPITAL || record.Event.KeyEvent.wVirtualKeyCode == VK_NUMLOCK ||
+                        record.Event.KeyEvent.wVirtualKeyCode == VK_SCROLL)
+                    {
+                        continue;
+                    }
+#if 0
+                    int key = 0;
+                    int buffer[4];
+                    if ((buffer = record.Event.KeyEvent.uChar.UnicodeChar))
+                    {
+                        if (buffer <= 26 && buffer != tdk_Key_Tab && buffer != tdk_Key_Enter)
+                        {
+                            event->key = buffer + 96;
+                        }
+                        else if (buffer >= _tdk_HIGH_SURROGATE_BEGIN && buffer <= _tdk_HIGH_SURROGATE_END)
+                        {
+                            ReadConsoleInputW(handle, &record, 1, &totalEventsRead);
+                            ReadConsoleInputW(handle, &record, 1, &totalEventsRead);
+                            *((short*)&buffer + 1) = record.Event.KeyEvent.uChar.UnicodeChar;
+                            WideCharToMultiByte(CP_UTF8, 0, (wchar_t*)&buffer, 2, (char*)&event->key, 4, NULL, NULL);
+                        }
+                        else
+                        {
+                            WideCharToMultiByte(CP_UTF8, 0, (wchar_t*)&buffer, 1, (char*)&event->key, 4, NULL, NULL);
+                        }
+                    }
+#endif
+                }
                 if (eventInfo.GetType() != EventType::None && eventInfo.GetType() != EventType::TimeOut)
                 {
                     if (filter && !filter(eventInfo))
@@ -792,5 +824,24 @@ namespace TMK
     int TMK::operator|(Effect effect0, Effect effect1)
     {
         return static_cast<int>(effect0) | static_cast<int>(effect1);
+    }
+
+    bool operator==(int code, VirtualKey key)
+    {
+        return code == static_cast<int>(key);
+    }
+    bool operator==(VirtualKey key, int code)
+    {
+        return static_cast<int>(key) == code;
+    }
+
+    bool operator!=(int code, VirtualKey key)
+    {
+        return code != static_cast<int>(key);
+    }
+
+    bool operator!=(VirtualKey key, int code)
+    {
+        return static_cast<int>(key) != code;
     }
 }
