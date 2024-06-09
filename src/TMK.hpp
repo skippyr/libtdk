@@ -1121,6 +1121,13 @@ namespace TMK
             /**
              * @brief Formats and writes arguments to the standard output stream.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
+             * @param arguments The arguments to be formatted.
+             * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
+             */
+            static void Write(std::string format, std::va_list arguments);
+            /**
+             * @brief Formats and writes arguments to the standard output stream.
+             * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
              * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
              */

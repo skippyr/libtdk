@@ -57,6 +57,19 @@ namespace TMK
             va_end(arguments);
         }
 
+        static void Write(std::FILE* stream, const char* format, std::va_list arguments, bool hasNewLine)
+        {
+            InitEnvironment();
+            if (format && std::vfprintf(stream, format, arguments) < 0)
+            {
+                throw WideCharacterOrientationException();
+            }
+            if (hasNewLine && std::fputc('\n', stream) == EOF)
+            {
+                throw WideCharacterOrientationException();
+            }
+        }
+
         static EventInfo ReadEvent(bool allowMouseCapture, int waitInMilliseconds, std::function<bool(EventInfo&)> filter)
         {
             InitEnvironment();
@@ -589,40 +602,32 @@ namespace TMK
 
     void Terminal::Output::WriteLine(std::string format, std::va_list arguments)
     {
-        Setup::InitEnvironment();
-        if (std::vprintf(format.c_str(), arguments) < 0)
-        {
-            throw WideCharacterOrientationException();
-        }
-        std::putchar('\n');
+        Setup::Write(GetFile(), format.c_str(), arguments, true);
     }
 
     void Terminal::Output::WriteLine(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
-        WriteLine(format, arguments);
+        Setup::Write(GetFile(), format.c_str(), arguments, true);
         va_end(arguments);
     }
 
     void Terminal::Output::WriteLine()
     {
-        Setup::InitEnvironment();
-        if (std::putchar('\n') == EOF)
-        {
-            throw WideCharacterOrientationException();
-        }
+        Setup::Write(GetFile(), nullptr, nullptr, true);
+    }
+
+    void Terminal::Output::Write(std::string format, std::va_list arguments)
+    {
+        Setup::Write(GetFile(), format.c_str(), arguments, false);
     }
 
     void Terminal::Output::Write(std::string format, ...)
     {
-        Setup::InitEnvironment();
         std::va_list arguments;
         va_start(arguments, format);
-        if (std::vprintf(format.c_str(), arguments) < 0)
-        {
-            throw WideCharacterOrientationException();
-        }
+        Setup::Write(GetFile(), format.c_str(), arguments, false);
         va_end(arguments);
     }
 
