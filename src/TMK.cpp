@@ -904,9 +904,9 @@ namespace TMK
         Setup::WriteANSISequence("\x1b[2K\x1b[1G");
     }
 
-    int TMK::operator|(FontEffect effect0, FontEffect effect1)
+    int TMK::operator|(FontEffect effectI, FontEffect effectII)
     {
-        return static_cast<int>(effect0) | static_cast<int>(effect1);
+        return static_cast<int>(effectI) | static_cast<int>(effectII);
     }
 
     bool operator==(int code, KeyboardKey key)

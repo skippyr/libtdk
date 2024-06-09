@@ -1014,7 +1014,7 @@ namespace TMK
     public:
 #ifdef _WIN32
         /**
-         * @brief Represents the terminal encoding converter. It is only available on Windows.
+         * @brief Represents the terminal encoding.
          */
         class Encoding final
         {
@@ -1103,19 +1103,19 @@ namespace TMK
              * @brief Formats and writes arguments to the standard output stream with a newline character appended at its end.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
-             * @throws WideCharacterOrientationException Gets thrown whenever the standard output stream is wide character oriented.
+             * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
              */
             static void WriteLine(std::string format, ...);
             /**
              * @brief Writes a newline character to the standard output stream.
-             * @throws WideCharacterOrientationException Gets thrown whenever the standard output stream is wide character oriented.
+             * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
              */
             static void WriteLine();
             /**
              * @brief Formats and writes arguments to the standard output stream.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
-             * @throws WideCharacterOrientationException Gets thrown whenever the standard output stream is wide character oriented.
+             * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
              */
             static void Write(std::string format, ...);
             /**
@@ -1148,19 +1148,19 @@ namespace TMK
              * @brief Formats and writes arguments to the standard error stream with a newline character appended at its end.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
-             * @throws WideCharacterOrientationException Gets thrown whenever the standard error stream is wide character oriented.
+             * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
              */
             static void WriteLine(std::string format, ...);
             /**
              * @brief Writes a newline character to the standard error stream.
-             * @throws WideCharacterOrientationException Gets thrown whenever the standard error stream is wide character oriented.
+             * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
              */
             static void WriteLine();
             /**
              * @brief Formats and writes arguments to the standard error stream.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
-             * @throws WideCharacterOrientationException Gets thrown whenever the standard error stream is wide character oriented.
+             * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
              */
             static void Write(std::string format, ...);
             /**
@@ -1301,8 +1301,8 @@ namespace TMK
             static void SetHexColor(HexColor color, FontLayer layer);
             /**
              * @brief Sets the terminal effects flagged in a bitmask.
-             * @param effect The bitmask containing the effects. It must be composed by value inside of the FontEffect enum.
-             * @throws OutOfRangeException Gets thrown whenever an invalid effect is used to compose the bitmask.
+             * @param effect The bitmask containing the effects. It must be composed by enumerators from the FontEffect enum class.
+             * @throws OutOfRangeException Thrown whenever an invalid effect is used to compose the bitmask.
              */
             static void SetEffects(int effect);
             /**
@@ -1334,24 +1334,23 @@ namespace TMK
         {
         public:
             /**
-             * @brief Gets the terminal cursor coordinate. On Linux, as it parses a terminal answer given through the standard input stream, its buffer will
-             * always be cleared.
+             * @brief Gets the terminal cursor coordinate. On Linux, as it parses a terminal answer given through the standard input stream, its buffer will always be cleared.
              * @returns The terminal cursor coordinate.
-             * @throws NoValidTTYException Gets thrown, on Windows, whenever the standard output and error streams are being redirected/piped; and, on Linux,
-             * whenever the standard input or the standard output and error streams are being redirected/piped.
+             * @throws NoValidTTYException Thrown, on Windows, whenever the standard output and error streams are not TTY; and, on Linux, whenever the standard input or the
+             * standard output and error streams are not TTY.
              */
             static Coordinate GetCoordinate();
             /**
              * @brief Sets the terminal cursor coordinate.
              * @param column The column component of the coordinate.
              * @param row The row component of the coordinate.
-             * @throws OutOfRangeException Gets thrown whenever the coordinate given is outside of the terminal window boundaries.
+             * @throws OutOfRangeException Thrown whenever the coordinate is outside of the terminal window boundaries.
              */
             static void SetCoordinate(unsigned short column, unsigned short row);
             /**
              * @brief Sets the terminal cursor coordinate.
              * @param coordinate The coordinate to be set.
-             * @throws OutOfRangeException Gets thrown whenever the coordinate given is outside of the terminal window boundaries.
+             * @throws OutOfRangeException Thrown whenever the coordinate is outside of the terminal window boundaries.
              */
             static void SetCoordinate(Coordinate coordinate);
             /**
@@ -1383,30 +1382,29 @@ namespace TMK
 
     /**
      * @brief Concatenates two effects together in order to create a bitmask.
-     * @param effect0 The first effect.
-     * @param effect1 The second effect.
+     * @param effectI The first effect.
+     * @param effectII The second effect.
      * @returns A bitmask containing both effects.
      */
-    int operator|(FontEffect effect0, FontEffect effect1);
+    int operator|(FontEffect effectI, FontEffect effectII);
     /**
-     * @brief Checks if a code and a virtual key are equal.
+     * @brief Checks if a code and a keyboard key are equal.
      * @param A boolean that states both are equal.
      */
     bool operator==(int code, KeyboardKey key);
     /**
-     * @brief Checks if a virtual key and a code are equal.
+     * @brief Checks if a keyboard key and a code are equal.
      * @param A boolean that states both are equal.
      */
     bool operator==(KeyboardKey key, int code);
     /**
-     * @brief Checks if a code and a virtual key are different.
+     * @brief Checks if a code and a keyboard key are different.
      * @param A boolean that states both are different.
      */
     bool operator!=(int code, KeyboardKey key);
     /**
-     * @brief Checks if a virtual key and a code are different.
+     * @brief Checks if a keyboard key and a code are different.
      * @param A boolean that states both are different.
      */
     bool operator!=(KeyboardKey key, int code);
-
 }
