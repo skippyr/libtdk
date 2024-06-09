@@ -596,6 +596,19 @@ namespace TMK
          * @returns The bottom right coordinate of the geometry.
          */
         Coordinate GetBottomRightCoordinate() const;
+        /**
+         * @brief Checks if the geometry contains a coordinate.
+         * @param column The column component of the coordinate.
+         * @param row The row component of the coordinate.
+         * @returns A boolean that states the geometry contains the coordinate.
+         */
+        bool Contains(unsigned short column, unsigned short row) const;
+        /**
+         * @brief Checks if the geometry contains a coordinate.
+         * @param coordinate The coordinate to be checked.
+         * @returns A boolean that states the geometry contains the coordinate.
+         */
+        bool Contains(Coordinate coordinate) const;
 
     private:
         /**
@@ -637,7 +650,7 @@ namespace TMK
         /**
          * @brief Creates an instance of the HexColor class.
          * @param code The hex code of the color. It must be a value in range from 0x0 to 0xffffff.
-         * @throws OutOfRangeException Gets thrown whenever the hex code is out of the valid range.
+         * @throws OutOfRangeException Thrown whenever the hex code is out of the valid range.
          */
         HexColor(unsigned int code);
         /**

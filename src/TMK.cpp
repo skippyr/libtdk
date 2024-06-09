@@ -332,6 +332,17 @@ namespace TMK
         return m_bottomRightCoordinate;
     }
 
+    bool Geometry::Contains(unsigned short column, unsigned short row) const
+    {
+        return column >= m_topLeftCoordinate.GetColumn() && column <= m_topRightCoordinate.GetColumn() && row >= m_topLeftCoordinate.GetRow() &&
+               row <= m_bottomLeftCoordinate.GetRow();
+    }
+
+    bool Geometry::Contains(Coordinate coordinate) const
+    {
+        return Contains(coordinate.GetColumn(), coordinate.GetRow());
+    }
+
     HexColor::HexColor(unsigned int code)
     {
         if (code > 0xffffff)
@@ -848,20 +859,17 @@ namespace TMK
 
     void Terminal::Cursor::SetCoordinate(unsigned short column, unsigned short row)
     {
-        Geometry windowGeometry;
         try
         {
-            windowGeometry = Terminal::Window::GetGeometry();
+            if (!Terminal::Window::GetGeometry().Contains(column, row))
+            {
+                throw OutOfRangeException();
+            }
+            Setup::WriteANSISequence("\x1b[%hu;%huH", row + 1, column + 1);
         }
-        catch (TMK::NoValidTTYException&)
+        catch (NoValidTTYException&)
         {
-            return;
         }
-        if (column >= windowGeometry.GetTotalColumns() || row >= windowGeometry.GetTotalRows())
-        {
-            throw OutOfRangeException();
-        }
-        Setup::WriteANSISequence("\x1b[%hu;%huH", row + 1, column + 1);
     }
 
     void Terminal::Cursor::SetCoordinate(Coordinate coordinate)
