@@ -361,6 +361,13 @@ namespace TMK
         return m_code;
     }
 
+    std::string HexColor::HexColor::GetCodeAsString(bool hasPrefix, bool hasZeroPadding, bool isUpperCase) const
+    {
+        char buffer[7];
+        std::snprintf(buffer, sizeof(buffer), hasZeroPadding ? isUpperCase ? "%06X" : "%06x" : isUpperCase ? "%X" : "%x", m_code);
+        return hasPrefix ? std::string("0x") + buffer : std::string(buffer);
+    }
+
     RGBColor::RGBColor(unsigned char red, unsigned char green, unsigned char blue) : m_red(red), m_green(green), m_blue(blue)
     {
     }
@@ -861,7 +868,7 @@ namespace TMK
     {
         try
         {
-            if (!Terminal::Window::GetGeometry().Contains(column, row))
+            if (!Window::GetGeometry().Contains(column, row))
             {
                 throw OutOfRangeException();
             }

@@ -658,11 +658,17 @@ namespace TMK
          * @param color A color in RGB format to be converted.
          */
         HexColor(RGBColor color);
-
         /**
-         * @brief Gets the hex code of the color as a number.
+         * @brief Gets number representation of the hex code of the color.
          */
         unsigned int GetCodeAsNumber() const;
+        /**
+         * @brief Gets the string representation of the hex code of the color.
+         * @param hasPrefix A boolean that states the string has the 0x prefix.
+         * @param hasZeroPadding A boolean that states the string has zero padding.
+         * @param isUpperCase A boolean that states the string is upper case.
+         */
+        std::string GetCodeAsString(bool hasPrefix, bool hasZeroPadding, bool isUpperCase) const;
 
     private:
         /**
