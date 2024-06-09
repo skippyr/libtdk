@@ -13,8 +13,8 @@
 #else
 #define TTY_CACHE(a_stream) (isatty(a_stream::GetFileNumber()) << a_stream::GetFileNumber())
 #endif
-#define IS_TTY(a_stream) (g_cache & 1 << a_stream::GetFileNumber())
-#define CACHE_HAS_BEEN_FILLED_FLAG (1 << 7)
+#define IS_TTY(a_stream) (g_ttyCache & 1 << a_stream::GetFileNumber())
+#define TTY_CACHE_HAS_BEEN_FILLED_FLAG (1 << 7)
 #define PARSE_KEY(a_condition, a_key)                                                                                                                                              \
     if (a_condition)                                                                                                                                                               \
     {                                                                                                                                                                              \
@@ -24,14 +24,14 @@
 
 namespace TMK
 {
-    char g_cache = 0;
+    char g_ttyCache = 0;
 
     class Setup
     {
     public:
         static void InitEnvironment()
         {
-            if (!(g_cache & CACHE_HAS_BEEN_FILLED_FLAG))
+            if (!(g_ttyCache & TTY_CACHE_HAS_BEEN_FILLED_FLAG))
             {
 #ifdef _WIN32
                 HANDLE handle;
@@ -40,7 +40,7 @@ namespace TMK
                 (GetConsoleMode((handle = GetStdHandle(STD_OUTPUT_HANDLE)), &mode) || GetConsoleMode((handle = GetStdHandle(STD_ERROR_HANDLE)), &mode)) &&
                     SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 #endif
-                g_cache |= TTY_CACHE(Terminal::Input) | TTY_CACHE(Terminal::Output) | TTY_CACHE(Terminal::Error) | CACHE_HAS_BEEN_FILLED_FLAG;
+                g_ttyCache |= TTY_CACHE(Terminal::Input) | TTY_CACHE(Terminal::Output) | TTY_CACHE(Terminal::Error) | TTY_CACHE_HAS_BEEN_FILLED_FLAG;
             }
         }
 

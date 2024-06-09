@@ -402,7 +402,7 @@ namespace TMK
     };
 
     /**
-     * @brief Represents an exception thrown whenever a group of streams are being redirected/piped.
+     * @brief Represents an exception thrown whenever a group of streams are not TTY.
      */
     class NoValidTTYException final
     {
@@ -423,29 +423,29 @@ namespace TMK
     };
 
     /**
-     * @brief Represents the command line arguments in both UTF-8 and UTF-16 encodings.
+     * @brief Represents the command line arguments.
      */
     class CMDArguments final
     {
     public:
 #ifdef _WIN32
         /**
-         * @brief Creates a new instance of the CMDArguments class. It is only available on Windows.
+         * @brief Creates a new instance of the CMDArguments class.
          * @param totalArguments The total arguments.
          * @param utf8Arguments The arguments in UTF-8 encoding.
          * @param utf16Arguments The arguments in UTF-16 encoding.
          */
         CMDArguments(int totalArguments, char** utf8Arguments, wchar_t** utf16Arguments);
         /**
-         * @brief Gets an argument in UTF-16 encoding by using its offset. It is only available on Windows.
+         * @brief Gets an argument in UTF-16 encoding by using its offset.
          * @param offset The offset to be used.
          * @returns The argument in UTF-16 encoding.
-         * @exception OutOfRangeException Gets throws whenever the offset is out of the valid range of arguments.
+         * @exception OutOfRangeException Thrown whenever the offset is out of the valid range of arguments.
          */
         std::wstring GetUTF16ArgumentByOffset(std::size_t offset) const;
 #else
         /**
-         * @brief Creates a new instance of the CMDArguments class. It is only available on Linux.
+         * @brief Creates a new instance of the CMDArguments class.
          * @param totalArguments The total arguments.
          * @param utf8Arguments The arguments in UTF8 encoding.
          */
@@ -464,7 +464,7 @@ namespace TMK
          * @brief Gets an argument in UTF-8 encoding by using its offset.
          * @param offset The offset to be used.
          * @returns The argument in UTF-8 encoding.
-         * @throws OutOfRangeException Gets thrown whenever the offset is out of the valid range of arguments.
+         * @throws OutOfRangeException Thrown whenever the offset is out of the valid range of arguments.
          */
         std::string GetUTF8ArgumentByOffset(std::size_t offset) const;
 
