@@ -200,6 +200,16 @@ namespace TMK
     {
     }
 
+    CMDArguments::~CMDArguments()
+    {
+        LocalFree(m_utf16Arguments);
+        for (int offset = 0; offset < m_totalArguments; ++offset)
+        {
+            delete[] m_utf8Arguments[offset];
+        }
+        delete[] m_utf8Arguments;
+    }
+
     std::wstring CMDArguments::GetUTF16ArgumentByOffset(std::size_t offset) const
     {
         if (offset >= m_totalArguments)
@@ -214,18 +224,6 @@ namespace TMK
     }
 #endif
 
-    CMDArguments::~CMDArguments()
-    {
-#ifdef _WIN32
-        LocalFree(m_utf16Arguments);
-        for (int offset = 0; offset < m_totalArguments; ++offset)
-        {
-            delete[] m_utf8Arguments[offset];
-        }
-        delete[] m_utf8Arguments;
-#endif
-    }
-
     int CMDArguments::GetTotalArguments() const
     {
         return m_totalArguments;
@@ -238,6 +236,34 @@ namespace TMK
             throw OutOfRangeException();
         }
         return m_utf8Arguments[offset];
+    }
+
+    Coordinate::Coordinate() : m_column(0), m_row(0)
+    {
+    }
+
+    Coordinate::Coordinate(unsigned short column, unsigned short row) : m_column(column), m_row(row)
+    {
+    }
+
+    unsigned short Coordinate::GetColumn() const
+    {
+        return m_column;
+    }
+
+    unsigned short Coordinate::GetRow() const
+    {
+        return m_row;
+    }
+
+    void Coordinate::SetColumn(unsigned short column)
+    {
+        m_column = column;
+    }
+
+    void Coordinate::SetRow(unsigned short row)
+    {
+        m_row = row;
     }
 
     Dimensions::Dimensions() : m_totalColumns(0), m_totalRows(0)
@@ -454,34 +480,6 @@ namespace TMK
         return utf16Buffer.get();
     }
 #endif
-
-    Coordinate::Coordinate() : m_column(0), m_row(0)
-    {
-    }
-
-    Coordinate::Coordinate(unsigned short column, unsigned short row) : m_column(column), m_row(row)
-    {
-    }
-
-    unsigned short Coordinate::GetColumn() const
-    {
-        return m_column;
-    }
-
-    unsigned short Coordinate::GetRow() const
-    {
-        return m_row;
-    }
-
-    void Coordinate::SetColumn(unsigned short column)
-    {
-        m_column = column;
-    }
-
-    void Coordinate::SetRow(unsigned short row)
-    {
-        m_row = row;
-    }
 
     std::FILE* Terminal::Input::GetFile()
     {

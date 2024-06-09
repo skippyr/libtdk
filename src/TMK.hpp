@@ -437,6 +437,10 @@ namespace TMK
          */
         CMDArguments(int totalArguments, char** utf8Arguments, wchar_t** utf16Arguments);
         /**
+         * @brief Destroys an instance of the CMDArguments class.
+         */
+        ~CMDArguments();
+        /**
          * @brief Gets an argument in UTF-16 encoding by using its offset.
          * @param offset The offset to be used.
          * @returns The argument in UTF-16 encoding.
@@ -451,10 +455,6 @@ namespace TMK
          */
         CMDArguments(int totalArguments, char** utf8Arguments);
 #endif
-        /**
-         * @brief Destroys an instance of the CMDArguments class.
-         */
-        ~CMDArguments();
         /**
          * @brief Gets the total arguments.
          * @returns The total arguments.
@@ -471,7 +471,7 @@ namespace TMK
     private:
 #ifdef _WIN32
         /**
-         * @brief The arguments in UTF-16 encoding. It is only available on Windows.
+         * @brief The arguments in UTF-16 encoding.
          */
         wchar_t** m_utf16Arguments;
 #endif
@@ -483,6 +483,141 @@ namespace TMK
          * @brief The total arguments.
          */
         int m_totalArguments;
+    };
+
+    /**
+     * @brief Represents a coordinate inside of the terminal window.
+     */
+    class Coordinate final
+    {
+    public:
+        /**
+         * @brief Creates a new instance of the Coordinate class.
+         */
+        Coordinate();
+        /**
+         * @brief Creates a new instance of the Coordinate class.
+         * @param column The column component of the coordinate.
+         * @param row The row component of the coordinate.
+         */
+        Coordinate(unsigned short column, unsigned short row);
+        /**
+         * @brief Gets the column component of the coordinate.
+         * @returns The column component of the coordinate.
+         */
+        unsigned short GetColumn() const;
+        /**
+         * @brief Gets the row component of the coordinate.
+         * @returns The row component of the coordinate.
+         */
+        unsigned short GetRow() const;
+        /**
+         * @brief Sets the column component of the coordinate.
+         * @param column The column component of the coordinate to be set.
+         */
+        void SetColumn(unsigned short column);
+        /**
+         * @brief Sets the row component of the coordinate.
+         * @param row The row component of the coordinate to be set.
+         */
+        void SetRow(unsigned short row);
+
+    private:
+        /**
+         * @brief The column component of the coordinate.
+         */
+        unsigned short m_column;
+        /**
+         * @brief The row component of the coordinate.
+         */
+        unsigned short m_row;
+    };
+
+    /** @brief Represents a geometry inside of the terminal window. */
+    class Geometry final
+    {
+    public:
+        /**
+         * @brief Creates an instance of the Geometry class.
+         */
+        Geometry();
+        /**
+         * @brief Creates an instance of the Geometry class.
+         * @param totalColumns The total columns of the geometry.
+         * @param totalRows The total rows of the geometry.
+         */
+        Geometry(unsigned short totalColumns, unsigned short totalRows);
+        /**
+         * @brief Creates an instance of the Geometry class.
+         * @param coordinateI The first coordinate of the geometry.
+         * @param coordinateII The second coordinate of the geometry. It must be opposite to the first one.
+         */
+        Geometry(Coordinate coordinateI, Coordinate coordinateII);
+        /**
+         * @brief Gets the total columns of the geometry.
+         * @returns The total columns of the geometry.
+         */
+        unsigned short GetTotalColumns() const;
+        /**
+         * @brief Gets the total rows of the geometry.
+         * @returns The total rows of the geometry.
+         */
+        unsigned short GetTotalRows() const;
+        /**
+         * @brief Gets the area of the geometry.
+         * @returns The area of the geometry.
+         */
+        unsigned int GetArea() const;
+        /**
+         * @brief Gets the top left coordinate of the geometry.
+         * @returns The top left coordinate of the geometry.
+         */
+        Coordinate GetTopLeftCoordinate() const;
+        /**
+         * @brief Gets the top right coordinate of the geometry.
+         * @returns The top right coordinate of the geometry.
+         */
+        Coordinate GetTopRightCoordinate() const;
+        /**
+         * @brief Gets the bottom left coordinate of the geometry.
+         * @returns The bottom left coordinate of the geometry.
+         */
+        Coordinate GetBottomLeftCoordinate() const;
+        /**
+         * @brief Gets the bottom right coordinate of the geometry.
+         * @returns The bottom right coordinate of the geometry.
+         */
+        Coordinate GetBottomRightCoordinate() const;
+
+    private:
+        /**
+         * @brief The total columns of the geometry.
+         */
+        unsigned short m_totalColumns;
+        /**
+         * @brief The total rows of the geometry.
+         */
+        unsigned short m_totalRows;
+        /**
+         * @brief The area of the geometry.
+         */
+        unsigned int m_area;
+        /**
+         * @brief The top left coordinate of the geometry.
+         */
+        Coordinate m_topLeftCoordinate;
+        /**
+         * @brief The top right coordinate of the geometry.
+         */
+        Coordinate m_topRightCoordinate;
+        /**
+         * @brief The bottom left coordinate of the geometry.
+         */
+        Coordinate m_bottomLeftCoordinate;
+        /**
+         * @brief The bottom right coordinate of the geometry.
+         */
+        Coordinate m_bottomRightCoordinate;
     };
 
     /**
@@ -600,54 +735,6 @@ namespace TMK
          * @brief The blue component of the color.
          */
         unsigned char m_blue;
-    };
-
-    /**
-     * @brief Represents a terminal coordinate.
-     */
-    class Coordinate final
-    {
-    public:
-        /**
-         * @brief Creates a new instance of the Coordinate class.
-         */
-        Coordinate();
-        /**
-         * @brief Creates a new instance of the Coordinate class.
-         * @param column The column component of the coordinate.
-         * @param row The row component of the coordinate.
-         */
-        Coordinate(unsigned short column, unsigned short row);
-        /**
-         * @brief Gets the column component of the coordinate.
-         * @returns The column component of the coordinate.
-         */
-        unsigned short GetColumn() const;
-        /**
-         * @brief Gets the row component of the coordinate.
-         * @returns The row component of the coordinate.
-         */
-        unsigned short GetRow() const;
-        /**
-         * @brief Sets the column component of the coordinate.
-         * @param column The column component of the coordinate to be set.
-         */
-        void SetColumn(unsigned short column);
-        /**
-         * @brief Sets the row component of the coordinate.
-         * @param row The row component of the coordinate to be set.
-         */
-        void SetRow(unsigned short row);
-
-    private:
-        /**
-         * @brief The column component of the coordinate.
-         */
-        unsigned short m_column;
-        /**
-         * @brief The row component of the coordinate.
-         */
-        unsigned short m_row;
     };
 
     /**
