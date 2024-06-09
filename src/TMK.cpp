@@ -327,24 +327,6 @@ namespace TMK
         return m_bottomRightCoordinate;
     }
 
-    Dimensions::Dimensions() : m_totalColumns(0), m_totalRows(0)
-    {
-    }
-
-    Dimensions::Dimensions(unsigned short totalColumns, unsigned short totalRows) : m_totalColumns(totalColumns), m_totalRows(totalRows)
-    {
-    }
-
-    unsigned short Dimensions::GetTotalColumns() const
-    {
-        return m_totalColumns;
-    }
-
-    unsigned short Dimensions::GetTotalRows() const
-    {
-        return m_totalRows;
-    }
-
     HexColor::HexColor(unsigned int code)
     {
         if (code > 0xffffff)
@@ -395,13 +377,13 @@ namespace TMK
         return m_hasFocus;
     }
 
-    ResizeEvent::ResizeEvent() : m_dimensions(Terminal::Window::GetDimensions())
+    ResizeEvent::ResizeEvent() : m_windowGeometry(Terminal::Window::GetGeometry())
     {
     }
 
-    Dimensions ResizeEvent::GetDimensions() const
+    Geometry ResizeEvent::GetWindowGeometry() const
     {
-        return m_dimensions;
+        return m_windowGeometry;
     }
 
     MouseEvent::MouseEvent(Coordinate coordinate, MouseButton button, bool isDragging, bool hasCtrl, bool hasAlt, bool hasShift)
@@ -706,7 +688,7 @@ namespace TMK
         std::exit(exitCode);
     }
 
-    Dimensions Terminal::Window::GetDimensions()
+    Geometry Terminal::Window::GetGeometry()
     {
 #ifdef _WIN32
         CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
@@ -714,14 +696,14 @@ namespace TMK
         {
             throw NoValidTTYException();
         }
-        return Dimensions(bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1, bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1);
+        return Geometry(bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1, bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1);
 #else
         struct winsize size;
         if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &size) && ioctl(STDERR_FILENO, TIOCGWINSZ, &size))
         {
             throw NoValidTTYException();
         }
-        return Dimensions(size.ws_col, size.ws_row);
+        return Geometry(size.ws_col, size.ws_row);
 #endif
     }
 
@@ -861,16 +843,16 @@ namespace TMK
 
     void Terminal::Cursor::SetCoordinate(unsigned short column, unsigned short row)
     {
-        TMK::Dimensions dimensions;
+        Geometry windowGeometry;
         try
         {
-            dimensions = TMK::Terminal::Window::GetDimensions();
+            windowGeometry = Terminal::Window::GetGeometry();
         }
         catch (TMK::NoValidTTYException&)
         {
             return;
         }
-        if (column >= dimensions.GetTotalColumns() || row >= dimensions.GetTotalRows())
+        if (column >= windowGeometry.GetTotalColumns() || row >= windowGeometry.GetTotalRows())
         {
             throw OutOfRangeException();
         }

@@ -533,7 +533,9 @@ namespace TMK
         unsigned short m_row;
     };
 
-    /** @brief Represents a geometry inside of the terminal window. */
+    /**
+     * @brief Represents a geometry inside of the terminal window.
+     */
     class Geometry final
     {
     public:
@@ -618,44 +620,6 @@ namespace TMK
          * @brief The bottom right coordinate of the geometry.
          */
         Coordinate m_bottomRightCoordinate;
-    };
-
-    /**
-     * @brief Represents terminal dimensions.
-     */
-    class Dimensions final
-    {
-    public:
-        /**
-         * @brief Creates an instance of the Dimensions class.
-         */
-        Dimensions();
-        /**
-         * @brief Creates an instance of the Dimensions class.
-         * @param totalColumns The total columns of the dimensions.
-         * @param totalRows The total rows of the dimensions.
-         */
-        Dimensions(unsigned short totalColumns, unsigned short totalRows);
-        /**
-         * @brief Gets the total columns of the dimensions.
-         * @returns The total columns of the dimensions.
-         */
-        unsigned short GetTotalColumns() const;
-        /**
-         * @brief Gets the total rows of the dimensions.
-         * @returns The total rows of the dimensions.
-         */
-        unsigned short GetTotalRows() const;
-
-    private:
-        /**
-         * @brief The total columns of the dimensions.
-         */
-        unsigned short m_totalColumns;
-        /**
-         * @brief The total rows of the dimensions.
-         */
-        unsigned short m_totalRows;
     };
 
     /**
@@ -772,16 +736,16 @@ namespace TMK
          */
         ResizeEvent();
         /**
-         * @brief Gets the terminal window dimensions.
-         * @returns The terminal window dimensions.
+         * @brief Gets the terminal window geometry.
+         * @returns The terminal window geometry.
          */
-        Dimensions GetDimensions() const;
+        Geometry GetWindowGeometry() const;
 
     private:
         /**
-         * @brief The terminal window dimensions.
+         * @brief The terminal window geometry.
          */
-        Dimensions m_dimensions;
+        Geometry m_windowGeometry;
     };
 
     /**
@@ -1205,11 +1169,10 @@ namespace TMK
         {
         public:
             /**
-             * @brief Gets the terminal window dimensions.
-             * @returns The terminal window dimensions.
-             * @exception NoValidTTYException Gets thrown whenever the standard output and error streams are being redirected/piped.
+             * @brief Gets the terminal window geometry.
+             * @returns The terminal window geometry.
              */
-            static Dimensions GetDimensions();
+            static Geometry GetGeometry();
             /**
              * @brief Opens the alternate window.
              */
