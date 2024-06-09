@@ -587,16 +587,21 @@ namespace TMK
         std::fflush(GetFile());
     }
 
-    void Terminal::Output::WriteLine(std::string format, ...)
+    void Terminal::Output::WriteLine(std::string format, std::va_list arguments)
     {
         Setup::InitEnvironment();
-        std::va_list arguments;
-        va_start(arguments, format);
         if (std::vprintf(format.c_str(), arguments) < 0)
         {
             throw WideCharacterOrientationException();
         }
         std::putchar('\n');
+    }
+
+    void Terminal::Output::WriteLine(std::string format, ...)
+    {
+        std::va_list arguments;
+        va_start(arguments, format);
+        WriteLine(format, arguments);
         va_end(arguments);
     }
 
