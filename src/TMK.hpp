@@ -850,6 +850,11 @@ namespace TMK
          */
         EventInfo(MouseEvent mouseEvent);
         /**
+         * @brief Creates a new instance of the EventInfo class.
+         * @param keyEvent A key event to be converted.
+         */
+        EventInfo(KeyEvent keyEvent);
+        /**
          * @brief Gets the event type.
          * @returns The event type.
          */
@@ -872,6 +877,13 @@ namespace TMK
          * @throws InvalidEventTypeException Gets thrown whenever the event type is not a mouse event.
          */
         MouseEvent GetMouseEvent() const;
+        /**
+         * @brief Gets the key event read.
+         * @returns The key event read.
+         * @throws InvalidEventTypeException Gets thrown whenever the event type is not a key event.
+         * @throws InvalidEventTypeException Gets thrown whenever the event type is not a key event.
+         */
+        KeyEvent GetKeyEvent() const;
 
     private:
         /**
@@ -891,6 +903,10 @@ namespace TMK
              * @brief The mouse event read.
              */
             MouseEvent m_mouseEvent;
+            /**
+             * @brief The key event read.
+             */
+            KeyEvent m_keyEvent;
         };
     };
 

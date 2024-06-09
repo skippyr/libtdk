@@ -15,6 +15,12 @@
 #endif
 #define IS_TTY(a_stream) (g_cache & 1 << a_stream::GetFileNumber())
 #define CACHE_HAS_BEEN_FILLED_FLAG (1 << 7)
+#define PARSE_KEY(a_condition, a_key)                                                                                                                          \
+    if (a_condition)                                                                                                                                           \
+    {                                                                                                                                                          \
+        key = a_key;                                                                                                                                           \
+        goto l_keyReadingEnd;                                                                                                                                  \
+    }
 
 namespace TMK
 {
@@ -137,28 +143,40 @@ namespace TMK
                     {
                         continue;
                     }
-#if 0
                     int key = 0;
-                    int buffer[4];
+                    int buffer;
                     if ((buffer = record.Event.KeyEvent.uChar.UnicodeChar))
                     {
-                        if (buffer <= 26 && buffer != tdk_Key_Tab && buffer != tdk_Key_Enter)
+                        if (buffer <= 26 && buffer != VirtualKey::Tab && buffer != VirtualKey::Enter)
                         {
-                            event->key = buffer + 96;
+                            key = buffer + 96;
                         }
-                        else if (buffer >= _tdk_HIGH_SURROGATE_BEGIN && buffer <= _tdk_HIGH_SURROGATE_END)
+                        else if (buffer >= HIGH_SURROGATE_START && buffer <= HIGH_SURROGATE_END)
                         {
-                            ReadConsoleInputW(handle, &record, 1, &totalEventsRead);
-                            ReadConsoleInputW(handle, &record, 1, &totalEventsRead);
-                            *((short*)&buffer + 1) = record.Event.KeyEvent.uChar.UnicodeChar;
-                            WideCharToMultiByte(CP_UTF8, 0, (wchar_t*)&buffer, 2, (char*)&event->key, 4, NULL, NULL);
+                            ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
+                            ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
+                            *(reinterpret_cast<short*>(&buffer) + 1) = record.Event.KeyEvent.uChar.UnicodeChar;
+                            WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<wchar_t*>(&buffer), 2, reinterpret_cast<char*>(&key), 4, nullptr, nullptr);
                         }
                         else
                         {
-                            WideCharToMultiByte(CP_UTF8, 0, (wchar_t*)&buffer, 1, (char*)&event->key, 4, NULL, NULL);
+                            WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<wchar_t*>(&buffer), 1, reinterpret_cast<char*>(&key), 4, nullptr, nullptr);
                         }
+                        goto l_keyReadingEnd;
                     }
-#endif
+                    PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_LEFT && record.Event.KeyEvent.wVirtualKeyCode <= VK_DOWN,
+                              record.Event.KeyEvent.wVirtualKeyCode - VK_LEFT + static_cast<int>(VirtualKey::LeftArrow));
+                    PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_PRIOR && record.Event.KeyEvent.wVirtualKeyCode <= VK_HOME,
+                              record.Event.KeyEvent.wVirtualKeyCode - VK_PRIOR + static_cast<int>(VirtualKey::PageUp));
+                    PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_INSERT && record.Event.KeyEvent.wVirtualKeyCode <= VK_DELETE,
+                              record.Event.KeyEvent.wVirtualKeyCode - VK_INSERT + static_cast<int>(VirtualKey::Insert));
+                    PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_F1 && record.Event.KeyEvent.wVirtualKeyCode <= VK_F12,
+                              record.Event.KeyEvent.wVirtualKeyCode - VK_F1 + static_cast<int>(VirtualKey::F1));
+                    continue;
+                l_keyReadingEnd:
+                    eventInfo = KeyEvent(key, record.Event.KeyEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED),
+                                         record.Event.KeyEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED),
+                                         record.Event.KeyEvent.dwControlKeyState & SHIFT_PRESSED);
                 }
                 if (eventInfo.GetType() != EventType::None && eventInfo.GetType() != EventType::TimeOut)
                 {
@@ -381,6 +399,10 @@ namespace TMK
     {
     }
 
+    EventInfo::EventInfo(KeyEvent keyEvent) : m_type(EventType::Key), m_keyEvent(keyEvent)
+    {
+    }
+
     FocusEvent EventInfo::GetFocusEvent() const
     {
         if (m_type == EventType::Focus)
@@ -404,6 +426,15 @@ namespace TMK
         if (m_type == EventType::Mouse)
         {
             return m_mouseEvent;
+        }
+        throw InvalidEventTypeException();
+    }
+
+    KeyEvent EventInfo::GetKeyEvent() const
+    {
+        if (m_type == EventType::Key)
+        {
+            return m_keyEvent;
         }
         throw InvalidEventTypeException();
     }
