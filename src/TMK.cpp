@@ -266,6 +266,67 @@ namespace TMK
         m_row = row;
     }
 
+    Geometry::Geometry()
+        : m_totalColumns(0), m_totalRows(0), m_area(0), m_topLeftCoordinate(0, 0), m_topRightCoordinate(0, 0), m_bottomLeftCoordinate(0, 0), m_bottomRightCoordinate(0, 0)
+    {
+    }
+
+    Geometry::Geometry(unsigned short totalColumns, unsigned short totalRows)
+        : m_totalColumns(totalColumns), m_totalRows(totalRows), m_area(totalColumns * totalRows), m_topLeftCoordinate(0, 0), m_topRightCoordinate(totalColumns - 1, 0),
+          m_bottomLeftCoordinate(0, totalRows - 1), m_bottomRightCoordinate(totalColumns - 1, totalRows - 1)
+    {
+    }
+
+    Geometry::Geometry(Coordinate coordinateI, Coordinate coordinateII)
+    {
+        unsigned short maximumColumn = (std::max)(coordinateI.GetColumn(), coordinateII.GetColumn());
+        unsigned short minimumColumn = (std::min)(coordinateI.GetColumn(), coordinateII.GetColumn());
+        unsigned short maximumRow = (std::max)(coordinateI.GetRow(), coordinateII.GetRow());
+        unsigned short minimumRow = (std::min)(coordinateI.GetRow(), coordinateII.GetRow());
+        m_totalColumns = maximumColumn + 1;
+        m_totalRows = maximumRow + 1;
+        m_area = m_totalColumns * m_totalRows;
+        m_topLeftCoordinate = Coordinate(minimumColumn, minimumRow);
+        m_topRightCoordinate = Coordinate(maximumColumn, minimumRow);
+        m_bottomLeftCoordinate = Coordinate(minimumColumn, maximumRow);
+        m_bottomRightCoordinate = Coordinate(maximumColumn, maximumRow);
+    }
+
+    unsigned short Geometry::GetTotalColumns() const
+    {
+        return m_totalColumns;
+    }
+
+    unsigned short Geometry::GetTotalRows() const
+    {
+        return m_totalRows;
+    }
+
+    unsigned int Geometry::GetArea() const
+    {
+        return m_area;
+    }
+
+    Coordinate Geometry::GetTopLeftCoordinate() const
+    {
+        return m_topLeftCoordinate;
+    }
+
+    Coordinate Geometry::GetTopRightCoordinate() const
+    {
+        return m_topRightCoordinate;
+    }
+
+    Coordinate Geometry::GetBottomLeftCoordinate() const
+    {
+        return m_bottomLeftCoordinate;
+    }
+
+    Coordinate Geometry::GetBottomRightCoordinate() const
+    {
+        return m_bottomRightCoordinate;
+    }
+
     Dimensions::Dimensions() : m_totalColumns(0), m_totalRows(0)
     {
     }
