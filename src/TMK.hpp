@@ -5,8 +5,9 @@
 #include <iostream>
 
 /**
- * @brief A blazing and open-source C++ terminal manipulation library for Windows and Linux. It is capable of handling terminal attributes, colors, effects,
- * arguments and event readings targetting UTF-8 and UTF-16 encodings. It has a an object oriented philosophy for those who love a touch of complexity.
+ * @brief An open-source C++ terminal manipulation library made to develop cross-platform apps to for Windows and Linux. It uses an object-oriented philosophy
+ * to handle terminal attributes, colors, effects, arguments and event readings. It primarily uses UTF-8 encoding, but has some exceptions that use UTF-16
+ * encoding to fit within the Windows runtime ecosystem.
  */
 namespace TMK
 {
@@ -31,11 +32,11 @@ namespace TMK
     enum class FontLayer
     {
         /**
-         * @brief Refers to the letters.
+         * @brief Refers to the graphemes.
          */
         Foreground = 3,
         /**
-         * @brief Refers to the background of the letters.
+         * @brief Refers to the background of the graphemes.
          */
         Background
     };
@@ -133,7 +134,7 @@ namespace TMK
     /**
      * @brief Represents the available terminal effects.
      */
-    enum class Effect
+    enum class FontEffect
     {
         /**
          * @brief Makes the text curly.
@@ -1206,7 +1207,7 @@ namespace TMK
             static void SetHexColor(HexColor color, FontLayer layer);
             /**
              * @brief Sets the terminal effects flagged in a bitmask.
-             * @param effect The bitmask containing the effects. It must be composed by value inside of the Effect enum.
+             * @param effect The bitmask containing the effects. It must be composed by value inside of the FontEffect enum.
              * @throws OutOfRangeException Gets thrown whenever an invalid effect is used to compose the bitmask.
              */
             static void SetEffect(int effect);
@@ -1214,7 +1215,7 @@ namespace TMK
              * @brief Sets a terminal effect.
              * @param effect The effect to be set.
              */
-            static void SetEffect(Effect effect);
+            static void SetEffect(FontEffect effect);
             /**
              * @brief Resets the terminal font colors.
              */
@@ -1292,7 +1293,7 @@ namespace TMK
      * @param effect1 The second effect.
      * @returns A bitmask containing both effects.
      */
-    int operator|(Effect effect0, Effect effect1);
+    int operator|(FontEffect effect0, FontEffect effect1);
     /**
      * @brief Checks if a code and a virtual key are equal.
      * @param A boolean that states both are equal.

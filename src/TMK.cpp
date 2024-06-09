@@ -761,7 +761,7 @@ namespace TMK
         }
     }
 
-    void Terminal::Font::SetEffect(Effect effect)
+    void Terminal::Font::SetEffect(FontEffect effect)
     {
         SetEffect(static_cast<int>(effect));
     }
@@ -852,7 +852,7 @@ namespace TMK
         Setup::WriteANSISequence("\x1b[2K\x1b[1G");
     }
 
-    int TMK::operator|(Effect effect0, Effect effect1)
+    int TMK::operator|(FontEffect effect0, FontEffect effect1)
     {
         return static_cast<int>(effect0) | static_cast<int>(effect1);
     }
