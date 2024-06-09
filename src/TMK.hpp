@@ -10,146 +10,252 @@
  */
 namespace TMK
 {
-    /** @brief Contains the available terminal font weights. */
+    /**
+     * @brief Contains the available terminal font weights.
+     */
     enum class FontWeight
     {
-        /** @brief Usually rendered as bold weight and/or with bright colors. */
+        /**
+         * @brief Usually rendered as bold weight and/or with bright colors.
+         */
         Bold = 1,
-        /** @brief Usually rendered with faded colors. */
+        /**
+         * @brief Usually rendered with faded colors.
+         */
         Dim
     };
 
-    /** @brief Contains the available terminal font layers. */
+    /**
+     * @brief Contains the available terminal font layers.
+     */
     enum class FontLayer
     {
-        /** @brief Refers to the letters. */
+        /**
+         * @brief Refers to the letters.
+         */
         Foreground = 3,
-        /** @brief Refers to the background of the letters. */
+        /**
+         * @brief Refers to the background of the letters.
+         */
         Background
     };
 
-    /** @brief Contains the available terminal cursor shapes. */
+    /**
+     * @brief Contains the available terminal cursor shapes.
+     */
     enum class CursorShape
     {
-        /** @brief Fills the whole character cell. */
+        /**
+         * @brief Fills the whole character cell.
+         */
         Block = 2,
-        /** @brief Fills a small region at the bottom of the character cell. */
+        /**
+         * @brief Fills a small region at the bottom of the character cell.
+         */
         Underline = 4,
-        /** @brief Fills a small region at the left of the character cell. */
+        /**
+         * @brief Fills a small region at the left of the character cell.
+         */
         Bar = 6
     };
 
-    /** @brief Contains the ANSI codes of the first 16 colors of the XTerm color palette. */
+    /**
+     * @brief Contains the ANSI codes of the first 16 colors of the XTerm color palette.
+     */
     enum class XColor
     {
-        /** @brief The dark variant of the black color. */
+        /**
+         * @brief The dark variant of the black color.
+         */
         DarkBlack,
-        /** @brief The dark variant of the red color. */
+        /**
+         * @brief The dark variant of the red color.
+         */
         DarkRed,
-        /** @brief The dark variant of the green color. */
+        /**
+         * @brief The dark variant of the green color.
+         */
         DarkGreen,
-        /** @brief The dark variant of the yellow color. */
+        /**
+         * @brief The dark variant of the yellow color.
+         */
         DarkYellow,
-        /** @brief The dark variant of the blue color. */
+        /**
+         * @brief The dark variant of the blue color.
+         */
         DarkBlue,
-        /** @brief The dark variant of the magenta color. */
+        /**
+         * @brief The dark variant of the magenta color.
+         */
         DarkMagenta,
-        /** @brief The dark variant of the cyan color. */
+        /**
+         * @brief The dark variant of the cyan color.
+         */
         DarkCyan,
-        /** @brief The dark variant of the white color. */
+        /**
+         * @brief The dark variant of the white color.
+         */
         DarkWhite,
-        /** @brief The light variant of the black color. */
+        /**
+         * @brief The light variant of the black color.
+         */
         LightBlack,
-        /** @brief The light variant of the red color. */
+        /**
+         * @brief The light variant of the red color.
+         */
         LightRed,
-        /** @brief The light variant of the green color. */
+        /**
+         * @brief The light variant of the green color.
+         */
         LightGreen,
-        /** @brief The light variant of the yellow color. */
+        /**
+         * @brief The light variant of the yellow color.
+         */
         LightYellow,
-        /** @brief The light variant of the blue color. */
+        /**
+         * @brief The light variant of the blue color.
+         */
         LightBlue,
-        /** @brief The light variant of the magenta color. */
+        /**
+         * @brief The light variant of the magenta color.
+         */
         LightMagenta,
-        /** @brief The light variant of the cyan color. */
+        /**
+         * @brief The light variant of the cyan color.
+         */
         LightCyan,
-        /** @brief The light variant of the white color. */
+        /**
+         * @brief The light variant of the white color.
+         */
         LightWhite
     };
 
-    /** @brief Represents the available terminal effects. */
+    /**
+     * @brief Represents the available terminal effects.
+     */
     enum class Effect
     {
-        /** @brief Makes the text curly. */
+        /**
+         * @brief Makes the text curly.
+         */
         Italic = 1 << 3,
-        /** @brief Draws a horizontal line crossing below the text. */
+        /**
+         * @brief Draws a horizontal line crossing below the text.
+         */
         Underlined = 1 << 4,
-        /** @brief Makes the text blink indefinitely. */
+        /**
+         * @brief Makes the text blink indefinitely.
+         */
         Blinking = 1 << 5,
-        /** @brief Swaps the background and foreground colors. */
+        /**
+         * @brief Swaps the background and foreground colors.
+         */
         Negative = 1 << 7,
-        /** @brief Makes the text hard to see or invisible. */
+        /**
+         * @brief Makes the text hard to see or invisible.
+         */
         Hidden = 1 << 8,
-        /** @brief Draws a horizontal line crossing through the middle of the text. */
+        /**
+         * @brief Draws a horizontal line crossing through the middle of the text.
+         */
         CrossedOut = 1 << 9
     };
 
-    /** @brief Represents the available terminal event types. */
+    /**
+     * @brief Represents the available terminal event types.
+     */
     enum class EventType
     {
-        /** @brief No event is available. */
+        /**
+         * @brief No event is available.
+         */
         None,
-        /** @brief The event timer ran out. */
+        /**
+         * @brief The event timer ran out.
+         */
         TimeOut,
-        /** @brief The terminal window was resized. */
+        /**
+         * @brief The terminal window was resized.
+         */
         Resize,
-        /** @brief The terminal window gained/lost focus. */
+        /**
+         * @brief The terminal window gained/lost focus.
+         */
         Focus,
-        /** @brief The mouse was moved or clicked. */
+        /**
+         * @brief The mouse was moved or clicked.
+         */
         Mouse,
-        /** @brief A keyboard key was pressed. */
+        /**
+         * @brief A keyboard key was pressed.
+         */
         Key
     };
 
-    /** @brief Contains the available mouse buttons. */
+    /**
+     * @brief Contains the available mouse buttons.
+     */
     enum class MouseButton
     {
-        /** @brief No button. */
+        /**
+         * @brief No button.
+         */
         None,
-        /** @brief Left mouse button. */
+        /**
+         * @brief Left mouse button.
+         */
         Left,
-        /** @brief Mouse wheel button. */
+        /**
+         * @brief Mouse wheel button.
+         */
         Wheel,
-        /** @brief Mouse wheel scroll upwards. */
+        /**
+         * @brief Mouse wheel scroll upwards.
+         */
         WheelUp,
-        /** @brief Mouse wheel scroll downwards. */
+        /**
+         * @brief Mouse wheel scroll downwards.
+         */
         WheelDown,
-        /** @brief Right mouse button. */
+        /**
+         * @brief Right mouse button.
+         */
         Right
     };
 
     class RGBColor;
 
-    /** @brief Represents an exception thrown whenever a group of streams are wide character oriented. */
+    /**
+     * @brief Represents an exception thrown whenever a group of streams are wide character oriented.
+     */
     class WideCharacterOrientationException final
     {
     };
 
-    /** @brief Represents an exception thrown whenever a group of streams are being redirected/piped. */
+    /**
+     * @brief Represents an exception thrown whenever a group of streams are being redirected/piped.
+     */
     class NoValidTTYException final
     {
     };
 
-    /** @brief Represents an exception thrown whenever a value is out of a certain range. */
+    /**
+     * @brief Represents an exception thrown whenever a value is out of a certain range.
+     */
     class OutOfRangeException final
     {
     };
 
-    /** @brief Represents an exception thrown whenever an invalid event type data tries to be read. */
+    /**
+     * @brief Represents an exception thrown whenever an invalid event type data tries to be read.
+     */
     class InvalidEventTypeException final
     {
     };
 
-    /** @brief Represents the command line arguments in both UTF-8 and UTF-16 encodings. */
+    /**
+     * @brief Represents the command line arguments in both UTF-8 and UTF-16 encodings.
+     */
     class Arguments final
     {
     public:
@@ -176,7 +282,9 @@ namespace TMK
          */
         Arguments(int totalArguments, char** utf8Arguments);
 #endif
-        /** @brief Destroys an instance of the Arguments class. */
+        /**
+         * @brief Destroys an instance of the Arguments class.
+         */
         ~Arguments();
         /**
          * @brief Gets the total arguments.
@@ -193,20 +301,30 @@ namespace TMK
 
     private:
 #ifdef _WIN32
-        /** @brief The arguments in UTF-16 encoding. It is only available on Windows. */
+        /**
+         * @brief The arguments in UTF-16 encoding. It is only available on Windows.
+         */
         wchar_t** m_utf16Arguments;
 #endif
-        /** @brief The arguments in UTF-8 encoding. */
+        /**
+         * @brief The arguments in UTF-8 encoding.
+         */
         char** m_utf8Arguments;
-        /** @brief The total arguments. */
+        /**
+         * @brief The total arguments.
+         */
         int m_totalArguments;
     };
 
-    /** @brief Represents terminal dimensions. */
+    /**
+     * @brief Represents terminal dimensions.
+     */
     class Dimensions final
     {
     public:
-        /** @brief Creates an instance of the Dimensions class. */
+        /**
+         * @brief Creates an instance of the Dimensions class.
+         */
         Dimensions();
         /**
          * @brief Creates an instance of the Dimensions class.
@@ -226,37 +344,49 @@ namespace TMK
         unsigned short GetTotalRows() const;
 
     private:
-        /** @brief The total columns of the dimensions. */
+        /**
+         * @brief The total columns of the dimensions.
+         */
         unsigned short m_totalColumns;
-        /** @brief The total rows of the dimensions. */
+        /**
+         * @brief The total rows of the dimensions.
+         */
         unsigned short m_totalRows;
     };
 
-    /** @brief Represents a color in hex format. */
+    /**
+     * @brief Represents a color in hex format.
+     */
     class HexColor final
     {
     public:
         /**
          * @brief Creates an instance of the HexColor class.
-         * @param The hex code of the color. It must be a value in range from 0x0 to 0xffffff.
+         * @param code The hex code of the color. It must be a value in range from 0x0 to 0xffffff.
          * @throws OutOfRangeException Gets thrown whenever the hex code is out of the valid range.
          */
         HexColor(unsigned int code);
         /**
          * @brief Creates an instance of the HexColor class.
-         * @param A color in RGB format to be converted.
+         * @param color A color in RGB format to be converted.
          */
         HexColor(RGBColor color);
 
-        /** @brief Gets the hex code of the color as a number. */
+        /**
+         * @brief Gets the hex code of the color as a number.
+         */
         unsigned int GetCodeAsNumber() const;
 
     private:
-        /** @brief The hex code of the color. */
+        /**
+         * @brief The hex code of the color.
+         */
         unsigned int m_code;
     };
 
-    /** @brief Represents a color in RGB format. */
+    /**
+     * @brief Represents a color in RGB format.
+     */
     class RGBColor final
     {
     public:
@@ -289,19 +419,29 @@ namespace TMK
         unsigned char GetBlue() const;
 
     private:
-        /** @brief The red component of the color. */
+        /**
+         * @brief The red component of the color.
+         */
         unsigned char m_red;
-        /** @brief The green component of the color. */
+        /**
+         * @brief The green component of the color.
+         */
         unsigned char m_green;
-        /** @brief The blue component of the color. */
+        /**
+         * @brief The blue component of the color.
+         */
         unsigned char m_blue;
     };
 
-    /** @brief Represents a terminal coordinate. */
+    /**
+     * @brief Represents a terminal coordinate.
+     */
     class Coordinate final
     {
     public:
-        /** @brief Creates a new instance of the Coordinate class. */
+        /**
+         * @brief Creates a new instance of the Coordinate class.
+         */
         Coordinate();
         /**
          * @brief Creates a new instance of the Coordinate class.
@@ -331,13 +471,19 @@ namespace TMK
         void SetRow(unsigned short row);
 
     private:
-        /** @brief The column component of the coordinate. */
+        /**
+         * @brief The column component of the coordinate.
+         */
         unsigned short m_column;
-        /** @brief The row component of the coordinate. */
+        /**
+         * @brief The row component of the coordinate.
+         */
         unsigned short m_row;
     };
 
-    /** @brief Represents a terminal focus event. */
+    /**
+     * @brief Represents a terminal focus event.
+     */
     class FocusEvent final
     {
     public:
@@ -353,15 +499,21 @@ namespace TMK
         bool HasFocus() const;
 
     private:
-        /** @brief A boolean that states the terminal window has gained focus. */
+        /**
+         * @brief A boolean that states the terminal window has gained focus.
+         */
         bool m_hasFocus;
     };
 
-    /** @brief Represents a terminal window resize event. */
+    /**
+     * @brief Represents a terminal window resize event.
+     */
     class ResizeEvent final
     {
     public:
-        /** @brief Creates a new instance of the ResizeEvent class. */
+        /**
+         * @brief Creates a new instance of the ResizeEvent class.
+         */
         ResizeEvent();
         /**
          * @brief Gets the terminal window dimensions.
@@ -370,11 +522,15 @@ namespace TMK
         Dimensions GetDimensions() const;
 
     private:
-        /** @brief The terminal window dimensions. */
+        /**
+         * @brief The terminal window dimensions.
+         */
         Dimensions m_dimensions;
     };
 
-    /** @brief Represents a terminal mouse event. */
+    /**
+     * @brief Represents a terminal mouse event.
+     */
     class MouseEvent final
     {
     public:
@@ -420,21 +576,88 @@ namespace TMK
         bool HasShift() const;
 
     private:
-        /** @brief The mouse coordinate. */
+        /**
+         * @brief The mouse coordinate.
+         */
         Coordinate m_coordinate;
-        /** @brief The mouse button pressed. */
+        /**
+         * @brief The mouse button pressed.
+         */
         MouseButton m_button;
-        /** @brief A boolean that states the mouse was being dragged. */
+        /**
+         * @brief A boolean that states the mouse was being dragged.
+         */
         bool m_isDragging;
-        /** @brief A boolean that states the Ctrl key was being holded. */
+        /**
+         * @brief A boolean that states the Ctrl key was being holded.
+         */
         bool m_hasCtrl;
-        /** @brief A boolean that states the Alt key was being holded. */
+        /**
+         * @brief A boolean that states the Alt key was being holded.
+         */
         bool m_hasAlt;
-        /** @brief A boolean that states the Shift key was being holded. */
+        /**
+         * @brief A boolean that states the Shift key was being holded.
+         */
         bool m_hasShift;
     };
 
-    /** @brief Represents the information of a terminal event. */
+    /**
+     * @brief Represents a terminal key event.
+     */
+    class KeyEvent final
+    {
+    public:
+        /**
+         * @brief Creates a new instance of the KeyEvent class.
+         * @param key The key pressed.
+         * @param hasCtrl A boolean that states the Ctrl key was being holded.
+         * @param hasAlt A boolean that states the Alt key was being holded.
+         * @param hasShift A boolean that states the Shift key was being holded.
+         */
+        KeyEvent(int key, bool hasCtrl, bool hasAlt, bool hasShift);
+        /**
+         * @brief Gets the key pressed.
+         */
+        int GetKey() const;
+        /**
+         * @brief Checks if the Ctrl key was being holded.
+         * @returns A boolean that states the Ctrl key was being holded.
+         */
+        bool HasCtrl() const;
+        /**
+         * @brief Checks if the Alt was being holded.
+         * @returns A boolean that states the Alt key was being holded.
+         */
+        bool HasAlt() const;
+        /**
+         * @brief Checks if the Shift was being holded.
+         * @returns A boolean that states the Shift key was being holded.
+         */
+        bool HasShift() const;
+
+    private:
+        /**
+         * @brief The key pressed.
+         */
+        int m_key;
+        /**
+         * @brief A boolean that states the Ctrl key was being holded.
+         */
+        bool m_hasCtrl;
+        /**
+         * @brief A boolean that states the Alt key was being holded.
+         */
+        bool m_hasAlt;
+        /**
+         * @brief A boolean that states the Shift key was being holded.
+         */
+        bool m_hasShift;
+    };
+
+    /**
+     * @brief Represents the information of a terminal event.
+     */
     class EventInfo final
     {
     public:
@@ -483,24 +706,36 @@ namespace TMK
         MouseEvent GetMouseEvent() const;
 
     private:
-        /** @brief The event type. */
+        /**
+         * @brief The event type.
+         */
         EventType m_type;
         union {
-            /** @brief The focus event read. */
+            /**
+             * @brief The focus event read.
+             */
             FocusEvent m_focusEvent;
-            /** @brief The resize event read. */
+            /**
+             * @brief The resize event read.
+             */
             ResizeEvent m_resizeEvent;
-            /** @brief The mouse event read. */
+            /**
+             * @brief The mouse event read.
+             */
             MouseEvent m_mouseEvent;
         };
     };
 
-    /** @brief Represents the terminal. */
+    /**
+     * @brief Represents the terminal.
+     */
     class Terminal final
     {
     public:
 #ifdef _WIN32
-        /** @brief Represents the terminal encoding converter. It is only available on Windows. */
+        /**
+         * @brief Represents the terminal encoding converter. It is only available on Windows.
+         */
         class Encoding final
         {
         public:
@@ -522,7 +757,9 @@ namespace TMK
         };
 #endif
 
-        /** @brief Represents the standard input stream. */
+        /**
+         * @brief Represents the standard input stream.
+         */
         class Input final
         {
         public:
@@ -572,11 +809,15 @@ namespace TMK
             Input() = delete;
         };
 
-        /** @brief Represents the standard output stream. */
+        /**
+         * @brief Represents the standard output stream.
+         */
         class Output final
         {
         public:
-            /** @brief Flushes the stream buffer. */
+            /**
+             * @brief Flushes the standard output stream buffer.
+             */
             static void Flush();
             /**
              * @brief Formats and writes arguments to the standard output stream with a newline character appended at its end.
@@ -599,17 +840,17 @@ namespace TMK
             static void Write(std::string format, ...);
             /**
              * @brief Gets the file descriptor associated with the standard output stream.
-             * @param The file descriptor associated with the standard output stream.
+             * @returns The file descriptor associated with the standard output stream.
              */
             static std::FILE* GetFile();
             /**
              * @brief Gets the file descriptor number associated with the standard output stream.
-             * @param The file descriptor number associated with the standard output stream.
+             * @returns The file descriptor number associated with the standard output stream.
              */
             static int GetFileNumber();
             /**
              * @brief Checks if the standard output stream is connected to an interactive terminal (TTY).
-             * @param A boolean that states the standard output stream is a TTY.
+             * @returns A boolean that states the standard output stream is a TTY.
              */
             static bool IsTTY();
 
@@ -617,7 +858,9 @@ namespace TMK
             Output() = delete;
         };
 
-        /** @brief Represents the standard error stream. */
+        /**
+         * @brief Represents the standard error stream.
+         */
         class Error final
         {
         public:
@@ -642,17 +885,17 @@ namespace TMK
             static void Write(std::string format, ...);
             /**
              * @brief Gets the file descriptor associated with the standard error stream.
-             * @param The file descriptor associated with the standard error stream.
+             * @returns The file descriptor associated with the standard error stream.
              */
             static std::FILE* GetFile();
             /**
              * @brief Gets the file descriptor number associated with the standard error stream.
-             * @param The file descriptor number associated with the standard error stream.
+             * @returns The file descriptor number associated with the standard error stream.
              */
             static int GetFileNumber();
             /**
              * @brief Checks if the standard error stream is connected to an interactive terminal (TTY).
-             * @param A boolean that states the standard error stream is a TTY.
+             * @returns A boolean that states the standard error stream is a TTY.
              */
             static bool IsTTY();
 
@@ -660,7 +903,9 @@ namespace TMK
             Error() = delete;
         };
 
-        /** @brief Represents the terminal process. */
+        /**
+         * @brief Represents the terminal process.
+         */
         class Process final
         {
         public:
@@ -681,7 +926,9 @@ namespace TMK
             Process() = delete;
         };
 
-        /** @brief Represents the terminal window. */
+        /**
+         * @brief Represents the terminal window.
+         */
         class Window final
         {
         public:
@@ -691,9 +938,13 @@ namespace TMK
              * @exception NoValidTTYException Gets thrown whenever the standard output and error streams are being redirected/piped.
              */
             static Dimensions GetDimensions();
-            /** @brief Opens the alternate window. */
+            /**
+             * @brief Opens the alternate window.
+             */
             static void OpenAlternateWindow();
-            /** @brief Closes the alternate window. */
+            /**
+             * @brief Closes the alternate window.
+             */
             static void CloseAlternateWindow();
             /**
              * @brief Sets the terminal window title.
@@ -705,18 +956,24 @@ namespace TMK
             Window() = delete;
         };
 
-        /** @brief Represents the terminal bell. */
+        /**
+         * @brief Represents the terminal bell.
+         */
         class Bell final
         {
         public:
-            /** @brief Rings the terminal bell. */
+            /**
+             * @brief Rings the terminal bell.
+             */
             static void Ring();
 
         private:
             Bell() = delete;
         };
 
-        /** @brief Represents the terminal font. */
+        /**
+         * @brief Represents the terminal font.
+         */
         class Font final
         {
         public:
@@ -774,18 +1031,26 @@ namespace TMK
              * @param effect The effect to be set.
              */
             static void SetEffect(Effect effect);
-            /** @brief Resets the terminal font colors. */
+            /**
+             * @brief Resets the terminal font colors.
+             */
             static void ResetColors();
-            /** @brief Resets the terminal font weight. */
+            /**
+             * @brief Resets the terminal font weight.
+             */
             static void ResetWeight();
-            /** @brief Resets the terminal effects. */
+            /**
+             * @brief Resets the terminal effects.
+             */
             static void ResetEffects();
 
         private:
             Font() = delete;
         };
 
-        /** @brief Represents the terminal cursor. */
+        /**
+         * @brief Represents the terminal cursor.
+         */
         class Cursor final
         {
         public:
@@ -820,9 +1085,13 @@ namespace TMK
              * @param isVisible A boolean that states the cursor should be visible.
              */
             static void SetVisibility(bool isVisible);
-            /** @brief Resets the terminal cursor shape. */
+            /**
+             * @brief Resets the terminal cursor shape.
+             */
             static void ResetShape();
-            /** @brief Clears the terminal cursor line. */
+            /**
+             * @brief Clears the terminal cursor line.
+             */
             static void ClearLine();
 
         private:

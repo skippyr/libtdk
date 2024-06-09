@@ -309,6 +309,30 @@ namespace TMK
         return m_hasShift;
     }
 
+    KeyEvent::KeyEvent(int key, bool hasCtrl, bool hasAlt, bool hasShift) : m_key(key), m_hasCtrl(hasCtrl), m_hasAlt(hasAlt), m_hasShift(hasShift)
+    {
+    }
+
+    int KeyEvent::GetKey() const
+    {
+        return m_key;
+    }
+
+    bool KeyEvent::HasCtrl() const
+    {
+        return m_hasCtrl;
+    }
+
+    bool KeyEvent::HasAlt() const
+    {
+        return m_hasAlt;
+    }
+
+    bool KeyEvent::HasShift() const
+    {
+        return m_hasShift;
+    }
+
     EventInfo::EventInfo(EventType type) : m_type(type)
     {
     }
