@@ -5,9 +5,9 @@
 #include <iostream>
 
 /**
- * @brief An open-source C++ terminal manipulation library made to develop cross-platform apps to for Windows and Linux. It uses an object-oriented philosophy
- * to handle terminal attributes, colors, effects, arguments and event readings. It primarily uses UTF-8 encoding, but has some exceptions that use UTF-16
- * encoding to fit within the Windows runtime ecosystem.
+ * @brief An open-source C++ terminal manipulation library made to develop cross-platform apps to for Windows and Linux. It uses an object-oriented philosophy to handle terminal
+ * attributes, colors, effects, arguments and event readings. It primarily uses UTF-8 encoding, but has some exceptions that use UTF-16 encoding to fit within the Windows runtime
+ * ecosystem.
  */
 namespace TMK
 {
@@ -42,22 +42,34 @@ namespace TMK
     };
 
     /**
-     * @brief Contains the available terminal cursor shapes.
+     * @brief Represents the available terminal effects.
      */
-    enum class CursorShape
+    enum class FontEffect
     {
         /**
-         * @brief Fills the whole character cell.
+         * @brief Makes the text curly.
          */
-        Block = 2,
+        Italic = 1 << 3,
         /**
-         * @brief Fills a small region at the bottom of the character cell.
+         * @brief Draws a horizontal line crossing below the text.
          */
-        Underline = 4,
+        Underline = 1 << 4,
         /**
-         * @brief Fills a small region at the left of the character cell.
+         * @brief Makes the text blink indefinitely.
          */
-        Bar = 6
+        Blink = 1 << 5,
+        /**
+         * @brief Swaps the background and foreground colors.
+         */
+        Negative = 1 << 7,
+        /**
+         * @brief Makes the text hard to see or invisible.
+         */
+        Hidden = 1 << 8,
+        /**
+         * @brief Draws a horizontal line crossing through the middle of the text.
+         */
+        Strike = 1 << 9
     };
 
     /**
@@ -132,34 +144,22 @@ namespace TMK
     };
 
     /**
-     * @brief Represents the available terminal effects.
+     * @brief Contains the available terminal cursor shapes.
      */
-    enum class FontEffect
+    enum class CursorShape
     {
         /**
-         * @brief Makes the text curly.
+         * @brief Fills the whole character cell.
          */
-        Italic = 1 << 3,
+        Block = 2,
         /**
-         * @brief Draws a horizontal line crossing below the text.
+         * @brief Fills a small region at the bottom of the character cell.
          */
-        Underlined = 1 << 4,
+        Underline = 4,
         /**
-         * @brief Makes the text blink indefinitely.
+         * @brief Fills a small region at the left of the character cell.
          */
-        Blinking = 1 << 5,
-        /**
-         * @brief Swaps the background and foreground colors.
-         */
-        Negative = 1 << 7,
-        /**
-         * @brief Makes the text hard to see or invisible.
-         */
-        Hidden = 1 << 8,
-        /**
-         * @brief Draws a horizontal line crossing through the middle of the text.
-         */
-        CrossedOut = 1 << 9
+        Bar = 6
     };
 
     /**
@@ -225,9 +225,9 @@ namespace TMK
     };
 
     /**
-     * @brief Contains the available virtual keys.
+     * @brief Contains the available keyboard keys.
      */
-    enum class VirtualKey
+    enum class KeyboardKey
     {
 #ifdef _WIN32
         /**
@@ -425,17 +425,17 @@ namespace TMK
     /**
      * @brief Represents the command line arguments in both UTF-8 and UTF-16 encodings.
      */
-    class Arguments final
+    class CMDArguments final
     {
     public:
 #ifdef _WIN32
         /**
-         * @brief Creates a new instance of the Arguments class. It is only available on Windows.
+         * @brief Creates a new instance of the CMDArguments class. It is only available on Windows.
          * @param totalArguments The total arguments.
          * @param utf8Arguments The arguments in UTF-8 encoding.
          * @param utf16Arguments The arguments in UTF-16 encoding.
          */
-        Arguments(int totalArguments, char** utf8Arguments, wchar_t** utf16Arguments);
+        CMDArguments(int totalArguments, char** utf8Arguments, wchar_t** utf16Arguments);
         /**
          * @brief Gets an argument in UTF-16 encoding by using its offset. It is only available on Windows.
          * @param offset The offset to be used.
@@ -445,16 +445,16 @@ namespace TMK
         std::wstring GetUTF16ArgumentByOffset(std::size_t offset) const;
 #else
         /**
-         * @brief Creates a new instance of the Arguments class. It is only available on Linux.
+         * @brief Creates a new instance of the CMDArguments class. It is only available on Linux.
          * @param totalArguments The total arguments.
          * @param utf8Arguments The arguments in UTF8 encoding.
          */
-        Arguments(int totalArguments, char** utf8Arguments);
+        CMDArguments(int totalArguments, char** utf8Arguments);
 #endif
         /**
-         * @brief Destroys an instance of the Arguments class.
+         * @brief Destroys an instance of the CMDArguments class.
          */
-        ~Arguments();
+        ~CMDArguments();
         /**
          * @brief Gets the total arguments.
          * @returns The total arguments.
@@ -1100,7 +1100,7 @@ namespace TMK
              * @param rawArguments The arguments given as second parameter of the main function.
              * @returns The treated arguments.
              */
-            static Arguments GetArguments(int rawTotalArguments, char** rawArguments);
+            static CMDArguments GetCMDArguments(int rawTotalCMDArguments, char** rawCMDArguments);
             /**
              * @brief Exits the process.
              * @param exitCode The exit code to be used.
@@ -1210,12 +1210,12 @@ namespace TMK
              * @param effect The bitmask containing the effects. It must be composed by value inside of the FontEffect enum.
              * @throws OutOfRangeException Gets thrown whenever an invalid effect is used to compose the bitmask.
              */
-            static void SetEffect(int effect);
+            static void SetEffects(int effect);
             /**
              * @brief Sets a terminal effect.
              * @param effect The effect to be set.
              */
-            static void SetEffect(FontEffect effect);
+            static void SetEffects(FontEffect effect);
             /**
              * @brief Resets the terminal font colors.
              */
@@ -1298,21 +1298,21 @@ namespace TMK
      * @brief Checks if a code and a virtual key are equal.
      * @param A boolean that states both are equal.
      */
-    bool operator==(int code, VirtualKey key);
+    bool operator==(int code, KeyboardKey key);
     /**
      * @brief Checks if a virtual key and a code are equal.
      * @param A boolean that states both are equal.
      */
-    bool operator==(VirtualKey key, int code);
+    bool operator==(KeyboardKey key, int code);
     /**
      * @brief Checks if a code and a virtual key are different.
      * @param A boolean that states both are different.
      */
-    bool operator!=(int code, VirtualKey key);
+    bool operator!=(int code, KeyboardKey key);
     /**
      * @brief Checks if a virtual key and a code are different.
      * @param A boolean that states both are different.
      */
-    bool operator!=(VirtualKey key, int code);
+    bool operator!=(KeyboardKey key, int code);
 
 }

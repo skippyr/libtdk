@@ -1,7 +1,7 @@
 AccessModifierOffset: -4
 AlwaysBreakTemplateDeclarations: true
 BasedOnStyle: Microsoft
-ColumnLimit: 160
+ColumnLimit: 180
 FixNamespaceComments: false
 NamespaceIndentation: All
 PointerAlignment: Left

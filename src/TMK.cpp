@@ -15,11 +15,11 @@
 #endif
 #define IS_TTY(a_stream) (g_cache & 1 << a_stream::GetFileNumber())
 #define CACHE_HAS_BEEN_FILLED_FLAG (1 << 7)
-#define PARSE_KEY(a_condition, a_key)                                                                                                                          \
-    if (a_condition)                                                                                                                                           \
-    {                                                                                                                                                          \
-        key = a_key;                                                                                                                                           \
-        goto l_keyReadingEnd;                                                                                                                                  \
+#define PARSE_KEY(a_condition, a_key)                                                                                                                                              \
+    if (a_condition)                                                                                                                                                               \
+    {                                                                                                                                                                              \
+        key = a_key;                                                                                                                                                               \
+        goto l_keyReadingEnd;                                                                                                                                                      \
     }
 
 namespace TMK
@@ -74,8 +74,8 @@ namespace TMK
             HANDLE timerHandle = nullptr;
             DWORD inputMode;
             GetConsoleMode(inputHandle, &inputMode);
-            SetConsoleMode(inputHandle, allowMouseCapture ? (inputMode | ENABLE_MOUSE_INPUT) & ~(ENABLE_QUICK_EDIT_MODE | ENABLE_PROCESSED_INPUT)
-                                                          : inputMode & ~ENABLE_PROCESSED_INPUT);
+            SetConsoleMode(inputHandle,
+                           allowMouseCapture ? (inputMode | ENABLE_MOUSE_INPUT) & ~(ENABLE_QUICK_EDIT_MODE | ENABLE_PROCESSED_INPUT) : inputMode & ~ENABLE_PROCESSED_INPUT);
             while (true)
             {
                 if (!waitInMilliseconds)
@@ -119,27 +119,22 @@ namespace TMK
                 {
 
                     CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-                    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) ||
-                        GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo);
-                    eventInfo = MouseEvent(Coordinate(record.Event.MouseEvent.dwMousePosition.X - bufferInfo.srWindow.Left,
-                                                      record.Event.MouseEvent.dwMousePosition.Y - bufferInfo.srWindow.Top),
-                                           record.Event.MouseEvent.dwEventFlags & MOUSE_WHEELED
-                                               ? record.Event.MouseEvent.dwButtonState & 0x1000000 ? MouseButton::WheelDown : MouseButton::WheelUp
-                                           : record.Event.MouseEvent.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED ? MouseButton::Left
-                                           : record.Event.MouseEvent.dwButtonState & FROM_LEFT_2ND_BUTTON_PRESSED ? MouseButton::Wheel
-                                           : record.Event.MouseEvent.dwButtonState & RIGHTMOST_BUTTON_PRESSED     ? MouseButton::Right
-                                                                                                                  : MouseButton::None,
-                                           record.Event.MouseEvent.dwEventFlags & MOUSE_MOVED,
-                                           record.Event.MouseEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED),
-                                           record.Event.MouseEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED),
-                                           record.Event.MouseEvent.dwControlKeyState & SHIFT_PRESSED);
+                    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) || GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo);
+                    eventInfo = MouseEvent(
+                        Coordinate(record.Event.MouseEvent.dwMousePosition.X - bufferInfo.srWindow.Left, record.Event.MouseEvent.dwMousePosition.Y - bufferInfo.srWindow.Top),
+                        record.Event.MouseEvent.dwEventFlags & MOUSE_WHEELED ? record.Event.MouseEvent.dwButtonState & 0x1000000 ? MouseButton::WheelDown : MouseButton::WheelUp
+                        : record.Event.MouseEvent.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED ? MouseButton::Left
+                        : record.Event.MouseEvent.dwButtonState & FROM_LEFT_2ND_BUTTON_PRESSED ? MouseButton::Wheel
+                        : record.Event.MouseEvent.dwButtonState & RIGHTMOST_BUTTON_PRESSED     ? MouseButton::Right
+                                                                                               : MouseButton::None,
+                        record.Event.MouseEvent.dwEventFlags & MOUSE_MOVED, record.Event.MouseEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED),
+                        record.Event.MouseEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED), record.Event.MouseEvent.dwControlKeyState & SHIFT_PRESSED);
                 }
                 else if (record.EventType == KEY_EVENT)
                 {
-                    if (!record.Event.KeyEvent.bKeyDown || record.Event.KeyEvent.wVirtualKeyCode == VK_CONTROL ||
-                        record.Event.KeyEvent.wVirtualKeyCode == VK_SHIFT || record.Event.KeyEvent.wVirtualKeyCode == VK_MENU ||
-                        record.Event.KeyEvent.wVirtualKeyCode == VK_CAPITAL || record.Event.KeyEvent.wVirtualKeyCode == VK_NUMLOCK ||
-                        record.Event.KeyEvent.wVirtualKeyCode == VK_SCROLL)
+                    if (!record.Event.KeyEvent.bKeyDown || record.Event.KeyEvent.wVirtualKeyCode == VK_CONTROL || record.Event.KeyEvent.wVirtualKeyCode == VK_SHIFT ||
+                        record.Event.KeyEvent.wVirtualKeyCode == VK_MENU || record.Event.KeyEvent.wVirtualKeyCode == VK_CAPITAL ||
+                        record.Event.KeyEvent.wVirtualKeyCode == VK_NUMLOCK || record.Event.KeyEvent.wVirtualKeyCode == VK_SCROLL)
                     {
                         continue;
                     }
@@ -147,7 +142,7 @@ namespace TMK
                     int buffer;
                     if ((buffer = record.Event.KeyEvent.uChar.UnicodeChar))
                     {
-                        if (buffer <= 26 && buffer != VirtualKey::Tab && buffer != VirtualKey::Enter)
+                        if (buffer <= 26 && buffer != KeyboardKey::Tab && buffer != KeyboardKey::Enter)
                         {
                             key = buffer + 96;
                         }
@@ -165,18 +160,17 @@ namespace TMK
                         goto l_keyReadingEnd;
                     }
                     PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_LEFT && record.Event.KeyEvent.wVirtualKeyCode <= VK_DOWN,
-                              record.Event.KeyEvent.wVirtualKeyCode - VK_LEFT + static_cast<int>(VirtualKey::LeftArrow));
+                              record.Event.KeyEvent.wVirtualKeyCode - VK_LEFT + static_cast<int>(KeyboardKey::LeftArrow));
                     PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_PRIOR && record.Event.KeyEvent.wVirtualKeyCode <= VK_HOME,
-                              record.Event.KeyEvent.wVirtualKeyCode - VK_PRIOR + static_cast<int>(VirtualKey::PageUp));
+                              record.Event.KeyEvent.wVirtualKeyCode - VK_PRIOR + static_cast<int>(KeyboardKey::PageUp));
                     PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_INSERT && record.Event.KeyEvent.wVirtualKeyCode <= VK_DELETE,
-                              record.Event.KeyEvent.wVirtualKeyCode - VK_INSERT + static_cast<int>(VirtualKey::Insert));
+                              record.Event.KeyEvent.wVirtualKeyCode - VK_INSERT + static_cast<int>(KeyboardKey::Insert));
                     PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_F1 && record.Event.KeyEvent.wVirtualKeyCode <= VK_F12,
-                              record.Event.KeyEvent.wVirtualKeyCode - VK_F1 + static_cast<int>(VirtualKey::F1));
+                              record.Event.KeyEvent.wVirtualKeyCode - VK_F1 + static_cast<int>(KeyboardKey::F1));
                     continue;
                 l_keyReadingEnd:
                     eventInfo = KeyEvent(key, record.Event.KeyEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED),
-                                         record.Event.KeyEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED),
-                                         record.Event.KeyEvent.dwControlKeyState & SHIFT_PRESSED);
+                                         record.Event.KeyEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED), record.Event.KeyEvent.dwControlKeyState & SHIFT_PRESSED);
                 }
                 if (eventInfo.GetType() != EventType::None && eventInfo.GetType() != EventType::TimeOut)
                 {
@@ -201,12 +195,12 @@ namespace TMK
     };
 
 #ifdef _WIN32
-    Arguments::Arguments(int totalArguments, char** utf8Arguments, wchar_t** utf16Arguments)
+    CMDArguments::CMDArguments(int totalArguments, char** utf8Arguments, wchar_t** utf16Arguments)
         : m_totalArguments(totalArguments), m_utf8Arguments(utf8Arguments), m_utf16Arguments(utf16Arguments)
     {
     }
 
-    std::wstring Arguments::GetUTF16ArgumentByOffset(std::size_t offset) const
+    std::wstring CMDArguments::GetUTF16ArgumentByOffset(std::size_t offset) const
     {
         if (offset >= m_totalArguments)
         {
@@ -215,12 +209,12 @@ namespace TMK
         return m_utf16Arguments[offset];
     }
 #else
-    Arguments::Arguments(int totalArguments, char** utf8Arguments) : m_totalArguments(totalArguments), m_utf8Arguments(utf8Arguments)
+    CMDArguments::CMDArguments(int totalArguments, char** utf8Arguments) : m_totalArguments(totalArguments), m_utf8Arguments(utf8Arguments)
     {
     }
 #endif
 
-    Arguments::~Arguments()
+    CMDArguments::~CMDArguments()
     {
 #ifdef _WIN32
         LocalFree(m_utf16Arguments);
@@ -232,12 +226,12 @@ namespace TMK
 #endif
     }
 
-    int Arguments::GetTotalArguments() const
+    int CMDArguments::GetTotalArguments() const
     {
         return m_totalArguments;
     }
 
-    std::string Arguments::GetUTF8ArgumentByOffset(std::size_t offset) const
+    std::string CMDArguments::GetUTF8ArgumentByOffset(std::size_t offset) const
     {
         if (offset >= m_totalArguments)
         {
@@ -286,8 +280,7 @@ namespace TMK
     {
     }
 
-    RGBColor::RGBColor(HexColor color)
-        : m_red(color.GetCodeAsNumber() >> 16 & 0xff), m_green(color.GetCodeAsNumber() >> 8 & 0xff), m_blue(color.GetCodeAsNumber() & 0xff)
+    RGBColor::RGBColor(HexColor color) : m_red(color.GetCodeAsNumber() >> 16 & 0xff), m_green(color.GetCodeAsNumber() >> 8 & 0xff), m_blue(color.GetCodeAsNumber() & 0xff)
     {
     }
 
@@ -632,20 +625,20 @@ namespace TMK
         return IS_TTY(Error);
     }
 
-    Arguments Terminal::Process::GetArguments(int rawTotalArguments, char** rawArguments)
+    CMDArguments Terminal::Process::GetCMDArguments(int rawTotalCMDArguments, char** rawCMDArguments)
     {
 #ifdef _WIN32
-        LPWSTR* utf16Arguments = CommandLineToArgvW(GetCommandLineW(), &rawTotalArguments);
-        char** utf8Arguments = new char*[rawTotalArguments];
-        for (int offset = 0; offset < rawTotalArguments; ++offset)
+        LPWSTR* utf16Arguments = CommandLineToArgvW(GetCommandLineW(), &rawTotalCMDArguments);
+        char** utf8Arguments = new char*[rawTotalCMDArguments];
+        for (int offset = 0; offset < rawTotalCMDArguments; ++offset)
         {
             int size = WideCharToMultiByte(CP_UTF8, 0, utf16Arguments[offset], -1, nullptr, 0, nullptr, nullptr);
             utf8Arguments[offset] = new char[size];
             WideCharToMultiByte(CP_UTF8, 0, utf16Arguments[offset], -1, utf8Arguments[offset], size, nullptr, nullptr);
         }
-        return Arguments(rawTotalArguments, utf8Arguments, utf16Arguments);
+        return CMDArguments(rawTotalCMDArguments, utf8Arguments, utf16Arguments);
 #else
-        return Arguments(rawTotalArguments, rawArguments);
+        return CMDArguments(rawTotalCMDArguments, rawCMDArguments);
 #endif
     }
 
@@ -658,8 +651,7 @@ namespace TMK
     {
 #ifdef _WIN32
         CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-        if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) &&
-            !GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo))
+        if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) && !GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo))
         {
             throw NoValidTTYException();
         }
@@ -739,7 +731,7 @@ namespace TMK
         Setup::WriteANSISequence("\x1b[22m");
     }
 
-    void Terminal::Font::SetEffect(int effects)
+    void Terminal::Font::SetEffects(int effects)
     {
         for (int offset = 6; offset < 32; ++offset)
         {
@@ -761,9 +753,9 @@ namespace TMK
         }
     }
 
-    void Terminal::Font::SetEffect(FontEffect effect)
+    void Terminal::Font::SetEffects(FontEffect effect)
     {
-        SetEffect(static_cast<int>(effect));
+        SetEffects(static_cast<int>(effect));
     }
 
     void Terminal::Font::ResetEffects()
@@ -781,8 +773,7 @@ namespace TMK
     {
 #ifdef _WIN32
         CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-        if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) &&
-            !GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo))
+        if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) && !GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo))
         {
             throw NoValidTTYException();
         }
@@ -857,21 +848,21 @@ namespace TMK
         return static_cast<int>(effect0) | static_cast<int>(effect1);
     }
 
-    bool operator==(int code, VirtualKey key)
+    bool operator==(int code, KeyboardKey key)
     {
         return code == static_cast<int>(key);
     }
-    bool operator==(VirtualKey key, int code)
+    bool operator==(KeyboardKey key, int code)
     {
         return static_cast<int>(key) == code;
     }
 
-    bool operator!=(int code, VirtualKey key)
+    bool operator!=(int code, KeyboardKey key)
     {
         return code != static_cast<int>(key);
     }
 
-    bool operator!=(VirtualKey key, int code)
+    bool operator!=(KeyboardKey key, int code)
     {
         return static_cast<int>(key) != code;
     }
