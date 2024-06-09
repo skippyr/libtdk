@@ -266,6 +266,11 @@ namespace TMK
         m_row = row;
     }
 
+    std::string Coordinate::ToString() const
+    {
+        return "column: " + std::to_string(m_column) + ", row: " + std::to_string(m_row);
+    }
+
     Geometry::Geometry()
         : m_totalColumns(0), m_totalRows(0), m_area(0), m_topLeftCoordinate(0, 0), m_topRightCoordinate(0, 0), m_bottomLeftCoordinate(0, 0), m_bottomRightCoordinate(0, 0)
     {

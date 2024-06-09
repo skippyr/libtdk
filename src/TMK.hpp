@@ -3,6 +3,7 @@
 #include <cstdarg>
 #include <functional>
 #include <iostream>
+#include <string>
 
 /**
  * @brief An open-source C++ terminal manipulation library made to develop cross-platform apps to for Windows and Linux. It uses an object-oriented philosophy to handle terminal
@@ -521,6 +522,11 @@ namespace TMK
          * @param row The row component of the coordinate to be set.
          */
         void SetRow(unsigned short row);
+        /**
+         * @brief Gets a string representation of the coordinate.
+         * @returns A string representation of the coordinate.
+         */
+        std::string Coordinate::ToString() const;
 
     private:
         /**
