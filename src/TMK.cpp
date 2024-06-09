@@ -13,7 +13,7 @@
 #else
 #define TTY_CACHE(a_stream) (isatty(a_stream::GetFileNumber()) << a_stream::GetFileNumber())
 #endif
-#define IS_TTY(a_stream) (g_ttyCache & 1 << a_stream::GetFileNumber())
+#define IS_TTY(a_streamFileNumber) (g_ttyCache & 1 << a_streamFileNumber)
 #define TTY_CACHE_HAS_BEEN_FILLED_FLAG (1 << 7)
 #define PARSE_KEY(a_condition, a_key)                                                                                                                                              \
     if (a_condition)                                                                                                                                                               \
@@ -46,14 +46,13 @@ namespace TMK
 
         static void WriteANSISequence(std::string format, ...)
         {
-            InitEnvironment();
-            if (!IS_TTY(Terminal::Output) && !IS_TTY(Terminal::Error))
+            if (!Terminal::Output::IsTTY() && !Terminal::Error::IsTTY())
             {
                 return;
             }
             std::va_list arguments;
             va_start(arguments, format);
-            std::vfprintf(IS_TTY(Terminal::Output) ? Terminal::Output::GetFile() : Terminal::Error::GetFile(), format.c_str(), arguments);
+            std::vfprintf(Terminal::Output::IsTTY() ? Terminal::Output::GetFile() : Terminal::Error::GetFile(), format.c_str(), arguments);
             va_end(arguments);
         }
 
@@ -72,8 +71,7 @@ namespace TMK
 
         static EventInfo ReadEvent(bool allowMouseCapture, int waitInMilliseconds, std::function<bool(EventInfo&)> filter)
         {
-            InitEnvironment();
-            if (!IS_TTY(Terminal::Input) || (!IS_TTY(Terminal::Output) && !IS_TTY(Terminal::Error)))
+            if (Terminal::Input::IsTTY() || (!Terminal::Output::IsTTY() && !Terminal::Error::IsTTY()))
             {
                 throw NoValidTTYException();
             }
@@ -572,7 +570,8 @@ namespace TMK
 
     bool Terminal::Input::IsTTY()
     {
-        return IS_TTY(Input);
+        Setup::InitEnvironment();
+        return IS_TTY(Input::GetFileNumber());
     }
 
     char Terminal::Input::ReadByte()
@@ -644,7 +643,7 @@ namespace TMK
     bool Terminal::Output::IsTTY()
     {
         Setup::InitEnvironment();
-        return IS_TTY(Output);
+        return IS_TTY(Output::GetFileNumber());
     }
 
     void Terminal::Error::WriteLine(std::string format, ...)
@@ -696,7 +695,8 @@ namespace TMK
 
     bool Terminal::Error::IsTTY()
     {
-        return IS_TTY(Error);
+        Setup::InitEnvironment();
+        return IS_TTY(Error::GetFileNumber());
     }
 
     CMDArguments Terminal::Process::GetCMDArguments(int rawTotalCMDArguments, char** rawCMDArguments)
