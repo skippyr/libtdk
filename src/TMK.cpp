@@ -682,30 +682,33 @@ namespace TMK
     void Terminal::Input::Clear()
     {
 #ifdef _WIN32
-        FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+        FlushConsoleInputBuffer(GetHandle());
 #else
         struct termios attributes;
-        if (tcgetattr(GetFileNumber(), &attributes))
+        try
+        {
+            attributes = GetTermiosAttributes();
+        }
+        catch (NoValidTTYException&)
         {
             return;
         }
-        int flags = fcntl(GetFileNumber(), F_GETFL);
         attributes.c_lflag &= ~(ICANON | ECHO);
-        tcsetattr(GetFileNumber(), TCSANOW, &attributes);
-        fcntl(GetFileNumber(), F_SETFL, flags | O_NONBLOCK);
-        while (std::getchar() != EOF)
+        SetTermiosAttributes(attributes);
+        SetFCNTLBlockingState(false);
+        while (ReadByte() != EOF)
         {
         }
         attributes.c_lflag |= ICANON | ECHO;
-        tcsetattr(GetFileNumber(), TCSANOW, &attributes);
-        fcntl(GetFileNumber(), F_SETFL, flags);
+        SetTermiosAttributes(attributes);
+        SetFCNTLBlockingState(true);
 #endif
     }
 
     bool Terminal::Input::IsTTY()
     {
         Setup::InitEnvironment();
-        return IS_TTY(Input::GetFileNumber());
+        return IS_TTY(GetFileNumber());
     }
 
     char Terminal::Input::ReadByte()
@@ -799,7 +802,7 @@ namespace TMK
     bool Terminal::Output::IsTTY()
     {
         Setup::InitEnvironment();
-        return IS_TTY(Output::GetFileNumber());
+        return IS_TTY(GetFileNumber());
     }
 
 #ifdef _WIN32
@@ -868,7 +871,7 @@ namespace TMK
     bool Terminal::Error::IsTTY()
     {
         Setup::InitEnvironment();
-        return IS_TTY(Error::GetFileNumber());
+        return IS_TTY(GetFileNumber());
     }
 
     CMDArguments Terminal::Process::GetCMDArguments(int rawTotalCMDArguments, char** rawCMDArguments)
@@ -1035,7 +1038,7 @@ namespace TMK
         return Coordinate(bufferInfo.dwCursorPosition.X - bufferInfo.srWindow.Left, bufferInfo.dwCursorPosition.Y - bufferInfo.srWindow.Top);
 #else
         struct termios attributes;
-        Terminal::Input::Clear();
+        Input::Clear();
         if (Setup::WriteANSISequence("\x1b[6n") || tcgetattr(Input::GetFileNumber(), &attributes))
         {
             throw NoValidTTYException();
