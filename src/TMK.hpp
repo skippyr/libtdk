@@ -1,5 +1,6 @@
 #pragma once
 
+#include <chrono>
 #include <cstdarg>
 #include <functional>
 #include <iostream>
@@ -9,6 +10,8 @@
 #else
 #include <unistd.h>
 #endif
+
+using namespace std::literals::chrono_literals;
 
 /**
  * @brief An open-source C++ terminal manipulation library made to develop cross-platform apps to for Windows and Linux. It uses an object-oriented philosophy to handle terminal
@@ -1676,18 +1679,18 @@ namespace TMK
             /**
              * @brief Reads a terminal event.
              * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
-             * @param waitInMilliseconds The time to wait for an event. If zero, it returns immediately.
+             * @param wait The time to wait for an event. If zero, it returns immediately.
              * @returns The information about the event read.
              */
-            static EventInfo ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds);
+            static EventInfo ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait);
             /**
              * @brief Reads a terminal event.
              * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
-             * @param waitInMilliseconds The time to wait for an event. If zero, it returns immediately.
+             * @param wait The time to wait for an event. If zero, it returns immediately.
              * @param filter A function used to filter events while the timer is running.
              * @returns The information about the event read.
              */
-            static EventInfo ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds, std::function<bool(EventInfo&)> filter);
+            static EventInfo ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter);
 
         private:
             Input() = delete;

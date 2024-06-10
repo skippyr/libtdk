@@ -117,7 +117,7 @@ namespace TMK
             }
         }
 
-        static EventInfo ReadEvent(bool allowMouseCapture, int waitInMilliseconds, std::function<bool(EventInfo&)> filter)
+        static EventInfo ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter)
         {
             if (!Terminal::Input::IsTTY() || (!Terminal::Output::IsTTY() && !Terminal::Error::IsTTY()))
             {
@@ -135,7 +135,7 @@ namespace TMK
                                                        : inputMode & ~ENABLE_PROCESSED_INPUT);
             while (true)
             {
-                if (!waitInMilliseconds)
+                if (!wait.count())
                 {
                     if (!Terminal::Input::GetTotalEventsCached())
                     {
@@ -143,13 +143,13 @@ namespace TMK
                         break;
                     }
                 }
-                if (waitInMilliseconds > 0)
+                if (wait.count() > 0)
                 {
                     if (!timerHandle)
                     {
                         timerHandle = CreateWaitableTimerW(nullptr, true, nullptr);
                         LARGE_INTEGER duration;
-                        duration.QuadPart = -10000 * waitInMilliseconds;
+                        duration.QuadPart = -10000 * wait.count();
                         SetWaitableTimer(timerHandle, &duration, 1, nullptr, nullptr, false);
                     }
                     HANDLE handles[] = {timerHandle, Terminal::Input::GetHandle()};
@@ -689,17 +689,17 @@ namespace TMK
 
     EventInfo Terminal::Input::ReadEvent(bool allowMouseCapture)
     {
-        return Setup::ReadEvent(allowMouseCapture, -1, nullptr);
+        return Setup::ReadEvent(allowMouseCapture, -1ms, nullptr);
     }
 
-    EventInfo Terminal::Input::ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds)
+    EventInfo Terminal::Input::ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait)
     {
-        return Setup::ReadEvent(allowMouseCapture, waitInMilliseconds, nullptr);
+        return Setup::ReadEvent(allowMouseCapture, wait, nullptr);
     }
 
-    EventInfo Terminal::Input::ReadEvent(bool allowMouseCapture, unsigned short waitInMilliseconds, std::function<bool(EventInfo&)> filter)
+    EventInfo Terminal::Input::ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter)
     {
-        return Setup::ReadEvent(allowMouseCapture, waitInMilliseconds, filter);
+        return Setup::ReadEvent(allowMouseCapture, wait, filter);
     }
 
 #ifdef _WIN32
