@@ -1293,6 +1293,11 @@ namespace TMK
          * @returns The blue component of the color.
          */
         unsigned char GetBlue() const;
+        /**
+         * @brief Gets a string representation of the color.
+         * @returns A string representation of the color.
+         */
+        std::string ToString() const;
 
     private:
         /**

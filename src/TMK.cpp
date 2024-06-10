@@ -471,6 +471,11 @@ namespace TMK
         return m_blue;
     }
 
+    std::string RGBColor::ToString() const
+    {
+        return "r: " + std::to_string(m_red) + ", g: " + std::to_string(m_green) + ", b: " + std::to_string(m_blue);
+    }
+
     FocusEvent::FocusEvent(bool hasFocus) : m_hasFocus(hasFocus)
     {
     }
