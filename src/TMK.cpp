@@ -4,7 +4,9 @@
 #include <Windows.h>
 #include <io.h>
 #else
+#include <fcntl.h>
 #include <sys/ioctl.h>
+#include <termios.h>
 #include <unistd.h>
 #endif
 
@@ -44,16 +46,17 @@ namespace TMK
             }
         }
 
-        static void WriteANSISequence(std::string format, ...)
+        static int WriteANSISequence(std::string format, ...)
         {
             if (!Terminal::Output::IsTTY() && !Terminal::Error::IsTTY())
             {
-                return;
+                return -1;
             }
             std::va_list arguments;
             va_start(arguments, format);
-            std::vfprintf(Terminal::Output::IsTTY() ? Terminal::Output::GetFile() : Terminal::Error::GetFile(), format.c_str(), arguments);
+            int totalBytesWritten = std::vfprintf(Terminal::Output::IsTTY() ? Terminal::Output::GetFile() : Terminal::Error::GetFile(), format.c_str(), arguments);
             va_end(arguments);
+            return -(totalBytesWritten < 0);
         }
 
         static void Write(std::FILE* streamFile, const char* format, std::va_list arguments, bool hasNewLine)
@@ -561,6 +564,13 @@ namespace TMK
     }
 #endif
 
+#ifdef _WIN32
+    HANDLE Terminal::Input::GetHandle()
+    {
+        return GetStdHandle(STD_INPUT_HANDLE);
+    }
+#endif
+
     std::FILE* Terminal::Input::GetFile()
     {
         return stdin;
@@ -569,6 +579,29 @@ namespace TMK
     int Terminal::Input::GetFileNumber()
     {
         return 0;
+    }
+
+    void Terminal::Input::Clear()
+    {
+#ifdef _WIN32
+        FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+#else
+        struct termios attributes;
+        if (tcgetattr(GetFileNumber(), &attributes))
+        {
+            return;
+        }
+        int flags = fcntl(GetFileNumber(), F_GETFL);
+        attributes.c_lflag &= ~(ICANON | ECHO);
+        tcsetattr(GetFileNumber(), TCSANOW, &attributes);
+        fcntl(GetFileNumber(), F_SETFL, flags | O_NONBLOCK);
+        while (std::getchar() != EOF)
+        {
+        }
+        attributes.c_lflag |= ICANON | ECHO;
+        tcsetattr(GetFileNumber(), TCSANOW, &attributes);
+        fcntl(GetFileNumber(), F_SETFL, flags);
+#endif
     }
 
     bool Terminal::Input::IsTTY()
@@ -633,6 +666,13 @@ namespace TMK
         va_end(arguments);
     }
 
+#ifdef _WIN32
+    HANDLE Terminal::Output::GetHandle()
+    {
+        return GetStdHandle(STD_OUTPUT_HANDLE);
+    }
+#endif
+
     std::FILE* Terminal::Output::GetFile()
     {
         return stdout;
@@ -679,6 +719,13 @@ namespace TMK
         Setup::Write(GetFile(), format.c_str(), arguments, false);
         va_end(arguments);
     }
+
+#ifdef _WIN32
+    HANDLE Terminal::Error::GetHandle()
+    {
+        return GetStdHandle(STD_ERROR_HANDLE);
+    }
+#endif
 
     std::FILE* Terminal::Error::GetFile()
     {
@@ -731,7 +778,7 @@ namespace TMK
     {
 #ifdef _WIN32
         CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-        if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) && !GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo))
+        if (!GetConsoleScreenBufferInfo(Output::GetHandle(), &bufferInfo) && !GetConsoleScreenBufferInfo(Error::GetHandle(), &bufferInfo))
         {
             throw NoValidTTYException();
         }
@@ -853,25 +900,25 @@ namespace TMK
     {
 #ifdef _WIN32
         CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-        if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) && !GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo))
+        if (!GetConsoleScreenBufferInfo(Output::GetHandle(), &bufferInfo) && !GetConsoleScreenBufferInfo(Error::GetHandle(), &bufferInfo))
         {
             throw NoValidTTYException();
         }
         return Coordinate(bufferInfo.dwCursorPosition.X - bufferInfo.srWindow.Left, bufferInfo.dwCursorPosition.Y - bufferInfo.srWindow.Top);
 #else
         struct termios attributes;
-        ClearInputBuffer();
-        if (WriteANSISequence("\x1b[6n") || tcgetattr(STDIN_FILENO, &attributes))
+        Terminal::Input::Clear();
+        if (Setup::WriteANSISequence("\x1b[6n") || tcgetattr(Input::GetFileNumber(), &attributes))
         {
             throw NoValidTTYException();
         }
         attributes.c_lflag &= ~(ICANON | ECHO);
-        tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+        tcsetattr(Input::GetFileNumber(), TCSANOW, &attributes);
         unsigned short column;
         unsigned short row;
         int totalMatchesRead = std::scanf("\x1b[%hu;%huR", &row, &column);
         attributes.c_lflag |= ICANON | ECHO;
-        tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+        tcsetattr(Input::GetFileNumber(), TCSANOW, &attributes);
         if (totalMatchesRead != 2)
         {
             throw NoValidTTYException();
@@ -920,7 +967,7 @@ namespace TMK
         Setup::WriteANSISequence("\x1b[2K\x1b[1G");
     }
 
-    int TMK::operator|(FontEffect effectI, FontEffect effectII)
+    int operator|(FontEffect effectI, FontEffect effectII)
     {
         return static_cast<int>(effectI) | static_cast<int>(effectII);
     }

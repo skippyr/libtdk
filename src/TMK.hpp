@@ -541,7 +541,7 @@ namespace TMK
          * @brief Gets a string representation of the coordinate.
          * @returns A string representation of the coordinate.
          */
-        std::string Coordinate::ToString() const;
+        std::string ToString() const;
 
     private:
         /**
@@ -1054,6 +1054,13 @@ namespace TMK
         class Input final
         {
         public:
+#ifdef _WIN32
+            /**
+             * @brief Gets the handle associated with the standard input stream.
+             * @returns The handle associated with the standard input stream. 
+             */
+            static HANDLE GetHandle();
+#endif
             /**
              * @brief Gets the file descriptor associated with the standard input stream.
              * @param The file descriptor associated with the standard input stream.
@@ -1064,6 +1071,10 @@ namespace TMK
              * @param The file descriptor number associated with the standard input stream.
              */
             static int GetFileNumber();
+            /**
+             * @brief Clears the standard input buffer.
+             */
+            static void Clear();
             /**
              * @brief Checks if the standard input stream is connected to an interactive terminal (TTY).
              * @param A boolean that states the standard input stream is a TTY.
@@ -1143,6 +1154,13 @@ namespace TMK
              * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
              */
             static void Write(std::string format, ...);
+#ifdef _WIN32
+            /**
+             * @brief Gets the handle associated with the standard output stream.
+             * @returns The handle associated with the standard output stream. 
+             */
+            static HANDLE GetHandle();
+#endif
             /**
              * @brief Gets the file descriptor associated with the standard output stream.
              * @returns The file descriptor associated with the standard output stream.
@@ -1202,6 +1220,13 @@ namespace TMK
              * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
              */
             static void Write(std::string format, ...);
+#ifdef _WIN32
+            /**
+             * @brief Gets the handle associated with the standard error stream.
+             * @returns The handle associated with the standard error stream. 
+             */
+            static HANDLE GetHandle();
+#endif
             /**
              * @brief Gets the file descriptor associated with the standard error stream.
              * @returns The file descriptor associated with the standard error stream.
