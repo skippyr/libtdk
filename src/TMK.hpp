@@ -1680,6 +1680,26 @@ namespace TMK
         class Output final
         {
         public:
+#ifdef _WIN32
+            /**
+             * @brief Gets the handle associated with the standard output stream.
+             * @returns The handle associated with the standard output stream.
+             */
+            static HANDLE GetHandle();
+            /**
+             * @brief Gets the standard output mode.
+             * @returns The standard output mode.
+             * @throws NoValidTTYException Thrown whenever the standard output stream is not a TTY.
+             */
+            static DWORD GetMode();
+            /**
+             * @brief Sets the standard output mode.
+             * @param mode The mode to be set.
+             * @throws NoValidTTYException Thrown whenever the standard output stream is not a TTY.
+             * @throws InvalidStreamModeException Thrown whenever the mode is invalid.
+             */
+            static void SetMode(DWORD mode);
+#endif
             /**
              * @brief Flushes the standard output stream buffer.
              */
@@ -1717,13 +1737,6 @@ namespace TMK
              * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
              */
             static void Write(std::string format, ...);
-#ifdef _WIN32
-            /**
-             * @brief Gets the handle associated with the standard output stream.
-             * @returns The handle associated with the standard output stream.
-             */
-            static HANDLE GetHandle();
-#endif
             /**
              * @brief Gets the file descriptor associated with the standard output stream.
              * @returns The file descriptor associated with the standard output stream.
@@ -1750,6 +1763,26 @@ namespace TMK
         class Error final
         {
         public:
+#ifdef _WIN32
+            /**
+             * @brief Gets the handle associated with the standard error stream.
+             * @returns The handle associated with the standard error stream.
+             */
+            static HANDLE GetHandle();
+            /**
+             * @brief Gets the standard error mode.
+             * @returns The standard error mode.
+             * @throws NoValidTTYException Thrown whenever the standard error stream is not a TTY.
+             */
+            static DWORD GetMode();
+            /**
+             * @brief Sets the standard error mode.
+             * @param mode The mode to be set.
+             * @throws NoValidTTYException Thrown whenever the standard error stream is not a TTY.
+             * @throws InvalidStreamModeException Thrown whenever the mode is invalid.
+             */
+            static void SetMode(DWORD mode);
+#endif
             /**
              * @brief Formats and writes arguments to the standard error stream with a newline character appended at its end.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
@@ -1783,13 +1816,6 @@ namespace TMK
              * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
              */
             static void Write(std::string format, ...);
-#ifdef _WIN32
-            /**
-             * @brief Gets the handle associated with the standard error stream.
-             * @returns The handle associated with the standard error stream.
-             */
-            static HANDLE GetHandle();
-#endif
             /**
              * @brief Gets the file descriptor associated with the standard error stream.
              * @returns The file descriptor associated with the standard error stream.

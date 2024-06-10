@@ -29,6 +29,30 @@ namespace TMK
     class Setup
     {
     public:
+#ifdef _WIN32
+        static DWORD GetStreamMode(HANDLE handle)
+        {
+            DWORD mode;
+            if (!GetConsoleMode(handle, &mode))
+            {
+                throw NoValidTTYException();
+            }
+            return mode;
+        }
+
+        static void SetStreamMode(HANDLE handle, bool isTTY, DWORD mode)
+        {
+            if (!isTTY)
+            {
+                throw NoValidTTYException();
+            }
+            if (!SetConsoleMode(handle, mode))
+            {
+                throw InvalidStreamModeException();
+            }
+        }
+#endif
+
         static void InitEnvironment()
         {
             if (!(g_ttyCache & TTY_CACHE_HAS_BEEN_FILLED_FLAG))
@@ -570,24 +594,12 @@ namespace TMK
 
     DWORD Terminal::Input::GetMode()
     {
-        DWORD mode;
-        if (!GetConsoleMode(GetHandle(), &mode))
-        {
-            throw NoValidTTYException();
-        }
-        return mode;
+        return Setup::GetStreamMode(GetHandle());
     }
 
     void Terminal::Input::SetMode(DWORD mode)
     {
-        if (!IsTTY())
-        {
-            throw NoValidTTYException();
-        }
-        if (!SetConsoleMode(GetHandle(), mode))
-        {
-            throw InvalidStreamModeException();
-        }
+        Setup::SetStreamMode(GetHandle(), IsTTY(), mode);
     }
 #endif
 
@@ -650,6 +662,23 @@ namespace TMK
         return Setup::ReadEvent(allowMouseCapture, waitInMilliseconds, filter);
     }
 
+#ifdef _WIN32
+    HANDLE Terminal::Output::GetHandle()
+    {
+        return GetStdHandle(STD_OUTPUT_HANDLE);
+    }
+
+    DWORD Terminal::Output::GetMode()
+    {
+        return Setup::GetStreamMode(GetHandle());
+    }
+
+    void Terminal::Output::SetMode(DWORD mode)
+    {
+        Setup::SetStreamMode(GetHandle(), IsTTY(), mode);
+    }
+#endif
+
     void Terminal::Output::Flush()
     {
         std::fflush(GetFile());
@@ -686,13 +715,6 @@ namespace TMK
         va_end(arguments);
     }
 
-#ifdef _WIN32
-    HANDLE Terminal::Output::GetHandle()
-    {
-        return GetStdHandle(STD_OUTPUT_HANDLE);
-    }
-#endif
-
     std::FILE* Terminal::Output::GetFile()
     {
         return stdout;
@@ -708,6 +730,23 @@ namespace TMK
         Setup::InitEnvironment();
         return IS_TTY(Output::GetFileNumber());
     }
+
+#ifdef _WIN32
+    HANDLE Terminal::Error::GetHandle()
+    {
+        return GetStdHandle(STD_ERROR_HANDLE);
+    }
+
+    DWORD Terminal::Error::GetMode()
+    {
+        return Setup::GetStreamMode(GetHandle());
+    }
+
+    void Terminal::Error::SetMode(DWORD mode)
+    {
+        Setup::SetStreamMode(GetHandle(), IsTTY(), mode);
+    }
+#endif
 
     void Terminal::Error::WriteLine(std::string format, std::va_list arguments)
     {
@@ -739,13 +778,6 @@ namespace TMK
         Setup::Write(GetFile(), format.c_str(), arguments, false);
         va_end(arguments);
     }
-
-#ifdef _WIN32
-    HANDLE Terminal::Error::GetHandle()
-    {
-        return GetStdHandle(STD_ERROR_HANDLE);
-    }
-#endif
 
     std::FILE* Terminal::Error::GetFile()
     {
