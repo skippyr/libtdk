@@ -1133,6 +1133,39 @@ namespace TMK
              */
             static void Write(std::string format, ...);
             /**
+             * @brief If it is a TTY, formats and writes arguments to the standard output stream with a newline character appended at its end.
+             * @param format The format to be used. It accepts the same specifiers as the printf function family.
+             * @param arguments The arguments to be formatted.
+             * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
+             */
+            static void TTYWriteLine(std::string format, std::va_list arguments);
+            /**
+             * @brief If it is a TTY, formats and writes arguments to the standard output stream with a newline character appended at its end.
+             * @param format The format to be used. It accepts the same specifiers as the printf function family.
+             * @param ... The arguments to be formatted.
+             * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
+             */
+            static void TTYWriteLine(std::string format, ...);
+            /**
+             * @brief If it is a TTY, writes a newline character to the standard output stream.
+             * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
+             */
+            static void TTYWriteLine();
+            /**
+             * @brief If it is a TTY, formats and writes arguments to the standard output stream.
+             * @param format The format to be used. It accepts the same specifiers as the printf function family.
+             * @param arguments The arguments to be formatted.
+             * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
+             */
+            static void TTYWrite(std::string format, std::va_list arguments);
+            /**
+             * @brief If it is a TTY, formats and writes arguments to the standard output stream.
+             * @param format The format to be used. It accepts the same specifiers as the printf function family.
+             * @param ... The arguments to be formatted.
+             * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
+             */
+            static void TTYWrite(std::string format, ...);
+            /**
              * @brief Gets the file descriptor associated with the standard output stream.
              * @returns The file descriptor associated with the standard output stream.
              */
