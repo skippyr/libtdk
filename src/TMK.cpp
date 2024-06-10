@@ -129,19 +129,15 @@ namespace TMK
             }
             EventInfo eventInfo = EventType::None;
 #ifdef _WIN32
-            HANDLE inputHandle = GetStdHandle(STD_INPUT_HANDLE);
             HANDLE timerHandle = nullptr;
-            DWORD inputMode;
-            GetConsoleMode(inputHandle, &inputMode);
-            SetConsoleMode(inputHandle,
-                           allowMouseCapture ? (inputMode | ENABLE_MOUSE_INPUT) & ~(ENABLE_QUICK_EDIT_MODE | ENABLE_PROCESSED_INPUT) : inputMode & ~ENABLE_PROCESSED_INPUT);
+            DWORD inputMode = Terminal::Input::GetMode();
+            Terminal::Input::SetMode(allowMouseCapture ? (inputMode | ENABLE_MOUSE_INPUT) & ~(ENABLE_QUICK_EDIT_MODE | ENABLE_PROCESSED_INPUT)
+                                                       : inputMode & ~ENABLE_PROCESSED_INPUT);
             while (true)
             {
                 if (!waitInMilliseconds)
                 {
-                    DWORD totalEventsAvailable;
-                    GetNumberOfConsoleInputEvents(inputHandle, &totalEventsAvailable);
-                    if (!totalEventsAvailable)
+                    if (!Terminal::Input::GetTotalEventsCached())
                     {
                         eventInfo = EventType::None;
                         break;
@@ -156,7 +152,7 @@ namespace TMK
                         duration.QuadPart = -10000 * waitInMilliseconds;
                         SetWaitableTimer(timerHandle, &duration, 1, nullptr, nullptr, false);
                     }
-                    HANDLE handles[] = {timerHandle, inputHandle};
+                    HANDLE handles[] = {timerHandle, Terminal::Input::GetHandle()};
                     if (WaitForMultipleObjects(2, handles, false, INFINITE) == WAIT_OBJECT_0)
                     {
                         eventInfo = EventType::TimeOut;
@@ -165,7 +161,7 @@ namespace TMK
                 }
                 INPUT_RECORD record;
                 DWORD totalEventsRead;
-                ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
+                ReadConsoleInputW(Terminal::Input::GetHandle(), &record, 1, &totalEventsRead);
                 if (record.EventType == FOCUS_EVENT)
                 {
                     eventInfo = FocusEvent(record.Event.FocusEvent.bSetFocus);
@@ -176,9 +172,15 @@ namespace TMK
                 }
                 else if (record.EventType == MOUSE_EVENT)
                 {
-
                     CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-                    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) || GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo);
+                    try
+                    {
+                        bufferInfo = Terminal::Output::GetScreenBufferInfo();
+                    }
+                    catch (NoValidTTYException&)
+                    {
+                        bufferInfo = Terminal::Error::GetScreenBufferInfo();
+                    }
                     eventInfo = MouseEvent(
                         Coordinate(record.Event.MouseEvent.dwMousePosition.X - bufferInfo.srWindow.Left, record.Event.MouseEvent.dwMousePosition.Y - bufferInfo.srWindow.Top),
                         record.Event.MouseEvent.dwEventFlags & MOUSE_WHEELED ? record.Event.MouseEvent.dwButtonState & 0x1000000 ? MouseButton::WheelDown : MouseButton::WheelUp
@@ -207,8 +209,8 @@ namespace TMK
                         }
                         else if (buffer >= HIGH_SURROGATE_START && buffer <= HIGH_SURROGATE_END)
                         {
-                            ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
-                            ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
+                            ReadConsoleInputW(Terminal::Input::GetHandle(), &record, 1, &totalEventsRead);
+                            ReadConsoleInputW(Terminal::Input::GetHandle(), &record, 1, &totalEventsRead);
                             *(reinterpret_cast<short*>(&buffer) + 1) = record.Event.KeyEvent.uChar.UnicodeChar;
                             WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<wchar_t*>(&buffer), 2, reinterpret_cast<char*>(&key), 4, nullptr, nullptr);
                         }
@@ -244,7 +246,7 @@ namespace TMK
             {
                 CloseHandle(timerHandle);
             }
-            SetConsoleMode(inputHandle, inputMode);
+            Terminal::Input::SetMode(inputMode);
 #endif
             return eventInfo;
         }
@@ -623,6 +625,16 @@ namespace TMK
     DWORD Terminal::Input::GetMode()
     {
         return Setup::GetStreamMode(GetHandle());
+    }
+
+    DWORD Terminal::Input::GetTotalEventsCached()
+    {
+        DWORD totalEvents;
+        if (!GetNumberOfConsoleInputEvents(GetHandle(), &totalEvents))
+        {
+            throw NoValidTTYException();
+        }
+        return totalEvents;
     }
 
     void Terminal::Input::SetMode(DWORD mode)

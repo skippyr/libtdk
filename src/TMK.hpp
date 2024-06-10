@@ -1630,6 +1630,12 @@ namespace TMK
              */
             static DWORD GetMode();
             /**
+             * @brief Gets the total events cached in the standard input buffer.
+             * @returns The total events cached in the standard input buffer.
+             * @throws NoValidTTYException Thrown whenever the standard input stream is not a TTY.
+             */
+            static DWORD GetTotalEventsCached();
+            /**
              * @brief Sets the standard input mode.
              * @param mode The mode to be set.
              * @throws NoValidTTYException Thrown whenever the standard input stream is not a TTY.
