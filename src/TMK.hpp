@@ -579,7 +579,7 @@ namespace TMK
         /**
          * @brief Usually rendered with faded colors.
          */
-        Dim
+        Light
     };
 
     /**
