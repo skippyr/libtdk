@@ -67,14 +67,24 @@ namespace TMK
         {
             if (!(g_ttyCache & TTY_CACHE_HAS_BEEN_FILLED_FLAG))
             {
-#ifdef _WIN32
-                HANDLE handle;
-                DWORD mode;
-                SetConsoleOutputCP(CP_UTF8);
-                (GetConsoleMode((handle = GetStdHandle(STD_OUTPUT_HANDLE)), &mode) || GetConsoleMode((handle = GetStdHandle(STD_ERROR_HANDLE)), &mode)) &&
-                    SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-#endif
                 g_ttyCache |= TTY_CACHE(Terminal::Input) | TTY_CACHE(Terminal::Output) | TTY_CACHE(Terminal::Error) | TTY_CACHE_HAS_BEEN_FILLED_FLAG;
+#ifdef _WIN32
+                Terminal::Encoding::SetOutputCodePage(CP_UTF8);
+                try
+                {
+                    Terminal::Output::SetMode(Terminal::Output::GetMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+                }
+                catch (NoValidTTYException&)
+                {
+                }
+                try
+                {
+                    Terminal::Error::SetMode(Terminal::Error::GetMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+                }
+                catch (NoValidTTYException&)
+                {
+                }
+#endif
             }
         }
 
@@ -579,6 +589,14 @@ namespace TMK
     }
 
 #ifdef _WIN32
+    void Terminal::Encoding::SetOutputCodePage(UINT codePage)
+    {
+        if (!SetConsoleOutputCP(codePage))
+        {
+            throw InvalidCodePageException();
+        }
+    }
+
     std::string Terminal::Encoding::ConvertUTF16ToUTF8(std::wstring utf16String)
     {
         int utf8Size = WideCharToMultiByte(CP_UTF8, 0, utf16String.c_str(), -1, nullptr, 0, nullptr, nullptr);

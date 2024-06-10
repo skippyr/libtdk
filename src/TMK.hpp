@@ -949,6 +949,13 @@ namespace TMK
 
 #ifdef _WIN32
     /**
+     * @brief Represents an exception thrown whenever an invalid code page tries to be set.
+     */
+    class InvalidCodePageException final
+    {
+    };
+
+    /**
      * @brief Represents an exception thrown whenever an invalid stream mode tries to be set.
      */
     class InvalidStreamModeException final
@@ -1580,6 +1587,12 @@ namespace TMK
         class Encoding final
         {
         public:
+            /**
+             * @brief Sets the output code page.
+             * @param codePage The code page to be used.
+             * @throws InvalidCodePageException Thrown whenever the code page is invalid.
+             */
+            static void SetOutputCodePage(UINT codePage);
             /**
              * @brief Converts an UTF-16 encoded string to UTF-8.
              * @param utf16String The UTF-16 encoded string to be converted.
