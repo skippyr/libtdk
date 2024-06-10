@@ -88,22 +88,35 @@ namespace TMK
 
         /**
          * @brief Writes an ANSI escape sequence to the standard output or error streams.
-         * @param The format to be used. It accepts the same specifiers as the printf function family.
+         * @param format The format to be used. It accepts the same specifiers as the printf function family.
+         * @param arguments The arguments to be formatted.
          * @throws NoValidTTYException Thrown whenever the standard output and error streams are not TTY.
          * @throws WideCharacterOrientationException Thrown whenever the standard output or error stream is wide character oriented.
          */
-        static void WriteANSIEscapeSequence(std::string format, ...)
+        static void WriteANSIEscapeSequence(std::string format, std::va_list arguments)
         {
             if (!Terminal::Output::IsTTY() && !Terminal::Error::IsTTY())
             {
                 throw NoValidTTYException();
             }
-            std::va_list arguments;
-            va_start(arguments, format);
             if (std::vfprintf(Terminal::Output::IsTTY() ? Terminal::Output::GetFile() : Terminal::Error::GetFile(), format.c_str(), arguments) < 0)
             {
                 throw WideCharacterOrientationException();
             }
+        }
+
+        /**
+         * @brief Writes an ANSI escape sequence to the standard output or error streams.
+         * @param format The format to be used. It accepts the same specifiers as the printf function family.
+         * @param ... The arguments to be formatted.
+         * @throws NoValidTTYException Thrown whenever the standard output and error streams are not TTY.
+         * @throws WideCharacterOrientationException Thrown whenever the standard output or error stream is wide character oriented.
+         */
+        static void WriteANSIEscapeSequence(std::string format, ...)
+        {
+            std::va_list arguments;
+            va_start(arguments, format);
+            WriteANSIEscapeSequence(format, arguments);
             va_end(arguments);
         }
 
@@ -954,15 +967,25 @@ namespace TMK
         }
     }
 
-    void Terminal::Window::SetTitle(std::string title)
+    void Terminal::Window::SetTitle(std::string format, std::va_list arguments)
     {
         try
         {
-            Setup::WriteANSIEscapeSequence("\x1b]0;%s\7", title.c_str());
+            Setup::WriteANSIEscapeSequence("\x1b]0;");
+            Setup::WriteANSIEscapeSequence(format, arguments);
+            Setup::WriteANSIEscapeSequence("\7");
         }
         catch (NoValidTTYException&)
         {
         }
+    }
+
+    void Terminal::Window::SetTitle(std::string format, ...)
+    {
+        std::va_list arguments;
+        va_start(arguments, format);
+        SetTitle(format, arguments);
+        va_end(arguments);
     }
 
     void Terminal::Bell::Ring()

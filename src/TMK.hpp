@@ -1941,9 +1941,16 @@ namespace TMK
             static void CloseAlternateWindow();
             /**
              * @brief Sets the terminal window title.
-             * @param title The title to be set.
+             * @param format The format to be used. It accepts the same specifiers as the printf function family.
+             * @param arguments The arguments to be formatted.
              */
-            static void SetTitle(std::string title);
+            static void SetTitle(std::string format, std::va_list arguments);
+            /**
+             * @brief Sets the terminal window title.
+             * @param format The format to be used. It accepts the same specifiers as the printf function family.
+             * @param ... The arguments to be formatted.
+             */
+            static void SetTitle(std::string format, ...);
 
         private:
             Window() = delete;
