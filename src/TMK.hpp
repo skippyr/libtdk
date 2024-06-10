@@ -4,6 +4,11 @@
 #include <functional>
 #include <iostream>
 #include <string>
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <unistd.h>
+#endif
 
 /**
  * @brief An open-source C++ terminal manipulation library made to develop cross-platform apps to for Windows and Linux. It uses an object-oriented philosophy to handle terminal
@@ -17,6 +22,10 @@ namespace TMK
      */
     enum class POSIXExitCode
     {
+        /**
+         * @brief Success.
+         */
+        Success = 0,
         /**
          * @brief Operation not permitted (EPERM).
          */
@@ -938,6 +947,15 @@ namespace TMK
 
     class RGBColor;
 
+#ifdef _WIN32
+    /**
+     * @brief Represents an exception thrown whenever an invalid stream mode tries to be set.
+     */
+    class InvalidStreamModeException final
+    {
+    };
+#endif
+
     /**
      * @brief Represents an exception thrown whenever a group of streams are wide character oriented.
      */
@@ -1592,6 +1610,19 @@ namespace TMK
              * @returns The handle associated with the standard input stream.
              */
             static HANDLE GetHandle();
+            /**
+             * @brief Gets the standard input mode.
+             * @returns The standard input mode.
+             * @throws NoValidTTYException Thrown whenever the standard input stream is not a TTY.
+             */
+            static DWORD GetMode();
+            /**
+             * @brief Sets the standard input mode.
+             * @param mode The mode to be set.
+             * @throws NoValidTTYException Thrown whenever the standard input stream is not a TTY.
+             * @throws InvalidStreamModeException Thrown whenever the mode is invalid.
+             */
+            static void SetMode(DWORD mode);
 #endif
             /**
              * @brief Gets the file descriptor associated with the standard input stream.

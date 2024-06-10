@@ -1,13 +1,11 @@
 #include "TMK.hpp"
 
 #ifdef _WIN32
-#include <Windows.h>
 #include <io.h>
 #else
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <termios.h>
-#include <unistd.h>
 #endif
 
 #ifdef _WIN32
@@ -568,6 +566,28 @@ namespace TMK
     HANDLE Terminal::Input::GetHandle()
     {
         return GetStdHandle(STD_INPUT_HANDLE);
+    }
+
+    DWORD Terminal::Input::GetMode()
+    {
+        DWORD mode;
+        if (!GetConsoleMode(GetHandle(), &mode))
+        {
+            throw NoValidTTYException();
+        }
+        return mode;
+    }
+
+    void Terminal::Input::SetMode(DWORD mode)
+    {
+        if (!IsTTY())
+        {
+            throw NoValidTTYException();
+        }
+        if (!SetConsoleMode(GetHandle(), mode))
+        {
+            throw InvalidStreamModeException();
+        }
     }
 #endif
 
