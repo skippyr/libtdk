@@ -1241,16 +1241,18 @@ namespace TMK
          */
         HexColor(RGBColor color);
         /**
-         * @brief Gets number representation of the hex code of the color.
+         * @brief Gets the hex code of the color.
+         * @returns The hex code of the color.
          */
-        unsigned int GetCodeAsNumber() const;
+        unsigned int GetCode() const;
         /**
-         * @brief Gets the string representation of the hex code of the color.
+         * @brief Gets a string representation of the color.
          * @param hasPrefix A boolean that states the string has the 0x prefix.
          * @param hasZeroPadding A boolean that states the string has a left padding filled by the number zero.
          * @param isUpperCase A boolean that states the string is upper case.
+         * @returns A string representation of the color.
          */
-        std::string GetCodeAsString(bool hasPrefix, bool hasZeroPadding, bool isUpperCase) const;
+        std::string ToString(bool hasPrefix, bool hasZeroPadding, bool isUpperCase) const;
 
     private:
         /**
@@ -1312,6 +1314,26 @@ namespace TMK
          * @brief The blue component of the color.
          */
         unsigned char m_blue;
+    };
+
+    /**
+     * @brief Represents a color in HSL format.
+     */
+    class HSLColor
+    {
+    private:
+        /**
+         * @brief The hue of the color.
+         */
+        unsigned char m_hue;
+        /**
+         * @brief The saturation of the color.
+         */
+        unsigned char m_saturation;
+        /**
+         * @brief The brightness of the color.
+         */
+        unsigned char m_brightness;
     };
 
     /**

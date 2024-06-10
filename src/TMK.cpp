@@ -436,12 +436,12 @@ namespace TMK
     {
     }
 
-    unsigned int HexColor::HexColor::GetCodeAsNumber() const
+    unsigned int HexColor::HexColor::GetCode() const
     {
         return m_code;
     }
 
-    std::string HexColor::HexColor::GetCodeAsString(bool hasPrefix, bool hasZeroPadding, bool isUpperCase) const
+    std::string HexColor::HexColor::ToString(bool hasPrefix, bool hasZeroPadding, bool isUpperCase) const
     {
         char buffer[7];
         std::snprintf(buffer, sizeof(buffer), hasZeroPadding ? isUpperCase ? "%06X" : "%06x" : isUpperCase ? "%X" : "%x", m_code);
@@ -452,7 +452,7 @@ namespace TMK
     {
     }
 
-    RGBColor::RGBColor(HexColor color) : m_red(color.GetCodeAsNumber() >> 16 & 0xff), m_green(color.GetCodeAsNumber() >> 8 & 0xff), m_blue(color.GetCodeAsNumber() & 0xff)
+    RGBColor::RGBColor(HexColor color) : m_red(color.GetCode() >> 16 & 0xff), m_green(color.GetCode() >> 8 & 0xff), m_blue(color.GetCode() & 0xff)
     {
     }
 
