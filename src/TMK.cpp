@@ -283,7 +283,7 @@ namespace TMK
     CMDArguments::~CMDArguments()
     {
         LocalFree(m_utf16Arguments);
-        for (int offset = 0; offset < m_totalArguments; ++offset)
+        for (std::size_t offset = 0; offset < m_totalArguments; ++offset)
         {
             delete[] m_utf8Arguments[offset];
         }
@@ -900,9 +900,9 @@ namespace TMK
 #ifdef _WIN32
         LPWSTR* utf16Arguments = CommandLineToArgvW(GetCommandLineW(), &rawTotalCMDArguments);
         char** utf8Arguments = new char*[rawTotalCMDArguments];
-        for (int offset = 0; offset < rawTotalCMDArguments; ++offset)
+        for (std::size_t offset = 0; offset < rawTotalCMDArguments; ++offset)
         {
-            int size = WideCharToMultiByte(CP_UTF8, 0, utf16Arguments[offset], -1, nullptr, 0, nullptr, nullptr);
+            std::size_t size = WideCharToMultiByte(CP_UTF8, 0, utf16Arguments[offset], -1, nullptr, 0, nullptr, nullptr);
             utf8Arguments[offset] = new char[size];
             WideCharToMultiByte(CP_UTF8, 0, utf16Arguments[offset], -1, utf8Arguments[offset], size, nullptr, nullptr);
         }
@@ -1082,7 +1082,7 @@ namespace TMK
 
     void Terminal::Font::SetEffects(int effects)
     {
-        for (int offset = 6; offset < 32; ++offset)
+        for (std::size_t offset = 6; offset < 32; ++offset)
         {
             if (effects & 1 << offset)
             {
@@ -1093,7 +1093,7 @@ namespace TMK
                 offset = 9;
             }
         }
-        for (int code = 3; code < 10; ++code)
+        for (std::size_t code = 3; code < 10; ++code)
         {
             if (effects & 1 << code)
             {
@@ -1115,7 +1115,7 @@ namespace TMK
 
     void Terminal::Font::ResetEffects()
     {
-        for (int code = 23; code < 30; ++code)
+        for (std::size_t code = 23; code < 30; ++code)
         {
             if (code != 26)
             {
