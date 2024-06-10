@@ -3,9 +3,7 @@
 #ifdef _WIN32
 #include <io.h>
 #else
-#include <fcntl.h>
 #include <sys/ioctl.h>
-#include <termios.h>
 #endif
 
 #ifdef _WIN32
@@ -58,7 +56,7 @@ namespace TMK
             }
             if (!SetConsoleMode(handle, mode))
             {
-                throw InvalidStreamModeException();
+                throw InvalidStreamAttributesException();
             }
         }
 #endif
@@ -640,6 +638,34 @@ namespace TMK
     void Terminal::Input::SetMode(DWORD mode)
     {
         Setup::SetStreamMode(GetHandle(), IsTTY(), mode);
+    }
+#else
+    struct termios Terminal::Input::GetTermiosAttributes()
+    {
+        struct termios attributes;
+        if (tcgetattr(GetFileNumber(), &attributes))
+        {
+            throw NoValidTTYException();
+        }
+        return attributes;
+    }
+
+    void Terminal::Input::SetTermiosAttributes(struct termios& attributes)
+    {
+        if (!IsTTY())
+        {
+            throw NoValidTTYException();
+        }
+        if (tcsetattr(GetFileNumber(), TCSANOW, &attributes))
+        {
+            throw InvalidStreamAttributesException();
+        }
+    }
+
+    void Terminal::Input::SetFCNTLBlockingState(bool isToEnable)
+    {
+        int flags = fcntl(GetFileNumber(), F_GETFL);
+        fcntl(GetFileNumber(), F_SETFL, isToEnable ? flags &~ O_NONBLOCK : flags | O_NONBLOCK);
     }
 #endif
 

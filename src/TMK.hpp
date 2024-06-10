@@ -8,6 +8,8 @@
 #ifdef _WIN32
 #include <Windows.h>
 #else
+#include <fcntl.h>
+#include <termios.h>
 #include <unistd.h>
 #endif
 
@@ -957,14 +959,14 @@ namespace TMK
     class InvalidCodePageException final
     {
     };
+#endif
 
     /**
-     * @brief Represents an exception thrown whenever an invalid stream mode tries to be set.
+     * @brief Represents an exception thrown wheneverinvalid stream attributes tries to be set.
      */
-    class InvalidStreamModeException final
+    class InvalidStreamAttributesException final
     {
     };
-#endif
 
     /**
      * @brief Represents an exception thrown whenever a group of streams are wide character oriented.
@@ -1642,9 +1644,28 @@ namespace TMK
              * @brief Sets the standard input mode.
              * @param mode The mode to be set.
              * @throws NoValidTTYException Thrown whenever the standard input stream is not a TTY.
-             * @throws InvalidStreamModeException Thrown whenever the mode is invalid.
+             * @throws InvalidStreamAttributesException Thrown whenever the mode is invalid.
              */
             static void SetMode(DWORD mode);
+#else
+            /**
+             * @brief Gets the termios attributes of the standard input stream.
+             * @returns The termios attributes of the standard input stream.
+             * @throws NoValidTTYException Thrown whenever the standard input stream is not a TTY.
+             */
+            static struct termios GetTermiosAttributes();
+            /**
+             * @brief Sets the termios attributes of the standard input stream.
+             * @param attributes The attributes to be set.
+             * @throws NoValidTTYException Thrown whenever the standard input stream is not a TTY.
+             * @throws InvalidStreamAttributesException Thrown whenever the attributes given are invalid.
+             */
+            static void SetTermiosAttributes(struct termios& attributes);
+            /**
+             * @brief Sets the FCNTL blocking state.
+             * @param isToEnable A boolean that states the blocking state should be enabled.
+             */
+            static void SetFCNTLBlockingState(bool isToEnable);
 #endif
             /**
              * @brief Gets the file descriptor associated with the standard input stream.
@@ -1724,7 +1745,7 @@ namespace TMK
              * @brief Sets the standard output mode.
              * @param mode The mode to be set.
              * @throws NoValidTTYException Thrown whenever the standard output stream is not a TTY.
-             * @throws InvalidStreamModeException Thrown whenever the mode is invalid.
+             * @throws InvalidStreamAttributesException Thrown whenever the mode is invalid.
              */
             static void SetMode(DWORD mode);
 #endif
@@ -1813,7 +1834,7 @@ namespace TMK
              * @brief Sets the standard error mode.
              * @param mode The mode to be set.
              * @throws NoValidTTYException Thrown whenever the standard error stream is not a TTY.
-             * @throws InvalidStreamModeException Thrown whenever the mode is invalid.
+             * @throws InvalidStreamAttributesException Thrown whenever the mode is invalid.
              */
             static void SetMode(DWORD mode);
 #endif
