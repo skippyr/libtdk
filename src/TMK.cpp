@@ -86,17 +86,25 @@ namespace TMK
             }
         }
 
-        static int WriteANSISequence(std::string format, ...)
+        /**
+         * @brief Writes an ANSI escape sequence to the standard output or error streams.
+         * @param The format to be used. It accepts the same specifiers as the printf function family.
+         * @throws NoValidTTYException Thrown whenever the standard output and error streams are not TTY.
+         * @throws WideCharacterOrientationException Thrown whenever the standard output or error stream is wide character oriented.
+         */
+        static void WriteANSIEscapeSequence(std::string format, ...)
         {
             if (!Terminal::Output::IsTTY() && !Terminal::Error::IsTTY())
             {
-                return -1;
+                throw NoValidTTYException();
             }
             std::va_list arguments;
             va_start(arguments, format);
-            int totalBytesWritten = std::vfprintf(Terminal::Output::IsTTY() ? Terminal::Output::GetFile() : Terminal::Error::GetFile(), format.c_str(), arguments);
+            if (std::vfprintf(Terminal::Output::IsTTY() ? Terminal::Output::GetFile() : Terminal::Error::GetFile(), format.c_str(), arguments) < 0)
+            {
+                throw WideCharacterOrientationException();
+            }
             va_end(arguments);
-            return -(totalBytesWritten < 0);
         }
 
         static void Write(std::FILE* streamFile, const char* format, std::va_list arguments, bool hasNewLine)
@@ -926,42 +934,90 @@ namespace TMK
 
     void Terminal::Window::OpenAlternateWindow()
     {
-        Setup::WriteANSISequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
+        try
+        {
+            Setup::WriteANSIEscapeSequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
+        }
+        catch (NoValidTTYException&)
+        {
+        }
     }
 
     void Terminal::Window::CloseAlternateWindow()
     {
-        Setup::WriteANSISequence("\x1b[?1049l");
+        try
+        {
+            Setup::WriteANSIEscapeSequence("\x1b[?1049l");
+        }
+        catch (NoValidTTYException&)
+        {
+        }
     }
 
     void Terminal::Window::SetTitle(std::string title)
     {
-        Setup::WriteANSISequence("\x1b]0;%s\7", title.c_str());
+        try
+        {
+            Setup::WriteANSIEscapeSequence("\x1b]0;%s\7", title.c_str());
+        }
+        catch (NoValidTTYException&)
+        {
+        }
     }
 
     void Terminal::Bell::Ring()
     {
-        Setup::WriteANSISequence("\7");
+        try
+        {
+            Setup::WriteANSIEscapeSequence("\7");
+        }
+        catch (NoValidTTYException&)
+        {
+        }
     }
 
     void Terminal::Font::SetWeight(FontWeight weight)
     {
-        Setup::WriteANSISequence("\x1b[22;%dm", static_cast<int>(weight));
+        try
+        {
+            Setup::WriteANSIEscapeSequence("\x1b[22;%dm", static_cast<int>(weight));
+        }
+        catch (NoValidTTYException&)
+        {
+        }
     }
 
     void Terminal::Font::SetXColor(unsigned char color, FontLayer layer)
     {
-        Setup::WriteANSISequence("\x1b[%d8;5;%hum", static_cast<int>(layer), color);
+        try
+        {
+            Setup::WriteANSIEscapeSequence("\x1b[%d8;5;%hum", static_cast<int>(layer), color);
+        }
+        catch (NoValidTTYException&)
+        {
+        }
     }
 
     void Terminal::Font::SetXColor(XColor color, FontLayer layer)
     {
-        Terminal::Font::SetXColor(static_cast<unsigned char>(color), layer);
+        try
+        {
+            Terminal::Font::SetXColor(static_cast<unsigned char>(color), layer);
+        }
+        catch (NoValidTTYException&)
+        {
+        }
     }
 
     void Terminal::Font::SetRGBColor(unsigned char red, unsigned char green, unsigned char blue, FontLayer layer)
     {
-        Setup::WriteANSISequence("\x1b[%d8;2;%hu;%hu;%hum", static_cast<int>(layer), red, green, blue);
+        try
+        {
+            Setup::WriteANSIEscapeSequence("\x1b[%d8;2;%hu;%hu;%hum", static_cast<int>(layer), red, green, blue);
+        }
+        catch (NoValidTTYException&)
+        {
+        }
     }
 
     void Terminal::Font::SetRGBColor(RGBColor color, FontLayer layer)
@@ -981,12 +1037,24 @@ namespace TMK
 
     void Terminal::Font::ResetColors()
     {
-        Setup::WriteANSISequence("\x1b[39;49m");
+        try
+        {
+            Setup::WriteANSIEscapeSequence("\x1b[39;49m");
+        }
+        catch (NoValidTTYException&)
+        {
+        }
     }
 
     void Terminal::Font::ResetWeight()
     {
-        Setup::WriteANSISequence("\x1b[22m");
+        try
+        {
+            Setup::WriteANSIEscapeSequence("\x1b[22m");
+        }
+        catch (NoValidTTYException&)
+        {
+        }
     }
 
     void Terminal::Font::SetEffects(int effects)
@@ -1006,7 +1074,13 @@ namespace TMK
         {
             if (effects & 1 << code)
             {
-                Setup::WriteANSISequence("\x1b[%dm", code);
+                try
+                {
+                    Setup::WriteANSIEscapeSequence("\x1b[%dm", code);
+                }
+                catch (NoValidTTYException&)
+                {
+                }
             }
         }
     }
@@ -1022,7 +1096,13 @@ namespace TMK
         {
             if (code != 26)
             {
-                Setup::WriteANSISequence("\x1b[%dm", code);
+                try
+                {
+                    Setup::WriteANSIEscapeSequence("\x1b[%dm", code);
+                }
+                catch (NoValidTTYException&)
+                {
+                }
             }
         }
     }
@@ -1031,28 +1111,29 @@ namespace TMK
     {
 #ifdef _WIN32
         CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-        if (!GetConsoleScreenBufferInfo(Output::GetHandle(), &bufferInfo) && !GetConsoleScreenBufferInfo(Error::GetHandle(), &bufferInfo))
+        try
         {
-            throw NoValidTTYException();
+            bufferInfo = Output::GetScreenBufferInfo();
+        }
+        catch (NoValidTTYException&)
+        {
+            bufferInfo = Error::GetScreenBufferInfo();
         }
         return Coordinate(bufferInfo.dwCursorPosition.X - bufferInfo.srWindow.Left, bufferInfo.dwCursorPosition.Y - bufferInfo.srWindow.Top);
 #else
-        struct termios attributes;
+        struct termios attributes = Input::GetTermiosAttributes();
         Input::Clear();
-        if (Setup::WriteANSISequence("\x1b[6n") || tcgetattr(Input::GetFileNumber(), &attributes))
-        {
-            throw NoValidTTYException();
-        }
+        Setup::WriteANSIEscapeSequence("\x1b[6n");
         attributes.c_lflag &= ~(ICANON | ECHO);
-        tcsetattr(Input::GetFileNumber(), TCSANOW, &attributes);
+        Input::SetTermiosAttributes(attributes);
         unsigned short column;
         unsigned short row;
         int totalMatchesRead = std::scanf("\x1b[%hu;%huR", &row, &column);
         attributes.c_lflag |= ICANON | ECHO;
-        tcsetattr(Input::GetFileNumber(), TCSANOW, &attributes);
+        Input::SetTermiosAttributes(attributes);
         if (totalMatchesRead != 2)
         {
-            throw NoValidTTYException();
+            throw WideCharacterOrientationException();
         }
         return Coordinate(--column, --row);
 #endif
@@ -1066,7 +1147,7 @@ namespace TMK
             {
                 throw OutOfRangeException();
             }
-            Setup::WriteANSISequence("\x1b[%hu;%huH", row + 1, column + 1);
+            Setup::WriteANSIEscapeSequence("\x1b[%hu;%huH", row + 1, column + 1);
         }
         catch (NoValidTTYException&)
         {
@@ -1080,22 +1161,46 @@ namespace TMK
 
     void Terminal::Cursor::SetShape(CursorShape shape, bool isBlinking)
     {
-        Setup::WriteANSISequence("\x1b[%d q", static_cast<int>(shape) - isBlinking);
+        try
+        {
+            Setup::WriteANSIEscapeSequence("\x1b[%d q", static_cast<int>(shape) - isBlinking);
+        }
+        catch (NoValidTTYException&)
+        {
+        }
     }
 
     void Terminal::Cursor::SetVisibility(bool isVisible)
     {
-        Setup::WriteANSISequence("\x1b[?25%c", isVisible ? 'h' : 'l');
+        try
+        {
+            Setup::WriteANSIEscapeSequence("\x1b[?25%c", isVisible ? 'h' : 'l');
+        }
+        catch (NoValidTTYException&)
+        {
+        }
     }
 
     void Terminal::Cursor::ResetShape()
     {
-        Setup::WriteANSISequence("\x1b[0 q");
+        try
+        {
+            Setup::WriteANSIEscapeSequence("\x1b[0 q");
+        }
+        catch (NoValidTTYException&)
+        {
+        }
     }
 
     void Terminal::Cursor::ClearLine()
     {
-        Setup::WriteANSISequence("\x1b[2K\x1b[1G");
+        try
+        {
+            Setup::WriteANSIEscapeSequence("\x1b[2K\x1b[1G");
+        }
+        catch (NoValidTTYException&)
+        {
+        }
     }
 
     int operator|(FontEffect effectI, FontEffect effectII)

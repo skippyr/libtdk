@@ -2052,6 +2052,7 @@ namespace TMK
              * @returns The terminal cursor coordinate.
              * @throws NoValidTTYException Thrown, on Windows, whenever the standard output and error streams are not TTY; and, on Linux, whenever the standard input or the
              * standard output and error streams are not TTY.
+             * @throws WideCharacterOrientationException Thrown, on Linux, whenever the standard input stream is wide character oriented.
              */
             static Coordinate GetCoordinate();
             /**
