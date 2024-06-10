@@ -12,6 +12,17 @@
  */
 namespace TMK
 {
+    enum class ExitCode
+    {
+        OperationNotPermitted = 1,
+        NoSuchFileOrDirectory = 2,
+        InputOutputError = 5,
+        PermissionDenied = 13,
+        InvalidArgument = 22,
+        CommandInvokedCannotExecute = 126,
+        CommandNotFound = 127,
+    };
+
     /**
      * @brief Contains the available terminal font weights.
      */
@@ -1226,9 +1237,15 @@ namespace TMK
             static CMDArguments GetCMDArguments(int rawTotalCMDArguments, char** rawCMDArguments);
             /**
              * @brief Exits the process.
-             * @param exitCode The exit code to be used.
+             * @param exitCode The exit code to be used. It must be a value in range from 0 to 255.
+             * @throws OutOfRangeException Thrown whenever the exit code is out of the valid range.
              */
             static void Exit(int exitCode);
+            /**
+             * @brief Exits the process.
+             * @param exitCode The exit code to be used.
+             */
+            static void Exit(ExitCode exitCode);
 
         private:
             Process() = delete;

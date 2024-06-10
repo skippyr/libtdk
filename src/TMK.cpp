@@ -715,7 +715,16 @@ namespace TMK
 
     void Terminal::Process::Exit(int exitCode)
     {
+        if (exitCode < 0 || exitCode > 255)
+        {
+            throw OutOfRangeException();
+        }
         std::exit(exitCode);
+    }
+
+    void Terminal::Process::Exit(ExitCode exitCode)
+    {
+        Exit(static_cast<int>(exitCode));
     }
 
     Geometry Terminal::Window::GetGeometry()
