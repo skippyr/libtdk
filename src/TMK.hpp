@@ -34,7 +34,7 @@ namespace TMK
          */
         InterruptedSystemCallEINTR = 4,
         /**
-         * @brief Input/Output error (EIO).
+         * @brief Input/output error (EIO).
          */
         InputOutputErrorEIO = 5,
         /**
@@ -57,132 +57,502 @@ namespace TMK
          * @brief No child processes (ECHILD).
          */
         NoChildProcessesECHILD = 10,
-#if 0
-        Resource temporarily unavailableEAGAIN = 11,
-        Cannot allocate memoryENOMEM = 12,
-        Permission deniedEACCES = 13,
-        Bad addressEFAULT = 14,
-        Block device requiredENOTBLK = 15,
-        Device or resource busyEBUSY = 16,
-        File existsEEXIST = 17,
-        Invalid cross-device linkEXDEV = 18,
-        No such deviceENODEV = 19,
-        Not a directoryENOTDIR = 20,
-        Is a directoryEISDIR = 21,
-        Invalid argumentEINVAL = 22,
-        Too many open files in systemENFILE = 23,
-        Too many open filesEMFILE = 24,
-        Inappropriate ioctl for deviceENOTTY = 25,
-        Text file busyETXTBSY = 26,
-        File too largeEFBIG = 27,
-        No space left on deviceENOSPC = 28,
-        Illegal seekESPIPE = 29,
-        Read-only file systemEROFS = 30,
-        Too many linksEMLINK = 31,
-        Broken pipeEPIPE = 32,
-        Numerical argument out of domainEDOM = 33,
-        Numerical result out of rangeERANGE = 34,
-        Resource deadlock avoidedEDEADLK = 35,
-        File name too longENAMETOOLONG = 36,
-        No locks availableENOLCK = 37,
-        Function not implementedENOSYS = 38,
-        Directory not emptyENOTEMPTY = 39,
-        Too many levels of symbolic linksELOOP = 40,
-        Resource temporarily unavailableEWOULDBLOCK = 11,
-        No message of desired typeENOMSG = 42,
-        Identifier removedEIDRM = 43,
-        Channel number out of rangeECHRNG = 44,
-        Level 2 not synchronizedEL2NSYNC = 45,
-        Level 3 haltedEL3HLT = 46,
-        Level 3 resetEL3RST = 47,
-        Link number out of rangeELNRNG = 48,
-        Protocol driver not attachedEUNATCH = 49,
-        No CSI structure availableENOCSI = 50,
-        Level 2 haltedEL2HLT = 51,
-        Invalid exchangeEBADE = 52,
-        Invalid request descriptorEBADR = 53,
-        Exchange fullEXFULL = 54,
-        No anodeENOANO = 55,
-        Invalid request codeEBADRQC = 56,
-        Invalid slotEBADSLT = 57,
-        Resource deadlock avoidedEDEADLOCK = 35,
-        Bad font file formatEBFONT = 59,
-        Device not a streamENOSTR = 60,
-        No data availableENODATA = 61,
-        Timer expiredETIME = 62,
-        Out of streams resourcesENOSR = 63,
-        Machine is not on the networkENONET = 64,
-        Package not installedENOPKG = 65,
-        Object is remoteEREMOTE = 66,
-        Link has been severedENOLINK = 67,
-        Advertise errorEADV = 68,
-        Srmount errorESRMNT = 69,
-        Communication error on sendECOMM = 70,
-        Protocol errorEPROTO = 71,
-        Multihop attemptedEMULTIHOP = 72,
-        RFS specific errorEDOTDOT = 73,
-        Bad messageEBADMSG = 74,
-        Value too large for defined data typeEOVERFLOW = 75,
-        Name not unique on networkENOTUNIQ = 76,
-        File descriptor in bad stateEBADFD = 77,
-        Remote address changedEREMCHG = 78,
-        Can not access a needed shared libraryELIBACC = 79,
-        Accessing a corrupted shared libraryELIBBAD = 80,
-        .lib section in a.out corruptedELIBSCN = 81,
-        Attempting to link in too many shared librariesELIBMAX = 82,
-        Cannot exec a shared library directlyELIBEXEC = 83,
-        Invalid or incomplete multibyte or wide characterEILSEQ = 84,
-        Interrupted system call should be restartedERESTART = 85,
-        Streams pipe errorESTRPIPE = 86,
-        Too many usersEUSERS = 87,
-        Socket operation on non-socketENOTSOCK = 88,
-        Destination address requiredEDESTADDRREQ = 89,
-        Message too longEMSGSIZE = 90,
-        Protocol wrong type for socketEPROTOTYPE = 91,
-        Protocol not availableENOPROTOOPT = 92,
-        Protocol not supportedEPROTONOSUPPORT = 93,
-        Socket type not supportedESOCKTNOSUPPORT = 94,
-        Operation not supportedEOPNOTSUPP = 95,
-        Protocol family not supportedEPFNOSUPPORT = 96,
-        Address family not supported by protocolEAFNOSUPPORT = 97,
-        Address already in useEADDRINUSE = 98,
-        Cannot assign requested addressEADDRNOTAVAIL = 99,
-        Network is downENETDOWN = 100,
-        Network is unreachableENETUNREACH = 101,
-        Network dropped connection on resetENETRESET = 102,
-        Software caused connection abortECONNABORTED = 103,
-        Connection reset by peerECONNRESET = 104,
-        No buffer space availableENOBUFS = 105,
-        Transport endpoint is already connectedEISCONN = 106,
-        Transport endpoint is not connectedENOTCONN = 107,
-        Cannot send after transport endpoint shutdownESHUTDOWN = 108,
-        Too many references: cannot spliceETOOMANYREFS = 109,
-        Connection timed outETIMEDOUT = 110,
-        Connection refusedECONNREFUSED = 111,
-        Host is downEHOSTDOWN = 112,
-        No route to hostEHOSTUNREACH = 113,
-        Operation already in progressEALREADY = 114,
-        Operation now in progressEINPROGRESS = 115,
-        Stale file handleESTALE = 116,
-        Structure needs cleaningEUCLEAN = 117,
-        Not a XENIX named type fileENOTNAM = 118,
-        No XENIX semaphores availableENAVAIL = 119,
-        Is a named type fileEISNAM = 120,
-        Remote I/O errorEREMOTEIO = 121,
-        Disk quota exceededEDQUOT = 122,
-        No medium foundENOMEDIUM = 123,
-        Wrong medium typeEMEDIUMTYPE = 124,
-        Operation canceledECANCELED = 125,
-        Required key not availableENOKEY = 126,
-        Key has expiredEKEYEXPIRED = 127,
-        Key has been revokedEKEYREVOKED = 128,
-        Key was rejected by serviceEKEYREJECTED = 129,
-        Owner diedEOWNERDEAD = 130,
-        State not recoverableENOTRECOVERABLE = 131,
-        Operation not possible due to RF-killERFKILL = 132,
-        Memory page has hardware errorEHWPOISON = 133,
-        Operation not supportedENOTSUP = 95,
-#endif
+        /**
+         * @brief Resource temporarily unavailable (EAGAIN).
+         */
+        ResourceTemporarilyUnavailableEAGAIN = 11,
+        /**
+         * @brief Cannot allocate memory (ENOMEM).
+         */
+        CannotAllocateMemoryENOMEM = 12,
+        /**
+         * @brief Permission denied (EACCES).
+         */
+        PermissionDeniedEACCES = 13,
+        /**
+         * @brief Bad address (EFAULT).
+         */
+        BadAddressEFAULT = 14,
+        /**
+         * @brief Block device required (ENOTBLK).
+         */
+        BlockDeviceRequiredENOTBLK = 15,
+        /**
+         * @brief Device or resource busy (EBUSY).
+         */
+        DeviceOrResourceBusyEBUSY = 16,
+        /**
+         * @brief File exists (EEXIST).
+         */
+        FileExistsEEXIST = 17,
+        /**
+         * @brief Invalid cross-device link (EXDEV).
+         */
+        InvalidCrossDeviceLinkEXDEV = 18,
+        /**
+         * @brief No such device (ENODEV).
+         */
+        NoSuchDeviceENODEV = 19,
+        /**
+         * @brief Not a directory (ENOTDIR).
+         */
+        NotADirectoryENOTDIR = 20,
+        /**
+         * @brief Is a directory (EISDIR).
+         */
+        IsADirectoryEISDIR = 21,
+        /**
+         * @brief Invalid argument (EINVAL).
+         */
+        InvalidArgumentEINVAL = 22,
+        /**
+         * @brief Too many open files in system (ENFILE).
+         */
+        TooManyOpenFilesInSystemENFILE = 23,
+        /**
+         * @brief Too many open files (EMFILE).
+         */
+        TooManyOpenFilesEMFILE = 24,
+        /**
+         * @brief Inappropriate ioctl for device (ENOTTY).
+         */
+        InappropriateIoctlForDeviceENOTTY = 25,
+        /**
+         * @brief Text file busy (ETXTBSY).
+         */
+        TextFileBusyETXTBSY = 26,
+        /**
+         * @brief File too large (EFBIG).
+         */
+        FileTooLargeEFBIG = 27,
+        /**
+         * @brief No space left on device (ENOSPC).
+         */
+        NoSpaceLeftOnDeviceENOSPC = 28,
+        /**
+         * @brief Illegal seek (ESPIPE).
+         */
+        IllegalSeekESPIPE = 29,
+        /**
+         * @brief Read-only file system (EROFS).
+         */
+        ReadOnlyFileSystemEROFS = 30,
+        /**
+         * @brief Too many links (EMLINK).
+         */
+        TooManyLinksEMLINK = 31,
+        /**
+         * @brief Broken pipe (EPIPE).
+         */
+        BrokenPipeEPIPE = 32,
+        /**
+         * @brief Numerical argument out of domain (EDOM).
+         */
+        NumericalArgumentOutOfDomainEDOM = 33,
+        /**
+         * @brief Numerical result out of range (ERANGE).
+         */
+        NumericalResultOutOfRangeERANGE = 34,
+        /**
+         * @brief Resource deadlock avoided (EDEADLK).
+         */
+        ResourceDeadlockAvoidedEDEADLK = 35,
+        /**
+         * @brief File name too long (ENAMETOOLONG).
+         */
+        FileNameTooLongENAMETOOLONG = 36,
+        /**
+         * @brief No locks available (ENOLCK).
+         */
+        NoLocksAvailableENOLCK = 37,
+        /**
+         * @brief Function not implemented (ENOSYS).
+         */
+        FunctionNotImplementedENOSYS = 38,
+        /**
+         * @brief Directory not empty (ENOTEMPTY).
+         */
+        DirectoryNotEmptyENOTEMPTY = 39,
+        /**
+         * @brief Too many levels of symbolic links (ELOOP).
+         */
+        TooManyLevelsOfSymbolicLinksELOOP = 40,
+        /**
+         * @brief Resource temporarily unavailable (EWOULDBLOCK).
+         */
+        ResourceTemporarilyUnavailableEWOULDBLOCK = 11,
+        /**
+         * @brief No message of desired type (ENOMSG).
+         */
+        NoMessageOfDesiredTypeENOMSG = 42,
+        /**
+         * @brief Identifier removed (EIDRM).
+         */
+        IdentifierRemovedEIDRM = 43,
+        /**
+         * @brief Channel number out of range (ECHRNG).
+         */
+        ChannelNumberOutOfRangeECHRNG = 44,
+        /**
+         * @brief Level 2 not synchronized (EL2NSYNC).
+         */
+        Level2NotSynchronizedEL2NSYNC = 45,
+        /**
+         * @brief Level 3 halted (EL3HLT).
+         */
+        Level3HaltedEL3HLT = 46,
+        /**
+         * @brief Level 3 reset (EL3RST).
+         */
+        Level3ResetEL3RST = 47,
+        /**
+         * @brief Link number out of range (ELNRNG).
+         */
+        LinkNumberOutOfRangeELNRNG = 48,
+        /**
+         * @brief Protocol driver not attached (EUNATCH).
+         */
+        ProtocolDriverNotAttachedEUNATCH = 49,
+        /**
+         * @brief No CSI structure available (ENOCSI).
+         */
+        NoCSIStructureAvailableENOCSI = 50,
+        /**
+         * @brief Level 2 halted (EL2HLT).
+         */
+        Level2HaltedEL2HLT = 51,
+        /**
+         * @brief Invalid exchange (EBADE).
+         */
+        InvalidExchangeEBADE = 52,
+        /**
+         * @brief Invalid request descriptor (EBADR).
+         */
+        InvalidRequestDescriptorEBADR = 53,
+        /**
+         * @brief Exchange full (EXFULL).
+         */
+        ExchangeFullEXFULL = 54,
+        /**
+         * @brief No anode (ENOANO).
+         */
+        NoAnodeENOANO = 55,
+        /**
+         * @brief Invalid request code (EBADRQC).
+         */
+        InvalidRequestCodeEBADRQC = 56,
+        /**
+         * @brief Invalid slot (EBADSLT).
+         */
+        InvalidSlotEBADSLT = 57,
+        /**
+         * @brief Resource deadlock avoided (EDEADLOCK).
+         */
+        ResourceDeadlockAvoidedEDEADLOCK = 35,
+        /**
+         * @brief Bad font file format (EBFONT).
+         */
+        BadFontFileFormatEBFONT = 59,
+        /**
+         * @brief Device not a stream (ENOSTR).
+         */
+        DeviceNotAStreamENOSTR = 60,
+        /**
+         * @brief No data available (ENODATA).
+         */
+        NoDataAvailableENODATA = 61,
+        /**
+         * @brief Timer expired (ETIME).
+         */
+        TimerExpiredETIME = 62,
+        /**
+         * @brief Out of streams resources (ENOSR).
+         */
+        OutOfStreamsResourcesENOSR = 63,
+        /**
+         * @brief Machine is not on the network (ENONET).
+         */
+        MachineIsNotOnTheNetworkENONET = 64,
+        /**
+         * @brief Package not installed (ENOPKG).
+         */
+        PackageNotInstalledENOPKG = 65,
+        /**
+         * @brief Object is remote (EREMOTE).
+         */
+        ObjectIsRemoteEREMOTE = 66,
+        /**
+         * @brief Link has been severed (ENOLINK).
+         */
+        LinkHasBeenSeveredENOLINK = 67,
+        /**
+         * @brief Advertise error (EADV).
+         */
+        AdvertiseErrorEADV = 68,
+        /**
+         * @brief Srmount error (ESRMNT).
+         */
+        SrmountErrorESRMNT = 69,
+        /**
+         * @brief Communication error on send (ECOMM).
+         */
+        CommunicationErrorOnSendECOMM = 70,
+        /**
+         * @brief Protocol error (EPROTO).
+         */
+        ProtocolErrorEPROTO = 71,
+        /**
+         * @brief Multihop attempted (EMULTIHOP).
+         */
+        MultihopAttemptedEMULTIHOP = 72,
+        /**
+         * @brief RFS specific error (EDOTDOT).
+         */
+        RFSSpecificErrorEDOTDOT = 73,
+        /**
+         * @brief Bad message (EBADMSG).
+         */
+        BadMessageEBADMSG = 74,
+        /**
+         * @brief Value too large for defined data type (EOVERFLOW).
+         */
+        ValueTooLargeForDefinedDataTypeEOVERFLOW = 75,
+        /**
+         * @brief Name not unique on network (ENOTUNIQ).
+         */
+        NameNotUniqueOnNetworkENOTUNIQ = 76,
+        /**
+         * @brief File descriptor in bad state (EBADFD).
+         */
+        FileDescriptorInBadStateEBADFD = 77,
+        /**
+         * @brief Remote address changed (EREMCHG).
+         */
+        RemoteAddressChangedEREMCHG = 78,
+        /**
+         * @brief Can not access a needed shared library (ELIBACC).
+         */
+        CanNotAccessANeededSharedLibraryELIBACC = 79,
+        /**
+         * @brief Accessing a corrupted shared library (ELIBBAD).
+         */
+        AccessingACorruptedSharedLibraryELIBBAD = 80,
+        /**
+         * @brief .lib section in a.out corrupted (ELIBSCN).
+         */
+        LibSectionInAOutCorruptedELIBSCN = 81,
+        /**
+         * @brief Attempting to link in too many shared libraries (ELIBMAX).
+         */
+        AttemptingToLinkInTooManySharedLibrariesELIBMAX = 82,
+        /**
+         * @brief Cannot exec a shared library directly (ELIBEXEC).
+         */
+        CannotExecASharedLibraryDirectlyELIBEXEC = 83,
+        /**
+         * @brief Invalid or incomplete multibyte or wide character (EILSEQ).
+         */
+        InvalidOrIncompleteMultibyteOrWideCharacterEILSEQ = 84,
+        /**
+         * @brief Interrupted system call should be restarted (ERESTART).
+         */
+        InterruptedSystemCallShouldBeRestartedERESTART = 85,
+        /**
+         * @brief Streams pipe error (ESTRPIPE).
+         */
+        StreamsPipeErrorESTRPIPE = 86,
+        /**
+         * @brief Too many users (EUSERS).
+         */
+        TooManyUsersEUSERS = 87,
+        /**
+         * @brief Socket operation on non-socket (ENOTSOCK).
+         */
+        SocketOperationOnNonSocketENOTSOCK = 88,
+        /**
+         * @brief Destination address required (EDESTADDRREQ).
+         */
+        DestinationAddressRequiredEDESTADDRREQ = 89,
+        /**
+         * @brief Message too long (EMSGSIZE).
+         */
+        MessageTooLongEMSGSIZE = 90,
+        /**
+         * @brief Protocol wrong type for socket (EPROTOTYPE).
+         */
+        ProtocolWrongTypeForSocketEPROTOTYPE = 91,
+        /**
+         * @brief Protocol not available (ENOPROTOOPT).
+         */
+        ProtocolNotAvailableENOPROTOOPT = 92,
+        /**
+         * @brief Protocol not supported (EPROTONOSUPPORT).
+         */
+        ProtocolNotSupportedEPROTONOSUPPORT = 93,
+        /**
+         * @brief Socket type not supported (ESOCKTNOSUPPORT).
+         */
+        SocketTypeNotSupportedESOCKTNOSUPPORT = 94,
+        /**
+         * @brief Operation not supported (EOPNOTSUPP).
+         */
+        OperationNotSupportedEOPNOTSUPP = 95,
+        /**
+         * @brief Protocol family not supported (EPFNOSUPPORT).
+         */
+        ProtocolFamilyNotSupportedEPFNOSUPPORT = 96,
+        /**
+         * @brief Address family not supported by protocol (EAFNOSUPPORT).
+         */
+        AddressFamilyNotSupportedByProtocolEAFNOSUPPORT = 97,
+        /**
+         * @brief Address already in use (EADDRINUSE).
+         */
+        AddressAlreadyInUseEADDRINUSE = 98,
+        /**
+         * @brief Cannot assign requested address (EADDRNOTAVAIL).
+         */
+        CannotAssignRequestedAddressEADDRNOTAVAIL = 99,
+        /**
+         * @brief Network is down (ENETDOWN).
+         */
+        NetworkIsDownENETDOWN = 100,
+        /**
+         * @brief Network is unreachable (ENETUNREACH).
+         */
+        NetworkIsUnreachableENETUNREACH = 101,
+        /**
+         * @brief Network dropped connection on reset (ENETRESET).
+         */
+        NetworkDroppedConnectionOnResetENETRESET = 102,
+        /**
+         * @brief Software caused connection abort (ECONNABORTED).
+         */
+        SoftwareCausedConnectionAbortECONNABORTED = 103,
+        /**
+         * @brief Connection reset by peer (ECONNRESET).
+         */
+        ConnectionResetByPeerECONNRESET = 104,
+        /**
+         * @brief No buffer space available (ENOBUFS).
+         */
+        NoBufferSpaceAvailableENOBUFS = 105,
+        /**
+         * @brief Transport endpoint is already connected (EISCONN).
+         */
+        TransportEndpointIsAlreadyConnectedEISCONN = 106,
+        /**
+         * @brief Transport endpoint is not connected (ENOTCONN).
+         */
+        TransportEndpointIsNotConnectedENOTCONN = 107,
+        /**
+         * @brief Cannot send after transport endpoint shutdown (ESHUTDOWN).
+         */
+        CannotSendAfterTransportEndpointShutdownESHUTDOWN = 108,
+        /**
+         * @brief Too many references: cannot splice (ETOOMANYREFS).
+         */
+        TooManyReferencesCannotSpliceETOOMANYREFS = 109,
+        /**
+         * @brief Connection timed out (ETIMEDOUT).
+         */
+        ConnectionTimedOutETIMEDOUT = 110,
+        /**
+         * @brief Connection refused (ECONNREFUSED).
+         */
+        ConnectionRefusedECONNREFUSED = 111,
+        /**
+         * @brief Host is down (EHOSTDOWN).
+         */
+        HostIsDownEHOSTDOWN = 112,
+        /**
+         * @brief No route to host (EHOSTUNREACH).
+         */
+        NoRouteToHostEHOSTUNREACH = 113,
+        /**
+         * @brief Operation already in progress (EALREADY).
+         */
+        OperationAlreadyInProgressEALREADY = 114,
+        /**
+         * @brief Operation now in progress (EINPROGRESS).
+         */
+        OperationNowInProgressEINPROGRESS = 115,
+        /**
+         * @brief Stale file handle (ESTALE).
+         */
+        StaleFileHandleESTALE = 116,
+        /**
+         * @brief Structure needs cleaning (EUCLEAN).
+         */
+        StructureNeedsCleaningEUCLEAN = 117,
+        /**
+         * @brief Not a XENIX named type file (ENOTNAM).
+         */
+        NotAXENIXNamedTypeFileENOTNAM = 118,
+        /**
+         * @brief No XENIX semaphores available (ENAVAIL).
+         */
+        NoXENIXSemaphoresAvailableENAVAIL = 119,
+        /**
+         * @brief Is a named type file (EISNAM).
+         */
+        IsANamedTypeFileEISNAM = 120,
+        /**
+         * @brief Remote I/O error (EREMOTEIO).
+         */
+        RemoteIOErrorEREMOTEIO = 121,
+        /**
+         * @brief Disk quota exceeded (EDQUOT).
+         */
+        DiskQuotaExceededEDQUOT = 122,
+        /**
+         * @brief No medium found (ENOMEDIUM).
+         */
+        NoMediumFoundENOMEDIUM = 123,
+        /**
+         * @brief Wrong medium type (EMEDIUMTYPE).
+         */
+        WrongMediumTypeEMEDIUMTYPE = 124,
+        /**
+         * @brief Operation canceled (ECANCELED).
+         */
+        OperationCanceledECANCELED = 125,
+        /**
+         * @brief Required key not available (ENOKEY).
+         */
+        RequiredKeyNotAvailableENOKEY = 126,
+        /**
+         * @brief Key has expired (EKEYEXPIRED).
+         */
+        KeyHasExpiredEKEYEXPIRED = 127,
+        /**
+         * @brief Key has been revoked (EKEYREVOKED).
+         */
+        KeyHasBeenRevokedEKEYREVOKED = 128,
+        /**
+         * @brief Key was rejected by service (EKEYREJECTED).
+         */
+        KeyWasRejectedByServiceEKEYREJECTED = 129,
+        /**
+         * @brief Owner died (EOWNERDEAD).
+         */
+        OwnerDiedEOWNERDEAD = 130,
+        /**
+         * @brief State not recoverable (ENOTRECOVERABLE).
+         */
+        StateNotRecoverableENOTRECOVERABLE = 131,
+        /**
+         * @brief Operation not possible due to RF-kill (ERFKILL).
+         */
+        OperationNotPossibleDueToRFKillERFKILL = 132,
+        /**
+         * @brief Memory page has hardware error (EHWPOISON).
+         */
+        MemoryPageHasHardwareErrorEHWPOISON = 133,
+        /**
+         * @brief Operation not supported (ENOTSUP).
+         */
+        OperationNotSupportedENOTSUP = 95
     };
 
     /**
