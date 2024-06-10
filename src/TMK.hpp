@@ -12,15 +12,177 @@
  */
 namespace TMK
 {
-    enum class ExitCode
+    /**
+     * @brief Contains the POSIX exit codes.
+     */
+    enum class POSIXExitCode
     {
-        OperationNotPermitted = 1,
-        NoSuchFileOrDirectory = 2,
-        InputOutputError = 5,
-        PermissionDenied = 13,
-        InvalidArgument = 22,
-        CommandInvokedCannotExecute = 126,
-        CommandNotFound = 127,
+        /**
+         * @brief Operation not permitted (EPERM).
+         */
+        OperationNotPermittedEPERM = 1,
+        /**
+         * @brief No such file or directory (ENOENT).
+         */
+        NoSuchFileOrDirectoryENOENT = 2,
+        /**
+         * @brief No such process (ESRCH).
+         */
+        NoSuchProcessESRCH = 3,
+        /**
+         * @brief Interrupted system call (EINTR).
+         */
+        InterruptedSystemCallEINTR = 4,
+        /**
+         * @brief Input/Output error (EIO).
+         */
+        InputOutputErrorEIO = 5,
+        /**
+         * @brief No such device or address (ENXIO).
+         */
+        NoSuchDeviceOrAddressENXIO = 6,
+        /**
+         * @brief Argument list too long (E2BIG).
+         */
+        ArgumentListTooLongE2BIG = 7,
+        /**
+         * @brief Exec format error (ENOEXEC).
+         */
+        ExecFormatErrorENOEXEC = 8,
+        /**
+         * @brief Bad file descriptor (EBADF).
+         */
+        BadFileDescriptorEBADF = 9,
+        /**
+         * @brief No child processes (ECHILD).
+         */
+        NoChildProcessesECHILD = 10,
+#if 0
+        Resource temporarily unavailableEAGAIN = 11,
+        Cannot allocate memoryENOMEM = 12,
+        Permission deniedEACCES = 13,
+        Bad addressEFAULT = 14,
+        Block device requiredENOTBLK = 15,
+        Device or resource busyEBUSY = 16,
+        File existsEEXIST = 17,
+        Invalid cross-device linkEXDEV = 18,
+        No such deviceENODEV = 19,
+        Not a directoryENOTDIR = 20,
+        Is a directoryEISDIR = 21,
+        Invalid argumentEINVAL = 22,
+        Too many open files in systemENFILE = 23,
+        Too many open filesEMFILE = 24,
+        Inappropriate ioctl for deviceENOTTY = 25,
+        Text file busyETXTBSY = 26,
+        File too largeEFBIG = 27,
+        No space left on deviceENOSPC = 28,
+        Illegal seekESPIPE = 29,
+        Read-only file systemEROFS = 30,
+        Too many linksEMLINK = 31,
+        Broken pipeEPIPE = 32,
+        Numerical argument out of domainEDOM = 33,
+        Numerical result out of rangeERANGE = 34,
+        Resource deadlock avoidedEDEADLK = 35,
+        File name too longENAMETOOLONG = 36,
+        No locks availableENOLCK = 37,
+        Function not implementedENOSYS = 38,
+        Directory not emptyENOTEMPTY = 39,
+        Too many levels of symbolic linksELOOP = 40,
+        Resource temporarily unavailableEWOULDBLOCK = 11,
+        No message of desired typeENOMSG = 42,
+        Identifier removedEIDRM = 43,
+        Channel number out of rangeECHRNG = 44,
+        Level 2 not synchronizedEL2NSYNC = 45,
+        Level 3 haltedEL3HLT = 46,
+        Level 3 resetEL3RST = 47,
+        Link number out of rangeELNRNG = 48,
+        Protocol driver not attachedEUNATCH = 49,
+        No CSI structure availableENOCSI = 50,
+        Level 2 haltedEL2HLT = 51,
+        Invalid exchangeEBADE = 52,
+        Invalid request descriptorEBADR = 53,
+        Exchange fullEXFULL = 54,
+        No anodeENOANO = 55,
+        Invalid request codeEBADRQC = 56,
+        Invalid slotEBADSLT = 57,
+        Resource deadlock avoidedEDEADLOCK = 35,
+        Bad font file formatEBFONT = 59,
+        Device not a streamENOSTR = 60,
+        No data availableENODATA = 61,
+        Timer expiredETIME = 62,
+        Out of streams resourcesENOSR = 63,
+        Machine is not on the networkENONET = 64,
+        Package not installedENOPKG = 65,
+        Object is remoteEREMOTE = 66,
+        Link has been severedENOLINK = 67,
+        Advertise errorEADV = 68,
+        Srmount errorESRMNT = 69,
+        Communication error on sendECOMM = 70,
+        Protocol errorEPROTO = 71,
+        Multihop attemptedEMULTIHOP = 72,
+        RFS specific errorEDOTDOT = 73,
+        Bad messageEBADMSG = 74,
+        Value too large for defined data typeEOVERFLOW = 75,
+        Name not unique on networkENOTUNIQ = 76,
+        File descriptor in bad stateEBADFD = 77,
+        Remote address changedEREMCHG = 78,
+        Can not access a needed shared libraryELIBACC = 79,
+        Accessing a corrupted shared libraryELIBBAD = 80,
+        .lib section in a.out corruptedELIBSCN = 81,
+        Attempting to link in too many shared librariesELIBMAX = 82,
+        Cannot exec a shared library directlyELIBEXEC = 83,
+        Invalid or incomplete multibyte or wide characterEILSEQ = 84,
+        Interrupted system call should be restartedERESTART = 85,
+        Streams pipe errorESTRPIPE = 86,
+        Too many usersEUSERS = 87,
+        Socket operation on non-socketENOTSOCK = 88,
+        Destination address requiredEDESTADDRREQ = 89,
+        Message too longEMSGSIZE = 90,
+        Protocol wrong type for socketEPROTOTYPE = 91,
+        Protocol not availableENOPROTOOPT = 92,
+        Protocol not supportedEPROTONOSUPPORT = 93,
+        Socket type not supportedESOCKTNOSUPPORT = 94,
+        Operation not supportedEOPNOTSUPP = 95,
+        Protocol family not supportedEPFNOSUPPORT = 96,
+        Address family not supported by protocolEAFNOSUPPORT = 97,
+        Address already in useEADDRINUSE = 98,
+        Cannot assign requested addressEADDRNOTAVAIL = 99,
+        Network is downENETDOWN = 100,
+        Network is unreachableENETUNREACH = 101,
+        Network dropped connection on resetENETRESET = 102,
+        Software caused connection abortECONNABORTED = 103,
+        Connection reset by peerECONNRESET = 104,
+        No buffer space availableENOBUFS = 105,
+        Transport endpoint is already connectedEISCONN = 106,
+        Transport endpoint is not connectedENOTCONN = 107,
+        Cannot send after transport endpoint shutdownESHUTDOWN = 108,
+        Too many references: cannot spliceETOOMANYREFS = 109,
+        Connection timed outETIMEDOUT = 110,
+        Connection refusedECONNREFUSED = 111,
+        Host is downEHOSTDOWN = 112,
+        No route to hostEHOSTUNREACH = 113,
+        Operation already in progressEALREADY = 114,
+        Operation now in progressEINPROGRESS = 115,
+        Stale file handleESTALE = 116,
+        Structure needs cleaningEUCLEAN = 117,
+        Not a XENIX named type fileENOTNAM = 118,
+        No XENIX semaphores availableENAVAIL = 119,
+        Is a named type fileEISNAM = 120,
+        Remote I/O errorEREMOTEIO = 121,
+        Disk quota exceededEDQUOT = 122,
+        No medium foundENOMEDIUM = 123,
+        Wrong medium typeEMEDIUMTYPE = 124,
+        Operation canceledECANCELED = 125,
+        Required key not availableENOKEY = 126,
+        Key has expiredEKEYEXPIRED = 127,
+        Key has been revokedEKEYREVOKED = 128,
+        Key was rejected by serviceEKEYREJECTED = 129,
+        Owner diedEOWNERDEAD = 130,
+        State not recoverableENOTRECOVERABLE = 131,
+        Operation not possible due to RF-killERFKILL = 132,
+        Memory page has hardware errorEHWPOISON = 133,
+        Operation not supportedENOTSUP = 95,
+#endif
     };
 
     /**
@@ -1057,7 +1219,7 @@ namespace TMK
 #ifdef _WIN32
             /**
              * @brief Gets the handle associated with the standard input stream.
-             * @returns The handle associated with the standard input stream. 
+             * @returns The handle associated with the standard input stream.
              */
             static HANDLE GetHandle();
 #endif
@@ -1157,7 +1319,7 @@ namespace TMK
 #ifdef _WIN32
             /**
              * @brief Gets the handle associated with the standard output stream.
-             * @returns The handle associated with the standard output stream. 
+             * @returns The handle associated with the standard output stream.
              */
             static HANDLE GetHandle();
 #endif
@@ -1223,7 +1385,7 @@ namespace TMK
 #ifdef _WIN32
             /**
              * @brief Gets the handle associated with the standard error stream.
-             * @returns The handle associated with the standard error stream. 
+             * @returns The handle associated with the standard error stream.
              */
             static HANDLE GetHandle();
 #endif
@@ -1270,7 +1432,7 @@ namespace TMK
              * @brief Exits the process.
              * @param exitCode The exit code to be used.
              */
-            static void Exit(ExitCode exitCode);
+            static void Exit(POSIXExitCode exitCode);
 
         private:
             Process() = delete;

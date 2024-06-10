@@ -769,7 +769,7 @@ namespace TMK
         std::exit(exitCode);
     }
 
-    void Terminal::Process::Exit(ExitCode exitCode)
+    void Terminal::Process::Exit(POSIXExitCode exitCode)
     {
         Exit(static_cast<int>(exitCode));
     }
