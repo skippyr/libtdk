@@ -40,6 +40,16 @@ namespace TMK
             return mode;
         }
 
+        static CONSOLE_SCREEN_BUFFER_INFO GetStreamScreenBufferInfo(HANDLE handle)
+        {
+            CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
+            if (!GetConsoleScreenBufferInfo(handle, &bufferInfo))
+            {
+                throw NoValidTTYException();
+            }
+            return bufferInfo;
+        }
+
         static void SetStreamMode(HANDLE handle, bool isTTY, DWORD mode)
         {
             if (!isTTY)
@@ -673,6 +683,11 @@ namespace TMK
         return Setup::GetStreamMode(GetHandle());
     }
 
+    CONSOLE_SCREEN_BUFFER_INFO Terminal::Output::GetScreenBufferInfo()
+    {
+        return Setup::GetStreamScreenBufferInfo(GetHandle());
+    }
+
     void Terminal::Output::SetMode(DWORD mode)
     {
         Setup::SetStreamMode(GetHandle(), IsTTY(), mode);
@@ -740,6 +755,11 @@ namespace TMK
     DWORD Terminal::Error::GetMode()
     {
         return Setup::GetStreamMode(GetHandle());
+    }
+
+    CONSOLE_SCREEN_BUFFER_INFO Terminal::Error::GetScreenBufferInfo()
+    {
+        return Setup::GetStreamScreenBufferInfo(GetHandle());
     }
 
     void Terminal::Error::SetMode(DWORD mode)

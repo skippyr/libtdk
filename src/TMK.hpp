@@ -1693,6 +1693,12 @@ namespace TMK
              */
             static DWORD GetMode();
             /**
+             * @brief Gets the buffer info of the window connected to the standard output stream.
+             * @returns The buffer info of the window connected to the standard output stream.
+             * @throws NoValidTTYException Thrown whenever the standard output stream is not a TTY.
+             */
+            static CONSOLE_SCREEN_BUFFER_INFO GetScreenBufferInfo();
+            /**
              * @brief Sets the standard output mode.
              * @param mode The mode to be set.
              * @throws NoValidTTYException Thrown whenever the standard output stream is not a TTY.
@@ -1775,6 +1781,12 @@ namespace TMK
              * @throws NoValidTTYException Thrown whenever the standard error stream is not a TTY.
              */
             static DWORD GetMode();
+            /**
+             * @brief Gets the buffer info of the window connected to the standard output stream.
+             * @returns The buffer info of the window connected to the standard output stream.
+             * @throws NoValidTTYException Thrown whenever the standard output stream is not a TTY.
+             */
+            static CONSOLE_SCREEN_BUFFER_INFO GetScreenBufferInfo();
             /**
              * @brief Sets the standard error mode.
              * @param mode The mode to be set.
