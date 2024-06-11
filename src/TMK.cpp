@@ -20,9 +20,21 @@
 
 namespace TMK
 {
+    /**
+     * @brief A boolean that states the stream TTY cache has been filled.
+     */
     bool g_hasStreamTTYCache = false;
+    /**
+     * @brief A boolean that states the terminal input stream is a TTY.
+     */
     bool g_isInputStreamTTY = false;
+    /**
+     * @brief A boolean that states the terminal output straem is a TTY.
+     */
     bool g_isOutputStreamTTY = false;
+    /**
+     * @brief A boolean that states the terminal error stream is a TTY.
+     */
     bool g_isErrorStreamTTY = false;
 
 #ifdef _WIN32
