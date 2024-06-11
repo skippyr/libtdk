@@ -2234,6 +2234,22 @@ namespace TMK
          * @brief Initiatializes the terminal stream TTY cache.
          */
         static void InitStreamTTYCache();
+        /**
+         * @brief Writes an ANSI escape sequence to the terminal output or error streams.
+         * @param format The format to be used. It accepts the same specifiers as the printf function family.
+         * @param arguments The arguments to be formatted.
+         * @throws NoValidTTYException Thrown whenever the standard output and error streams are not TTY.
+         * @throws WideCharacterOrientationException Thrown whenever the standard output or error stream is wide character oriented.
+         */
+        static void WriteANSIEscapeSequence(std::string format, std::va_list arguments);
+        /**
+         * @brief Writes an ANSI escape sequence to the terminal output or error streams.
+         * @param format The format to be used. It accepts the same specifiers as the printf function family.
+         * @param ... The arguments to be formatted.
+         * @throws NoValidTTYException Thrown whenever the standard output and error streams are not TTY.
+         * @throws WideCharacterOrientationException Thrown whenever the standard output or error stream is wide character oriented.
+         */
+        static void WriteANSIEscapeSequence(std::string format, ...);
     };
 
     /**
