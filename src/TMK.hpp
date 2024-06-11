@@ -951,6 +951,7 @@ namespace TMK
     };
 
     class RGBColor;
+    class HSLColor;
 
 #ifdef _WIN32
     /**
@@ -1283,8 +1284,15 @@ namespace TMK
         /**
          * @brief Creates an instance of the RGBColor class.
          * @param color A color in hex format to be converted.
+         * @returns An instance of the RGBColor class.
          */
         RGBColor(HexColor color);
+        /**
+         * @brief Creates an instance of the RGBColor class.
+         * @param color A color in HSL format to be converted.
+         * @returns An instance of the RGBColor class.
+         */
+        RGBColor(HSLColor color);
         /**
          * @brief Gets the red component of the color.
          * @returns The red component of the color.
@@ -2204,22 +2212,86 @@ namespace TMK
     int operator|(FontEffect effectI, FontEffect effectII);
     /**
      * @brief Checks if a code and a keyboard key are equal.
-     * @param A boolean that states both are equal.
+     * @param code The code to be checked.
+     * @param key The key to be used as reference.
+     * @returns A boolean that states both are equal.
      */
     bool operator==(int code, KeyboardKey key);
     /**
      * @brief Checks if a keyboard key and a code are equal.
-     * @param A boolean that states both are equal.
+     * @param key The key to be checked.
+     * @param code The code to be used as reference.
+     * @returns A boolean that states both are equal.
      */
     bool operator==(KeyboardKey key, int code);
     /**
      * @brief Checks if a code and a keyboard key are different.
-     * @param A boolean that states both are different.
+     * @param code The code to be checked.
+     * @param key The key to be used as reference.
+     * @returns A boolean that states both are different.
      */
     bool operator!=(int code, KeyboardKey key);
     /**
      * @brief Checks if a keyboard key and a code are different.
-     * @param A boolean that states both are different.
+     * @param key The key to be checked.
+     * @param code The code to be used as reference.
+     * @returns A boolean that states both are different.
      */
     bool operator!=(KeyboardKey key, int code);
+    /**
+     * @brief Checks if two hex colors are equal.
+     * @param colorI The first color.
+     * @param colorII The second color.
+     * @returns A boolean that states both colors are equal.
+     */
+    bool operator==(HexColor colorI, HexColor colorII);
+    /**
+     * @brief Checks if two hex colors are different.
+     * @param colorI The first color.
+     * @param colorII The second color.
+     * @returns A boolean that states both colors are different.
+     */
+    bool operator!=(HexColor colorI, HexColor colorII);
+    /**
+     * @brief Checks if two RGB colors are equal.
+     * @param colorI The first color.
+     * @param colorII The second color.
+     * @returns A boolean that states both colors are equal.
+     */
+    bool operator==(RGBColor colorI, RGBColor colorII);
+    /**
+     * @brief Checks if two RGB colors are different.
+     * @param colorI The first color.
+     * @param colorII The second color.
+     * @returns A boolean that states both colors are different.
+     */
+    bool operator!=(RGBColor colorI, RGBColor colorII);
+    /**
+     * @brief Checks if a hex color is equal to an RGB one.
+     * @param hexColor The hex color.
+     * @param rgbColor The RGB color.
+     * @returns A boolean that states both colors are equal.
+     */
+    bool operator==(HexColor hexColor, RGBColor rgbColor);
+    /**
+     * @brief Checks if a hex color is different to an RGB one.
+     * @param hexColor The hex color.
+     * @param rgbColor The RGB color.
+     * @returns A boolean that states both colors are different.
+     */
+    bool operator!=(HexColor hexColor, RGBColor rgbColor);
+    /**
+     * @brief Checks if an RGB color is equal to a hex one.
+     * @param rgbColor The RGB color.
+     * @param hexColor The hex color.
+     * @returns A boolean that states both colors are equal.
+     */
+    bool operator==(RGBColor rgbColor, HexColor hexColor);
+    /**
+     * @brief Checks if an RGB color is different to a hex one.
+     * @param rgbColor The RGB color.
+     * @param hexColor The hex color.
+     * @returns A boolean that states both colors are different.
+     */
+    bool operator!=(RGBColor rgbColor, HexColor hexColor);
 }

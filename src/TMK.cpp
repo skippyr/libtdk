@@ -461,6 +461,10 @@ namespace TMK
     {
     }
 
+    RGBColor::RGBColor(HSLColor color)
+    {
+    }
+
     unsigned char RGBColor::GetRed() const
     {
         return m_red;
@@ -1327,5 +1331,45 @@ namespace TMK
     bool operator!=(KeyboardKey key, int code)
     {
         return static_cast<int>(key) != code;
+    }
+
+    bool operator==(HexColor colorI, HexColor colorII)
+    {
+        return colorI.GetCode() == colorII.GetCode();
+    }
+
+    bool operator!=(HexColor colorI, HexColor colorII)
+    {
+        return colorI.GetCode() != colorII.GetCode();
+    }
+
+    bool operator==(RGBColor colorI, RGBColor colorII)
+    {
+        return colorI.GetRed() == colorII.GetRed() && colorI.GetGreen() == colorII.GetGreen() && colorI.GetBlue() == colorII.GetBlue();
+    }
+
+    bool operator!=(RGBColor colorI, RGBColor colorII)
+    {
+        return colorI.GetRed() != colorII.GetRed() && colorI.GetGreen() != colorII.GetGreen() && colorI.GetBlue() != colorII.GetBlue();
+    }
+
+    bool operator==(HexColor hexColor, RGBColor rgbColor)
+    {
+        return hexColor == HexColor(rgbColor);
+    }
+
+    bool operator!=(HexColor hexColor, RGBColor rgbColor)
+    {
+        return hexColor != HexColor(rgbColor);
+    }
+
+    bool operator==(RGBColor rgbColor, HexColor hexColor)
+    {
+        return rgbColor == RGBColor(hexColor);
+    }
+
+    bool operator!=(RGBColor rgbColor, HexColor hexColor)
+    {
+        return rgbColor != RGBColor(hexColor);
     }
 }
