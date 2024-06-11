@@ -471,6 +471,21 @@ namespace TMK
         return m_blue;
     }
 
+    void RGBColor::SetRed(unsigned char red)
+    {
+        m_red = red;
+    }
+
+    void RGBColor::SetGreen(unsigned char green)
+    {
+        m_green = green;
+    }
+
+    void RGBColor::SetBlue(unsigned char blue)
+    {
+        m_blue = blue;
+    }
+
     std::string RGBColor::ToString() const
     {
         return "r: " + std::to_string(m_red) + ", g: " + std::to_string(m_green) + ", b: " + std::to_string(m_blue);
