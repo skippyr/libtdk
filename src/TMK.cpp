@@ -25,147 +25,6 @@ namespace TMK
     bool g_isOutputStreamTTY = false;
     bool g_isErrorStreamTTY = false;
 
-    class Setup
-    {
-    public:
-        static EventInfo ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter)
-        {
-            if (!Terminal::InputStream::IsTTY() || (!Terminal::OutputStream::IsTTY() && !Terminal::ErrorStream::IsTTY()))
-            {
-                throw NoValidTTYException();
-            }
-            if (std::fwide(Terminal::InputStream::GetFile(), 0) > 0)
-            {
-                throw WideCharacterOrientationException();
-            }
-            EventInfo eventInfo = EventType::None;
-#ifdef _WIN32
-            HANDLE timerHandle = nullptr;
-            DWORD inputMode = Terminal::InputStream::GetMode();
-            Terminal::InputStream::SetMode(allowMouseCapture ? (inputMode | ENABLE_MOUSE_INPUT) & ~(ENABLE_QUICK_EDIT_MODE | ENABLE_PROCESSED_INPUT)
-                                                             : inputMode & ~ENABLE_PROCESSED_INPUT);
-            while (true)
-            {
-                if (!wait.count())
-                {
-                    if (!Terminal::InputStream::GetTotalEventsCached())
-                    {
-                        eventInfo = EventType::None;
-                        break;
-                    }
-                }
-                if (wait.count() > 0)
-                {
-                    if (!timerHandle)
-                    {
-                        timerHandle = CreateWaitableTimerW(nullptr, true, nullptr);
-                        LARGE_INTEGER duration;
-                        duration.QuadPart = -10000 * wait.count();
-                        SetWaitableTimer(timerHandle, &duration, 1, nullptr, nullptr, false);
-                    }
-                    HANDLE handles[] = {timerHandle, Terminal::InputStream::GetHandle()};
-                    if (WaitForMultipleObjects(2, handles, false, INFINITE) == WAIT_OBJECT_0)
-                    {
-                        eventInfo = EventType::TimeOut;
-                        break;
-                    }
-                }
-                INPUT_RECORD record;
-                DWORD totalEventsRead;
-                ReadConsoleInputW(Terminal::InputStream::GetHandle(), &record, 1, &totalEventsRead);
-                if (record.EventType == FOCUS_EVENT)
-                {
-                    eventInfo = FocusEvent(record.Event.FocusEvent.bSetFocus);
-                }
-                else if (record.EventType == WINDOW_BUFFER_SIZE_EVENT)
-                {
-                    eventInfo = ResizeEvent();
-                }
-                else if (record.EventType == MOUSE_EVENT)
-                {
-                    CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-                    try
-                    {
-                        bufferInfo = Terminal::OutputStream::GetWindowBufferInfo();
-                    }
-                    catch (NoValidTTYException&)
-                    {
-                        bufferInfo = Terminal::ErrorStream::GetWindowBufferInfo();
-                    }
-                    eventInfo = MouseEvent(
-                        Coordinate(record.Event.MouseEvent.dwMousePosition.X - bufferInfo.srWindow.Left, record.Event.MouseEvent.dwMousePosition.Y - bufferInfo.srWindow.Top),
-                        record.Event.MouseEvent.dwEventFlags & MOUSE_WHEELED ? record.Event.MouseEvent.dwButtonState & 0x1000000 ? MouseButton::WheelDown : MouseButton::WheelUp
-                        : record.Event.MouseEvent.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED ? MouseButton::Left
-                        : record.Event.MouseEvent.dwButtonState & FROM_LEFT_2ND_BUTTON_PRESSED ? MouseButton::Wheel
-                        : record.Event.MouseEvent.dwButtonState & RIGHTMOST_BUTTON_PRESSED     ? MouseButton::Right
-                                                                                               : MouseButton::None,
-                        record.Event.MouseEvent.dwEventFlags & MOUSE_MOVED, record.Event.MouseEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED),
-                        record.Event.MouseEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED), record.Event.MouseEvent.dwControlKeyState & SHIFT_PRESSED);
-                }
-                else if (record.EventType == KEY_EVENT)
-                {
-                    if (!record.Event.KeyEvent.bKeyDown || record.Event.KeyEvent.wVirtualKeyCode == VK_CONTROL || record.Event.KeyEvent.wVirtualKeyCode == VK_SHIFT ||
-                        record.Event.KeyEvent.wVirtualKeyCode == VK_MENU || record.Event.KeyEvent.wVirtualKeyCode == VK_CAPITAL ||
-                        record.Event.KeyEvent.wVirtualKeyCode == VK_NUMLOCK || record.Event.KeyEvent.wVirtualKeyCode == VK_SCROLL)
-                    {
-                        continue;
-                    }
-                    int key = 0;
-                    int buffer;
-                    if ((buffer = record.Event.KeyEvent.uChar.UnicodeChar))
-                    {
-                        if (buffer <= 26 && buffer != KeyboardKey::Tab && buffer != KeyboardKey::Enter)
-                        {
-                            key = buffer + 96;
-                        }
-                        else if (buffer >= HIGH_SURROGATE_START && buffer <= HIGH_SURROGATE_END)
-                        {
-                            ReadConsoleInputW(Terminal::InputStream::GetHandle(), &record, 1, &totalEventsRead);
-                            ReadConsoleInputW(Terminal::InputStream::GetHandle(), &record, 1, &totalEventsRead);
-                            *(reinterpret_cast<short*>(&buffer) + 1) = record.Event.KeyEvent.uChar.UnicodeChar;
-                            WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<wchar_t*>(&buffer), 2, reinterpret_cast<char*>(&key), 4, nullptr, nullptr);
-                        }
-                        else
-                        {
-                            WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<wchar_t*>(&buffer), 1, reinterpret_cast<char*>(&key), 4, nullptr, nullptr);
-                        }
-                        goto l_keyReadingEnd;
-                    }
-                    PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_LEFT && record.Event.KeyEvent.wVirtualKeyCode <= VK_DOWN,
-                              record.Event.KeyEvent.wVirtualKeyCode - VK_LEFT + static_cast<int>(KeyboardKey::LeftArrow));
-                    PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_PRIOR && record.Event.KeyEvent.wVirtualKeyCode <= VK_HOME,
-                              record.Event.KeyEvent.wVirtualKeyCode - VK_PRIOR + static_cast<int>(KeyboardKey::PageUp));
-                    PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_INSERT && record.Event.KeyEvent.wVirtualKeyCode <= VK_DELETE,
-                              record.Event.KeyEvent.wVirtualKeyCode - VK_INSERT + static_cast<int>(KeyboardKey::Insert));
-                    PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_F1 && record.Event.KeyEvent.wVirtualKeyCode <= VK_F12,
-                              record.Event.KeyEvent.wVirtualKeyCode - VK_F1 + static_cast<int>(KeyboardKey::F1));
-                    continue;
-                l_keyReadingEnd:
-                    eventInfo = KeyEvent(key, record.Event.KeyEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED),
-                                         record.Event.KeyEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED), record.Event.KeyEvent.dwControlKeyState & SHIFT_PRESSED);
-                }
-                if (eventInfo.GetType() != EventType::None && eventInfo.GetType() != EventType::TimeOut)
-                {
-                    if (filter && !filter(eventInfo))
-                    {
-                        continue;
-                    }
-                    break;
-                }
-            }
-            if (timerHandle)
-            {
-                CloseHandle(timerHandle);
-            }
-            Terminal::InputStream::SetMode(inputMode);
-#endif
-            return eventInfo;
-        }
-
-    private:
-        Setup() = delete;
-    };
-
 #ifdef _WIN32
     CMDArguments::CMDArguments(int totalArguments, wchar_t** utf16Arguments, char** utf8Arguments)
         : m_totalArguments(totalArguments), m_utf16Arguments(utf16Arguments), m_utf8Arguments(utf8Arguments)
@@ -649,6 +508,139 @@ namespace TMK
         }
     }
 
+    EventInfo Terminal::ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter)
+    {
+        if (!InputStream::IsTTY() || (!OutputStream::IsTTY() && !ErrorStream::IsTTY()))
+        {
+            throw NoValidTTYException();
+        }
+        if (std::fwide(InputStream::GetFile(), 0) > 0)
+        {
+            throw WideCharacterOrientationException();
+        }
+        EventInfo eventInfo = EventType::None;
+#ifdef _WIN32
+        HANDLE timer = nullptr;
+        DWORD mode = InputStream::GetMode();
+        InputStream::SetMode(allowMouseCapture ? (mode | ENABLE_MOUSE_INPUT) & ~(ENABLE_QUICK_EDIT_MODE | ENABLE_PROCESSED_INPUT) : mode & ~ENABLE_PROCESSED_INPUT);
+        while (true)
+        {
+            if (!wait.count())
+            {
+                if (!InputStream::GetTotalEventsCached())
+                {
+                    eventInfo = EventType::None;
+                    break;
+                }
+            }
+            if (wait.count() > 0)
+            {
+                if (!timer)
+                {
+                    timer = CreateWaitableTimerW(nullptr, true, nullptr);
+                    LARGE_INTEGER duration;
+                    duration.QuadPart = -10000 * wait.count();
+                    SetWaitableTimer(timer, &duration, 1, nullptr, nullptr, false);
+                }
+                HANDLE handles[] = {timer, InputStream::GetHandle()};
+                if (WaitForMultipleObjects(2, handles, false, INFINITE) == WAIT_OBJECT_0)
+                {
+                    eventInfo = EventType::TimeOut;
+                    break;
+                }
+            }
+            INPUT_RECORD record;
+            DWORD totalEventsRead;
+            ReadConsoleInputW(InputStream::GetHandle(), &record, 1, &totalEventsRead);
+            if (record.EventType == FOCUS_EVENT)
+            {
+                eventInfo = FocusEvent(record.Event.FocusEvent.bSetFocus);
+            }
+            else if (record.EventType == WINDOW_BUFFER_SIZE_EVENT)
+            {
+                eventInfo = ResizeEvent();
+            }
+            else if (record.EventType == MOUSE_EVENT)
+            {
+                CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
+                try
+                {
+                    bufferInfo = OutputStream::GetWindowBufferInfo();
+                }
+                catch (NoValidTTYException&)
+                {
+                    bufferInfo = ErrorStream::GetWindowBufferInfo();
+                }
+                eventInfo = MouseEvent(
+                    Coordinate(record.Event.MouseEvent.dwMousePosition.X - bufferInfo.srWindow.Left, record.Event.MouseEvent.dwMousePosition.Y - bufferInfo.srWindow.Top),
+                    record.Event.MouseEvent.dwEventFlags & MOUSE_WHEELED ? record.Event.MouseEvent.dwButtonState & 0x1000000 ? MouseButton::WheelDown : MouseButton::WheelUp
+                    : record.Event.MouseEvent.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED ? MouseButton::Left
+                    : record.Event.MouseEvent.dwButtonState & FROM_LEFT_2ND_BUTTON_PRESSED ? MouseButton::Wheel
+                    : record.Event.MouseEvent.dwButtonState & RIGHTMOST_BUTTON_PRESSED     ? MouseButton::Right
+                                                                                           : MouseButton::None,
+                    record.Event.MouseEvent.dwEventFlags & MOUSE_MOVED, record.Event.MouseEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED),
+                    record.Event.MouseEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED), record.Event.MouseEvent.dwControlKeyState & SHIFT_PRESSED);
+            }
+            else if (record.EventType == KEY_EVENT)
+            {
+                if (!record.Event.KeyEvent.bKeyDown || record.Event.KeyEvent.wVirtualKeyCode == VK_CONTROL || record.Event.KeyEvent.wVirtualKeyCode == VK_SHIFT ||
+                    record.Event.KeyEvent.wVirtualKeyCode == VK_MENU || record.Event.KeyEvent.wVirtualKeyCode == VK_CAPITAL ||
+                    record.Event.KeyEvent.wVirtualKeyCode == VK_NUMLOCK || record.Event.KeyEvent.wVirtualKeyCode == VK_SCROLL)
+                {
+                    continue;
+                }
+                int key = 0;
+                int buffer;
+                if ((buffer = record.Event.KeyEvent.uChar.UnicodeChar))
+                {
+                    if (buffer <= 26 && buffer != KeyboardKey::Tab && buffer != KeyboardKey::Enter)
+                    {
+                        key = buffer + 96;
+                    }
+                    else if (buffer >= HIGH_SURROGATE_START && buffer <= HIGH_SURROGATE_END)
+                    {
+                        ReadConsoleInputW(InputStream::GetHandle(), &record, 1, &totalEventsRead);
+                        ReadConsoleInputW(InputStream::GetHandle(), &record, 1, &totalEventsRead);
+                        *(reinterpret_cast<short*>(&buffer) + 1) = record.Event.KeyEvent.uChar.UnicodeChar;
+                        WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<wchar_t*>(&buffer), 2, reinterpret_cast<char*>(&key), 4, nullptr, nullptr);
+                    }
+                    else
+                    {
+                        WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<wchar_t*>(&buffer), 1, reinterpret_cast<char*>(&key), 4, nullptr, nullptr);
+                    }
+                    goto l_keyReadingEnd;
+                }
+                PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_LEFT && record.Event.KeyEvent.wVirtualKeyCode <= VK_DOWN,
+                          record.Event.KeyEvent.wVirtualKeyCode - VK_LEFT + static_cast<int>(KeyboardKey::LeftArrow));
+                PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_PRIOR && record.Event.KeyEvent.wVirtualKeyCode <= VK_HOME,
+                          record.Event.KeyEvent.wVirtualKeyCode - VK_PRIOR + static_cast<int>(KeyboardKey::PageUp));
+                PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_INSERT && record.Event.KeyEvent.wVirtualKeyCode <= VK_DELETE,
+                          record.Event.KeyEvent.wVirtualKeyCode - VK_INSERT + static_cast<int>(KeyboardKey::Insert));
+                PARSE_KEY(record.Event.KeyEvent.wVirtualKeyCode >= VK_F1 && record.Event.KeyEvent.wVirtualKeyCode <= VK_F12,
+                          record.Event.KeyEvent.wVirtualKeyCode - VK_F1 + static_cast<int>(KeyboardKey::F1));
+                continue;
+            l_keyReadingEnd:
+                eventInfo = KeyEvent(key, record.Event.KeyEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED),
+                                     record.Event.KeyEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED), record.Event.KeyEvent.dwControlKeyState & SHIFT_PRESSED);
+            }
+            if (eventInfo.GetType() != EventType::None && eventInfo.GetType() != EventType::TimeOut)
+            {
+                if (filter && !filter(eventInfo))
+                {
+                    continue;
+                }
+                break;
+            }
+        }
+        if (timer)
+        {
+            CloseHandle(timer);
+        }
+        InputStream::SetMode(mode);
+#endif
+        return eventInfo;
+    }
+
 #ifdef _WIN32
     DWORD Terminal::GetStreamMode(HANDLE handle)
     {
@@ -811,17 +803,17 @@ namespace TMK
 
     EventInfo Terminal::InputStream::ReadEvent(bool allowMouseCapture)
     {
-        return Setup::ReadEvent(allowMouseCapture, -1ms, nullptr);
+        return Terminal::ReadEvent(allowMouseCapture, -1ms, nullptr);
     }
 
     EventInfo Terminal::InputStream::ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait)
     {
-        return Setup::ReadEvent(allowMouseCapture, wait, nullptr);
+        return Terminal::ReadEvent(allowMouseCapture, wait, nullptr);
     }
 
     EventInfo Terminal::InputStream::ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter)
     {
-        return Setup::ReadEvent(allowMouseCapture, wait, filter);
+        return Terminal::ReadEvent(allowMouseCapture, wait, filter);
     }
 
 #ifdef _WIN32

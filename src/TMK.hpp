@@ -2258,6 +2258,14 @@ namespace TMK
          * @param hasNewLine A boolean that states a newline character should be appended at the end of the string.
          */
         static void Write(std::FILE* file, const char* format, std::va_list arguments, bool hasNewLine);
+        /**
+         * @brief Reads a terminal event.
+         * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
+         * @param wait The time to wait for an event. If zero, it returns immediately. If negative, it waits until an event become available.
+         * @param filter A function to be used to filter events while the timer is running.
+         * @returns The information about the event read.
+         */
+        static EventInfo ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter);
     };
 
     /**
