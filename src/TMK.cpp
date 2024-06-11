@@ -28,16 +28,6 @@ namespace TMK
     {
     public:
 #ifdef _WIN32
-        static CONSOLE_SCREEN_BUFFER_INFO GetStreamScreenBufferInfo(HANDLE handle)
-        {
-            CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-            if (!GetConsoleScreenBufferInfo(handle, &bufferInfo))
-            {
-                throw NoValidTTYException();
-            }
-            return bufferInfo;
-        }
-
         static void SetStreamMode(HANDLE handle, bool isTTY, DWORD mode)
         {
             if (!isTTY)
@@ -184,11 +174,11 @@ namespace TMK
                     CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
                     try
                     {
-                        bufferInfo = Terminal::OutputStream::GetScreenBufferInfo();
+                        bufferInfo = Terminal::OutputStream::GetWindowBufferInfo();
                     }
                     catch (NoValidTTYException&)
                     {
-                        bufferInfo = Terminal::ErrorStream::GetScreenBufferInfo();
+                        bufferInfo = Terminal::ErrorStream::GetWindowBufferInfo();
                     }
                     eventInfo = MouseEvent(
                         Coordinate(record.Event.MouseEvent.dwMousePosition.X - bufferInfo.srWindow.Left, record.Event.MouseEvent.dwMousePosition.Y - bufferInfo.srWindow.Top),
@@ -692,6 +682,16 @@ namespace TMK
         return mode;
     }
 
+    CONSOLE_SCREEN_BUFFER_INFO Terminal::GetStreamWindowBufferInfo(HANDLE handle)
+    {
+        CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
+        if (!GetConsoleScreenBufferInfo(handle, &bufferInfo))
+        {
+            throw NoValidTTYException();
+        }
+        return bufferInfo;
+    }
+
     void Terminal::Encoding::SetOutputCodePage(UINT codePage)
     {
         if (!SetConsoleOutputCP(codePage))
@@ -845,9 +845,9 @@ namespace TMK
         return GetStreamMode(GetHandle());
     }
 
-    CONSOLE_SCREEN_BUFFER_INFO Terminal::OutputStream::GetScreenBufferInfo()
+    CONSOLE_SCREEN_BUFFER_INFO Terminal::OutputStream::GetWindowBufferInfo()
     {
-        return Setup::GetStreamScreenBufferInfo(GetHandle());
+        return GetStreamWindowBufferInfo(GetHandle());
     }
 
     void Terminal::OutputStream::SetMode(DWORD mode)
@@ -919,9 +919,9 @@ namespace TMK
         return GetStreamMode(GetHandle());
     }
 
-    CONSOLE_SCREEN_BUFFER_INFO Terminal::ErrorStream::GetScreenBufferInfo()
+    CONSOLE_SCREEN_BUFFER_INFO Terminal::ErrorStream::GetWindowBufferInfo()
     {
-        return Setup::GetStreamScreenBufferInfo(GetHandle());
+        return GetStreamWindowBufferInfo(GetHandle());
     }
 
     void Terminal::ErrorStream::SetMode(DWORD mode)
@@ -1218,11 +1218,11 @@ namespace TMK
         CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
         try
         {
-            bufferInfo = OutputStream::GetScreenBufferInfo();
+            bufferInfo = OutputStream::GetWindowBufferInfo();
         }
         catch (NoValidTTYException&)
         {
-            bufferInfo = ErrorStream::GetScreenBufferInfo();
+            bufferInfo = ErrorStream::GetWindowBufferInfo();
         }
         return Coordinate(bufferInfo.dwCursorPosition.X - bufferInfo.srWindow.Left, bufferInfo.dwCursorPosition.Y - bufferInfo.srWindow.Top);
 #else

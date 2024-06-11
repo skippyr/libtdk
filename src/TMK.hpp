@@ -1845,7 +1845,7 @@ namespace TMK
              * @returns The buffer info of the window connected to the standard output stream.
              * @throws NoValidTTYException Thrown whenever the standard output stream is not a TTY.
              */
-            static CONSOLE_SCREEN_BUFFER_INFO GetScreenBufferInfo();
+            static CONSOLE_SCREEN_BUFFER_INFO GetWindowBufferInfo();
             /**
              * @brief Sets the standard output mode.
              * @param mode The mode to be set.
@@ -1934,7 +1934,7 @@ namespace TMK
              * @returns The buffer info of the window connected to the standard error stream.
              * @throws NoValidTTYException Thrown whenever the standard error stream is not a TTY.
              */
-            static CONSOLE_SCREEN_BUFFER_INFO GetScreenBufferInfo();
+            static CONSOLE_SCREEN_BUFFER_INFO GetWindowBufferInfo();
             /**
              * @brief Sets the standard error mode.
              * @param mode The mode to be set.
@@ -2214,6 +2214,13 @@ namespace TMK
          * @throws NoValidTTYException Thrown whenever the stream is not a TTY.
          */
         static DWORD GetStreamMode(HANDLE handle);
+        /**
+         * @brief Gets the buffer information of the window connected to a terminal stream.
+         * @param handle The handle of the stream.
+         * @returns The buffer information of the window connected to the stream.
+         * @throws NoValidTTYException Thrown whenever the stream is not a TTY.
+         */
+        static CONSOLE_SCREEN_BUFFER_INFO GetStreamWindowBufferInfo(HANDLE handle);
 #endif
     };
 
