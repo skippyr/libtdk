@@ -2067,6 +2067,19 @@ namespace TMK
         class Bell final
         {
         public:
+#ifdef _WIN32
+            /**
+             * @brief Emits a beep sound.
+             * @param frequency The frequency of the sound in heartz (Hz). It must be a value in range from 37 to 32767.
+             * @param duration The duration of the sound.
+             * @throws OutOfRangeException Thrown whenever any value is out of its valid range.
+             */
+            static void Beep(unsigned short frequency, std::chrono::milliseconds duration);
+            /**
+             * @brief Emits a beep sound.
+             */
+            static void Beep();
+#endif
             /**
              * @brief Rings the terminal bell.
              */
