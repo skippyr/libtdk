@@ -7,12 +7,10 @@
 #endif
 
 #ifdef _WIN32
-#define TTY_CACHE(a_stream) (!!_isatty(a_stream::GetFileNumber()) << a_stream::GetFileNumber())
+#define IS_TTY(a_stream) _isatty(a_stream::GetFileNumber())
 #else
-#define TTY_CACHE(a_stream) (isatty(a_stream::GetFileNumber()) << a_stream::GetFileNumber())
+#define IS_TTY(a_stream) isatty(a_stream::GetFileNumber())
 #endif
-#define IS_TTY(a_streamFileNumber) (g_ttyCache & 1 << a_streamFileNumber)
-#define TTY_CACHE_HAS_BEEN_FILLED_FLAG (1 << 7)
 #define PARSE_KEY(a_condition, a_key)                                                                                                                                              \
     if (a_condition)                                                                                                                                                               \
     {                                                                                                                                                                              \
@@ -24,34 +22,14 @@ namespace TMK
 {
     char g_ttyCache = 0;
 
+    bool g_hasStreamTTYCache = false;
+    bool g_isInputStreamTTY = false;
+    bool g_isOutputStreamTTY = false;
+    bool g_isErrorStreamTTY = false;
+
     class Setup
     {
     public:
-        static void InitEnvironment()
-        {
-            if (!(g_ttyCache & TTY_CACHE_HAS_BEEN_FILLED_FLAG))
-            {
-                g_ttyCache |= TTY_CACHE(Terminal::InputStream) | TTY_CACHE(Terminal::OutputStream) | TTY_CACHE(Terminal::ErrorStream) | TTY_CACHE_HAS_BEEN_FILLED_FLAG;
-#ifdef _WIN32
-                Terminal::Encoding::SetOutputCodePage(CP_UTF8);
-                try
-                {
-                    Terminal::OutputStream::SetMode(Terminal::OutputStream::GetMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-                }
-                catch (NoValidTTYException&)
-                {
-                }
-                try
-                {
-                    Terminal::ErrorStream::SetMode(Terminal::ErrorStream::GetMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-                }
-                catch (NoValidTTYException&)
-                {
-                }
-#endif
-            }
-        }
-
         /**
          * @brief Writes an ANSI escape sequence to the standard output or error streams.
          * @param format The format to be used. It accepts the same specifiers as the printf function family.
@@ -657,6 +635,35 @@ namespace TMK
         }
         throw InvalidEventTypeException();
     }
+
+    void Terminal::InitStreamTTYCache()
+    {
+        if (g_hasStreamTTYCache)
+        {
+            return;
+        }
+        g_isInputStreamTTY = IS_TTY(InputStream);
+        g_isOutputStreamTTY = IS_TTY(OutputStream);
+        g_isErrorStreamTTY = IS_TTY(ErrorStream);
+#ifdef _WIN32
+        Encoding::SetOutputCodePage(CP_UTF8);
+        try
+        {
+            OutputStream::SetMode(OutputStream::GetMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+        }
+        catch (NoValidTTYException&)
+        {
+        }
+        try
+        {
+            ErrorStream::SetMode(ErrorStream::GetMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+        }
+        catch (NoValidTTYException&)
+        {
+        }
+#endif
+    }
+
 #ifdef _WIN32
     DWORD Terminal::GetStreamMode(HANDLE handle)
     {
@@ -808,8 +815,8 @@ namespace TMK
 
     bool Terminal::InputStream::IsTTY()
     {
-        Setup::InitEnvironment();
-        return IS_TTY(GetFileNumber());
+        InitStreamTTYCache();
+        return g_isInputStreamTTY;
     }
 
     char Terminal::InputStream::ReadByte()
@@ -902,8 +909,8 @@ namespace TMK
 
     bool Terminal::OutputStream::IsTTY()
     {
-        Setup::InitEnvironment();
-        return IS_TTY(GetFileNumber());
+        InitStreamTTYCache();
+        return g_isOutputStreamTTY;
     }
 
 #ifdef _WIN32
@@ -971,8 +978,8 @@ namespace TMK
 
     bool Terminal::ErrorStream::IsTTY()
     {
-        Setup::InitEnvironment();
-        return IS_TTY(GetFileNumber());
+        InitStreamTTYCache();
+        return g_isErrorStreamTTY;
     }
 
     CMDArguments Terminal::Process::GetCMDArguments(int rawTotalCMDArguments, char** rawCMDArguments)

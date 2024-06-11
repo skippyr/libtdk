@@ -2205,7 +2205,6 @@ namespace TMK
 
     private:
         Terminal() = delete;
-
 #ifdef _WIN32
         /**
          * @brief Gets the mode of a terminal stream.
@@ -2231,6 +2230,10 @@ namespace TMK
          */
         static void SetStreamMode(HANDLE handle, bool isTTY, DWORD mode);
 #endif
+        /**
+         * @brief Initiatializes the terminal stream TTY cache.
+         */
+        static void InitStreamTTYCache();
     };
 
     /**
