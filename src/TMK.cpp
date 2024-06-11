@@ -1013,7 +1013,7 @@ namespace TMK
     {
         try
         {
-            Terminal::WriteANSIEscapeSequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
+            WriteANSIEscapeSequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
         }
         catch (NoValidTTYException&)
         {
@@ -1024,7 +1024,7 @@ namespace TMK
     {
         try
         {
-            Terminal::WriteANSIEscapeSequence("\x1b[?1049l");
+            WriteANSIEscapeSequence("\x1b[?1049l");
         }
         catch (NoValidTTYException&)
         {
@@ -1035,9 +1035,9 @@ namespace TMK
     {
         try
         {
-            Terminal::WriteANSIEscapeSequence("\x1b]0;");
-            Terminal::WriteANSIEscapeSequence(format, arguments);
-            Terminal::WriteANSIEscapeSequence("\7");
+            WriteANSIEscapeSequence("\x1b]0;");
+            WriteANSIEscapeSequence(format, arguments);
+            WriteANSIEscapeSequence("\7");
         }
         catch (NoValidTTYException&)
         {
@@ -1072,7 +1072,7 @@ namespace TMK
     {
         try
         {
-            Terminal::WriteANSIEscapeSequence("\7");
+            WriteANSIEscapeSequence("\7");
         }
         catch (NoValidTTYException&)
         {
@@ -1083,7 +1083,7 @@ namespace TMK
     {
         try
         {
-            Terminal::WriteANSIEscapeSequence("\x1b[22;%dm", static_cast<int>(weight));
+            WriteANSIEscapeSequence("\x1b[22;%dm", static_cast<int>(weight));
         }
         catch (NoValidTTYException&)
         {
@@ -1094,7 +1094,7 @@ namespace TMK
     {
         try
         {
-            Terminal::WriteANSIEscapeSequence("\x1b[%d8;5;%hum", static_cast<int>(layer), color);
+            WriteANSIEscapeSequence("\x1b[%d8;5;%hum", static_cast<int>(layer), color);
         }
         catch (NoValidTTYException&)
         {
@@ -1116,7 +1116,7 @@ namespace TMK
     {
         try
         {
-            Terminal::WriteANSIEscapeSequence("\x1b[%d8;2;%hu;%hu;%hum", static_cast<int>(layer), red, green, blue);
+            WriteANSIEscapeSequence("\x1b[%d8;2;%hu;%hu;%hum", static_cast<int>(layer), red, green, blue);
         }
         catch (NoValidTTYException&)
         {
@@ -1157,7 +1157,7 @@ namespace TMK
             {
                 try
                 {
-                    Terminal::WriteANSIEscapeSequence("\x1b[%dm", code);
+                    WriteANSIEscapeSequence("\x1b[%dm", code);
                 }
                 catch (NoValidTTYException&)
                 {
@@ -1175,7 +1175,7 @@ namespace TMK
     {
         try
         {
-            Terminal::WriteANSIEscapeSequence("\x1b[39;49m");
+            WriteANSIEscapeSequence("\x1b[39;49m");
         }
         catch (NoValidTTYException&)
         {
@@ -1186,7 +1186,7 @@ namespace TMK
     {
         try
         {
-            Terminal::WriteANSIEscapeSequence("\x1b[22m");
+            WriteANSIEscapeSequence("\x1b[22m");
         }
         catch (NoValidTTYException&)
         {
@@ -1201,7 +1201,7 @@ namespace TMK
             {
                 try
                 {
-                    Terminal::WriteANSIEscapeSequence("\x1b[%dm", code);
+                    WriteANSIEscapeSequence("\x1b[%dm", code);
                 }
                 catch (NoValidTTYException&)
                 {
@@ -1226,7 +1226,7 @@ namespace TMK
 #else
         struct termios attributes = InputStream::GetTermiosAttributes();
         InputStream::Clear();
-        Terminal::WriteANSIEscapeSequence("\x1b[6n");
+        WriteANSIEscapeSequence("\x1b[6n");
         attributes.c_lflag &= ~(ICANON | ECHO);
         InputStream::SetTermiosAttributes(attributes);
         unsigned short column;
@@ -1250,7 +1250,7 @@ namespace TMK
             {
                 throw OutOfRangeException();
             }
-            Terminal::WriteANSIEscapeSequence("\x1b[%hu;%huH", row + 1, column + 1);
+            WriteANSIEscapeSequence("\x1b[%hu;%huH", row + 1, column + 1);
         }
         catch (NoValidTTYException&)
         {
@@ -1266,7 +1266,7 @@ namespace TMK
     {
         try
         {
-            Terminal::WriteANSIEscapeSequence("\x1b[%d q", static_cast<int>(shape) - isBlinking);
+            WriteANSIEscapeSequence("\x1b[%d q", static_cast<int>(shape) - isBlinking);
         }
         catch (NoValidTTYException&)
         {
@@ -1277,7 +1277,7 @@ namespace TMK
     {
         try
         {
-            Terminal::WriteANSIEscapeSequence("\x1b[?25%c", isVisible ? 'h' : 'l');
+            WriteANSIEscapeSequence("\x1b[?25%c", isVisible ? 'h' : 'l');
         }
         catch (NoValidTTYException&)
         {
@@ -1288,7 +1288,7 @@ namespace TMK
     {
         try
         {
-            Terminal::WriteANSIEscapeSequence("\x1b[0 q");
+            WriteANSIEscapeSequence("\x1b[0 q");
         }
         catch (NoValidTTYException&)
         {
@@ -1299,7 +1299,7 @@ namespace TMK
     {
         try
         {
-            Terminal::WriteANSIEscapeSequence("\x1b[2K\x1b[1G");
+            WriteANSIEscapeSequence("\x1b[2K\x1b[1G");
         }
         catch (NoValidTTYException&)
         {
