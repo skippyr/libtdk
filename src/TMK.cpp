@@ -351,18 +351,18 @@ namespace TMK
         return "column: " + std::to_string(m_column) + ", row: " + std::to_string(m_row);
     }
 
-    Geometry::Geometry()
+    Region::Region()
         : m_totalColumns(0), m_totalRows(0), m_area(0), m_topLeftCoordinate(0, 0), m_topRightCoordinate(0, 0), m_bottomLeftCoordinate(0, 0), m_bottomRightCoordinate(0, 0)
     {
     }
 
-    Geometry::Geometry(unsigned short totalColumns, unsigned short totalRows)
+    Region::Region(unsigned short totalColumns, unsigned short totalRows)
         : m_totalColumns(totalColumns), m_totalRows(totalRows), m_area(totalColumns * totalRows), m_topLeftCoordinate(0, 0), m_topRightCoordinate(totalColumns - 1, 0),
           m_bottomLeftCoordinate(0, totalRows - 1), m_bottomRightCoordinate(totalColumns - 1, totalRows - 1)
     {
     }
 
-    Geometry::Geometry(Coordinate coordinateI, Coordinate coordinateII)
+    Region::Region(Coordinate coordinateI, Coordinate coordinateII)
     {
         unsigned short maximumColumn = (std::max)(coordinateI.GetColumn(), coordinateII.GetColumn());
         unsigned short minimumColumn = (std::min)(coordinateI.GetColumn(), coordinateII.GetColumn());
@@ -377,48 +377,48 @@ namespace TMK
         m_bottomRightCoordinate = Coordinate(maximumColumn, maximumRow);
     }
 
-    unsigned short Geometry::GetTotalColumns() const
+    unsigned short Region::GetTotalColumns() const
     {
         return m_totalColumns;
     }
 
-    unsigned short Geometry::GetTotalRows() const
+    unsigned short Region::GetTotalRows() const
     {
         return m_totalRows;
     }
 
-    unsigned int Geometry::GetArea() const
+    unsigned int Region::GetArea() const
     {
         return m_area;
     }
 
-    Coordinate Geometry::GetTopLeftCoordinate() const
+    Coordinate Region::GetTopLeftCoordinate() const
     {
         return m_topLeftCoordinate;
     }
 
-    Coordinate Geometry::GetTopRightCoordinate() const
+    Coordinate Region::GetTopRightCoordinate() const
     {
         return m_topRightCoordinate;
     }
 
-    Coordinate Geometry::GetBottomLeftCoordinate() const
+    Coordinate Region::GetBottomLeftCoordinate() const
     {
         return m_bottomLeftCoordinate;
     }
 
-    Coordinate Geometry::GetBottomRightCoordinate() const
+    Coordinate Region::GetBottomRightCoordinate() const
     {
         return m_bottomRightCoordinate;
     }
 
-    bool Geometry::Contains(unsigned short column, unsigned short row) const
+    bool Region::Contains(unsigned short column, unsigned short row) const
     {
         return column >= m_topLeftCoordinate.GetColumn() && column <= m_topRightCoordinate.GetColumn() && row >= m_topLeftCoordinate.GetRow() &&
                row <= m_bottomLeftCoordinate.GetRow();
     }
 
-    bool Geometry::Contains(Coordinate coordinate) const
+    bool Region::Contains(Coordinate coordinate) const
     {
         return Contains(coordinate.GetColumn(), coordinate.GetRow());
     }
@@ -563,13 +563,13 @@ namespace TMK
         return m_hasFocus;
     }
 
-    ResizeEvent::ResizeEvent() : m_windowGeometry(Terminal::Window::GetGeometry())
+    ResizeEvent::ResizeEvent() : m_windowRegion(Terminal::Window::GetRegion())
     {
     }
 
-    Geometry ResizeEvent::GetWindowGeometry() const
+    Region ResizeEvent::GetWindowRegion() const
     {
-        return m_windowGeometry;
+        return m_windowRegion;
     }
 
     MouseEvent::MouseEvent(Coordinate coordinate, MouseButton button, bool isDragging, bool hasCtrl, bool hasAlt, bool hasShift)
@@ -1008,7 +1008,7 @@ namespace TMK
         Exit(static_cast<int>(exitCode));
     }
 
-    Geometry Terminal::Window::GetGeometry()
+    Region Terminal::Window::GetRegion()
     {
 #ifdef _WIN32
         CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
@@ -1016,14 +1016,14 @@ namespace TMK
         {
             throw NoValidTTYException();
         }
-        return Geometry(bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1, bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1);
+        return Region(bufferInfo.srWindow.Right - bufferInfo.srWindow.Left + 1, bufferInfo.srWindow.Bottom - bufferInfo.srWindow.Top + 1);
 #else
         struct winsize size;
         if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &size) && ioctl(STDERR_FILENO, TIOCGWINSZ, &size))
         {
             throw NoValidTTYException();
         }
-        return Geometry(size.ws_col, size.ws_row);
+        return Region(size.ws_col, size.ws_row);
 #endif
     }
 
@@ -1248,7 +1248,7 @@ namespace TMK
     {
         try
         {
-            if (!Window::GetGeometry().Contains(column, row))
+            if (!Window::GetRegion().Contains(column, row))
             {
                 throw OutOfRangeException();
             }

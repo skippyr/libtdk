@@ -711,11 +711,11 @@ namespace TMK
          */
         Block = 2,
         /**
-         * @brief Fills a small region at the bottom of the character cell.
+         * @brief Fills a region at the bottom of the character cell.
          */
         Underline = 4,
         /**
-         * @brief Fills a small region at the left of the character cell.
+         * @brief Fills a region at the left of the character cell.
          */
         Bar = 6
     };
@@ -963,7 +963,7 @@ namespace TMK
 #endif
 
     /**
-     * @brief Represents an exception thrown wheneverinvalid stream attributes tries to be set.
+     * @brief Represents an exception thrown whenever invalid stream attributes tries to be set.
      */
     class InvalidStreamAttributesException final
     {
@@ -1005,7 +1005,7 @@ namespace TMK
     public:
 #ifdef _WIN32
         /**
-         * @brief Creates a new instance of the CMDArguments class.
+         * @brief Creates an instance of the CMDArguments class.
          * @param totalArguments The total arguments.
          * @param utf16Arguments The arguments in UTF-16 encoding.
          * @param utf8Arguments The arguments in UTF-8 encoding.
@@ -1025,7 +1025,7 @@ namespace TMK
         std::wstring GetUTF16ArgumentByOffset(std::size_t offset) const;
 #else
         /**
-         * @brief Creates a new instance of the CMDArguments class.
+         * @brief Creates an instance of the CMDArguments class.
          * @param totalArguments The total arguments.
          * @param utf8Arguments The arguments in UTF8 encoding.
          * @returns An instance of the CMDArguments class.
@@ -1069,12 +1069,12 @@ namespace TMK
     {
     public:
         /**
-         * @brief Creates a new instance of the Coordinate class.
+         * @brief Creates an instance of the Coordinate class.
          * @returns An instance of the Coordinate class.
          */
         Coordinate();
         /**
-         * @brief Creates a new instance of the Coordinate class.
+         * @brief Creates an instance of the Coordinate class.
          * @param column The column component of the coordinate.
          * @param row The row component of the coordinate.
          * @returns An instance of the Coordinate class.
@@ -1092,12 +1092,12 @@ namespace TMK
         unsigned short GetRow() const;
         /**
          * @brief Sets the column component of the coordinate.
-         * @param column The column component of the coordinate to be set.
+         * @param column The column component to be set.
          */
         void SetColumn(unsigned short column);
         /**
          * @brief Sets the row component of the coordinate.
-         * @param row The row component of the coordinate to be set.
+         * @param row The row component to be set.
          */
         void SetRow(unsigned short row);
         /**
@@ -1118,106 +1118,106 @@ namespace TMK
     };
 
     /**
-     * @brief Represents a geometry inside of the terminal window.
+     * @brief Represents a region inside of the terminal window.
      */
-    class Geometry final
+    class Region final
     {
     public:
         /**
-         * @brief Creates an instance of the Geometry class.
-         * @returns An instance of the Geometry class.
+         * @brief Creates an instance of the Region class.
+         * @returns An instance of the Region class.
          */
-        Geometry();
+        Region();
         /**
-         * @brief Creates an instance of the Geometry class.
-         * @param totalColumns The total columns of the geometry.
-         * @param totalRows The total rows of the geometry.
-         * @returns An instance of the Geometry class.
+         * @brief Creates an instance of the Region class.
+         * @param totalColumns The total columns of the region.
+         * @param totalRows The total rows of the region.
+         * @returns An instance of the Region class.
          */
-        Geometry(unsigned short totalColumns, unsigned short totalRows);
+        Region(unsigned short totalColumns, unsigned short totalRows);
         /**
-         * @brief Creates an instance of the Geometry class.
-         * @param coordinateI The first coordinate of the geometry.
-         * @param coordinateII The second coordinate of the geometry. It must be opposite to the first one.
-         * @returns An instance of the Geometry class.
+         * @brief Creates an instance of the Region class.
+         * @param coordinateI The first coordinate of the region.
+         * @param coordinateII The second coordinate of the region. It must be opposite to the first one.
+         * @returns An instance of the Region class.
          */
-        Geometry(Coordinate coordinateI, Coordinate coordinateII);
+        Region(Coordinate coordinateI, Coordinate coordinateII);
         /**
-         * @brief Gets the total columns of the geometry.
-         * @returns The total columns of the geometry.
+         * @brief Gets the total columns of the region.
+         * @returns The total columns of the region.
          */
         unsigned short GetTotalColumns() const;
         /**
-         * @brief Gets the total rows of the geometry.
-         * @returns The total rows of the geometry.
+         * @brief Gets the total rows of the region.
+         * @returns The total rows of the region.
          */
         unsigned short GetTotalRows() const;
         /**
-         * @brief Gets the area of the geometry.
-         * @returns The area of the geometry.
+         * @brief Gets the area of the region.
+         * @returns The area of the region.
          */
         unsigned int GetArea() const;
         /**
-         * @brief Gets the top left coordinate of the geometry.
-         * @returns The top left coordinate of the geometry.
+         * @brief Gets the top left coordinate of the region.
+         * @returns The top left coordinate of the region.
          */
         Coordinate GetTopLeftCoordinate() const;
         /**
-         * @brief Gets the top right coordinate of the geometry.
-         * @returns The top right coordinate of the geometry.
+         * @brief Gets the top right coordinate of the region.
+         * @returns The top right coordinate of the region.
          */
         Coordinate GetTopRightCoordinate() const;
         /**
-         * @brief Gets the bottom left coordinate of the geometry.
-         * @returns The bottom left coordinate of the geometry.
+         * @brief Gets the bottom left coordinate of the region.
+         * @returns The bottom left coordinate of the region.
          */
         Coordinate GetBottomLeftCoordinate() const;
         /**
-         * @brief Gets the bottom right coordinate of the geometry.
-         * @returns The bottom right coordinate of the geometry.
+         * @brief Gets the bottom right coordinate of the region.
+         * @returns The bottom right coordinate of the region.
          */
         Coordinate GetBottomRightCoordinate() const;
         /**
-         * @brief Checks if the geometry contains a coordinate.
+         * @brief Checks if the region contains a coordinate.
          * @param column The column component of the coordinate.
          * @param row The row component of the coordinate.
-         * @returns A boolean that states the geometry contains the coordinate.
+         * @returns A boolean that states the region contains the coordinate.
          */
         bool Contains(unsigned short column, unsigned short row) const;
         /**
-         * @brief Checks if the geometry contains a coordinate.
+         * @brief Checks if the region contains a coordinate.
          * @param coordinate The coordinate to be checked.
-         * @returns A boolean that states the geometry contains the coordinate.
+         * @returns A boolean that states the region contains the coordinate.
          */
         bool Contains(Coordinate coordinate) const;
 
     private:
         /**
-         * @brief The total columns of the geometry.
+         * @brief The total columns of the region.
          */
         unsigned short m_totalColumns;
         /**
-         * @brief The total rows of the geometry.
+         * @brief The total rows of the region.
          */
         unsigned short m_totalRows;
         /**
-         * @brief The area of the geometry.
+         * @brief The area of the region.
          */
         unsigned int m_area;
         /**
-         * @brief The top left coordinate of the geometry.
+         * @brief The top left coordinate of the region.
          */
         Coordinate m_topLeftCoordinate;
         /**
-         * @brief The top right coordinate of the geometry.
+         * @brief The top right coordinate of the region.
          */
         Coordinate m_topRightCoordinate;
         /**
-         * @brief The bottom left coordinate of the geometry.
+         * @brief The bottom left coordinate of the region.
          */
         Coordinate m_bottomLeftCoordinate;
         /**
-         * @brief The bottom right coordinate of the geometry.
+         * @brief The bottom right coordinate of the region.
          */
         Coordinate m_bottomRightCoordinate;
     };
@@ -1248,6 +1248,7 @@ namespace TMK
         unsigned int GetCode() const;
         /**
          * @brief Sets the hex code of the color.
+         * @param code The hex code to be set.
          * @throws OutOfRangeException Thrown whenever the hex code is out of the valid range.
          */
         void SetCode(unsigned int code);
@@ -1310,17 +1311,17 @@ namespace TMK
         unsigned char GetBlue() const;
         /**
          * @brief Sets the red component of the color.
-		 * @param red The red component to be set.
+         * @param red The red component to be set.
          */
         void SetRed(unsigned char red);
         /**
          * @brief Sets the green component of the color.
-		 * @param green The green component to be set.
+         * @param green The green component to be set.
          */
         void SetGreen(unsigned char green);
         /**
          * @brief Sets the blue component of the color.
-		 * @param blue The blue component to be set.
+         * @param blue The blue component to be set.
          */
         void SetBlue(unsigned char blue);
         /**
@@ -1420,7 +1421,7 @@ namespace TMK
     {
     public:
         /**
-         * @brief Creates a new instance of the FocusEvent class.
+         * @brief Creates an instance of the FocusEvent class.
          * @param hasFocus A boolean that states the terminal window has gained focus.
          * @returns An instance of the FocusEvent class.
          */
@@ -1445,21 +1446,21 @@ namespace TMK
     {
     public:
         /**
-         * @brief Creates a new instance of the ResizeEvent class.
+         * @brief Creates an instance of the ResizeEvent class.
          * @returns An instance of the ResizeEvent class.
          */
         ResizeEvent();
         /**
-         * @brief Gets the terminal window geometry.
-         * @returns The terminal window geometry.
+         * @brief Gets the terminal window region.
+         * @returns The terminal window region.
          */
-        Geometry GetWindowGeometry() const;
+        Region GetWindowRegion() const;
 
     private:
         /**
-         * @brief The terminal window geometry.
+         * @brief The terminal window region.
          */
-        Geometry m_windowGeometry;
+        Region m_windowRegion;
     };
 
     /**
@@ -1469,7 +1470,7 @@ namespace TMK
     {
     public:
         /**
-         * @brief Creates a new instance of the MouseEvent class.
+         * @brief Creates an instance of the MouseEvent class.
          * @param coordinate The mouse coordinate.
          * @param button The mouse button pressed.
          * @param isDragging A boolean that states the mouse was being dragged.
@@ -1544,7 +1545,7 @@ namespace TMK
     {
     public:
         /**
-         * @brief Creates a new instance of the KeyEvent class.
+         * @brief Creates an instance of the KeyEvent class.
          * @param key The key pressed. It may be an UTF-8 grapheme or an enumerator from the KeyboardKey enum class.
          * @param hasCtrl A boolean that states the Ctrl key was being holded.
          * @param hasAlt A boolean that states the Alt key was being holded.
@@ -1599,31 +1600,31 @@ namespace TMK
     {
     public:
         /**
-         * @brief Creates a new instance of the EventInfo class.
+         * @brief Creates an instance of the EventInfo class.
          * @param type The event type.
          * @returns An instance of the EventInfo class.
          */
         EventInfo(EventType type);
         /**
-         * @brief Creates a new instance of the EventInfo class.
+         * @brief Creates an instance of the EventInfo class.
          * @param focusEvent A focus event to be converted.
          * @returns An instance of the EventInfo class.
          */
         EventInfo(FocusEvent focusEvent);
         /**
-         * @brief Creates a new instance of the EventInfo class.
+         * @brief Creates an instance of the EventInfo class.
          * @param resizeEvent A resize event to be converted.
          * @returns An instance of the EventInfo class.
          */
         EventInfo(ResizeEvent resizeEvent);
         /**
-         * @brief Creates a new instance of the EventInfo class.
+         * @brief Creates an instance of the EventInfo class.
          * @param mouseEvent A mouse event to be converted.
          * @returns An instance of the EventInfo class.
          */
         EventInfo(MouseEvent mouseEvent);
         /**
-         * @brief Creates a new instance of the EventInfo class.
+         * @brief Creates an instance of the EventInfo class.
          * @param keyEvent A key event to be converted.
          * @returns An instance of the EventInfo class.
          */
@@ -1812,7 +1813,7 @@ namespace TMK
              * @brief Reads a terminal event.
              * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
              * @param wait The time to wait for an event. If zero, it returns immediately.
-             * @param filter A function used to filter events while the timer is running.
+             * @param filter A function to be used to filter events while the timer is running.
              * @returns The information about the event read.
              */
             static EventInfo ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter);
@@ -2034,7 +2035,7 @@ namespace TMK
              * @brief Gets the terminal window geometry.
              * @returns The terminal window geometry.
              */
-            static Geometry GetGeometry();
+            static Region GetRegion();
             /**
              * @brief Opens the alternate window.
              */
