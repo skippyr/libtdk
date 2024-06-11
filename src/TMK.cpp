@@ -476,6 +476,64 @@ namespace TMK
         return "r: " + std::to_string(m_red) + ", g: " + std::to_string(m_green) + ", b: " + std::to_string(m_blue);
     }
 
+    HSLColor::HSLColor(unsigned short hue, unsigned char saturation, unsigned char lightness)
+    {
+        if (hue > 360 || saturation > 100 || lightness > 100)
+        {
+            throw OutOfRangeException();
+        }
+        m_hue = hue;
+        m_saturation = saturation;
+        m_lightness = lightness;
+    }
+
+    unsigned short HSLColor::GetHue() const
+    {
+        return m_hue;
+    }
+
+    unsigned char HSLColor::GetSaturation() const
+    {
+        return m_saturation;
+    }
+
+    unsigned char HSLColor::GetLightness() const
+    {
+        return m_lightness;
+    }
+
+    void HSLColor::SetHue(unsigned short hue)
+    {
+        if (hue > 360)
+        {
+            throw OutOfRangeException();
+        }
+        m_hue = hue;
+    }
+
+    void HSLColor::SetSaturation(unsigned char saturation)
+    {
+        if (saturation > 100)
+        {
+            throw OutOfRangeException();
+        }
+        m_saturation = saturation;
+    }
+
+    void HSLColor::SetLightness(unsigned char lightness)
+    {
+        if (lightness > 100)
+        {
+            throw OutOfRangeException();
+        }
+        m_lightness = lightness;
+    }
+
+    std::string HSLColor::ToString() const
+    {
+        return "h: " + std::to_string(m_hue) + ", s: " + std::to_string(m_saturation) + ", l: " + std::to_string(m_saturation);
+    }
+
     FocusEvent::FocusEvent(bool hasFocus) : m_hasFocus(hasFocus)
     {
     }

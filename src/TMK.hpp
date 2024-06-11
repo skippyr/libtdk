@@ -1321,19 +1321,67 @@ namespace TMK
      */
     class HSLColor
     {
+    public:
+        /**
+         * @brief Creates an instance of the HSLColor class.
+         * @param hue The hue of the color. It must be a value in range from 0 to 360.
+         * @param saturation The saturation of the color. It must be a value in range from 0 to 100.
+         * @param lightness The lightness of the color. It must be a value in range from 0 to 100.
+         * @throws OutOfRangeException Thrown whenever any value is out of its valid range.
+         */
+        HSLColor(unsigned short hue, unsigned char saturation, unsigned char lightness);
+        /**
+         * @brief Gets the hue of the color.
+         * @returns The hue of the color.
+         */
+        unsigned short GetHue() const;
+        /**
+         * @brief Gets the saturation of the color.
+         * @returns The saturation of the color.
+         */
+        unsigned char GetSaturation() const;
+        /**
+         * @brief Gets the lightness of the color.
+         * @returns The lightness of the color.
+         */
+        unsigned char GetLightness() const;
+        /**
+         * @brief Sets the hue of the color.
+         * @param hue The hue to be set. It must be a value in range from 0 to 360.
+         * @throws OutOfRangeException Thrown whenever the hue is out of the valid range.
+         */
+        void SetHue(unsigned short hue);
+        /**
+         * @brief Sets the saturation of the color.
+         * @param saturation The saturation to be set. It must be a value in range from 0 to 100.
+         * @throws OutOfRangeException Thrown whenever the saturation is out of the valid range.
+         */
+        void SetSaturation(unsigned char saturation);
+        /**
+         * @brief Sets the lightness of the color.
+         * @param lightness The lightness to be set. It must be a value in range from 0 to 100.
+         * @throws OutOfRangeException Thrown whenever the saturation is out of the valid range.
+         */
+        void SetLightness(unsigned char lightness);
+        /**
+         * @brief Gets a string representation of the color.
+         * @returns A string representation of the color.
+         */
+        std::string ToString() const;
+
     private:
         /**
          * @brief The hue of the color.
          */
-        unsigned char m_hue;
+        unsigned short m_hue;
         /**
          * @brief The saturation of the color.
          */
         unsigned char m_saturation;
         /**
-         * @brief The brightness of the color.
+         * @brief The lightness of the color.
          */
-        unsigned char m_brightness;
+        unsigned char m_lightness;
     };
 
     /**
