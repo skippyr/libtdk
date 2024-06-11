@@ -27,20 +27,6 @@ namespace TMK
     class Setup
     {
     public:
-#ifdef _WIN32
-        static void SetStreamMode(HANDLE handle, bool isTTY, DWORD mode)
-        {
-            if (!isTTY)
-            {
-                throw NoValidTTYException();
-            }
-            if (!SetConsoleMode(handle, mode))
-            {
-                throw InvalidStreamAttributesException();
-            }
-        }
-#endif
-
         static void InitEnvironment()
         {
             if (!(g_ttyCache & TTY_CACHE_HAS_BEEN_FILLED_FLAG))
@@ -692,6 +678,18 @@ namespace TMK
         return bufferInfo;
     }
 
+    void Terminal::SetStreamMode(HANDLE handle, bool isTTY, DWORD mode)
+    {
+        if (!isTTY)
+        {
+            throw NoValidTTYException();
+        }
+        if (!SetConsoleMode(handle, mode))
+        {
+            throw InvalidStreamAttributesException();
+        }
+    }
+
     void Terminal::Encoding::SetOutputCodePage(UINT codePage)
     {
         if (!SetConsoleOutputCP(codePage))
@@ -740,7 +738,7 @@ namespace TMK
 
     void Terminal::InputStream::SetMode(DWORD mode)
     {
-        Setup::SetStreamMode(GetHandle(), IsTTY(), mode);
+        SetStreamMode(GetHandle(), IsTTY(), mode);
     }
 #else
     struct termios Terminal::InputStream::GetTermiosAttributes()
@@ -852,7 +850,7 @@ namespace TMK
 
     void Terminal::OutputStream::SetMode(DWORD mode)
     {
-        Setup::SetStreamMode(GetHandle(), IsTTY(), mode);
+        SetStreamMode(GetHandle(), IsTTY(), mode);
     }
 #endif
 
@@ -926,7 +924,7 @@ namespace TMK
 
     void Terminal::ErrorStream::SetMode(DWORD mode)
     {
-        Setup::SetStreamMode(GetHandle(), IsTTY(), mode);
+        SetStreamMode(GetHandle(), IsTTY(), mode);
     }
 #endif
 

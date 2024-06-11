@@ -2221,6 +2221,15 @@ namespace TMK
          * @throws NoValidTTYException Thrown whenever the stream is not a TTY.
          */
         static CONSOLE_SCREEN_BUFFER_INFO GetStreamWindowBufferInfo(HANDLE handle);
+        /**
+         * @brief Sets the mode of a terminal stream.
+         * @param handle The handle of the stream.
+         * @param isTTY A boolean that states the stream is a TTY.
+         * @param mode The mode to be set.
+         * @throws NoValidTTYException Thrown whenever the stream is not a TTY.
+         * @throws InvalidStreamAttributesException Thrown whenever the mode is invalid.
+         */
+        static void SetStreamMode(HANDLE handle, bool isTTY, DWORD mode);
 #endif
     };
 
