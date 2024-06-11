@@ -425,20 +425,25 @@ namespace TMK
 
     HexColor::HexColor(unsigned int code)
     {
-        if (code > 0xffffff)
-        {
-            throw OutOfRangeException();
-        }
-        m_code = code;
+        SetCode(code);
     }
 
     HexColor::HexColor(RGBColor color) : m_code(color.GetRed() << 16 | color.GetGreen() << 8 | color.GetBlue())
     {
     }
 
-    unsigned int HexColor::HexColor::GetCode() const
+    unsigned int HexColor::GetCode() const
     {
         return m_code;
+    }
+
+    void HexColor::SetCode(unsigned int code)
+    {
+        if (code > 0xffffff)
+        {
+            throw OutOfRangeException();
+        }
+        m_code = code;
     }
 
     std::string HexColor::HexColor::ToString(bool hasPrefix, bool hasZeroPadding, bool isUpperCase) const
@@ -493,13 +498,9 @@ namespace TMK
 
     HSLColor::HSLColor(unsigned short hue, unsigned char saturation, unsigned char lightness)
     {
-        if (hue > 360 || saturation > 100 || lightness > 100)
-        {
-            throw OutOfRangeException();
-        }
-        m_hue = hue;
-        m_saturation = saturation;
-        m_lightness = lightness;
+        SetHue(hue);
+        SetSaturation(saturation);
+        SetLightness(lightness);
     }
 
     unsigned short HSLColor::GetHue() const

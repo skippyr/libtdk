@@ -1246,6 +1246,11 @@ namespace TMK
          */
         unsigned int GetCode() const;
         /**
+         * @brief Sets the hex code of the color.
+         * @throws OutOfRangeException Thrown whenever the hex code is out of the valid range.
+         */
+        void SetCode(unsigned int code);
+        /**
          * @brief Gets a string representation of the color.
          * @param hasPrefix A boolean that states the string has the 0x prefix.
          * @param hasZeroPadding A boolean that states the string has a left padding filled by the number zero.
@@ -1340,6 +1345,7 @@ namespace TMK
          * @param saturation The saturation of the color. It must be a value in range from 0 to 100.
          * @param lightness The lightness of the color. It must be a value in range from 0 to 100.
          * @throws OutOfRangeException Thrown whenever any value is out of its valid range.
+         * @returns An instance of the HSLColor class.
          */
         HSLColor(unsigned short hue, unsigned char saturation, unsigned char lightness);
         /**
