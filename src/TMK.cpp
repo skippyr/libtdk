@@ -28,16 +28,6 @@ namespace TMK
     {
     public:
 #ifdef _WIN32
-        static DWORD GetStreamMode(HANDLE handle)
-        {
-            DWORD mode;
-            if (!GetConsoleMode(handle, &mode))
-            {
-                throw NoValidTTYException();
-            }
-            return mode;
-        }
-
         static CONSOLE_SCREEN_BUFFER_INFO GetStreamScreenBufferInfo(HANDLE handle)
         {
             CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
@@ -65,19 +55,19 @@ namespace TMK
         {
             if (!(g_ttyCache & TTY_CACHE_HAS_BEEN_FILLED_FLAG))
             {
-                g_ttyCache |= TTY_CACHE(Terminal::Input) | TTY_CACHE(Terminal::Output) | TTY_CACHE(Terminal::Error) | TTY_CACHE_HAS_BEEN_FILLED_FLAG;
+                g_ttyCache |= TTY_CACHE(Terminal::InputStream) | TTY_CACHE(Terminal::OutputStream) | TTY_CACHE(Terminal::ErrorStream) | TTY_CACHE_HAS_BEEN_FILLED_FLAG;
 #ifdef _WIN32
                 Terminal::Encoding::SetOutputCodePage(CP_UTF8);
                 try
                 {
-                    Terminal::Output::SetMode(Terminal::Output::GetMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+                    Terminal::OutputStream::SetMode(Terminal::OutputStream::GetMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
                 }
                 catch (NoValidTTYException&)
                 {
                 }
                 try
                 {
-                    Terminal::Error::SetMode(Terminal::Error::GetMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+                    Terminal::ErrorStream::SetMode(Terminal::ErrorStream::GetMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
                 }
                 catch (NoValidTTYException&)
                 {
@@ -95,11 +85,11 @@ namespace TMK
          */
         static void WriteANSIEscapeSequence(std::string format, std::va_list arguments)
         {
-            if (!Terminal::Output::IsTTY() && !Terminal::Error::IsTTY())
+            if (!Terminal::OutputStream::IsTTY() && !Terminal::ErrorStream::IsTTY())
             {
                 throw NoValidTTYException();
             }
-            if (std::vfprintf(Terminal::Output::IsTTY() ? Terminal::Output::GetFile() : Terminal::Error::GetFile(), format.c_str(), arguments) < 0)
+            if (std::vfprintf(Terminal::OutputStream::IsTTY() ? Terminal::OutputStream::GetFile() : Terminal::ErrorStream::GetFile(), format.c_str(), arguments) < 0)
             {
                 throw WideCharacterOrientationException();
             }
@@ -122,9 +112,9 @@ namespace TMK
 
         static void Write(std::FILE* streamFile, const char* format, std::va_list arguments, bool hasNewLine)
         {
-            if (streamFile == Terminal::Error::GetFile())
+            if (streamFile == Terminal::ErrorStream::GetFile())
             {
-                Terminal::Output::Flush();
+                Terminal::OutputStream::Flush();
             }
             if (format && std::vfprintf(streamFile, format, arguments) < 0)
             {
@@ -138,25 +128,25 @@ namespace TMK
 
         static EventInfo ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter)
         {
-            if (!Terminal::Input::IsTTY() || (!Terminal::Output::IsTTY() && !Terminal::Error::IsTTY()))
+            if (!Terminal::InputStream::IsTTY() || (!Terminal::OutputStream::IsTTY() && !Terminal::ErrorStream::IsTTY()))
             {
                 throw NoValidTTYException();
             }
-            if (std::fwide(Terminal::Input::GetFile(), 0) > 0)
+            if (std::fwide(Terminal::InputStream::GetFile(), 0) > 0)
             {
                 throw WideCharacterOrientationException();
             }
             EventInfo eventInfo = EventType::None;
 #ifdef _WIN32
             HANDLE timerHandle = nullptr;
-            DWORD inputMode = Terminal::Input::GetMode();
-            Terminal::Input::SetMode(allowMouseCapture ? (inputMode | ENABLE_MOUSE_INPUT) & ~(ENABLE_QUICK_EDIT_MODE | ENABLE_PROCESSED_INPUT)
-                                                       : inputMode & ~ENABLE_PROCESSED_INPUT);
+            DWORD inputMode = Terminal::InputStream::GetMode();
+            Terminal::InputStream::SetMode(allowMouseCapture ? (inputMode | ENABLE_MOUSE_INPUT) & ~(ENABLE_QUICK_EDIT_MODE | ENABLE_PROCESSED_INPUT)
+                                                             : inputMode & ~ENABLE_PROCESSED_INPUT);
             while (true)
             {
                 if (!wait.count())
                 {
-                    if (!Terminal::Input::GetTotalEventsCached())
+                    if (!Terminal::InputStream::GetTotalEventsCached())
                     {
                         eventInfo = EventType::None;
                         break;
@@ -171,7 +161,7 @@ namespace TMK
                         duration.QuadPart = -10000 * wait.count();
                         SetWaitableTimer(timerHandle, &duration, 1, nullptr, nullptr, false);
                     }
-                    HANDLE handles[] = {timerHandle, Terminal::Input::GetHandle()};
+                    HANDLE handles[] = {timerHandle, Terminal::InputStream::GetHandle()};
                     if (WaitForMultipleObjects(2, handles, false, INFINITE) == WAIT_OBJECT_0)
                     {
                         eventInfo = EventType::TimeOut;
@@ -180,7 +170,7 @@ namespace TMK
                 }
                 INPUT_RECORD record;
                 DWORD totalEventsRead;
-                ReadConsoleInputW(Terminal::Input::GetHandle(), &record, 1, &totalEventsRead);
+                ReadConsoleInputW(Terminal::InputStream::GetHandle(), &record, 1, &totalEventsRead);
                 if (record.EventType == FOCUS_EVENT)
                 {
                     eventInfo = FocusEvent(record.Event.FocusEvent.bSetFocus);
@@ -194,11 +184,11 @@ namespace TMK
                     CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
                     try
                     {
-                        bufferInfo = Terminal::Output::GetScreenBufferInfo();
+                        bufferInfo = Terminal::OutputStream::GetScreenBufferInfo();
                     }
                     catch (NoValidTTYException&)
                     {
-                        bufferInfo = Terminal::Error::GetScreenBufferInfo();
+                        bufferInfo = Terminal::ErrorStream::GetScreenBufferInfo();
                     }
                     eventInfo = MouseEvent(
                         Coordinate(record.Event.MouseEvent.dwMousePosition.X - bufferInfo.srWindow.Left, record.Event.MouseEvent.dwMousePosition.Y - bufferInfo.srWindow.Top),
@@ -228,8 +218,8 @@ namespace TMK
                         }
                         else if (buffer >= HIGH_SURROGATE_START && buffer <= HIGH_SURROGATE_END)
                         {
-                            ReadConsoleInputW(Terminal::Input::GetHandle(), &record, 1, &totalEventsRead);
-                            ReadConsoleInputW(Terminal::Input::GetHandle(), &record, 1, &totalEventsRead);
+                            ReadConsoleInputW(Terminal::InputStream::GetHandle(), &record, 1, &totalEventsRead);
+                            ReadConsoleInputW(Terminal::InputStream::GetHandle(), &record, 1, &totalEventsRead);
                             *(reinterpret_cast<short*>(&buffer) + 1) = record.Event.KeyEvent.uChar.UnicodeChar;
                             WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<wchar_t*>(&buffer), 2, reinterpret_cast<char*>(&key), 4, nullptr, nullptr);
                         }
@@ -265,7 +255,7 @@ namespace TMK
             {
                 CloseHandle(timerHandle);
             }
-            Terminal::Input::SetMode(inputMode);
+            Terminal::InputStream::SetMode(inputMode);
 #endif
             return eventInfo;
         }
@@ -692,6 +682,16 @@ namespace TMK
         throw InvalidEventTypeException();
     }
 #ifdef _WIN32
+    DWORD Terminal::GetStreamMode(HANDLE handle)
+    {
+        DWORD mode;
+        if (!GetConsoleMode(handle, &mode))
+        {
+            throw NoValidTTYException();
+        }
+        return mode;
+    }
+
     void Terminal::Encoding::SetOutputCodePage(UINT codePage)
     {
         if (!SetConsoleOutputCP(codePage))
@@ -718,17 +718,17 @@ namespace TMK
 #endif
 
 #ifdef _WIN32
-    HANDLE Terminal::Input::GetHandle()
+    HANDLE Terminal::InputStream::GetHandle()
     {
         return GetStdHandle(STD_INPUT_HANDLE);
     }
 
-    DWORD Terminal::Input::GetMode()
+    DWORD Terminal::InputStream::GetMode()
     {
-        return Setup::GetStreamMode(GetHandle());
+        return GetStreamMode(GetHandle());
     }
 
-    DWORD Terminal::Input::GetTotalEventsCached()
+    DWORD Terminal::InputStream::GetTotalEventsCached()
     {
         DWORD totalEvents;
         if (!GetNumberOfConsoleInputEvents(GetHandle(), &totalEvents))
@@ -738,12 +738,12 @@ namespace TMK
         return totalEvents;
     }
 
-    void Terminal::Input::SetMode(DWORD mode)
+    void Terminal::InputStream::SetMode(DWORD mode)
     {
         Setup::SetStreamMode(GetHandle(), IsTTY(), mode);
     }
 #else
-    struct termios Terminal::Input::GetTermiosAttributes()
+    struct termios Terminal::InputStream::GetTermiosAttributes()
     {
         struct termios attributes;
         if (tcgetattr(GetFileNumber(), &attributes))
@@ -753,7 +753,7 @@ namespace TMK
         return attributes;
     }
 
-    void Terminal::Input::SetTermiosAttributes(struct termios& attributes)
+    void Terminal::InputStream::SetTermiosAttributes(struct termios& attributes)
     {
         if (!IsTTY())
         {
@@ -765,24 +765,24 @@ namespace TMK
         }
     }
 
-    void Terminal::Input::SetFCNTLBlockingState(bool isToEnable)
+    void Terminal::InputStream::SetFCNTLBlockingState(bool isToEnable)
     {
         int flags = fcntl(GetFileNumber(), F_GETFL);
         fcntl(GetFileNumber(), F_SETFL, isToEnable ? flags & ~O_NONBLOCK : flags | O_NONBLOCK);
     }
 #endif
 
-    std::FILE* Terminal::Input::GetFile()
+    std::FILE* Terminal::InputStream::GetFile()
     {
         return stdin;
     }
 
-    int Terminal::Input::GetFileNumber()
+    int Terminal::InputStream::GetFileNumber()
     {
         return 0;
     }
 
-    void Terminal::Input::Clear()
+    void Terminal::InputStream::Clear()
     {
 #ifdef _WIN32
         FlushConsoleInputBuffer(GetHandle());
@@ -808,65 +808,65 @@ namespace TMK
 #endif
     }
 
-    bool Terminal::Input::IsTTY()
+    bool Terminal::InputStream::IsTTY()
     {
         Setup::InitEnvironment();
         return IS_TTY(GetFileNumber());
     }
 
-    char Terminal::Input::ReadByte()
+    char Terminal::InputStream::ReadByte()
     {
         return std::getchar();
     }
 
-    EventInfo Terminal::Input::ReadEvent(bool allowMouseCapture)
+    EventInfo Terminal::InputStream::ReadEvent(bool allowMouseCapture)
     {
         return Setup::ReadEvent(allowMouseCapture, -1ms, nullptr);
     }
 
-    EventInfo Terminal::Input::ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait)
+    EventInfo Terminal::InputStream::ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait)
     {
         return Setup::ReadEvent(allowMouseCapture, wait, nullptr);
     }
 
-    EventInfo Terminal::Input::ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter)
+    EventInfo Terminal::InputStream::ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter)
     {
         return Setup::ReadEvent(allowMouseCapture, wait, filter);
     }
 
 #ifdef _WIN32
-    HANDLE Terminal::Output::GetHandle()
+    HANDLE Terminal::OutputStream::GetHandle()
     {
         return GetStdHandle(STD_OUTPUT_HANDLE);
     }
 
-    DWORD Terminal::Output::GetMode()
+    DWORD Terminal::OutputStream::GetMode()
     {
-        return Setup::GetStreamMode(GetHandle());
+        return GetStreamMode(GetHandle());
     }
 
-    CONSOLE_SCREEN_BUFFER_INFO Terminal::Output::GetScreenBufferInfo()
+    CONSOLE_SCREEN_BUFFER_INFO Terminal::OutputStream::GetScreenBufferInfo()
     {
         return Setup::GetStreamScreenBufferInfo(GetHandle());
     }
 
-    void Terminal::Output::SetMode(DWORD mode)
+    void Terminal::OutputStream::SetMode(DWORD mode)
     {
         Setup::SetStreamMode(GetHandle(), IsTTY(), mode);
     }
 #endif
 
-    void Terminal::Output::Flush()
+    void Terminal::OutputStream::Flush()
     {
         std::fflush(GetFile());
     }
 
-    void Terminal::Output::WriteLine(std::string format, std::va_list arguments)
+    void Terminal::OutputStream::WriteLine(std::string format, std::va_list arguments)
     {
         Setup::Write(GetFile(), format.c_str(), arguments, true);
     }
 
-    void Terminal::Output::WriteLine(std::string format, ...)
+    void Terminal::OutputStream::WriteLine(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
@@ -874,17 +874,17 @@ namespace TMK
         va_end(arguments);
     }
 
-    void Terminal::Output::WriteLine()
+    void Terminal::OutputStream::WriteLine()
     {
         Setup::Write(GetFile(), nullptr, nullptr, true);
     }
 
-    void Terminal::Output::Write(std::string format, std::va_list arguments)
+    void Terminal::OutputStream::Write(std::string format, std::va_list arguments)
     {
         Setup::Write(GetFile(), format.c_str(), arguments, false);
     }
 
-    void Terminal::Output::Write(std::string format, ...)
+    void Terminal::OutputStream::Write(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
@@ -892,50 +892,50 @@ namespace TMK
         va_end(arguments);
     }
 
-    std::FILE* Terminal::Output::GetFile()
+    std::FILE* Terminal::OutputStream::GetFile()
     {
         return stdout;
     }
 
-    int Terminal::Output::GetFileNumber()
+    int Terminal::OutputStream::GetFileNumber()
     {
         return 1;
     }
 
-    bool Terminal::Output::IsTTY()
+    bool Terminal::OutputStream::IsTTY()
     {
         Setup::InitEnvironment();
         return IS_TTY(GetFileNumber());
     }
 
 #ifdef _WIN32
-    HANDLE Terminal::Error::GetHandle()
+    HANDLE Terminal::ErrorStream::GetHandle()
     {
         return GetStdHandle(STD_ERROR_HANDLE);
     }
 
-    DWORD Terminal::Error::GetMode()
+    DWORD Terminal::ErrorStream::GetMode()
     {
-        return Setup::GetStreamMode(GetHandle());
+        return GetStreamMode(GetHandle());
     }
 
-    CONSOLE_SCREEN_BUFFER_INFO Terminal::Error::GetScreenBufferInfo()
+    CONSOLE_SCREEN_BUFFER_INFO Terminal::ErrorStream::GetScreenBufferInfo()
     {
         return Setup::GetStreamScreenBufferInfo(GetHandle());
     }
 
-    void Terminal::Error::SetMode(DWORD mode)
+    void Terminal::ErrorStream::SetMode(DWORD mode)
     {
         Setup::SetStreamMode(GetHandle(), IsTTY(), mode);
     }
 #endif
 
-    void Terminal::Error::WriteLine(std::string format, std::va_list arguments)
+    void Terminal::ErrorStream::WriteLine(std::string format, std::va_list arguments)
     {
         Setup::Write(GetFile(), format.c_str(), arguments, true);
     }
 
-    void Terminal::Error::WriteLine(std::string format, ...)
+    void Terminal::ErrorStream::WriteLine(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
@@ -943,17 +943,17 @@ namespace TMK
         va_end(arguments);
     }
 
-    void Terminal::Error::WriteLine()
+    void Terminal::ErrorStream::WriteLine()
     {
         Setup::Write(GetFile(), nullptr, nullptr, true);
     }
 
-    void Terminal::Error::Write(std::string format, std::va_list arguments)
+    void Terminal::ErrorStream::Write(std::string format, std::va_list arguments)
     {
         Setup::Write(GetFile(), format.c_str(), arguments, false);
     }
 
-    void Terminal::Error::Write(std::string format, ...)
+    void Terminal::ErrorStream::Write(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
@@ -961,17 +961,17 @@ namespace TMK
         va_end(arguments);
     }
 
-    std::FILE* Terminal::Error::GetFile()
+    std::FILE* Terminal::ErrorStream::GetFile()
     {
         return stderr;
     }
 
-    int Terminal::Error::GetFileNumber()
+    int Terminal::ErrorStream::GetFileNumber()
     {
         return 2;
     }
 
-    bool Terminal::Error::IsTTY()
+    bool Terminal::ErrorStream::IsTTY()
     {
         Setup::InitEnvironment();
         return IS_TTY(GetFileNumber());
@@ -1012,7 +1012,7 @@ namespace TMK
     {
 #ifdef _WIN32
         CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-        if (!GetConsoleScreenBufferInfo(Output::GetHandle(), &bufferInfo) && !GetConsoleScreenBufferInfo(Error::GetHandle(), &bufferInfo))
+        if (!GetConsoleScreenBufferInfo(OutputStream::GetHandle(), &bufferInfo) && !GetConsoleScreenBufferInfo(ErrorStream::GetHandle(), &bufferInfo))
         {
             throw NoValidTTYException();
         }
@@ -1218,24 +1218,24 @@ namespace TMK
         CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
         try
         {
-            bufferInfo = Output::GetScreenBufferInfo();
+            bufferInfo = OutputStream::GetScreenBufferInfo();
         }
         catch (NoValidTTYException&)
         {
-            bufferInfo = Error::GetScreenBufferInfo();
+            bufferInfo = ErrorStream::GetScreenBufferInfo();
         }
         return Coordinate(bufferInfo.dwCursorPosition.X - bufferInfo.srWindow.Left, bufferInfo.dwCursorPosition.Y - bufferInfo.srWindow.Top);
 #else
-        struct termios attributes = Input::GetTermiosAttributes();
-        Input::Clear();
+        struct termios attributes = InputStream::GetTermiosAttributes();
+        InputStream::Clear();
         Setup::WriteANSIEscapeSequence("\x1b[6n");
         attributes.c_lflag &= ~(ICANON | ECHO);
-        Input::SetTermiosAttributes(attributes);
+        InputStream::SetTermiosAttributes(attributes);
         unsigned short column;
         unsigned short row;
         int totalMatchesRead = std::scanf("\x1b[%hu;%huR", &row, &column);
         attributes.c_lflag |= ICANON | ECHO;
-        Input::SetTermiosAttributes(attributes);
+        InputStream::SetTermiosAttributes(attributes);
         if (totalMatchesRead != 2)
         {
             throw WideCharacterOrientationException();

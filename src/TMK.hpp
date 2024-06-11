@@ -48,7 +48,7 @@ namespace TMK
          */
         InterruptedSystemCallEINTR = 4,
         /**
-         * @brief Input/output error (EIO).
+         * @brief InputStream/output error (EIO).
          */
         InputOutputErrorEIO = 5,
         /**
@@ -1724,7 +1724,7 @@ namespace TMK
         /**
          * @brief Represents the standard input stream.
          */
-        class Input final
+        class InputStream final
         {
         public:
 #ifdef _WIN32
@@ -1819,13 +1819,13 @@ namespace TMK
             static EventInfo ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter);
 
         private:
-            Input() = delete;
+            InputStream() = delete;
         };
 
         /**
          * @brief Represents the standard output stream.
          */
-        class Output final
+        class OutputStream final
         {
         public:
 #ifdef _WIN32
@@ -1908,13 +1908,13 @@ namespace TMK
             static bool IsTTY();
 
         private:
-            Output() = delete;
+            OutputStream() = delete;
         };
 
         /**
          * @brief Represents the standard error stream.
          */
-        class Error final
+        class ErrorStream final
         {
         public:
 #ifdef _WIN32
@@ -1993,7 +1993,7 @@ namespace TMK
             static bool IsTTY();
 
         private:
-            Error() = delete;
+            ErrorStream() = delete;
         };
 
         /**
@@ -2205,6 +2205,16 @@ namespace TMK
 
     private:
         Terminal() = delete;
+
+#ifdef _WIN32
+        /**
+         * @brief Gets the mode of a terminal stream.
+         * @param handle The handle of the stream.
+         * @returns The mode of stream.
+         * @throws NoValidTTYException Thrown whenever the stream is not a TTY.
+         */
+        static DWORD GetStreamMode(HANDLE handle);
+#endif
     };
 
     /**
