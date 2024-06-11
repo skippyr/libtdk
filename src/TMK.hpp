@@ -2250,6 +2250,14 @@ namespace TMK
          * @throws WideCharacterOrientationException Thrown whenever the standard output or error stream is wide character oriented.
          */
         static void WriteANSIEscapeSequence(std::string format, ...);
+        /**
+         * @brief Formats and writes a string to a terminal stream.
+         * @param file The file of the stream.
+         * @param format The format to be used. It accepts the same specifiers as the printf function family.
+         * @param arguments The arguments to be formatted.
+         * @param hasNewLine A boolean that states a newline character should be appended at the end of the string.
+         */
+        static void Write(std::FILE* file, const char* format, std::va_list arguments, bool hasNewLine);
     };
 
     /**

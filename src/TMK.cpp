@@ -28,22 +28,6 @@ namespace TMK
     class Setup
     {
     public:
-        static void Write(std::FILE* streamFile, const char* format, std::va_list arguments, bool hasNewLine)
-        {
-            if (streamFile == Terminal::ErrorStream::GetFile())
-            {
-                Terminal::OutputStream::Flush();
-            }
-            if (format && std::vfprintf(streamFile, format, arguments) < 0)
-            {
-                throw WideCharacterOrientationException();
-            }
-            if (hasNewLine && std::fputc('\n', streamFile) == EOF)
-            {
-                throw WideCharacterOrientationException();
-            }
-        }
-
         static EventInfo ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter)
         {
             if (!Terminal::InputStream::IsTTY() || (!Terminal::OutputStream::IsTTY() && !Terminal::ErrorStream::IsTTY()))
@@ -631,21 +615,38 @@ namespace TMK
 
     void Terminal::WriteANSIEscapeSequence(std::string format, std::va_list arguments)
     {
-        if (!Terminal::OutputStream::IsTTY() && !Terminal::ErrorStream::IsTTY())
+        if (!OutputStream::IsTTY() && !ErrorStream::IsTTY())
         {
             throw NoValidTTYException();
         }
-        if (std::vfprintf(Terminal::OutputStream::IsTTY() ? Terminal::OutputStream::GetFile() : Terminal::ErrorStream::GetFile(), format.c_str(), arguments) < 0)
+        if (std::vfprintf(OutputStream::IsTTY() ? OutputStream::GetFile() : ErrorStream::GetFile(), format.c_str(), arguments) < 0)
         {
             throw WideCharacterOrientationException();
         }
     }
+
     void Terminal::WriteANSIEscapeSequence(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
         WriteANSIEscapeSequence(format, arguments);
         va_end(arguments);
+    }
+
+    void Terminal::Write(std::FILE* file, const char* format, std::va_list arguments, bool hasNewLine)
+    {
+        if (file == ErrorStream::GetFile())
+        {
+            OutputStream::Flush();
+        }
+        if (format && std::vfprintf(file, format, arguments) < 0)
+        {
+            throw WideCharacterOrientationException();
+        }
+        if (hasNewLine && std::fputc('\n', file) == EOF)
+        {
+            throw WideCharacterOrientationException();
+        }
     }
 
 #ifdef _WIN32
@@ -852,32 +853,32 @@ namespace TMK
 
     void Terminal::OutputStream::WriteLine(std::string format, std::va_list arguments)
     {
-        Setup::Write(GetFile(), format.c_str(), arguments, true);
+        Terminal::Write(GetFile(), format.c_str(), arguments, true);
     }
 
     void Terminal::OutputStream::WriteLine(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
-        Setup::Write(GetFile(), format.c_str(), arguments, true);
+        Terminal::Write(GetFile(), format.c_str(), arguments, true);
         va_end(arguments);
     }
 
     void Terminal::OutputStream::WriteLine()
     {
-        Setup::Write(GetFile(), nullptr, nullptr, true);
+        Terminal::Write(GetFile(), nullptr, nullptr, true);
     }
 
     void Terminal::OutputStream::Write(std::string format, std::va_list arguments)
     {
-        Setup::Write(GetFile(), format.c_str(), arguments, false);
+        Terminal::Write(GetFile(), format.c_str(), arguments, false);
     }
 
     void Terminal::OutputStream::Write(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
-        Setup::Write(GetFile(), format.c_str(), arguments, false);
+        Terminal::Write(GetFile(), format.c_str(), arguments, false);
         va_end(arguments);
     }
 
@@ -921,32 +922,32 @@ namespace TMK
 
     void Terminal::ErrorStream::WriteLine(std::string format, std::va_list arguments)
     {
-        Setup::Write(GetFile(), format.c_str(), arguments, true);
+        Terminal::Write(GetFile(), format.c_str(), arguments, true);
     }
 
     void Terminal::ErrorStream::WriteLine(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
-        Setup::Write(GetFile(), format.c_str(), arguments, true);
+        Terminal::Write(GetFile(), format.c_str(), arguments, true);
         va_end(arguments);
     }
 
     void Terminal::ErrorStream::WriteLine()
     {
-        Setup::Write(GetFile(), nullptr, nullptr, true);
+        Terminal::Write(GetFile(), nullptr, nullptr, true);
     }
 
     void Terminal::ErrorStream::Write(std::string format, std::va_list arguments)
     {
-        Setup::Write(GetFile(), format.c_str(), arguments, false);
+        Terminal::Write(GetFile(), format.c_str(), arguments, false);
     }
 
     void Terminal::ErrorStream::Write(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
-        Setup::Write(GetFile(), format.c_str(), arguments, false);
+        Terminal::Write(GetFile(), format.c_str(), arguments, false);
         va_end(arguments);
     }
 
