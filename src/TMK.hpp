@@ -1310,14 +1310,17 @@ namespace TMK
         unsigned char GetBlue() const;
         /**
          * @brief Sets the red component of the color.
+		 * @param red The red component to be set.
          */
         void SetRed(unsigned char red);
         /**
          * @brief Sets the green component of the color.
+		 * @param green The green component to be set.
          */
         void SetGreen(unsigned char green);
         /**
          * @brief Sets the blue component of the color.
+		 * @param blue The blue component to be set.
          */
         void SetBlue(unsigned char blue);
         /**

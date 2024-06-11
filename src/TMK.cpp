@@ -651,6 +651,11 @@ namespace TMK
     {
     }
 
+    EventType EventInfo::GetType() const
+    {
+        return m_type;
+    }
+
     FocusEvent EventInfo::GetFocusEvent() const
     {
         if (m_type == EventType::Focus)
@@ -686,12 +691,6 @@ namespace TMK
         }
         throw InvalidEventTypeException();
     }
-
-    EventType EventInfo::GetType() const
-    {
-        return m_type;
-    }
-
 #ifdef _WIN32
     void Terminal::Encoding::SetOutputCodePage(UINT codePage)
     {
@@ -769,7 +768,7 @@ namespace TMK
     void Terminal::Input::SetFCNTLBlockingState(bool isToEnable)
     {
         int flags = fcntl(GetFileNumber(), F_GETFL);
-        fcntl(GetFileNumber(), F_SETFL, isToEnable ? flags &~ O_NONBLOCK : flags | O_NONBLOCK);
+        fcntl(GetFileNumber(), F_SETFL, isToEnable ? flags & ~O_NONBLOCK : flags | O_NONBLOCK);
     }
 #endif
 
@@ -1141,28 +1140,6 @@ namespace TMK
         SetRGBColor(RGBColor(color), layer);
     }
 
-    void Terminal::Font::ResetColors()
-    {
-        try
-        {
-            Setup::WriteANSIEscapeSequence("\x1b[39;49m");
-        }
-        catch (NoValidTTYException&)
-        {
-        }
-    }
-
-    void Terminal::Font::ResetWeight()
-    {
-        try
-        {
-            Setup::WriteANSIEscapeSequence("\x1b[22m");
-        }
-        catch (NoValidTTYException&)
-        {
-        }
-    }
-
     void Terminal::Font::SetEffects(int effects)
     {
         for (std::size_t offset = 6; offset < 32; ++offset)
@@ -1194,6 +1171,28 @@ namespace TMK
     void Terminal::Font::SetEffects(FontEffect effect)
     {
         SetEffects(static_cast<int>(effect));
+    }
+
+    void Terminal::Font::ResetColors()
+    {
+        try
+        {
+            Setup::WriteANSIEscapeSequence("\x1b[39;49m");
+        }
+        catch (NoValidTTYException&)
+        {
+        }
+    }
+
+    void Terminal::Font::ResetWeight()
+    {
+        try
+        {
+            Setup::WriteANSIEscapeSequence("\x1b[22m");
+        }
+        catch (NoValidTTYException&)
+        {
+        }
     }
 
     void Terminal::Font::ResetEffects()
