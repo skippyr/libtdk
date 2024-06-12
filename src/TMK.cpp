@@ -216,15 +216,15 @@ namespace TMK
         return hasPrefix ? std::string("0x") + buffer : std::string(buffer);
     }
 
+    RGBColor::RGBColor() : m_red(0), m_green(0), m_blue(0)
+    {
+    }
+
     RGBColor::RGBColor(unsigned char red, unsigned char green, unsigned char blue) : m_red(red), m_green(green), m_blue(blue)
     {
     }
 
     RGBColor::RGBColor(HexColor color) : m_red(color.GetCode() >> 16 & 0xff), m_green(color.GetCode() >> 8 & 0xff), m_blue(color.GetCode() & 0xff)
-    {
-    }
-
-    RGBColor::RGBColor(HSLColor color)
     {
     }
 
@@ -261,60 +261,6 @@ namespace TMK
     std::string RGBColor::ToString() const
     {
         return "r: " + std::to_string(m_red) + ", g: " + std::to_string(m_green) + ", b: " + std::to_string(m_blue);
-    }
-
-    HSLColor::HSLColor(unsigned short hue, unsigned char saturation, unsigned char lightness)
-    {
-        SetHue(hue);
-        SetSaturation(saturation);
-        SetLightness(lightness);
-    }
-
-    unsigned short HSLColor::GetHue() const
-    {
-        return m_hue;
-    }
-
-    unsigned char HSLColor::GetSaturation() const
-    {
-        return m_saturation;
-    }
-
-    unsigned char HSLColor::GetLightness() const
-    {
-        return m_lightness;
-    }
-
-    void HSLColor::SetHue(unsigned short hue)
-    {
-        if (hue > 360)
-        {
-            throw OutOfRangeException();
-        }
-        m_hue = hue;
-    }
-
-    void HSLColor::SetSaturation(unsigned char saturation)
-    {
-        if (saturation > 100)
-        {
-            throw OutOfRangeException();
-        }
-        m_saturation = saturation;
-    }
-
-    void HSLColor::SetLightness(unsigned char lightness)
-    {
-        if (lightness > 100)
-        {
-            throw OutOfRangeException();
-        }
-        m_lightness = lightness;
-    }
-
-    std::string HSLColor::ToString() const
-    {
-        return "h: " + std::to_string(m_hue) + ", s: " + std::to_string(m_saturation) + ", l: " + std::to_string(m_saturation);
     }
 
     FocusEvent::FocusEvent(bool hasFocus) : m_hasFocus(hasFocus)
