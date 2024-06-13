@@ -473,20 +473,24 @@ namespace tmk
         {
             throw NoValidTTYException();
         }
-        if (std::fwide(InputStream::getFile(), 0) > 0)
+        if (std::fwide(stdin, 0) > 0)
         {
             throw WideCharacterOrientationException();
         }
         EventInfo eventInfo = EventType::None;
 #ifdef _WIN32
-        HANDLE timer = nullptr;
-        DWORD mode = InputStream::getMode();
-        InputStream::setMode(allowMouseCapture ? (mode | ENABLE_MOUSE_INPUT) & ~(ENABLE_QUICK_EDIT_MODE | ENABLE_PROCESSED_INPUT) : mode & ~ENABLE_PROCESSED_INPUT);
+        HANDLE timerHandle = nullptr;
+        HANDLE inputHandle = GetStdHandle(STD_INPUT_HANDLE);
+        DWORD mode;
+        GetConsoleMode(inputHandle, &mode);
+        SetConsoleMode(inputHandle, allowMouseCapture ? (mode | ENABLE_MOUSE_INPUT) & ~(ENABLE_QUICK_EDIT_MODE | ENABLE_PROCESSED_INPUT) : mode & ~ENABLE_PROCESSED_INPUT);
         while (true)
         {
             if (!wait.count())
             {
-                if (!InputStream::getTotalEventsCached())
+                DWORD totalEventsAvailable;
+                GetNumberOfConsoleInputEvents(inputHandle, &totalEventsAvailable);
+                if (!totalEventsAvailable)
                 {
                     eventInfo = EventType::None;
                     break;
@@ -494,14 +498,14 @@ namespace tmk
             }
             if (wait.count() > 0)
             {
-                if (!timer)
+                if (!timerHandle)
                 {
-                    timer = CreateWaitableTimerW(nullptr, true, nullptr);
+                    timerHandle = CreateWaitableTimerW(nullptr, true, nullptr);
                     LARGE_INTEGER duration;
                     duration.QuadPart = -10000 * wait.count();
-                    SetWaitableTimer(timer, &duration, 1, nullptr, nullptr, false);
+                    SetWaitableTimer(timerHandle, &duration, 1, nullptr, nullptr, false);
                 }
-                HANDLE handles[] = {timer, InputStream::getHandle()};
+                HANDLE handles[] = {timerHandle, inputHandle};
                 if (WaitForMultipleObjects(2, handles, false, INFINITE) == WAIT_OBJECT_0)
                 {
                     eventInfo = EventType::TimeOut;
@@ -510,7 +514,7 @@ namespace tmk
             }
             INPUT_RECORD record;
             DWORD totalEventsRead;
-            ReadConsoleInputW(InputStream::getHandle(), &record, 1, &totalEventsRead);
+            ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
             if (record.EventType == FOCUS_EVENT)
             {
                 eventInfo = FocusEvent(record.Event.FocusEvent.bSetFocus);
@@ -522,14 +526,7 @@ namespace tmk
             else if (record.EventType == MOUSE_EVENT)
             {
                 CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-                try
-                {
-                    bufferInfo = OutputStream::getWindowBufferInfo();
-                }
-                catch (NoValidTTYException&)
-                {
-                    bufferInfo = ErrorStream::getWindowBufferInfo();
-                }
+                GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) || GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo);
                 eventInfo = MouseEvent(
                     Coordinate(record.Event.MouseEvent.dwMousePosition.X - bufferInfo.srWindow.Left, record.Event.MouseEvent.dwMousePosition.Y - bufferInfo.srWindow.Top),
                     record.Event.MouseEvent.dwEventFlags & MOUSE_WHEELED ? record.Event.MouseEvent.dwButtonState & 0x1000000 ? MouseButton::WheelDown : MouseButton::WheelUp
@@ -558,8 +555,8 @@ namespace tmk
                     }
                     else if (buffer >= HIGH_SURROGATE_START && buffer <= HIGH_SURROGATE_END)
                     {
-                        ReadConsoleInputW(InputStream::getHandle(), &record, 1, &totalEventsRead);
-                        ReadConsoleInputW(InputStream::getHandle(), &record, 1, &totalEventsRead);
+                        ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
+                        ReadConsoleInputW(inputHandle, &record, 1, &totalEventsRead);
                         *(reinterpret_cast<short*>(&buffer) + 1) = record.Event.KeyEvent.uChar.UnicodeChar;
                         WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<wchar_t*>(&buffer), 2, reinterpret_cast<char*>(&key), 4, nullptr, nullptr);
                     }
@@ -591,11 +588,11 @@ namespace tmk
                 break;
             }
         }
-        if (timer)
+        if (timerHandle)
         {
-            CloseHandle(timer);
+            CloseHandle(timerHandle);
         }
-        InputStream::setMode(mode);
+        SetConsoleMode(inputHandle, mode);
 #endif
         return eventInfo;
     }

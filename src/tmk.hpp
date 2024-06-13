@@ -4,7 +4,7 @@
 #include <cstdarg>
 #include <functional>
 #include <iostream>
-#include <string>
+
 #ifdef _WIN32
 #include <Windows.h>
 #else
