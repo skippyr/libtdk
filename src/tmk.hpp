@@ -20,10 +20,10 @@ using namespace std::literals::chrono_literals;
  * attributes, colors, effects, arguments and event readings. It primarily uses UTF-8 encoding, but has some exceptions that use UTF-16 encoding to fit within the Windows runtime
  * ecosystem.
  */
-namespace TMK
+namespace tmk
 {
     /**
-     * @brief Contains the POSIX exit codes.
+     * @brief contains the POSIX exit codes.
      */
     enum class POSIXExitCode
     {
@@ -570,7 +570,7 @@ namespace TMK
     };
 
     /**
-     * @brief Contains the available terminal font weights.
+     * @brief contains the available terminal font weights.
      */
     enum class FontWeight
     {
@@ -585,7 +585,7 @@ namespace TMK
     };
 
     /**
-     * @brief Contains the available terminal font layers.
+     * @brief contains the available terminal font layers.
      */
     enum class FontLayer
     {
@@ -631,7 +631,7 @@ namespace TMK
     };
 
     /**
-     * @brief Contains the ANSI codes of the first 16 colors of the XTerm color palette.
+     * @brief contains the ANSI codes of the first 16 colors of the XTerm color palette.
      */
     enum class XColor
     {
@@ -702,7 +702,7 @@ namespace TMK
     };
 
     /**
-     * @brief Contains the available terminal cursor shapes.
+     * @brief contains the available terminal cursor shapes.
      */
     enum class CursorShape
     {
@@ -752,7 +752,7 @@ namespace TMK
     };
 
     /**
-     * @brief Contains the available mouse buttons.
+     * @brief contains the available mouse buttons.
      */
     enum class MouseButton
     {
@@ -783,7 +783,7 @@ namespace TMK
     };
 
     /**
-     * @brief Contains the available keyboard keys.
+     * @brief contains the available keyboard keys.
      */
     enum class KeyboardKey
     {
@@ -1021,7 +1021,7 @@ namespace TMK
          * @returns The argument in UTF-16 encoding.
          * @exception OutOfRangeException Thrown whenever the offset is out of the valid range of arguments.
          */
-        std::wstring GetUTF16ArgumentByOffset(std::size_t offset) const;
+        std::wstring getUTF16ArgumentByOffset(std::size_t offset) const;
 #else
         /**
          * @brief Creates an instance of the CMDArguments class.
@@ -1035,14 +1035,14 @@ namespace TMK
          * @brief Gets the total arguments.
          * @returns The total arguments.
          */
-        int GetTotalArguments() const;
+        int getTotalArguments() const;
         /**
          * @brief Gets an argument in UTF-8 encoding by using its offset.
          * @param offset The offset to be used.
          * @returns The argument in UTF-8 encoding.
          * @throws OutOfRangeException Thrown whenever the offset is out of the valid range of arguments.
          */
-        std::string GetUTF8ArgumentByOffset(std::size_t offset) const;
+        std::string getUTF8ArgumentByOffset(std::size_t offset) const;
 
     private:
 #ifdef _WIN32
@@ -1083,27 +1083,27 @@ namespace TMK
          * @brief Gets the column component of the coordinate.
          * @returns The column component of the coordinate.
          */
-        unsigned short GetColumn() const;
+        unsigned short getColumn() const;
         /**
          * @brief Gets the row component of the coordinate.
          * @returns The row component of the coordinate.
          */
-        unsigned short GetRow() const;
+        unsigned short getRow() const;
         /**
          * @brief Sets the column component of the coordinate.
          * @param column The column component to be set.
          */
-        void SetColumn(unsigned short column);
+        void setColumn(unsigned short column);
         /**
          * @brief Sets the row component of the coordinate.
          * @param row The row component to be set.
          */
-        void SetRow(unsigned short row);
+        void setRow(unsigned short row);
         /**
          * @brief Gets a string representation of the coordinate.
          * @returns A string representation of the coordinate.
          */
-        std::string ToString() const;
+        std::string toString() const;
 
     private:
         /**
@@ -1145,50 +1145,50 @@ namespace TMK
          * @brief Gets the total columns of the region.
          * @returns The total columns of the region.
          */
-        unsigned short GetTotalColumns() const;
+        unsigned short getTotalColumns() const;
         /**
          * @brief Gets the total rows of the region.
          * @returns The total rows of the region.
          */
-        unsigned short GetTotalRows() const;
+        unsigned short getTotalRows() const;
         /**
          * @brief Gets the area of the region.
          * @returns The area of the region.
          */
-        unsigned int GetArea() const;
+        unsigned int getArea() const;
         /**
          * @brief Gets the top left coordinate of the region.
          * @returns The top left coordinate of the region.
          */
-        Coordinate GetTopLeftCoordinate() const;
+        Coordinate getTopLeftCoordinate() const;
         /**
          * @brief Gets the top right coordinate of the region.
          * @returns The top right coordinate of the region.
          */
-        Coordinate GetTopRightCoordinate() const;
+        Coordinate getTopRightCoordinate() const;
         /**
          * @brief Gets the bottom left coordinate of the region.
          * @returns The bottom left coordinate of the region.
          */
-        Coordinate GetBottomLeftCoordinate() const;
+        Coordinate getBottomLeftCoordinate() const;
         /**
          * @brief Gets the bottom right coordinate of the region.
          * @returns The bottom right coordinate of the region.
          */
-        Coordinate GetBottomRightCoordinate() const;
+        Coordinate getBottomRightCoordinate() const;
         /**
          * @brief Checks if the region contains a coordinate.
          * @param column The column component of the coordinate.
          * @param row The row component of the coordinate.
          * @returns A boolean that states the region contains the coordinate.
          */
-        bool Contains(unsigned short column, unsigned short row) const;
+        bool contains(unsigned short column, unsigned short row) const;
         /**
          * @brief Checks if the region contains a coordinate.
          * @param coordinate The coordinate to be checked.
          * @returns A boolean that states the region contains the coordinate.
          */
-        bool Contains(Coordinate coordinate) const;
+        bool contains(Coordinate coordinate) const;
 
     private:
         /**
@@ -1244,13 +1244,13 @@ namespace TMK
          * @brief Gets the hex code of the color.
          * @returns The hex code of the color.
          */
-        unsigned int GetCode() const;
+        unsigned int getCode() const;
         /**
          * @brief Sets the hex code of the color.
          * @param code The hex code to be set.
          * @throws OutOfRangeException Thrown whenever the hex code is out of the valid range.
          */
-        void SetCode(unsigned int code);
+        void setCode(unsigned int code);
         /**
          * @brief Gets a string representation of the color.
          * @param hasPrefix A boolean that states the string has the 0x prefix.
@@ -1258,7 +1258,7 @@ namespace TMK
          * @param isUpperCase A boolean that states the string is upper case.
          * @returns A string representation of the color.
          */
-        std::string ToString(bool hasPrefix, bool hasZeroPadding, bool isUpperCase) const;
+        std::string toString(bool hasPrefix, bool hasZeroPadding, bool isUpperCase) const;
 
     private:
         /**
@@ -1296,37 +1296,37 @@ namespace TMK
          * @brief Gets the red component of the color.
          * @returns The red component of the color.
          */
-        unsigned char GetRed() const;
+        unsigned char getRed() const;
         /**
          * @brief Gets the green component of the color.
          * @returns The green component of the color.
          */
-        unsigned char GetGreen() const;
+        unsigned char getGreen() const;
         /**
          * @brief Gets the blue component of the color.
          * @returns The blue component of the color.
          */
-        unsigned char GetBlue() const;
+        unsigned char getBlue() const;
         /**
          * @brief Sets the red component of the color.
          * @param red The red component to be set.
          */
-        void SetRed(unsigned char red);
+        void setRed(unsigned char red);
         /**
          * @brief Sets the green component of the color.
          * @param green The green component to be set.
          */
-        void SetGreen(unsigned char green);
+        void setGreen(unsigned char green);
         /**
          * @brief Sets the blue component of the color.
          * @param blue The blue component to be set.
          */
-        void SetBlue(unsigned char blue);
+        void setBlue(unsigned char blue);
         /**
          * @brief Gets a string representation of the color.
          * @returns A string representation of the color.
          */
-        std::string ToString() const;
+        std::string toString() const;
 
     private:
         /**
@@ -1359,7 +1359,7 @@ namespace TMK
          * @brief Checks if the terminal window has gained focus.
          * @returns A boolean that states the terminal window has gained focus.
          */
-        bool HasFocus() const;
+        bool hasFocus() const;
 
     private:
         /**
@@ -1383,13 +1383,13 @@ namespace TMK
          * @brief Gets the terminal window region.
          * @returns The terminal window region.
          */
-        Region GetWindowRegion() const;
+        Region getRegion() const;
 
     private:
         /**
          * @brief The terminal window region.
          */
-        Region m_windowRegion;
+        Region m_region;
     };
 
     /**
@@ -1413,32 +1413,32 @@ namespace TMK
          * @brief Gets the mouse coordinate.
          * @returns The mouse coordinate.
          */
-        Coordinate GetCoordinate() const;
+        Coordinate getCoordinate() const;
         /**
          * @brief Gets the mouse button pressed.
          * @returns The mouse button pressed.
          */
-        MouseButton GetButton() const;
+        MouseButton getButton() const;
         /**
          * @brief Checks if the mouse was being dragged.
          * @returns A boolean that states the mouse was being dragged.
          */
-        bool IsDragging() const;
+        bool isDragging() const;
         /**
          * @brief Checks if the Ctrl was being holded.
          * @returns A boolean that states the Ctrl key was being holded.
          */
-        bool HasCtrl() const;
+        bool hasCtrl() const;
         /**
          * @brief Checks if the Alt was being holded.
          * @returns A boolean that states the Alt key was being holded.
          */
-        bool HasAlt() const;
+        bool hasAlt() const;
         /**
          * @brief Checks if the Shift was being holded.
          * @returns A boolean that states the Shift key was being holded.
          */
-        bool HasShift() const;
+        bool hasShift() const;
 
     private:
         /**
@@ -1486,22 +1486,22 @@ namespace TMK
          * @brief Gets the key pressed.
          * @returns The key pressed. It may be an UTF-8 grapheme or an enumerator from the KeyboardKey enum class.
          */
-        int GetKey() const;
+        int getKey() const;
         /**
          * @brief Checks if the Ctrl key was being holded.
          * @returns A boolean that states the Ctrl key was being holded.
          */
-        bool HasCtrl() const;
+        bool hasCtrl() const;
         /**
          * @brief Checks if the Alt was being holded.
          * @returns A boolean that states the Alt key was being holded.
          */
-        bool HasAlt() const;
+        bool hasAlt() const;
         /**
          * @brief Checks if the Shift was being holded.
          * @returns A boolean that states the Shift key was being holded.
          */
-        bool HasShift() const;
+        bool hasShift() const;
 
     private:
         /**
@@ -1562,31 +1562,31 @@ namespace TMK
          * @brief Gets the event type.
          * @returns The event type.
          */
-        EventType GetType() const;
+        EventType getType() const;
         /**
          * @brief Gets the focus event read.
          * @returns The focus event read.
          * @throws InvalidEventTypeException Thrown whenever the event type is not a focus event.
          */
-        FocusEvent GetFocusEvent() const;
+        FocusEvent getFocusEvent() const;
         /**
          * @brief Gets the resize event read.
          * @returns The resize event read.
          * @throws InvalidEventTypeException Thrown whenever the event type is not a resize event.
          */
-        ResizeEvent GetResizeEvent() const;
+        ResizeEvent getResizeEvent() const;
         /**
          * @brief Gets the mouse event read.
          * @returns The mouse event read.
          * @throws InvalidEventTypeException Thrown whenever the event type is not a mouse event.
          */
-        MouseEvent GetMouseEvent() const;
+        MouseEvent getMouseEvent() const;
         /**
          * @brief Gets the key event read.
          * @returns The key event read.
          * @throws InvalidEventTypeException Thrown whenever the event type is not a key event.
          */
-        KeyEvent GetKeyEvent() const;
+        KeyEvent getKeyEvent() const;
 
     private:
         /**
@@ -1631,19 +1631,19 @@ namespace TMK
              * @param codePage The code page to be used.
              * @throws InvalidCodePageException Thrown whenever the code page is invalid.
              */
-            static void SetOutputCodePage(UINT codePage);
+            static void setOutputCodePage(UINT codePage);
             /**
              * @brief Converts an UTF-16 encoded string to UTF-8.
              * @param utf16String The UTF-16 encoded string to be converted.
              * @returns The converted UTF-8 encoded string.
              */
-            static std::string ConvertUTF16ToUTF8(std::wstring utf16String);
+            static std::string convertUTF16ToUTF8(std::wstring utf16String);
             /**
              * @brief Converts an UTF-8 encoded string to UTF-16.
              * @param utf8String The UTF-8 encoded string to be converted.
              * @returns The converted UTF-16 encoded string.
              */
-            static std::wstring ConvertUTF8ToUTF16(std::string utf8String);
+            static std::wstring convertUTF8ToUTF16(std::string utf8String);
 
         private:
             Encoding() = delete;
@@ -1661,83 +1661,83 @@ namespace TMK
              * @brief Gets the handle associated with the standard input stream.
              * @returns The handle associated with the standard input stream.
              */
-            static HANDLE GetHandle();
+            static HANDLE getHandle();
             /**
              * @brief Gets the standard input mode.
              * @returns The standard input mode.
              * @throws NoValidTTYException Thrown whenever the standard input stream is not a TTY.
              */
-            static DWORD GetMode();
+            static DWORD getMode();
             /**
              * @brief Gets the total events cached in the standard input buffer.
              * @returns The total events cached in the standard input buffer.
              * @throws NoValidTTYException Thrown whenever the standard input stream is not a TTY.
              */
-            static DWORD GetTotalEventsCached();
+            static DWORD getTotalEventsCached();
             /**
              * @brief Sets the standard input mode.
              * @param mode The mode to be set.
              * @throws NoValidTTYException Thrown whenever the standard input stream is not a TTY.
              * @throws InvalidStreamAttributesException Thrown whenever the mode is invalid.
              */
-            static void SetMode(DWORD mode);
+            static void setMode(DWORD mode);
 #else
             /**
              * @brief Gets the termios attributes of the standard input stream.
              * @returns The termios attributes of the standard input stream.
              * @throws NoValidTTYException Thrown whenever the standard input stream is not a TTY.
              */
-            static struct termios GetTermiosAttributes();
+            static struct termios getTermiosAttributes();
             /**
              * @brief Sets the termios attributes of the standard input stream.
              * @param attributes The attributes to be set.
              * @throws NoValidTTYException Thrown whenever the standard input stream is not a TTY.
              * @throws InvalidStreamAttributesException Thrown whenever the attributes given are invalid.
              */
-            static void SetTermiosAttributes(struct termios& attributes);
+            static void setTermiosAttributes(struct termios& attributes);
             /**
              * @brief Sets the FCNTL blocking state.
              * @param isToEnable A boolean that states the blocking state should be enabled.
              */
-            static void SetFCNTLBlockingState(bool isToEnable);
+            static void setFCNTLBlockingState(bool isToEnable);
 #endif
             /**
              * @brief Gets the file descriptor associated with the standard input stream.
              * @param The file descriptor associated with the standard input stream.
              */
-            static std::FILE* GetFile();
+            static std::FILE* getFile();
             /**
              * @brief Gets the file descriptor number associated with the standard input stream.
              * @param The file descriptor number associated with the standard input stream.
              */
-            static int GetFileNumber();
+            static int getFileNumber();
             /**
              * @brief Clears the standard input buffer.
              */
-            static void Clear();
+            static void clear();
             /**
              * @brief Checks if the standard input stream is connected to an interactive terminal (TTY).
              * @param A boolean that states the standard input stream is a TTY.
              */
-            static bool IsTTY();
+            static bool isTTY();
             /**
              * @brief Reads a byte.
              * @returns The byte read or EOF if the standard input stream is closed or it is wide character oriented.
              */
-            static char ReadByte();
+            static char readByte();
             /**
              * @brief Reads a terminal event.
              * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
              * @returns The information about the event read.
              */
-            static EventInfo ReadEvent(bool allowMouseCapture);
+            static EventInfo readEvent(bool allowMouseCapture);
             /**
              * @brief Reads a terminal event.
              * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
              * @param wait The time to wait for an event. If zero, it returns immediately.
              * @returns The information about the event read.
              */
-            static EventInfo ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait);
+            static EventInfo readEvent(bool allowMouseCapture, std::chrono::milliseconds wait);
             /**
              * @brief Reads a terminal event.
              * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
@@ -1745,7 +1745,7 @@ namespace TMK
              * @param filter A function to be used to filter events while the timer is running.
              * @returns The information about the event read.
              */
-            static EventInfo ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter);
+            static EventInfo readEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter);
 
         private:
             InputStream() = delete;
@@ -1762,79 +1762,79 @@ namespace TMK
              * @brief Gets the handle associated with the standard output stream.
              * @returns The handle associated with the standard output stream.
              */
-            static HANDLE GetHandle();
+            static HANDLE getHandle();
             /**
              * @brief Gets the standard output mode.
              * @returns The standard output mode.
              * @throws NoValidTTYException Thrown whenever the standard output stream is not a TTY.
              */
-            static DWORD GetMode();
+            static DWORD getMode();
             /**
              * @brief Gets the buffer info of the window connected to the standard output stream.
              * @returns The buffer info of the window connected to the standard output stream.
              * @throws NoValidTTYException Thrown whenever the standard output stream is not a TTY.
              */
-            static CONSOLE_SCREEN_BUFFER_INFO GetWindowBufferInfo();
+            static CONSOLE_SCREEN_BUFFER_INFO getWindowBufferInfo();
             /**
              * @brief Sets the standard output mode.
              * @param mode The mode to be set.
              * @throws NoValidTTYException Thrown whenever the standard output stream is not a TTY.
              * @throws InvalidStreamAttributesException Thrown whenever the mode is invalid.
              */
-            static void SetMode(DWORD mode);
+            static void setMode(DWORD mode);
 #endif
             /**
              * @brief Flushes the standard output stream buffer.
              */
-            static void Flush();
+            static void flush();
             /**
              * @brief Formats and writes arguments to the standard output stream with a newline character appended at its end.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param arguments The arguments to be formatted.
              * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
              */
-            static void WriteLine(std::string format, std::va_list arguments);
+            static void writeLine(std::string format, std::va_list arguments);
             /**
              * @brief Formats and writes arguments to the standard output stream with a newline character appended at its end.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
              * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
              */
-            static void WriteLine(std::string format, ...);
+            static void writeLine(std::string format, ...);
             /**
              * @brief Writes a newline character to the standard output stream.
              * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
              */
-            static void WriteLine();
+            static void writeLine();
             /**
              * @brief Formats and writes arguments to the standard output stream.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param arguments The arguments to be formatted.
              * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
              */
-            static void Write(std::string format, std::va_list arguments);
+            static void write(std::string format, std::va_list arguments);
             /**
              * @brief Formats and writes arguments to the standard output stream.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
              * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
              */
-            static void Write(std::string format, ...);
+            static void write(std::string format, ...);
             /**
              * @brief Gets the file descriptor associated with the standard output stream.
              * @returns The file descriptor associated with the standard output stream.
              */
-            static std::FILE* GetFile();
+            static std::FILE* getFile();
             /**
              * @brief Gets the file descriptor number associated with the standard output stream.
              * @returns The file descriptor number associated with the standard output stream.
              */
-            static int GetFileNumber();
+            static int getFileNumber();
             /**
              * @brief Checks if the standard output stream is connected to an interactive terminal (TTY).
              * @returns A boolean that states the standard output stream is a TTY.
              */
-            static bool IsTTY();
+            static bool isTTY();
 
         private:
             OutputStream() = delete;
@@ -1851,26 +1851,26 @@ namespace TMK
              * @brief Gets the handle associated with the standard error stream.
              * @returns The handle associated with the standard error stream.
              */
-            static HANDLE GetHandle();
+            static HANDLE getHandle();
             /**
              * @brief Gets the standard error mode.
              * @returns The standard error mode.
              * @throws NoValidTTYException Thrown whenever the standard error stream is not a TTY.
              */
-            static DWORD GetMode();
+            static DWORD getMode();
             /**
              * @brief Gets the buffer info of the window connected to the standard error stream.
              * @returns The buffer info of the window connected to the standard error stream.
              * @throws NoValidTTYException Thrown whenever the standard error stream is not a TTY.
              */
-            static CONSOLE_SCREEN_BUFFER_INFO GetWindowBufferInfo();
+            static CONSOLE_SCREEN_BUFFER_INFO getWindowBufferInfo();
             /**
              * @brief Sets the standard error mode.
              * @param mode The mode to be set.
              * @throws NoValidTTYException Thrown whenever the standard error stream is not a TTY.
              * @throws InvalidStreamAttributesException Thrown whenever the mode is invalid.
              */
-            static void SetMode(DWORD mode);
+            static void setMode(DWORD mode);
 #endif
             /**
              * @brief Formats and writes arguments to the standard error stream with a newline character appended at its end.
@@ -1878,48 +1878,48 @@ namespace TMK
              * @param arguments The arguments to be formatted.
              * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
              */
-            static void WriteLine(std::string format, std::va_list arguments);
+            static void writeLine(std::string format, std::va_list arguments);
             /**
              * @brief Formats and writes arguments to the standard error stream with a newline character appended at its end.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
              * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
              */
-            static void WriteLine(std::string format, ...);
+            static void writeLine(std::string format, ...);
             /**
              * @brief Writes a newline character to the standard error stream.
              * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
              */
-            static void WriteLine();
+            static void writeLine();
             /**
              * @brief Formats and writes arguments to the standard error stream.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param arguments The arguments to be formatted.
              * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
              */
-            static void Write(std::string format, std::va_list arguments);
+            static void write(std::string format, std::va_list arguments);
             /**
              * @brief Formats and writes arguments to the standard error stream.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
              * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
              */
-            static void Write(std::string format, ...);
+            static void write(std::string format, ...);
             /**
              * @brief Gets the file descriptor associated with the standard error stream.
              * @returns The file descriptor associated with the standard error stream.
              */
-            static std::FILE* GetFile();
+            static std::FILE* getFile();
             /**
              * @brief Gets the file descriptor number associated with the standard error stream.
              * @returns The file descriptor number associated with the standard error stream.
              */
-            static int GetFileNumber();
+            static int getFileNumber();
             /**
              * @brief Checks if the standard error stream is connected to an interactive terminal (TTY).
              * @returns A boolean that states the standard error stream is a TTY.
              */
-            static bool IsTTY();
+            static bool isTTY();
 
         private:
             ErrorStream() = delete;
@@ -1937,18 +1937,18 @@ namespace TMK
              * @param rawArguments The arguments given as second parameter of the main function.
              * @returns The treated arguments.
              */
-            static CMDArguments GetCMDArguments(int rawTotalCMDArguments, char** rawCMDArguments);
+            static CMDArguments getCMDArguments(int totalRawCMDArguments, char** rawCMDArguments);
             /**
              * @brief Exits the process.
              * @param exitCode The exit code to be used. It must be a value in range from 0 to 255.
              * @throws OutOfRangeException Thrown whenever the exit code is out of the valid range.
              */
-            static void Exit(int exitCode);
+            static void exit(int exitCode);
             /**
              * @brief Exits the process.
              * @param exitCode The exit code to be used.
              */
-            static void Exit(POSIXExitCode exitCode);
+            static void exit(POSIXExitCode exitCode);
 
         private:
             Process() = delete;
@@ -1964,27 +1964,27 @@ namespace TMK
              * @brief Gets the terminal window geometry.
              * @returns The terminal window geometry.
              */
-            static Region GetRegion();
+            static Region getRegion();
             /**
              * @brief Opens the alternate window.
              */
-            static void OpenAlternateWindow();
+            static void openAlternateWindow();
             /**
              * @brief Closes the alternate window.
              */
-            static void CloseAlternateWindow();
+            static void closeAlternateWindow();
             /**
              * @brief Sets the terminal window title.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param arguments The arguments to be formatted.
              */
-            static void SetTitle(std::string format, std::va_list arguments);
+            static void setTitle(std::string format, std::va_list arguments);
             /**
              * @brief Sets the terminal window title.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
              */
-            static void SetTitle(std::string format, ...);
+            static void setTitle(std::string format, ...);
 
         private:
             Window() = delete;
@@ -2003,16 +2003,16 @@ namespace TMK
              * @param duration The duration of the sound.
              * @throws OutOfRangeException Thrown whenever any value is out of its valid range.
              */
-            static void Beep(unsigned short frequency, std::chrono::milliseconds duration);
+            static void beep(unsigned short frequency, std::chrono::milliseconds duration);
             /**
              * @brief Emits a beep sound.
              */
-            static void Beep();
+            static void beep();
 #endif
             /**
              * @brief Rings the terminal bell.
              */
-            static void Ring();
+            static void ring();
 
         private:
             Bell() = delete;
@@ -2028,19 +2028,19 @@ namespace TMK
              * @brief Sets the terminal font weight.
              * @param weight The weight to be set.
              */
-            static void SetWeight(FontWeight weight);
+            static void setWeight(FontWeight weight);
             /**
              * @brief Sets an XTerm color into the terminal font.
              * @param color The ANSI code of the color.
              * @param layer The layer of the font to be affected.
              */
-            static void SetXColor(unsigned char color, FontLayer layer);
+            static void setXColor(unsigned char color, FontLayer layer);
             /**
              * @brief Sets an XTerm color into the terminal font.
              * @param color The ANSI code of the color.
              * @param layer The layer of the font to be affected.
              */
-            static void SetXColor(XColor color, FontLayer layer);
+            static void setXColor(XColor color, FontLayer layer);
             /**
              * @brief Sets an RGB color into the terminal font.
              * @param red The red component of the color.
@@ -2048,48 +2048,48 @@ namespace TMK
              * @param blue The blue component of the color.
              * @param layer The layer of the font to be affected.
              */
-            static void SetRGBColor(unsigned char red, unsigned char green, unsigned char blue, FontLayer layer);
+            static void setRGBColor(unsigned char red, unsigned char green, unsigned char blue, FontLayer layer);
             /**
              * @brief Sets an RGB color into the terminal font.
              * @param color The color to be applied.
              * @param layer The layer of the font to be affected.
              */
-            static void SetRGBColor(RGBColor color, FontLayer layer);
+            static void setRGBColor(RGBColor color, FontLayer layer);
             /**
              * @brief Sets a hex color into the terminal font.
              * @param color The hex code of the color.
              * @param layer The layer of the font to be affected.
              */
-            static void SetHexColor(unsigned int hex, FontLayer layer);
+            static void setHexColor(unsigned int hex, FontLayer layer);
             /**
              * @brief Sets a hex color into the terminal font.
              * @param color The color to be applied.
              * @param layer The layer of the font to be affected.
              */
-            static void SetHexColor(HexColor color, FontLayer layer);
+            static void setHexColor(HexColor color, FontLayer layer);
             /**
              * @brief Sets the terminal effects flagged in a bitmask.
              * @param effect The bitmask containing the effects. It must be composed by enumerators from the FontEffect enum class.
              * @throws OutOfRangeException Thrown whenever an invalid effect is used to compose the bitmask.
              */
-            static void SetEffects(int effect);
+            static void setEffects(int effect);
             /**
              * @brief Sets a terminal effect.
              * @param effect The effect to be set.
              */
-            static void SetEffects(FontEffect effect);
+            static void setEffects(FontEffect effect);
             /**
              * @brief Resets the terminal font colors.
              */
-            static void ResetColors();
+            static void resetColors();
             /**
              * @brief Resets the terminal font weight.
              */
-            static void ResetWeight();
+            static void resetWeight();
             /**
              * @brief Resets the terminal effects.
              */
-            static void ResetEffects();
+            static void resetEffects();
 
         private:
             Font() = delete;
@@ -2108,38 +2108,38 @@ namespace TMK
              * standard output and error streams are not TTY.
              * @throws WideCharacterOrientationException Thrown, on Linux, whenever the standard input stream is wide character oriented.
              */
-            static Coordinate GetCoordinate();
+            static Coordinate getCoordinate();
             /**
              * @brief Sets the terminal cursor coordinate.
              * @param column The column component of the coordinate.
              * @param row The row component of the coordinate.
              * @throws OutOfRangeException Thrown whenever the coordinate is outside of the terminal window boundaries.
              */
-            static void SetCoordinate(unsigned short column, unsigned short row);
+            static void setCoordinate(unsigned short column, unsigned short row);
             /**
              * @brief Sets the terminal cursor coordinate.
              * @param coordinate The coordinate to be set.
              * @throws OutOfRangeException Thrown whenever the coordinate is outside of the terminal window boundaries.
              */
-            static void SetCoordinate(Coordinate coordinate);
+            static void setCoordinate(Coordinate coordinate);
             /**
              * @brief Sets the terminal cursor shape.
              * @param shape The shape to be set.
              */
-            static void SetShape(CursorShape shape, bool isBlinking);
+            static void setShape(CursorShape shape, bool isBlinking);
             /**
              * @brief Sets the terminal cursor visibility.
              * @param isVisible A boolean that states the cursor should be visible.
              */
-            static void SetVisibility(bool isVisible);
+            static void setVisibility(bool isVisible);
             /**
              * @brief Resets the terminal cursor shape.
              */
-            static void ResetShape();
+            static void resetShape();
             /**
              * @brief Clears the terminal cursor line.
              */
-            static void ClearLine();
+            static void clearLine();
 
         private:
             Cursor() = delete;
@@ -2154,14 +2154,14 @@ namespace TMK
          * @returns The mode of stream.
          * @throws NoValidTTYException Thrown whenever the stream is not a TTY.
          */
-        static DWORD GetStreamMode(HANDLE handle);
+        static DWORD getStreamMode(HANDLE handle);
         /**
          * @brief Gets the buffer information of the window connected to a terminal stream.
          * @param handle The handle of the stream.
          * @returns The buffer information of the window connected to the stream.
          * @throws NoValidTTYException Thrown whenever the stream is not a TTY.
          */
-        static CONSOLE_SCREEN_BUFFER_INFO GetStreamWindowBufferInfo(HANDLE handle);
+        static CONSOLE_SCREEN_BUFFER_INFO getStreamWindowBufferInfo(HANDLE handle);
         /**
          * @brief Sets the mode of a terminal stream.
          * @param handle The handle of the stream.
@@ -2170,12 +2170,12 @@ namespace TMK
          * @throws NoValidTTYException Thrown whenever the stream is not a TTY.
          * @throws InvalidStreamAttributesException Thrown whenever the mode is invalid.
          */
-        static void SetStreamMode(HANDLE handle, bool isTTY, DWORD mode);
+        static void setStreamMode(HANDLE handle, bool isTTY, DWORD mode);
 #endif
         /**
          * @brief Initiatializes the terminal stream TTY cache.
          */
-        static void InitStreamTTYCache();
+        static void initStreamTTYCache();
         /**
          * @brief Writes an ANSI escape sequence to the terminal output or error streams.
          * @param format The format to be used. It accepts the same specifiers as the printf function family.
@@ -2183,7 +2183,7 @@ namespace TMK
          * @throws NoValidTTYException Thrown whenever the standard output and error streams are not TTY.
          * @throws WideCharacterOrientationException Thrown whenever the standard output or error stream is wide character oriented.
          */
-        static void WriteANSIEscapeSequence(std::string format, std::va_list arguments);
+        static void writeANSIEscapeSequence(std::string format, std::va_list arguments);
         /**
          * @brief Writes an ANSI escape sequence to the terminal output or error streams.
          * @param format The format to be used. It accepts the same specifiers as the printf function family.
@@ -2191,7 +2191,7 @@ namespace TMK
          * @throws NoValidTTYException Thrown whenever the standard output and error streams are not TTY.
          * @throws WideCharacterOrientationException Thrown whenever the standard output or error stream is wide character oriented.
          */
-        static void WriteANSIEscapeSequence(std::string format, ...);
+        static void writeANSIEscapeSequence(std::string format, ...);
         /**
          * @brief Formats and writes a string to a terminal stream.
          * @param file The file of the stream.
@@ -2199,7 +2199,7 @@ namespace TMK
          * @param arguments The arguments to be formatted.
          * @param hasNewLine A boolean that states a newline character should be appended at the end of the string.
          */
-        static void Write(std::FILE* file, const char* format, std::va_list arguments, bool hasNewLine);
+        static void write(std::FILE* file, const char* format, std::va_list arguments, bool hasNewLine);
         /**
          * @brief Reads a terminal event.
          * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
@@ -2207,7 +2207,7 @@ namespace TMK
          * @param filter A function to be used to filter events while the timer is running.
          * @returns The information about the event read.
          */
-        static EventInfo ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter);
+        static EventInfo readEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter);
     };
 
     /**

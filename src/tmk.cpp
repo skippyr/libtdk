@@ -7,9 +7,9 @@
 #endif
 
 #ifdef _WIN32
-#define IS_TTY(a_stream) _isatty(a_stream::GetFileNumber())
+#define IS_TTY(a_stream) _isatty(a_stream::getFileNumber())
 #else
-#define IS_TTY(a_stream) isatty(a_stream::GetFileNumber())
+#define IS_TTY(a_stream) isatty(a_stream::getFileNumber())
 #endif
 #define PARSE_KEY(a_condition, a_key)                                                                                                                                              \
     if (a_condition)                                                                                                                                                               \
@@ -18,7 +18,7 @@
         goto l_keyReadingEnd;                                                                                                                                                      \
     }
 
-namespace TMK
+namespace tmk
 {
     /**
      * @brief A boolean that states the stream TTY cache has been filled.
@@ -53,7 +53,7 @@ namespace TMK
         delete[] m_utf8Arguments;
     }
 
-    std::wstring CMDArguments::GetUTF16ArgumentByOffset(std::size_t offset) const
+    std::wstring CMDArguments::getUTF16ArgumentByOffset(std::size_t offset) const
     {
         if (offset >= m_totalArguments)
         {
@@ -67,12 +67,12 @@ namespace TMK
     }
 #endif
 
-    int CMDArguments::GetTotalArguments() const
+    int CMDArguments::getTotalArguments() const
     {
         return m_totalArguments;
     }
 
-    std::string CMDArguments::GetUTF8ArgumentByOffset(std::size_t offset) const
+    std::string CMDArguments::getUTF8ArgumentByOffset(std::size_t offset) const
     {
         if (offset >= m_totalArguments)
         {
@@ -89,27 +89,27 @@ namespace TMK
     {
     }
 
-    unsigned short Coordinate::GetColumn() const
+    unsigned short Coordinate::getColumn() const
     {
         return m_column;
     }
 
-    unsigned short Coordinate::GetRow() const
+    unsigned short Coordinate::getRow() const
     {
         return m_row;
     }
 
-    void Coordinate::SetColumn(unsigned short column)
+    void Coordinate::setColumn(unsigned short column)
     {
         m_column = column;
     }
 
-    void Coordinate::SetRow(unsigned short row)
+    void Coordinate::setRow(unsigned short row)
     {
         m_row = row;
     }
 
-    std::string Coordinate::ToString() const
+    std::string Coordinate::toString() const
     {
         return "column: " + std::to_string(m_column) + ", row: " + std::to_string(m_row);
     }
@@ -127,10 +127,10 @@ namespace TMK
 
     Region::Region(Coordinate coordinateI, Coordinate coordinateII)
     {
-        unsigned short maximumColumn = (std::max)(coordinateI.GetColumn(), coordinateII.GetColumn());
-        unsigned short minimumColumn = (std::min)(coordinateI.GetColumn(), coordinateII.GetColumn());
-        unsigned short maximumRow = (std::max)(coordinateI.GetRow(), coordinateII.GetRow());
-        unsigned short minimumRow = (std::min)(coordinateI.GetRow(), coordinateII.GetRow());
+        unsigned short maximumColumn = (std::max)(coordinateI.getColumn(), coordinateII.getColumn());
+        unsigned short minimumColumn = (std::min)(coordinateI.getColumn(), coordinateII.getColumn());
+        unsigned short maximumRow = (std::max)(coordinateI.getRow(), coordinateII.getRow());
+        unsigned short minimumRow = (std::min)(coordinateI.getRow(), coordinateII.getRow());
         m_totalColumns = maximumColumn + 1;
         m_totalRows = maximumRow + 1;
         m_area = m_totalColumns * m_totalRows;
@@ -140,67 +140,67 @@ namespace TMK
         m_bottomRightCoordinate = Coordinate(maximumColumn, maximumRow);
     }
 
-    unsigned short Region::GetTotalColumns() const
+    unsigned short Region::getTotalColumns() const
     {
         return m_totalColumns;
     }
 
-    unsigned short Region::GetTotalRows() const
+    unsigned short Region::getTotalRows() const
     {
         return m_totalRows;
     }
 
-    unsigned int Region::GetArea() const
+    unsigned int Region::getArea() const
     {
         return m_area;
     }
 
-    Coordinate Region::GetTopLeftCoordinate() const
+    Coordinate Region::getTopLeftCoordinate() const
     {
         return m_topLeftCoordinate;
     }
 
-    Coordinate Region::GetTopRightCoordinate() const
+    Coordinate Region::getTopRightCoordinate() const
     {
         return m_topRightCoordinate;
     }
 
-    Coordinate Region::GetBottomLeftCoordinate() const
+    Coordinate Region::getBottomLeftCoordinate() const
     {
         return m_bottomLeftCoordinate;
     }
 
-    Coordinate Region::GetBottomRightCoordinate() const
+    Coordinate Region::getBottomRightCoordinate() const
     {
         return m_bottomRightCoordinate;
     }
 
-    bool Region::Contains(unsigned short column, unsigned short row) const
+    bool Region::contains(unsigned short column, unsigned short row) const
     {
-        return column >= m_topLeftCoordinate.GetColumn() && column <= m_topRightCoordinate.GetColumn() && row >= m_topLeftCoordinate.GetRow() &&
-               row <= m_bottomLeftCoordinate.GetRow();
+        return column >= m_topLeftCoordinate.getColumn() && column <= m_topRightCoordinate.getColumn() && row >= m_topLeftCoordinate.getRow() &&
+               row <= m_bottomLeftCoordinate.getRow();
     }
 
-    bool Region::Contains(Coordinate coordinate) const
+    bool Region::contains(Coordinate coordinate) const
     {
-        return Contains(coordinate.GetColumn(), coordinate.GetRow());
+        return contains(coordinate.getColumn(), coordinate.getRow());
     }
 
     HexColor::HexColor(unsigned int code)
     {
-        SetCode(code);
+        setCode(code);
     }
 
-    HexColor::HexColor(RGBColor color) : m_code(color.GetRed() << 16 | color.GetGreen() << 8 | color.GetBlue())
+    HexColor::HexColor(RGBColor color) : m_code(color.getRed() << 16 | color.getGreen() << 8 | color.getBlue())
     {
     }
 
-    unsigned int HexColor::GetCode() const
+    unsigned int HexColor::getCode() const
     {
         return m_code;
     }
 
-    void HexColor::SetCode(unsigned int code)
+    void HexColor::setCode(unsigned int code)
     {
         if (code > 0xffffff)
         {
@@ -209,7 +209,7 @@ namespace TMK
         m_code = code;
     }
 
-    std::string HexColor::HexColor::ToString(bool hasPrefix, bool hasZeroPadding, bool isUpperCase) const
+    std::string HexColor::HexColor::toString(bool hasPrefix, bool hasZeroPadding, bool isUpperCase) const
     {
         char buffer[7];
         std::snprintf(buffer, sizeof(buffer), hasZeroPadding ? isUpperCase ? "%06X" : "%06x" : isUpperCase ? "%X" : "%x", m_code);
@@ -224,41 +224,41 @@ namespace TMK
     {
     }
 
-    RGBColor::RGBColor(HexColor color) : m_red(color.GetCode() >> 16 & 0xff), m_green(color.GetCode() >> 8 & 0xff), m_blue(color.GetCode() & 0xff)
+    RGBColor::RGBColor(HexColor color) : m_red(color.getCode() >> 16 & 0xff), m_green(color.getCode() >> 8 & 0xff), m_blue(color.getCode() & 0xff)
     {
     }
 
-    unsigned char RGBColor::GetRed() const
+    unsigned char RGBColor::getRed() const
     {
         return m_red;
     }
 
-    unsigned char RGBColor::GetGreen() const
+    unsigned char RGBColor::getGreen() const
     {
         return m_green;
     }
 
-    unsigned char RGBColor::GetBlue() const
+    unsigned char RGBColor::getBlue() const
     {
         return m_blue;
     }
 
-    void RGBColor::SetRed(unsigned char red)
+    void RGBColor::setRed(unsigned char red)
     {
         m_red = red;
     }
 
-    void RGBColor::SetGreen(unsigned char green)
+    void RGBColor::setGreen(unsigned char green)
     {
         m_green = green;
     }
 
-    void RGBColor::SetBlue(unsigned char blue)
+    void RGBColor::setBlue(unsigned char blue)
     {
         m_blue = blue;
     }
 
-    std::string RGBColor::ToString() const
+    std::string RGBColor::toString() const
     {
         return "r: " + std::to_string(m_red) + ", g: " + std::to_string(m_green) + ", b: " + std::to_string(m_blue);
     }
@@ -267,18 +267,18 @@ namespace TMK
     {
     }
 
-    bool FocusEvent::HasFocus() const
+    bool FocusEvent::hasFocus() const
     {
         return m_hasFocus;
     }
 
-    ResizeEvent::ResizeEvent() : m_windowRegion(Terminal::Window::GetRegion())
+    ResizeEvent::ResizeEvent() : m_region(Terminal::Window::getRegion())
     {
     }
 
-    Region ResizeEvent::GetWindowRegion() const
+    Region ResizeEvent::getRegion() const
     {
-        return m_windowRegion;
+        return m_region;
     }
 
     MouseEvent::MouseEvent(Coordinate coordinate, MouseButton button, bool isDragging, bool hasCtrl, bool hasAlt, bool hasShift)
@@ -286,32 +286,32 @@ namespace TMK
     {
     }
 
-    Coordinate MouseEvent::GetCoordinate() const
+    Coordinate MouseEvent::getCoordinate() const
     {
         return m_coordinate;
     }
 
-    MouseButton MouseEvent::GetButton() const
+    MouseButton MouseEvent::getButton() const
     {
         return m_button;
     }
 
-    bool MouseEvent::IsDragging() const
+    bool MouseEvent::isDragging() const
     {
         return m_isDragging;
     }
 
-    bool MouseEvent::HasCtrl() const
+    bool MouseEvent::hasCtrl() const
     {
         return m_hasCtrl;
     }
 
-    bool MouseEvent::HasAlt() const
+    bool MouseEvent::hasAlt() const
     {
         return m_hasAlt;
     }
 
-    bool MouseEvent::HasShift() const
+    bool MouseEvent::hasShift() const
     {
         return m_hasShift;
     }
@@ -320,22 +320,22 @@ namespace TMK
     {
     }
 
-    int KeyEvent::GetKey() const
+    int KeyEvent::getKey() const
     {
         return m_key;
     }
 
-    bool KeyEvent::HasCtrl() const
+    bool KeyEvent::hasCtrl() const
     {
         return m_hasCtrl;
     }
 
-    bool KeyEvent::HasAlt() const
+    bool KeyEvent::hasAlt() const
     {
         return m_hasAlt;
     }
 
-    bool KeyEvent::HasShift() const
+    bool KeyEvent::hasShift() const
     {
         return m_hasShift;
     }
@@ -360,12 +360,12 @@ namespace TMK
     {
     }
 
-    EventType EventInfo::GetType() const
+    EventType EventInfo::getType() const
     {
         return m_type;
     }
 
-    FocusEvent EventInfo::GetFocusEvent() const
+    FocusEvent EventInfo::getFocusEvent() const
     {
         if (m_type == EventType::Focus)
         {
@@ -374,7 +374,7 @@ namespace TMK
         throw InvalidEventTypeException();
     }
 
-    ResizeEvent EventInfo::GetResizeEvent() const
+    ResizeEvent EventInfo::getResizeEvent() const
     {
         if (m_type == EventType::Resize)
         {
@@ -383,7 +383,7 @@ namespace TMK
         throw InvalidEventTypeException();
     }
 
-    MouseEvent EventInfo::GetMouseEvent() const
+    MouseEvent EventInfo::getMouseEvent() const
     {
         if (m_type == EventType::Mouse)
         {
@@ -392,7 +392,7 @@ namespace TMK
         throw InvalidEventTypeException();
     }
 
-    KeyEvent EventInfo::GetKeyEvent() const
+    KeyEvent EventInfo::getKeyEvent() const
     {
         if (m_type == EventType::Key)
         {
@@ -401,7 +401,7 @@ namespace TMK
         throw InvalidEventTypeException();
     }
 
-    void Terminal::InitStreamTTYCache()
+    void Terminal::initStreamTTYCache()
     {
         if (g_hasStreamTTYCache)
         {
@@ -412,17 +412,17 @@ namespace TMK
         g_isOutputStreamTTY = IS_TTY(OutputStream);
         g_isErrorStreamTTY = IS_TTY(ErrorStream);
 #ifdef _WIN32
-        Encoding::SetOutputCodePage(CP_UTF8);
+        Encoding::setOutputCodePage(CP_UTF8);
         try
         {
-            OutputStream::SetMode(OutputStream::GetMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+            OutputStream::setMode(OutputStream::getMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
         }
         catch (NoValidTTYException&)
         {
         }
         try
         {
-            ErrorStream::SetMode(ErrorStream::GetMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+            ErrorStream::setMode(ErrorStream::getMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
         }
         catch (NoValidTTYException&)
         {
@@ -430,31 +430,32 @@ namespace TMK
 #endif
     }
 
-    void Terminal::WriteANSIEscapeSequence(std::string format, std::va_list arguments)
+    void Terminal::writeANSIEscapeSequence(std::string format, std::va_list arguments)
     {
-        if (!OutputStream::IsTTY() && !ErrorStream::IsTTY())
+        if (!OutputStream::isTTY() && !ErrorStream::isTTY())
         {
             throw NoValidTTYException();
         }
-        if (std::vfprintf(OutputStream::IsTTY() ? OutputStream::GetFile() : ErrorStream::GetFile(), format.c_str(), arguments) < 0)
+        if (std::vfprintf(OutputStream::isTTY() ? OutputStream::getFile() : ErrorStream::getFile(), format.c_str(), arguments) < 0)
         {
             throw WideCharacterOrientationException();
         }
     }
 
-    void Terminal::WriteANSIEscapeSequence(std::string format, ...)
+    void Terminal::writeANSIEscapeSequence(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
-        WriteANSIEscapeSequence(format, arguments);
+        writeANSIEscapeSequence(format, arguments);
         va_end(arguments);
     }
 
-    void Terminal::Write(std::FILE* file, const char* format, std::va_list arguments, bool hasNewLine)
+    void Terminal::write(std::FILE* file, const char* format, std::va_list arguments, bool hasNewLine)
     {
-        if (file == ErrorStream::GetFile())
+        initStreamTTYCache();
+        if (file == ErrorStream::getFile())
         {
-            OutputStream::Flush();
+            OutputStream::flush();
         }
         if (format && std::vfprintf(file, format, arguments) < 0)
         {
@@ -466,26 +467,26 @@ namespace TMK
         }
     }
 
-    EventInfo Terminal::ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter)
+    EventInfo Terminal::readEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter)
     {
-        if (!InputStream::IsTTY() || (!OutputStream::IsTTY() && !ErrorStream::IsTTY()))
+        if (!InputStream::isTTY() || (!OutputStream::isTTY() && !ErrorStream::isTTY()))
         {
             throw NoValidTTYException();
         }
-        if (std::fwide(InputStream::GetFile(), 0) > 0)
+        if (std::fwide(InputStream::getFile(), 0) > 0)
         {
             throw WideCharacterOrientationException();
         }
         EventInfo eventInfo = EventType::None;
 #ifdef _WIN32
         HANDLE timer = nullptr;
-        DWORD mode = InputStream::GetMode();
-        InputStream::SetMode(allowMouseCapture ? (mode | ENABLE_MOUSE_INPUT) & ~(ENABLE_QUICK_EDIT_MODE | ENABLE_PROCESSED_INPUT) : mode & ~ENABLE_PROCESSED_INPUT);
+        DWORD mode = InputStream::getMode();
+        InputStream::setMode(allowMouseCapture ? (mode | ENABLE_MOUSE_INPUT) & ~(ENABLE_QUICK_EDIT_MODE | ENABLE_PROCESSED_INPUT) : mode & ~ENABLE_PROCESSED_INPUT);
         while (true)
         {
             if (!wait.count())
             {
-                if (!InputStream::GetTotalEventsCached())
+                if (!InputStream::getTotalEventsCached())
                 {
                     eventInfo = EventType::None;
                     break;
@@ -500,7 +501,7 @@ namespace TMK
                     duration.QuadPart = -10000 * wait.count();
                     SetWaitableTimer(timer, &duration, 1, nullptr, nullptr, false);
                 }
-                HANDLE handles[] = {timer, InputStream::GetHandle()};
+                HANDLE handles[] = {timer, InputStream::getHandle()};
                 if (WaitForMultipleObjects(2, handles, false, INFINITE) == WAIT_OBJECT_0)
                 {
                     eventInfo = EventType::TimeOut;
@@ -509,7 +510,7 @@ namespace TMK
             }
             INPUT_RECORD record;
             DWORD totalEventsRead;
-            ReadConsoleInputW(InputStream::GetHandle(), &record, 1, &totalEventsRead);
+            ReadConsoleInputW(InputStream::getHandle(), &record, 1, &totalEventsRead);
             if (record.EventType == FOCUS_EVENT)
             {
                 eventInfo = FocusEvent(record.Event.FocusEvent.bSetFocus);
@@ -523,11 +524,11 @@ namespace TMK
                 CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
                 try
                 {
-                    bufferInfo = OutputStream::GetWindowBufferInfo();
+                    bufferInfo = OutputStream::getWindowBufferInfo();
                 }
                 catch (NoValidTTYException&)
                 {
-                    bufferInfo = ErrorStream::GetWindowBufferInfo();
+                    bufferInfo = ErrorStream::getWindowBufferInfo();
                 }
                 eventInfo = MouseEvent(
                     Coordinate(record.Event.MouseEvent.dwMousePosition.X - bufferInfo.srWindow.Left, record.Event.MouseEvent.dwMousePosition.Y - bufferInfo.srWindow.Top),
@@ -557,8 +558,8 @@ namespace TMK
                     }
                     else if (buffer >= HIGH_SURROGATE_START && buffer <= HIGH_SURROGATE_END)
                     {
-                        ReadConsoleInputW(InputStream::GetHandle(), &record, 1, &totalEventsRead);
-                        ReadConsoleInputW(InputStream::GetHandle(), &record, 1, &totalEventsRead);
+                        ReadConsoleInputW(InputStream::getHandle(), &record, 1, &totalEventsRead);
+                        ReadConsoleInputW(InputStream::getHandle(), &record, 1, &totalEventsRead);
                         *(reinterpret_cast<short*>(&buffer) + 1) = record.Event.KeyEvent.uChar.UnicodeChar;
                         WideCharToMultiByte(CP_UTF8, 0, reinterpret_cast<wchar_t*>(&buffer), 2, reinterpret_cast<char*>(&key), 4, nullptr, nullptr);
                     }
@@ -581,7 +582,7 @@ namespace TMK
                 eventInfo = KeyEvent(key, record.Event.KeyEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED),
                                      record.Event.KeyEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED), record.Event.KeyEvent.dwControlKeyState & SHIFT_PRESSED);
             }
-            if (eventInfo.GetType() != EventType::None && eventInfo.GetType() != EventType::TimeOut)
+            if (eventInfo.getType() != EventType::None && eventInfo.getType() != EventType::TimeOut)
             {
                 if (filter && !filter(eventInfo))
                 {
@@ -594,13 +595,13 @@ namespace TMK
         {
             CloseHandle(timer);
         }
-        InputStream::SetMode(mode);
+        InputStream::setMode(mode);
 #endif
         return eventInfo;
     }
 
 #ifdef _WIN32
-    DWORD Terminal::GetStreamMode(HANDLE handle)
+    DWORD Terminal::getStreamMode(HANDLE handle)
     {
         DWORD mode;
         if (!GetConsoleMode(handle, &mode))
@@ -610,7 +611,7 @@ namespace TMK
         return mode;
     }
 
-    CONSOLE_SCREEN_BUFFER_INFO Terminal::GetStreamWindowBufferInfo(HANDLE handle)
+    CONSOLE_SCREEN_BUFFER_INFO Terminal::getStreamWindowBufferInfo(HANDLE handle)
     {
         CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
         if (!GetConsoleScreenBufferInfo(handle, &bufferInfo))
@@ -620,7 +621,7 @@ namespace TMK
         return bufferInfo;
     }
 
-    void Terminal::SetStreamMode(HANDLE handle, bool isTTY, DWORD mode)
+    void Terminal::setStreamMode(HANDLE handle, bool isTTY, DWORD mode)
     {
         if (!isTTY)
         {
@@ -632,7 +633,7 @@ namespace TMK
         }
     }
 
-    void Terminal::Encoding::SetOutputCodePage(UINT codePage)
+    void Terminal::Encoding::setOutputCodePage(UINT codePage)
     {
         if (!SetConsoleOutputCP(codePage))
         {
@@ -640,7 +641,7 @@ namespace TMK
         }
     }
 
-    std::string Terminal::Encoding::ConvertUTF16ToUTF8(std::wstring utf16String)
+    std::string Terminal::Encoding::convertUTF16ToUTF8(std::wstring utf16String)
     {
         int utf8Size = WideCharToMultiByte(CP_UTF8, 0, utf16String.c_str(), -1, nullptr, 0, nullptr, nullptr);
         std::unique_ptr<char[]> utf8Buffer = std::make_unique<char[]>(utf8Size);
@@ -648,7 +649,7 @@ namespace TMK
         return utf8Buffer.get();
     }
 
-    std::wstring Terminal::Encoding::ConvertUTF8ToUTF16(std::string utf8String)
+    std::wstring Terminal::Encoding::convertUTF8ToUTF16(std::string utf8String)
     {
         int utf16Size = MultiByteToWideChar(CP_UTF8, 0, utf8String.c_str(), -1, nullptr, 0);
         std::unique_ptr<WCHAR[]> utf16Buffer = std::make_unique<WCHAR[]>(utf16Size);
@@ -658,283 +659,283 @@ namespace TMK
 #endif
 
 #ifdef _WIN32
-    HANDLE Terminal::InputStream::GetHandle()
+    HANDLE Terminal::InputStream::getHandle()
     {
         return GetStdHandle(STD_INPUT_HANDLE);
     }
 
-    DWORD Terminal::InputStream::GetMode()
+    DWORD Terminal::InputStream::getMode()
     {
-        return GetStreamMode(GetHandle());
+        return getStreamMode(getHandle());
     }
 
-    DWORD Terminal::InputStream::GetTotalEventsCached()
+    DWORD Terminal::InputStream::getTotalEventsCached()
     {
         DWORD totalEvents;
-        if (!GetNumberOfConsoleInputEvents(GetHandle(), &totalEvents))
+        if (!GetNumberOfConsoleInputEvents(getHandle(), &totalEvents))
         {
             throw NoValidTTYException();
         }
         return totalEvents;
     }
 
-    void Terminal::InputStream::SetMode(DWORD mode)
+    void Terminal::InputStream::setMode(DWORD mode)
     {
-        SetStreamMode(GetHandle(), IsTTY(), mode);
+        setStreamMode(getHandle(), isTTY(), mode);
     }
 #else
-    struct termios Terminal::InputStream::GetTermiosAttributes()
+    struct termios Terminal::InputStream::getTermiosAttributes()
     {
         struct termios attributes;
-        if (tcgetattr(GetFileNumber(), &attributes))
+        if (tcgetattr(getFileNumber(), &attributes))
         {
             throw NoValidTTYException();
         }
         return attributes;
     }
 
-    void Terminal::InputStream::SetTermiosAttributes(struct termios& attributes)
+    void Terminal::InputStream::setTermiosAttributes(struct termios& attributes)
     {
-        if (!IsTTY())
+        if (!isTTY())
         {
             throw NoValidTTYException();
         }
-        if (tcsetattr(GetFileNumber(), TCSANOW, &attributes))
+        if (tcsetattr(getFileNumber(), TCSANOW, &attributes))
         {
             throw InvalidStreamAttributesException();
         }
     }
 
-    void Terminal::InputStream::SetFCNTLBlockingState(bool isToEnable)
+    void Terminal::InputStream::setFCNTLBlockingState(bool isToEnable)
     {
-        int flags = fcntl(GetFileNumber(), F_GETFL);
-        fcntl(GetFileNumber(), F_SETFL, isToEnable ? flags & ~O_NONBLOCK : flags | O_NONBLOCK);
+        int flags = fcntl(getFileNumber(), F_GETFL);
+        fcntl(getFileNumber(), F_SETFL, isToEnable ? flags & ~O_NONBLOCK : flags | O_NONBLOCK);
     }
 #endif
 
-    std::FILE* Terminal::InputStream::GetFile()
+    std::FILE* Terminal::InputStream::getFile()
     {
         return stdin;
     }
 
-    int Terminal::InputStream::GetFileNumber()
+    int Terminal::InputStream::getFileNumber()
     {
         return 0;
     }
 
-    void Terminal::InputStream::Clear()
+    void Terminal::InputStream::clear()
     {
 #ifdef _WIN32
-        FlushConsoleInputBuffer(GetHandle());
+        FlushConsoleInputBuffer(getHandle());
 #else
         struct termios attributes;
         try
         {
-            attributes = GetTermiosAttributes();
+            attributes = getTermiosAttributes();
         }
         catch (NoValidTTYException&)
         {
             return;
         }
         attributes.c_lflag &= ~(ICANON | ECHO);
-        SetTermiosAttributes(attributes);
-        SetFCNTLBlockingState(false);
-        while (ReadByte() != EOF)
+        setTermiosAttributes(attributes);
+        setFCNTLBlockingState(false);
+        while (readByte() != EOF)
         {
         }
         attributes.c_lflag |= ICANON | ECHO;
-        SetTermiosAttributes(attributes);
-        SetFCNTLBlockingState(true);
+        setTermiosAttributes(attributes);
+        setFCNTLBlockingState(true);
 #endif
     }
 
-    bool Terminal::InputStream::IsTTY()
+    bool Terminal::InputStream::isTTY()
     {
-        InitStreamTTYCache();
+        initStreamTTYCache();
         return g_isInputStreamTTY;
     }
 
-    char Terminal::InputStream::ReadByte()
+    char Terminal::InputStream::readByte()
     {
         return std::getchar();
     }
 
-    EventInfo Terminal::InputStream::ReadEvent(bool allowMouseCapture)
+    EventInfo Terminal::InputStream::readEvent(bool allowMouseCapture)
     {
-        return Terminal::ReadEvent(allowMouseCapture, -1ms, nullptr);
+        return Terminal::readEvent(allowMouseCapture, -1ms, nullptr);
     }
 
-    EventInfo Terminal::InputStream::ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait)
+    EventInfo Terminal::InputStream::readEvent(bool allowMouseCapture, std::chrono::milliseconds wait)
     {
-        return Terminal::ReadEvent(allowMouseCapture, wait, nullptr);
+        return Terminal::readEvent(allowMouseCapture, wait, nullptr);
     }
 
-    EventInfo Terminal::InputStream::ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter)
+    EventInfo Terminal::InputStream::readEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter)
     {
-        return Terminal::ReadEvent(allowMouseCapture, wait, filter);
+        return Terminal::readEvent(allowMouseCapture, wait, filter);
     }
 
 #ifdef _WIN32
-    HANDLE Terminal::OutputStream::GetHandle()
+    HANDLE Terminal::OutputStream::getHandle()
     {
         return GetStdHandle(STD_OUTPUT_HANDLE);
     }
 
-    DWORD Terminal::OutputStream::GetMode()
+    DWORD Terminal::OutputStream::getMode()
     {
-        return GetStreamMode(GetHandle());
+        return getStreamMode(getHandle());
     }
 
-    CONSOLE_SCREEN_BUFFER_INFO Terminal::OutputStream::GetWindowBufferInfo()
+    CONSOLE_SCREEN_BUFFER_INFO Terminal::OutputStream::getWindowBufferInfo()
     {
-        return GetStreamWindowBufferInfo(GetHandle());
+        return getStreamWindowBufferInfo(getHandle());
     }
 
-    void Terminal::OutputStream::SetMode(DWORD mode)
+    void Terminal::OutputStream::setMode(DWORD mode)
     {
-        SetStreamMode(GetHandle(), IsTTY(), mode);
+        setStreamMode(getHandle(), isTTY(), mode);
     }
 #endif
 
-    void Terminal::OutputStream::Flush()
+    void Terminal::OutputStream::flush()
     {
-        std::fflush(GetFile());
+        std::fflush(getFile());
     }
 
-    void Terminal::OutputStream::WriteLine(std::string format, std::va_list arguments)
+    void Terminal::OutputStream::writeLine(std::string format, std::va_list arguments)
     {
-        Terminal::Write(GetFile(), format.c_str(), arguments, true);
+        Terminal::write(getFile(), format.c_str(), arguments, true);
     }
 
-    void Terminal::OutputStream::WriteLine(std::string format, ...)
-    {
-        std::va_list arguments;
-        va_start(arguments, format);
-        Terminal::Write(GetFile(), format.c_str(), arguments, true);
-        va_end(arguments);
-    }
-
-    void Terminal::OutputStream::WriteLine()
-    {
-        Terminal::Write(GetFile(), nullptr, nullptr, true);
-    }
-
-    void Terminal::OutputStream::Write(std::string format, std::va_list arguments)
-    {
-        Terminal::Write(GetFile(), format.c_str(), arguments, false);
-    }
-
-    void Terminal::OutputStream::Write(std::string format, ...)
+    void Terminal::OutputStream::writeLine(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
-        Terminal::Write(GetFile(), format.c_str(), arguments, false);
+        Terminal::write(getFile(), format.c_str(), arguments, true);
         va_end(arguments);
     }
 
-    std::FILE* Terminal::OutputStream::GetFile()
+    void Terminal::OutputStream::writeLine()
+    {
+        Terminal::write(getFile(), nullptr, nullptr, true);
+    }
+
+    void Terminal::OutputStream::write(std::string format, std::va_list arguments)
+    {
+        Terminal::write(getFile(), format.c_str(), arguments, false);
+    }
+
+    void Terminal::OutputStream::write(std::string format, ...)
+    {
+        std::va_list arguments;
+        va_start(arguments, format);
+        Terminal::write(getFile(), format.c_str(), arguments, false);
+        va_end(arguments);
+    }
+
+    std::FILE* Terminal::OutputStream::getFile()
     {
         return stdout;
     }
 
-    int Terminal::OutputStream::GetFileNumber()
+    int Terminal::OutputStream::getFileNumber()
     {
         return 1;
     }
 
-    bool Terminal::OutputStream::IsTTY()
+    bool Terminal::OutputStream::isTTY()
     {
-        InitStreamTTYCache();
+        initStreamTTYCache();
         return g_isOutputStreamTTY;
     }
 
 #ifdef _WIN32
-    HANDLE Terminal::ErrorStream::GetHandle()
+    HANDLE Terminal::ErrorStream::getHandle()
     {
         return GetStdHandle(STD_ERROR_HANDLE);
     }
 
-    DWORD Terminal::ErrorStream::GetMode()
+    DWORD Terminal::ErrorStream::getMode()
     {
-        return GetStreamMode(GetHandle());
+        return getStreamMode(getHandle());
     }
 
-    CONSOLE_SCREEN_BUFFER_INFO Terminal::ErrorStream::GetWindowBufferInfo()
+    CONSOLE_SCREEN_BUFFER_INFO Terminal::ErrorStream::getWindowBufferInfo()
     {
-        return GetStreamWindowBufferInfo(GetHandle());
+        return getStreamWindowBufferInfo(getHandle());
     }
 
-    void Terminal::ErrorStream::SetMode(DWORD mode)
+    void Terminal::ErrorStream::setMode(DWORD mode)
     {
-        SetStreamMode(GetHandle(), IsTTY(), mode);
+        setStreamMode(getHandle(), isTTY(), mode);
     }
 #endif
 
-    void Terminal::ErrorStream::WriteLine(std::string format, std::va_list arguments)
+    void Terminal::ErrorStream::writeLine(std::string format, std::va_list arguments)
     {
-        Terminal::Write(GetFile(), format.c_str(), arguments, true);
+        Terminal::write(getFile(), format.c_str(), arguments, true);
     }
 
-    void Terminal::ErrorStream::WriteLine(std::string format, ...)
-    {
-        std::va_list arguments;
-        va_start(arguments, format);
-        Terminal::Write(GetFile(), format.c_str(), arguments, true);
-        va_end(arguments);
-    }
-
-    void Terminal::ErrorStream::WriteLine()
-    {
-        Terminal::Write(GetFile(), nullptr, nullptr, true);
-    }
-
-    void Terminal::ErrorStream::Write(std::string format, std::va_list arguments)
-    {
-        Terminal::Write(GetFile(), format.c_str(), arguments, false);
-    }
-
-    void Terminal::ErrorStream::Write(std::string format, ...)
+    void Terminal::ErrorStream::writeLine(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
-        Terminal::Write(GetFile(), format.c_str(), arguments, false);
+        Terminal::write(getFile(), format.c_str(), arguments, true);
         va_end(arguments);
     }
 
-    std::FILE* Terminal::ErrorStream::GetFile()
+    void Terminal::ErrorStream::writeLine()
+    {
+        Terminal::write(getFile(), nullptr, nullptr, true);
+    }
+
+    void Terminal::ErrorStream::write(std::string format, std::va_list arguments)
+    {
+        Terminal::write(getFile(), format.c_str(), arguments, false);
+    }
+
+    void Terminal::ErrorStream::write(std::string format, ...)
+    {
+        std::va_list arguments;
+        va_start(arguments, format);
+        Terminal::write(getFile(), format.c_str(), arguments, false);
+        va_end(arguments);
+    }
+
+    std::FILE* Terminal::ErrorStream::getFile()
     {
         return stderr;
     }
 
-    int Terminal::ErrorStream::GetFileNumber()
+    int Terminal::ErrorStream::getFileNumber()
     {
         return 2;
     }
 
-    bool Terminal::ErrorStream::IsTTY()
+    bool Terminal::ErrorStream::isTTY()
     {
-        InitStreamTTYCache();
+        initStreamTTYCache();
         return g_isErrorStreamTTY;
     }
 
-    CMDArguments Terminal::Process::GetCMDArguments(int rawTotalCMDArguments, char** rawCMDArguments)
+    CMDArguments Terminal::Process::getCMDArguments(int totalRawCMDArguments, char** rawCMDArguments)
     {
 #ifdef _WIN32
-        LPWSTR* utf16Arguments = CommandLineToArgvW(GetCommandLineW(), &rawTotalCMDArguments);
-        char** utf8Arguments = new char*[rawTotalCMDArguments];
-        for (std::size_t offset = 0; offset < rawTotalCMDArguments; ++offset)
+        LPWSTR* utf16Arguments = CommandLineToArgvW(GetCommandLineW(), &totalRawCMDArguments);
+        char** utf8Arguments = new char*[totalRawCMDArguments];
+        for (std::size_t offset = 0; offset < totalRawCMDArguments; ++offset)
         {
             std::size_t size = WideCharToMultiByte(CP_UTF8, 0, utf16Arguments[offset], -1, nullptr, 0, nullptr, nullptr);
             utf8Arguments[offset] = new char[size];
             WideCharToMultiByte(CP_UTF8, 0, utf16Arguments[offset], -1, utf8Arguments[offset], size, nullptr, nullptr);
         }
-        return CMDArguments(rawTotalCMDArguments, utf16Arguments, utf8Arguments);
+        return CMDArguments(totalRawCMDArguments, utf16Arguments, utf8Arguments);
 #else
-        return CMDArguments(rawTotalCMDArguments, rawCMDArguments);
+        return CMDArguments(totalRawCMDArguments, rawCMDArguments);
 #endif
     }
 
-    void Terminal::Process::Exit(int exitCode)
+    void Terminal::Process::exit(int exitCode)
     {
         if (exitCode < 0 || exitCode > 255)
         {
@@ -943,16 +944,16 @@ namespace TMK
         std::exit(exitCode);
     }
 
-    void Terminal::Process::Exit(POSIXExitCode exitCode)
+    void Terminal::Process::exit(POSIXExitCode exitCode)
     {
-        Exit(static_cast<int>(exitCode));
+        exit(static_cast<int>(exitCode));
     }
 
-    Region Terminal::Window::GetRegion()
+    Region Terminal::Window::getRegion()
     {
 #ifdef _WIN32
         CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-        if (!GetConsoleScreenBufferInfo(OutputStream::GetHandle(), &bufferInfo) && !GetConsoleScreenBufferInfo(ErrorStream::GetHandle(), &bufferInfo))
+        if (!GetConsoleScreenBufferInfo(OutputStream::getHandle(), &bufferInfo) && !GetConsoleScreenBufferInfo(ErrorStream::getHandle(), &bufferInfo))
         {
             throw NoValidTTYException();
         }
@@ -967,51 +968,51 @@ namespace TMK
 #endif
     }
 
-    void Terminal::Window::OpenAlternateWindow()
+    void Terminal::Window::openAlternateWindow()
     {
         try
         {
-            WriteANSIEscapeSequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
+            writeANSIEscapeSequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
         }
         catch (NoValidTTYException&)
         {
         }
     }
 
-    void Terminal::Window::CloseAlternateWindow()
+    void Terminal::Window::closeAlternateWindow()
     {
         try
         {
-            WriteANSIEscapeSequence("\x1b[?1049l");
+            writeANSIEscapeSequence("\x1b[?1049l");
         }
         catch (NoValidTTYException&)
         {
         }
     }
 
-    void Terminal::Window::SetTitle(std::string format, std::va_list arguments)
+    void Terminal::Window::setTitle(std::string format, std::va_list arguments)
     {
         try
         {
-            WriteANSIEscapeSequence("\x1b]0;");
-            WriteANSIEscapeSequence(format, arguments);
-            WriteANSIEscapeSequence("\7");
+            writeANSIEscapeSequence("\x1b]0;");
+            writeANSIEscapeSequence(format, arguments);
+            writeANSIEscapeSequence("\7");
         }
         catch (NoValidTTYException&)
         {
         }
     }
 
-    void Terminal::Window::SetTitle(std::string format, ...)
+    void Terminal::Window::setTitle(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
-        SetTitle(format, arguments);
+        setTitle(format, arguments);
         va_end(arguments);
     }
 
 #ifdef _WIN32
-    void Terminal::Bell::Beep(unsigned short frequency, std::chrono::milliseconds duration)
+    void Terminal::Bell::beep(unsigned short frequency, std::chrono::milliseconds duration)
     {
         if (frequency < 37 || frequency > 32767 || duration.count() < 0)
         {
@@ -1020,83 +1021,83 @@ namespace TMK
         ::Beep(frequency, duration.count());
     }
 
-    void Terminal::Bell::Beep()
+    void Terminal::Bell::beep()
     {
-        Beep(800, 200ms);
+        beep(800, 200ms);
     }
 #endif
 
-    void Terminal::Bell::Ring()
+    void Terminal::Bell::ring()
     {
         try
         {
-            WriteANSIEscapeSequence("\7");
+            writeANSIEscapeSequence("\7");
         }
         catch (NoValidTTYException&)
         {
         }
     }
 
-    void Terminal::Font::SetWeight(FontWeight weight)
+    void Terminal::Font::setWeight(FontWeight weight)
     {
         try
         {
-            WriteANSIEscapeSequence("\x1b[22;%dm", static_cast<int>(weight));
+            writeANSIEscapeSequence("\x1b[22;%dm", static_cast<int>(weight));
         }
         catch (NoValidTTYException&)
         {
         }
     }
 
-    void Terminal::Font::SetXColor(unsigned char color, FontLayer layer)
+    void Terminal::Font::setXColor(unsigned char color, FontLayer layer)
     {
         try
         {
-            WriteANSIEscapeSequence("\x1b[%d8;5;%hum", static_cast<int>(layer), color);
+            writeANSIEscapeSequence("\x1b[%d8;5;%hum", static_cast<int>(layer), color);
         }
         catch (NoValidTTYException&)
         {
         }
     }
 
-    void Terminal::Font::SetXColor(XColor color, FontLayer layer)
+    void Terminal::Font::setXColor(XColor color, FontLayer layer)
     {
         try
         {
-            Terminal::Font::SetXColor(static_cast<unsigned char>(color), layer);
+            Terminal::Font::setXColor(static_cast<unsigned char>(color), layer);
         }
         catch (NoValidTTYException&)
         {
         }
     }
 
-    void Terminal::Font::SetRGBColor(unsigned char red, unsigned char green, unsigned char blue, FontLayer layer)
+    void Terminal::Font::setRGBColor(unsigned char red, unsigned char green, unsigned char blue, FontLayer layer)
     {
         try
         {
-            WriteANSIEscapeSequence("\x1b[%d8;2;%hu;%hu;%hum", static_cast<int>(layer), red, green, blue);
+            writeANSIEscapeSequence("\x1b[%d8;2;%hu;%hu;%hum", static_cast<int>(layer), red, green, blue);
         }
         catch (NoValidTTYException&)
         {
         }
     }
 
-    void Terminal::Font::SetRGBColor(RGBColor color, FontLayer layer)
+    void Terminal::Font::setRGBColor(RGBColor color, FontLayer layer)
     {
-        SetRGBColor(color.GetRed(), color.GetGreen(), color.GetBlue(), layer);
+        setRGBColor(color.getRed(), color.getGreen(), color.getBlue(), layer);
     }
 
-    void Terminal::Font::SetHexColor(unsigned int hex, FontLayer layer)
+    void Terminal::Font::setHexColor(unsigned int hex, FontLayer layer)
     {
-        SetRGBColor(RGBColor(HexColor(hex)), layer);
+        setRGBColor(RGBColor(HexColor(hex)), layer);
     }
 
-    void Terminal::Font::SetHexColor(HexColor color, FontLayer layer)
+    void Terminal::Font::setHexColor(HexColor color, FontLayer layer)
     {
-        SetRGBColor(RGBColor(color), layer);
+        setRGBColor(RGBColor(color), layer);
     }
 
-    void Terminal::Font::SetEffects(int effects)
+    void Terminal::Font::setEffects(int effects)
     {
         for (std::size_t offset = 6; offset < 32; ++offset)
         {
@@ -1115,7 +1116,7 @@ namespace TMK
             {
                 try
                 {
-                    WriteANSIEscapeSequence("\x1b[%dm", code);
+                    writeANSIEscapeSequence("\x1b[%dm", code);
                 }
                 catch (NoValidTTYException&)
                 {
@@ -1124,34 +1125,34 @@ namespace TMK
         }
     }
 
-    void Terminal::Font::SetEffects(FontEffect effect)
+    void Terminal::Font::setEffects(FontEffect effect)
     {
-        SetEffects(static_cast<int>(effect));
+        setEffects(static_cast<int>(effect));
     }
 
-    void Terminal::Font::ResetColors()
+    void Terminal::Font::resetColors()
     {
         try
         {
-            WriteANSIEscapeSequence("\x1b[39;49m");
+            writeANSIEscapeSequence("\x1b[39;49m");
         }
         catch (NoValidTTYException&)
         {
         }
     }
 
-    void Terminal::Font::ResetWeight()
+    void Terminal::Font::resetWeight()
     {
         try
         {
-            WriteANSIEscapeSequence("\x1b[22m");
+            writeANSIEscapeSequence("\x1b[22m");
         }
         catch (NoValidTTYException&)
         {
         }
     }
 
-    void Terminal::Font::ResetEffects()
+    void Terminal::Font::resetEffects()
     {
         for (std::size_t code = 23; code < 30; ++code)
         {
@@ -1159,7 +1160,7 @@ namespace TMK
             {
                 try
                 {
-                    WriteANSIEscapeSequence("\x1b[%dm", code);
+                    writeANSIEscapeSequence("\x1b[%dm", code);
                 }
                 catch (NoValidTTYException&)
                 {
@@ -1168,30 +1169,30 @@ namespace TMK
         }
     }
 
-    Coordinate Terminal::Cursor::GetCoordinate()
+    Coordinate Terminal::Cursor::getCoordinate()
     {
 #ifdef _WIN32
         CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
         try
         {
-            bufferInfo = OutputStream::GetWindowBufferInfo();
+            bufferInfo = OutputStream::getWindowBufferInfo();
         }
         catch (NoValidTTYException&)
         {
-            bufferInfo = ErrorStream::GetWindowBufferInfo();
+            bufferInfo = ErrorStream::getWindowBufferInfo();
         }
         return Coordinate(bufferInfo.dwCursorPosition.X - bufferInfo.srWindow.Left, bufferInfo.dwCursorPosition.Y - bufferInfo.srWindow.Top);
 #else
-        struct termios attributes = InputStream::GetTermiosAttributes();
-        InputStream::Clear();
-        WriteANSIEscapeSequence("\x1b[6n");
+        struct termios attributes = InputStream::getTermiosAttributes();
+        InputStream::clear();
+        writeANSIEscapeSequence("\x1b[6n");
         attributes.c_lflag &= ~(ICANON | ECHO);
-        InputStream::SetTermiosAttributes(attributes);
+        InputStream::setTermiosAttributes(attributes);
         unsigned short column;
         unsigned short row;
         int totalMatchesRead = std::scanf("\x1b[%hu;%huR", &row, &column);
         attributes.c_lflag |= ICANON | ECHO;
-        InputStream::SetTermiosAttributes(attributes);
+        InputStream::setTermiosAttributes(attributes);
         if (totalMatchesRead != 2)
         {
             throw WideCharacterOrientationException();
@@ -1200,64 +1201,64 @@ namespace TMK
 #endif
     }
 
-    void Terminal::Cursor::SetCoordinate(unsigned short column, unsigned short row)
+    void Terminal::Cursor::setCoordinate(unsigned short column, unsigned short row)
     {
         try
         {
-            if (!Window::GetRegion().Contains(column, row))
+            if (!Window::getRegion().contains(column, row))
             {
                 throw OutOfRangeException();
             }
-            WriteANSIEscapeSequence("\x1b[%hu;%huH", row + 1, column + 1);
+            writeANSIEscapeSequence("\x1b[%hu;%huH", row + 1, column + 1);
         }
         catch (NoValidTTYException&)
         {
         }
     }
 
-    void Terminal::Cursor::SetCoordinate(Coordinate coordinate)
+    void Terminal::Cursor::setCoordinate(Coordinate coordinate)
     {
-        SetCoordinate(coordinate.GetColumn(), coordinate.GetRow());
+        setCoordinate(coordinate.getColumn(), coordinate.getRow());
     }
 
-    void Terminal::Cursor::SetShape(CursorShape shape, bool isBlinking)
+    void Terminal::Cursor::setShape(CursorShape shape, bool isBlinking)
     {
         try
         {
-            WriteANSIEscapeSequence("\x1b[%d q", static_cast<int>(shape) - isBlinking);
+            writeANSIEscapeSequence("\x1b[%d q", static_cast<int>(shape) - isBlinking);
         }
         catch (NoValidTTYException&)
         {
         }
     }
 
-    void Terminal::Cursor::SetVisibility(bool isVisible)
+    void Terminal::Cursor::setVisibility(bool isVisible)
     {
         try
         {
-            WriteANSIEscapeSequence("\x1b[?25%c", isVisible ? 'h' : 'l');
+            writeANSIEscapeSequence("\x1b[?25%c", isVisible ? 'h' : 'l');
         }
         catch (NoValidTTYException&)
         {
         }
     }
 
-    void Terminal::Cursor::ResetShape()
+    void Terminal::Cursor::resetShape()
     {
         try
         {
-            WriteANSIEscapeSequence("\x1b[0 q");
+            writeANSIEscapeSequence("\x1b[0 q");
         }
         catch (NoValidTTYException&)
         {
         }
     }
 
-    void Terminal::Cursor::ClearLine()
+    void Terminal::Cursor::clearLine()
     {
         try
         {
-            WriteANSIEscapeSequence("\x1b[2K\x1b[1G");
+            writeANSIEscapeSequence("\x1b[2K\x1b[1G");
         }
         catch (NoValidTTYException&)
         {
@@ -1290,22 +1291,22 @@ namespace TMK
 
     bool operator==(HexColor colorI, HexColor colorII)
     {
-        return colorI.GetCode() == colorII.GetCode();
+        return colorI.getCode() == colorII.getCode();
     }
 
     bool operator!=(HexColor colorI, HexColor colorII)
     {
-        return colorI.GetCode() != colorII.GetCode();
+        return colorI.getCode() != colorII.getCode();
     }
 
     bool operator==(RGBColor colorI, RGBColor colorII)
     {
-        return colorI.GetRed() == colorII.GetRed() && colorI.GetGreen() == colorII.GetGreen() && colorI.GetBlue() == colorII.GetBlue();
+        return colorI.getRed() == colorII.getRed() && colorI.getGreen() == colorII.getGreen() && colorI.getBlue() == colorII.getBlue();
     }
 
     bool operator!=(RGBColor colorI, RGBColor colorII)
     {
-        return colorI.GetRed() != colorII.GetRed() && colorI.GetGreen() != colorII.GetGreen() && colorI.GetBlue() != colorII.GetBlue();
+        return colorI.getRed() != colorII.getRed() && colorI.getGreen() != colorII.getGreen() && colorI.getBlue() != colorII.getBlue();
     }
 
     bool operator==(HexColor hexColor, RGBColor rgbColor)
