@@ -1625,13 +1625,9 @@ namespace tmk
          */
         class Encoding final
         {
+            friend class Terminal;
+
         public:
-            /**
-             * @brief Sets the output code page.
-             * @param codePage The code page to be used.
-             * @throws InvalidCodePageException Thrown whenever the code page is invalid.
-             */
-            static void setOutputCodePage(UINT codePage);
             /**
              * @brief Converts an UTF-16 encoded string to UTF-8.
              * @param utf16String The UTF-16 encoded string to be converted.
@@ -1647,6 +1643,13 @@ namespace tmk
 
         private:
             Encoding() = delete;
+
+            /**
+             * @brief Sets the output code page.
+             * @param codePage The code page to be used.
+             * @throws InvalidCodePageException Thrown whenever the code page is invalid.
+             */
+            static void setOutputCodePage(UINT codePage);
         };
 #endif
 
@@ -1655,7 +1658,48 @@ namespace tmk
          */
         class InputStream final
         {
+            friend class Terminal;
+
         public:
+            /**
+             * @brief Clears the standard input buffer.
+             */
+            static void clear();
+            /**
+             * @brief Checks if the standard input stream is connected to an interactive terminal (TTY).
+             * @param A boolean that states the standard input stream is a TTY.
+             */
+            static bool isTTY();
+            /**
+             * @brief Reads a byte.
+             * @returns The byte read or EOF if the standard input stream is closed or it is wide character oriented.
+             */
+            static char readByte();
+            /**
+             * @brief Reads a terminal event.
+             * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
+             * @returns The information about the event read.
+             */
+            static EventInfo readEvent(bool allowMouseCapture);
+            /**
+             * @brief Reads a terminal event.
+             * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
+             * @param wait The time to wait for an event. If zero, it returns immediately.
+             * @returns The information about the event read.
+             */
+            static EventInfo readEvent(bool allowMouseCapture, std::chrono::milliseconds wait);
+            /**
+             * @brief Reads a terminal event.
+             * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
+             * @param wait The time to wait for an event. If zero, it returns immediately.
+             * @param filter A function to be used to filter events while the timer is running.
+             * @returns The information about the event read.
+             */
+            static EventInfo readEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter);
+
+        private:
+            InputStream() = delete;
+
 #ifdef _WIN32
             /**
              * @brief Gets the handle associated with the standard input stream.
@@ -1711,44 +1755,6 @@ namespace tmk
              * @param The file descriptor number associated with the standard input stream.
              */
             static int getFileNumber();
-            /**
-             * @brief Clears the standard input buffer.
-             */
-            static void clear();
-            /**
-             * @brief Checks if the standard input stream is connected to an interactive terminal (TTY).
-             * @param A boolean that states the standard input stream is a TTY.
-             */
-            static bool isTTY();
-            /**
-             * @brief Reads a byte.
-             * @returns The byte read or EOF if the standard input stream is closed or it is wide character oriented.
-             */
-            static char readByte();
-            /**
-             * @brief Reads a terminal event.
-             * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
-             * @returns The information about the event read.
-             */
-            static EventInfo readEvent(bool allowMouseCapture);
-            /**
-             * @brief Reads a terminal event.
-             * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
-             * @param wait The time to wait for an event. If zero, it returns immediately.
-             * @returns The information about the event read.
-             */
-            static EventInfo readEvent(bool allowMouseCapture, std::chrono::milliseconds wait);
-            /**
-             * @brief Reads a terminal event.
-             * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
-             * @param wait The time to wait for an event. If zero, it returns immediately.
-             * @param filter A function to be used to filter events while the timer is running.
-             * @returns The information about the event read.
-             */
-            static EventInfo readEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter);
-
-        private:
-            InputStream() = delete;
         };
 
         /**
@@ -1756,33 +1762,9 @@ namespace tmk
          */
         class OutputStream final
         {
+            friend class Terminal;
+
         public:
-#ifdef _WIN32
-            /**
-             * @brief Gets the handle associated with the standard output stream.
-             * @returns The handle associated with the standard output stream.
-             */
-            static HANDLE getHandle();
-            /**
-             * @brief Gets the standard output mode.
-             * @returns The standard output mode.
-             * @throws NoValidTTYException Thrown whenever the standard output stream is not a TTY.
-             */
-            static DWORD getMode();
-            /**
-             * @brief Gets the buffer info of the window connected to the standard output stream.
-             * @returns The buffer info of the window connected to the standard output stream.
-             * @throws NoValidTTYException Thrown whenever the standard output stream is not a TTY.
-             */
-            static CONSOLE_SCREEN_BUFFER_INFO getWindowBufferInfo();
-            /**
-             * @brief Sets the standard output mode.
-             * @param mode The mode to be set.
-             * @throws NoValidTTYException Thrown whenever the standard output stream is not a TTY.
-             * @throws InvalidStreamAttributesException Thrown whenever the mode is invalid.
-             */
-            static void setMode(DWORD mode);
-#endif
             /**
              * @brief Flushes the standard output stream buffer.
              */
@@ -1821,6 +1803,41 @@ namespace tmk
              */
             static void write(std::string format, ...);
             /**
+             * @brief Checks if the standard output stream is connected to an interactive terminal (TTY).
+             * @returns A boolean that states the standard output stream is a TTY.
+             */
+            static bool isTTY();
+
+        private:
+            OutputStream() = delete;
+
+#ifdef _WIN32
+            /**
+             * @brief Gets the handle associated with the standard output stream.
+             * @returns The handle associated with the standard output stream.
+             */
+            static HANDLE getHandle();
+            /**
+             * @brief Gets the standard output mode.
+             * @returns The standard output mode.
+             * @throws NoValidTTYException Thrown whenever the standard output stream is not a TTY.
+             */
+            static DWORD getMode();
+            /**
+             * @brief Gets the buffer info of the window connected to the standard output stream.
+             * @returns The buffer info of the window connected to the standard output stream.
+             * @throws NoValidTTYException Thrown whenever the standard output stream is not a TTY.
+             */
+            static CONSOLE_SCREEN_BUFFER_INFO getWindowBufferInfo();
+            /**
+             * @brief Sets the standard output mode.
+             * @param mode The mode to be set.
+             * @throws NoValidTTYException Thrown whenever the standard output stream is not a TTY.
+             * @throws InvalidStreamAttributesException Thrown whenever the mode is invalid.
+             */
+            static void setMode(DWORD mode);
+#endif
+            /**
              * @brief Gets the file descriptor associated with the standard output stream.
              * @returns The file descriptor associated with the standard output stream.
              */
@@ -1830,14 +1847,6 @@ namespace tmk
              * @returns The file descriptor number associated with the standard output stream.
              */
             static int getFileNumber();
-            /**
-             * @brief Checks if the standard output stream is connected to an interactive terminal (TTY).
-             * @returns A boolean that states the standard output stream is a TTY.
-             */
-            static bool isTTY();
-
-        private:
-            OutputStream() = delete;
         };
 
         /**
@@ -1845,33 +1854,9 @@ namespace tmk
          */
         class ErrorStream final
         {
+            friend class Terminal;
+
         public:
-#ifdef _WIN32
-            /**
-             * @brief Gets the handle associated with the standard error stream.
-             * @returns The handle associated with the standard error stream.
-             */
-            static HANDLE getHandle();
-            /**
-             * @brief Gets the standard error mode.
-             * @returns The standard error mode.
-             * @throws NoValidTTYException Thrown whenever the standard error stream is not a TTY.
-             */
-            static DWORD getMode();
-            /**
-             * @brief Gets the buffer info of the window connected to the standard error stream.
-             * @returns The buffer info of the window connected to the standard error stream.
-             * @throws NoValidTTYException Thrown whenever the standard error stream is not a TTY.
-             */
-            static CONSOLE_SCREEN_BUFFER_INFO getWindowBufferInfo();
-            /**
-             * @brief Sets the standard error mode.
-             * @param mode The mode to be set.
-             * @throws NoValidTTYException Thrown whenever the standard error stream is not a TTY.
-             * @throws InvalidStreamAttributesException Thrown whenever the mode is invalid.
-             */
-            static void setMode(DWORD mode);
-#endif
             /**
              * @brief Formats and writes arguments to the standard error stream with a newline character appended at its end.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
@@ -1906,6 +1891,41 @@ namespace tmk
              */
             static void write(std::string format, ...);
             /**
+             * @brief Checks if the standard error stream is connected to an interactive terminal (TTY).
+             * @returns A boolean that states the standard error stream is a TTY.
+             */
+            static bool isTTY();
+
+        private:
+            ErrorStream() = delete;
+
+#ifdef _WIN32
+            /**
+             * @brief Gets the handle associated with the standard error stream.
+             * @returns The handle associated with the standard error stream.
+             */
+            static HANDLE getHandle();
+            /**
+             * @brief Gets the standard error mode.
+             * @returns The standard error mode.
+             * @throws NoValidTTYException Thrown whenever the standard error stream is not a TTY.
+             */
+            static DWORD getMode();
+            /**
+             * @brief Gets the buffer info of the window connected to the standard error stream.
+             * @returns The buffer info of the window connected to the standard error stream.
+             * @throws NoValidTTYException Thrown whenever the standard error stream is not a TTY.
+             */
+            static CONSOLE_SCREEN_BUFFER_INFO getWindowBufferInfo();
+            /**
+             * @brief Sets the standard error mode.
+             * @param mode The mode to be set.
+             * @throws NoValidTTYException Thrown whenever the standard error stream is not a TTY.
+             * @throws InvalidStreamAttributesException Thrown whenever the mode is invalid.
+             */
+            static void setMode(DWORD mode);
+#endif
+            /**
              * @brief Gets the file descriptor associated with the standard error stream.
              * @returns The file descriptor associated with the standard error stream.
              */
@@ -1915,14 +1935,6 @@ namespace tmk
              * @returns The file descriptor number associated with the standard error stream.
              */
             static int getFileNumber();
-            /**
-             * @brief Checks if the standard error stream is connected to an interactive terminal (TTY).
-             * @returns A boolean that states the standard error stream is a TTY.
-             */
-            static bool isTTY();
-
-        private:
-            ErrorStream() = delete;
         };
 
         /**
