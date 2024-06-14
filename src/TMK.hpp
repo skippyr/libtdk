@@ -8,572 +8,575 @@
 
 using namespace std::literals::chrono_literals;
 
-/**
- * @brief An open-source C++ terminal manipulation library made to develop cross-platform apps to for Windows and Linux. It uses an object-oriented philosophy to handle terminal
- * attributes, colors, effects, arguments and event readings. It primarily uses UTF-8 encoding, but has some exceptions that use UTF-16 encoding to fit within the Windows runtime
- * ecosystem.
- */
-namespace tmk
+/// <summary>
+/// Terminal Manipulation Kit (TMK) - An open-source C++ terminal manipulation library for Windows and Linux that includes features to handle terminal attributes, arguments and
+/// events targetting UTF-8 encoding.
+/// </summary>
+namespace TMK
 {
-    /**
-     * @brief Contains the POSIX exit codes.
-     */
+    /// <summary>
+    /// Contains the POSIX exit codes.
+    /// </summary>
     enum class ExitCode
     {
-        /**
-         * @brief Success.
-         */
-        Success = 0,
-        /**
-         * @brief Operation not permitted (EPERM).
-         */
+        /// <summary>
+        /// Successful execution.
+        /// </summary>
+        Success,
+        /// <summary>
+        /// Generic failed execution.
+        /// </summary>
+        Failure,
+        /// <summary>
+        /// Operation not permitted (EPERM).
+        /// </summary>
         OperationNotPermittedEPERM = 1,
-        /**
-         * @brief No such file or directory (ENOENT).
-         */
-        NoSuchFileOrDirectoryENOENT = 2,
-        /**
-         * @brief No such process (ESRCH).
-         */
-        NoSuchProcessESRCH = 3,
-        /**
-         * @brief Interrupted system call (EINTR).
-         */
-        InterruptedSystemCallEINTR = 4,
-        /**
-         * @brief InputStream/output error (EIO).
-         */
-        InputOutputErrorEIO = 5,
-        /**
-         * @brief No such device or address (ENXIO).
-         */
-        NoSuchDeviceOrAddressENXIO = 6,
-        /**
-         * @brief Argument list too long (E2BIG).
-         */
-        ArgumentListTooLongE2BIG = 7,
-        /**
-         * @brief Exec format error (ENOEXEC).
-         */
-        ExecFormatErrorENOEXEC = 8,
-        /**
-         * @brief Bad file descriptor (EBADF).
-         */
-        BadFileDescriptorEBADF = 9,
-        /**
-         * @brief No child processes (ECHILD).
-         */
-        NoChildProcessesECHILD = 10,
-        /**
-         * @brief Resource temporarily unavailable (EAGAIN).
-         */
-        ResourceTemporarilyUnavailableEAGAIN = 11,
-        /**
-         * @brief Cannot allocate memory (ENOMEM).
-         */
-        CannotAllocateMemoryENOMEM = 12,
-        /**
-         * @brief Permission denied (EACCES).
-         */
-        PermissionDeniedEACCES = 13,
-        /**
-         * @brief Bad address (EFAULT).
-         */
-        BadAddressEFAULT = 14,
-        /**
-         * @brief Block device required (ENOTBLK).
-         */
-        BlockDeviceRequiredENOTBLK = 15,
-        /**
-         * @brief Device or resource busy (EBUSY).
-         */
-        DeviceOrResourceBusyEBUSY = 16,
-        /**
-         * @brief File exists (EEXIST).
-         */
-        FileExistsEEXIST = 17,
-        /**
-         * @brief Invalid cross-device link (EXDEV).
-         */
-        InvalidCrossDeviceLinkEXDEV = 18,
-        /**
-         * @brief No such device (ENODEV).
-         */
-        NoSuchDeviceENODEV = 19,
-        /**
-         * @brief Not a directory (ENOTDIR).
-         */
-        NotADirectoryENOTDIR = 20,
-        /**
-         * @brief Is a directory (EISDIR).
-         */
-        IsADirectoryEISDIR = 21,
-        /**
-         * @brief Invalid argument (EINVAL).
-         */
-        InvalidArgumentEINVAL = 22,
-        /**
-         * @brief Too many open files in system (ENFILE).
-         */
-        TooManyOpenFilesInSystemENFILE = 23,
-        /**
-         * @brief Too many open files (EMFILE).
-         */
-        TooManyOpenFilesEMFILE = 24,
-        /**
-         * @brief Inappropriate ioctl for device (ENOTTY).
-         */
-        InappropriateIoctlForDeviceENOTTY = 25,
-        /**
-         * @brief Text file busy (ETXTBSY).
-         */
-        TextFileBusyETXTBSY = 26,
-        /**
-         * @brief File too large (EFBIG).
-         */
-        FileTooLargeEFBIG = 27,
-        /**
-         * @brief No space left on device (ENOSPC).
-         */
-        NoSpaceLeftOnDeviceENOSPC = 28,
-        /**
-         * @brief Illegal seek (ESPIPE).
-         */
-        IllegalSeekESPIPE = 29,
-        /**
-         * @brief Read-only file system (EROFS).
-         */
-        ReadOnlyFileSystemEROFS = 30,
-        /**
-         * @brief Too many links (EMLINK).
-         */
-        TooManyLinksEMLINK = 31,
-        /**
-         * @brief Broken pipe (EPIPE).
-         */
-        BrokenPipeEPIPE = 32,
-        /**
-         * @brief Numerical argument out of domain (EDOM).
-         */
-        NumericalArgumentOutOfDomainEDOM = 33,
-        /**
-         * @brief Numerical result out of range (ERANGE).
-         */
-        NumericalResultOutOfRangeERANGE = 34,
-        /**
-         * @brief Resource deadlock avoided (EDEADLK).
-         */
-        ResourceDeadlockAvoidedEDEADLK = 35,
-        /**
-         * @brief File name too long (ENAMETOOLONG).
-         */
-        FileNameTooLongENAMETOOLONG = 36,
-        /**
-         * @brief No locks available (ENOLCK).
-         */
-        NoLocksAvailableENOLCK = 37,
-        /**
-         * @brief Function not implemented (ENOSYS).
-         */
-        FunctionNotImplementedENOSYS = 38,
-        /**
-         * @brief Directory not empty (ENOTEMPTY).
-         */
-        DirectoryNotEmptyENOTEMPTY = 39,
-        /**
-         * @brief Too many levels of symbolic links (ELOOP).
-         */
-        TooManyLevelsOfSymbolicLinksELOOP = 40,
-        /**
-         * @brief Resource temporarily unavailable (EWOULDBLOCK).
-         */
+        /// <summary>
+        /// No such file or directory (ENOENT).
+        /// </summary>
+        NoSuchFileOrDirectoryENOENT,
+        /// <summary>
+        /// No such process (ESRCH).
+        /// </summary>
+        NoSuchProcessESRCH,
+        /// <summary>
+        /// Interrupted system call (EINTR).
+        /// </summary>
+        InterruptedSystemCallEINTR,
+        /// <summary>
+        /// Input/output error (EIO).
+        /// </summary>
+        InputOutputErrorEIO,
+        /// <summary>
+        /// No such device or address (ENXIO).
+        /// </summary>
+        NoSuchDeviceOrAddressENXIO,
+        /// <summary>
+        /// Argument list too long (E2BIG).
+        /// </summary>
+        ArgumentListTooLongE2BIG,
+        /// <summary>
+        /// Exec format error (ENOEXEC).
+        /// </summary>
+        ExecFormatErrorENOEXEC,
+        /// <summary>
+        /// Bad file descriptor (EBADF).
+        /// </summary>
+        BadFileDescriptorEBADF,
+        /// <summary>
+        /// No child processes (ECHILD).
+        /// </summary>
+        NoChildProcessesECHILD,
+        /// <summary>
+        /// Resource temporarily unavailable (EAGAIN).
+        /// </summary>
+        ResourceTemporarilyUnavailableEAGAIN,
+        /// <summary>
+        /// Resource temporarily unavailable (EWOULDBLOCK).
+        /// </summary>
         ResourceTemporarilyUnavailableEWOULDBLOCK = 11,
-        /**
-         * @brief No message of desired type (ENOMSG).
-         */
-        NoMessageOfDesiredTypeENOMSG = 42,
-        /**
-         * @brief Identifier removed (EIDRM).
-         */
-        IdentifierRemovedEIDRM = 43,
-        /**
-         * @brief Channel number out of range (ECHRNG).
-         */
-        ChannelNumberOutOfRangeECHRNG = 44,
-        /**
-         * @brief Level 2 not synchronized (EL2NSYNC).
-         */
-        Level2NotSynchronizedEL2NSYNC = 45,
-        /**
-         * @brief Level 3 halted (EL3HLT).
-         */
-        Level3HaltedEL3HLT = 46,
-        /**
-         * @brief Level 3 reset (EL3RST).
-         */
-        Level3ResetEL3RST = 47,
-        /**
-         * @brief Link number out of range (ELNRNG).
-         */
-        LinkNumberOutOfRangeELNRNG = 48,
-        /**
-         * @brief Protocol driver not attached (EUNATCH).
-         */
-        ProtocolDriverNotAttachedEUNATCH = 49,
-        /**
-         * @brief No CSI structure available (ENOCSI).
-         */
-        NoCSIStructureAvailableENOCSI = 50,
-        /**
-         * @brief Level 2 halted (EL2HLT).
-         */
-        Level2HaltedEL2HLT = 51,
-        /**
-         * @brief Invalid exchange (EBADE).
-         */
-        InvalidExchangeEBADE = 52,
-        /**
-         * @brief Invalid request descriptor (EBADR).
-         */
-        InvalidRequestDescriptorEBADR = 53,
-        /**
-         * @brief Exchange full (EXFULL).
-         */
-        ExchangeFullEXFULL = 54,
-        /**
-         * @brief No anode (ENOANO).
-         */
-        NoAnodeENOANO = 55,
-        /**
-         * @brief Invalid request code (EBADRQC).
-         */
-        InvalidRequestCodeEBADRQC = 56,
-        /**
-         * @brief Invalid slot (EBADSLT).
-         */
-        InvalidSlotEBADSLT = 57,
-        /**
-         * @brief Resource deadlock avoided (EDEADLOCK).
-         */
+        /// <summary>
+        /// Can not allocate memory (ENOMEM).
+        /// </summary>
+        CanNotAllocateMemoryENOMEM,
+        /// <summary>
+        /// Permission denied (EACCES).
+        /// </summary>
+        PermissionDeniedEACCES,
+        /// <summary>
+        /// Bad address (EFAULT).
+        /// </summary>
+        BadAddressEFAULT,
+        /// <summary>
+        /// Block device required (ENOTBLK).
+        /// </summary>
+        BlockDeviceRequiredENOTBLK,
+        /// <summary>
+        /// Device or resource busy (EBUSY).
+        /// </summary>
+        DeviceOrResourceBusyEBUSY,
+        /// <summary>
+        /// File exists (EEXIST).
+        /// </summary>
+        FileExistsEEXIST,
+        /// <summary>
+        /// Invalid cross-device link (EXDEV).
+        /// </summary>
+        InvalidCrossDeviceLinkEXDEV,
+        /// <summary>
+        /// No such device (ENODEV).
+        /// </summary>
+        NoSuchDeviceENODEV,
+        /// <summary>
+        /// Not a directory (ENOTDIR).
+        /// </summary>
+        NotADirectoryENOTDIR,
+        /// <summary>
+        /// Is a directory (EISDIR).
+        /// </summary>
+        IsADirectoryEISDIR,
+        /// <summary>
+        /// Invalid argument (EINVAL).
+        /// </summary>
+        InvalidArgumentEINVAL,
+        /// <summary>
+        /// Too many open files in system (ENFILE).
+        /// </summary>
+        TooManyOpenFilesInSystemENFILE,
+        /// <summary>
+        /// Too many open files (EMFILE).
+        /// </summary>
+        TooManyOpenFilesEMFILE,
+        /// <summary>
+        /// Inappropriate ioctl for device (ENOTTY).
+        /// </summary>
+        InappropriateIoctlForDeviceENOTTY,
+        /// <summary>
+        /// Text file busy (ETXTBSY).
+        /// </summary>
+        TextFileBusyETXTBSY,
+        /// <summary>
+        /// File too large (EFBIG).
+        /// </summary>
+        FileTooLargeEFBIG,
+        /// <summary>
+        /// No space left on device (ENOSPC).
+        /// </summary>
+        NoSpaceLeftOnDeviceENOSPC,
+        /// <summary>
+        /// Illegal seek (ESPIPE).
+        /// </summary>
+        IllegalSeekESPIPE,
+        /// <summary>
+        /// Read-only file system (EROFS).
+        /// </summary>
+        ReadOnlyFileSystemEROFS,
+        /// <summary>
+        /// Too many links (EMLINK).
+        /// </summary>
+        TooManyLinksEMLINK,
+        /// <summary>
+        /// Broken pipe (EPIPE).
+        /// </summary>
+        BrokenPipeEPIPE,
+        /// <summary>
+        /// Numerical argument out of domain (EDOM).
+        /// </summary>
+        NumericalArgumentOutOfDomainEDOM,
+        /// <summary>
+        /// Numerical result out of range (ERANGE).
+        /// </summary>
+        NumericalResultOutOfRangeERANGE,
+        /// <summary>
+        /// Resource deadlock avoided (EDEADLK).
+        /// </summary>
+        ResourceDeadlockAvoidedEDEADLK,
+        /// <summary>
+        /// Resource deadlock avoided (EDEADLOCK).
+        /// </summary>
         ResourceDeadlockAvoidedEDEADLOCK = 35,
-        /**
-         * @brief Bad font file format (EBFONT).
-         */
+        /// <summary>
+        /// File name too long (ENAMETOOLONG).
+        /// </summary>
+        FileNameTooLongENAMETOOLONG,
+        /// <summary>
+        /// No locks available (ENOLCK).
+        /// </summary>
+        NoLocksAvailableENOLCK,
+        /// <summary>
+        /// Function not implemented (ENOSYS).
+        /// </summary>
+        FunctionNotImplementedENOSYS,
+        /// <summary>
+        /// Directory not empty (ENOTEMPTY).
+        /// </summary>
+        DirectoryNotEmptyENOTEMPTY,
+        /// <summary>
+        /// Too many levels of symbolic links (ELOOP).
+        /// </summary>
+        TooManyLevelsOfSymbolicLinksELOOP,
+        /// <summary>
+        /// No message of desired type (ENOMSG).
+        /// </summary>
+        NoMessageOfDesiredTypeENOMSG = 42,
+        /// <summary>
+        /// Identifier removed (EIDRM).
+        /// </summary>
+        IdentifierRemovedEIDRM,
+        /// <summary>
+        /// Channel number out of range (ECHRNG).
+        /// </summary>
+        ChannelNumberOutOfRangeECHRNG,
+        /// <summary>
+        /// Level 2 not synchronized (EL2NSYNC).
+        /// </summary>
+        Level2NotSynchronizedEL2NSYNC,
+        /// <summary>
+        /// Level 3 halted (EL3HLT).
+        /// </summary>
+        Level3HaltedEL3HLT,
+        /// <summary>
+        /// Level 3 reset (EL3RST).
+        /// </summary>
+        Level3ResetEL3RST,
+        /// <summary>
+        /// Link number out of range (ELNRNG).
+        /// </summary>
+        LinkNumberOutOfRangeELNRNG,
+        /// <summary>
+        /// Protocol driver not attached (EUNATCH).
+        /// </summary>
+        ProtocolDriverNotAttachedEUNATCH,
+        /// <summary>
+        /// No CSI structure available (ENOCSI).
+        /// </summary>
+        NoCSIStructureAvailableENOCSI,
+        /// <summary>
+        /// Level 2 halted (EL2HLT).
+        /// </summary>
+        Level2HaltedEL2HLT,
+        /// <summary>
+        /// Invalid exchange (EBADE).
+        /// </summary>
+        InvalidExchangeEBADE,
+        /// <summary>
+        /// Invalid request descriptor (EBADR).
+        /// </summary>
+        InvalidRequestDescriptorEBADR,
+        /// <summary>
+        /// Exchange full (EXFULL).
+        /// </summary>
+        ExchangeFullEXFULL,
+        /// <summary>
+        /// No anode (ENOANO).
+        /// </summary>
+        NoAnodeENOANO,
+        /// <summary>
+        /// Invalid request code (EBADRQC).
+        /// </summary>
+        InvalidRequestCodeEBADRQC,
+        /// <summary>
+        /// Invalid slot (EBADSLT).
+        /// </summary>
+        InvalidSlotEBADSLT,
+        /// <summary>
+        /// Bad font file format (EBFONT).
+        /// </summary>
         BadFontFileFormatEBFONT = 59,
-        /**
-         * @brief Device not a stream (ENOSTR).
-         */
-        DeviceNotAStreamENOSTR = 60,
-        /**
-         * @brief No data available (ENODATA).
-         */
-        NoDataAvailableENODATA = 61,
-        /**
-         * @brief Timer expired (ETIME).
-         */
-        TimerExpiredETIME = 62,
-        /**
-         * @brief Out of streams resources (ENOSR).
-         */
-        OutOfStreamsResourcesENOSR = 63,
-        /**
-         * @brief Machine is not on the network (ENONET).
-         */
-        MachineIsNotOnTheNetworkENONET = 64,
-        /**
-         * @brief Package not installed (ENOPKG).
-         */
-        PackageNotInstalledENOPKG = 65,
-        /**
-         * @brief Object is remote (EREMOTE).
-         */
-        ObjectIsRemoteEREMOTE = 66,
-        /**
-         * @brief Link has been severed (ENOLINK).
-         */
-        LinkHasBeenSeveredENOLINK = 67,
-        /**
-         * @brief Advertise error (EADV).
-         */
-        AdvertiseErrorEADV = 68,
-        /**
-         * @brief Srmount error (ESRMNT).
-         */
-        SrmountErrorESRMNT = 69,
-        /**
-         * @brief Communication error on send (ECOMM).
-         */
-        CommunicationErrorOnSendECOMM = 70,
-        /**
-         * @brief Protocol error (EPROTO).
-         */
-        ProtocolErrorEPROTO = 71,
-        /**
-         * @brief Multihop attempted (EMULTIHOP).
-         */
-        MultihopAttemptedEMULTIHOP = 72,
-        /**
-         * @brief RFS specific error (EDOTDOT).
-         */
-        RFSSpecificErrorEDOTDOT = 73,
-        /**
-         * @brief Bad message (EBADMSG).
-         */
-        BadMessageEBADMSG = 74,
-        /**
-         * @brief Value too large for defined data type (EOVERFLOW).
-         */
-        ValueTooLargeForDefinedDataTypeEOVERFLOW = 75,
-        /**
-         * @brief Name not unique on network (ENOTUNIQ).
-         */
-        NameNotUniqueOnNetworkENOTUNIQ = 76,
-        /**
-         * @brief File descriptor in bad state (EBADFD).
-         */
-        FileDescriptorInBadStateEBADFD = 77,
-        /**
-         * @brief Remote address changed (EREMCHG).
-         */
-        RemoteAddressChangedEREMCHG = 78,
-        /**
-         * @brief Can not access a needed shared library (ELIBACC).
-         */
-        CanNotAccessANeededSharedLibraryELIBACC = 79,
-        /**
-         * @brief Accessing a corrupted shared library (ELIBBAD).
-         */
-        AccessingACorruptedSharedLibraryELIBBAD = 80,
-        /**
-         * @brief .lib section in a.out corrupted (ELIBSCN).
-         */
-        LibSectionInAOutCorruptedELIBSCN = 81,
-        /**
-         * @brief Attempting to link in too many shared libraries (ELIBMAX).
-         */
-        AttemptingToLinkInTooManySharedLibrariesELIBMAX = 82,
-        /**
-         * @brief Cannot exec a shared library directly (ELIBEXEC).
-         */
-        CannotExecASharedLibraryDirectlyELIBEXEC = 83,
-        /**
-         * @brief Invalid or incomplete multibyte or wide character (EILSEQ).
-         */
-        InvalidOrIncompleteMultibyteOrWideCharacterEILSEQ = 84,
-        /**
-         * @brief Interrupted system call should be restarted (ERESTART).
-         */
-        InterruptedSystemCallShouldBeRestartedERESTART = 85,
-        /**
-         * @brief Streams pipe error (ESTRPIPE).
-         */
-        StreamsPipeErrorESTRPIPE = 86,
-        /**
-         * @brief Too many users (EUSERS).
-         */
-        TooManyUsersEUSERS = 87,
-        /**
-         * @brief Socket operation on non-socket (ENOTSOCK).
-         */
-        SocketOperationOnNonSocketENOTSOCK = 88,
-        /**
-         * @brief Destination address required (EDESTADDRREQ).
-         */
-        DestinationAddressRequiredEDESTADDRREQ = 89,
-        /**
-         * @brief Message too long (EMSGSIZE).
-         */
-        MessageTooLongEMSGSIZE = 90,
-        /**
-         * @brief Protocol wrong type for socket (EPROTOTYPE).
-         */
-        ProtocolWrongTypeForSocketEPROTOTYPE = 91,
-        /**
-         * @brief Protocol not available (ENOPROTOOPT).
-         */
-        ProtocolNotAvailableENOPROTOOPT = 92,
-        /**
-         * @brief Protocol not supported (EPROTONOSUPPORT).
-         */
-        ProtocolNotSupportedEPROTONOSUPPORT = 93,
-        /**
-         * @brief Socket type not supported (ESOCKTNOSUPPORT).
-         */
-        SocketTypeNotSupportedESOCKTNOSUPPORT = 94,
-        /**
-         * @brief Operation not supported (EOPNOTSUPP).
-         */
-        OperationNotSupportedEOPNOTSUPP = 95,
-        /**
-         * @brief Protocol family not supported (EPFNOSUPPORT).
-         */
-        ProtocolFamilyNotSupportedEPFNOSUPPORT = 96,
-        /**
-         * @brief Address family not supported by protocol (EAFNOSUPPORT).
-         */
-        AddressFamilyNotSupportedByProtocolEAFNOSUPPORT = 97,
-        /**
-         * @brief Address already in use (EADDRINUSE).
-         */
-        AddressAlreadyInUseEADDRINUSE = 98,
-        /**
-         * @brief Cannot assign requested address (EADDRNOTAVAIL).
-         */
-        CannotAssignRequestedAddressEADDRNOTAVAIL = 99,
-        /**
-         * @brief Network is down (ENETDOWN).
-         */
-        NetworkIsDownENETDOWN = 100,
-        /**
-         * @brief Network is unreachable (ENETUNREACH).
-         */
-        NetworkIsUnreachableENETUNREACH = 101,
-        /**
-         * @brief Network dropped connection on reset (ENETRESET).
-         */
-        NetworkDroppedConnectionOnResetENETRESET = 102,
-        /**
-         * @brief Software caused connection abort (ECONNABORTED).
-         */
-        SoftwareCausedConnectionAbortECONNABORTED = 103,
-        /**
-         * @brief Connection reset by peer (ECONNRESET).
-         */
-        ConnectionResetByPeerECONNRESET = 104,
-        /**
-         * @brief No buffer space available (ENOBUFS).
-         */
-        NoBufferSpaceAvailableENOBUFS = 105,
-        /**
-         * @brief Transport endpoint is already connected (EISCONN).
-         */
-        TransportEndpointIsAlreadyConnectedEISCONN = 106,
-        /**
-         * @brief Transport endpoint is not connected (ENOTCONN).
-         */
-        TransportEndpointIsNotConnectedENOTCONN = 107,
-        /**
-         * @brief Cannot send after transport endpoint shutdown (ESHUTDOWN).
-         */
-        CannotSendAfterTransportEndpointShutdownESHUTDOWN = 108,
-        /**
-         * @brief Too many references: cannot splice (ETOOMANYREFS).
-         */
-        TooManyReferencesCannotSpliceETOOMANYREFS = 109,
-        /**
-         * @brief Connection timed out (ETIMEDOUT).
-         */
-        ConnectionTimedOutETIMEDOUT = 110,
-        /**
-         * @brief Connection refused (ECONNREFUSED).
-         */
-        ConnectionRefusedECONNREFUSED = 111,
-        /**
-         * @brief Host is down (EHOSTDOWN).
-         */
-        HostIsDownEHOSTDOWN = 112,
-        /**
-         * @brief No route to host (EHOSTUNREACH).
-         */
-        NoRouteToHostEHOSTUNREACH = 113,
-        /**
-         * @brief Operation already in progress (EALREADY).
-         */
-        OperationAlreadyInProgressEALREADY = 114,
-        /**
-         * @brief Operation now in progress (EINPROGRESS).
-         */
-        OperationNowInProgressEINPROGRESS = 115,
-        /**
-         * @brief Stale file handle (ESTALE).
-         */
-        StaleFileHandleESTALE = 116,
-        /**
-         * @brief Structure needs cleaning (EUCLEAN).
-         */
-        StructureNeedsCleaningEUCLEAN = 117,
-        /**
-         * @brief Not a XENIX named type file (ENOTNAM).
-         */
-        NotAXENIXNamedTypeFileENOTNAM = 118,
-        /**
-         * @brief No XENIX semaphores available (ENAVAIL).
-         */
-        NoXENIXSemaphoresAvailableENAVAIL = 119,
-        /**
-         * @brief Is a named type file (EISNAM).
-         */
-        IsANamedTypeFileEISNAM = 120,
-        /**
-         * @brief Remote I/O error (EREMOTEIO).
-         */
-        RemoteIOErrorEREMOTEIO = 121,
-        /**
-         * @brief Disk quota exceeded (EDQUOT).
-         */
-        DiskQuotaExceededEDQUOT = 122,
-        /**
-         * @brief No medium found (ENOMEDIUM).
-         */
-        NoMediumFoundENOMEDIUM = 123,
-        /**
-         * @brief Wrong medium type (EMEDIUMTYPE).
-         */
-        WrongMediumTypeEMEDIUMTYPE = 124,
-        /**
-         * @brief Operation canceled (ECANCELED).
-         */
-        OperationCanceledECANCELED = 125,
-        /**
-         * @brief Required key not available (ENOKEY).
-         */
-        RequiredKeyNotAvailableENOKEY = 126,
-        /**
-         * @brief Key has expired (EKEYEXPIRED).
-         */
-        KeyHasExpiredEKEYEXPIRED = 127,
-        /**
-         * @brief Key has been revoked (EKEYREVOKED).
-         */
-        KeyHasBeenRevokedEKEYREVOKED = 128,
-        /**
-         * @brief Key was rejected by service (EKEYREJECTED).
-         */
-        KeyWasRejectedByServiceEKEYREJECTED = 129,
-        /**
-         * @brief Owner died (EOWNERDEAD).
-         */
-        OwnerDiedEOWNERDEAD = 130,
-        /**
-         * @brief State not recoverable (ENOTRECOVERABLE).
-         */
-        StateNotRecoverableENOTRECOVERABLE = 131,
-        /**
-         * @brief Operation not possible due to RF-kill (ERFKILL).
-         */
-        OperationNotPossibleDueToRFKillERFKILL = 132,
-        /**
-         * @brief Memory page has hardware error (EHWPOISON).
-         */
-        MemoryPageHasHardwareErrorEHWPOISON = 133,
-        /**
-         * @brief Operation not supported (ENOTSUP).
-         */
-        OperationNotSupportedENOTSUP = 95
+        /// <summary>
+        /// Device not a stream (ENOSTR).
+        /// </summary>
+        DeviceNotAStreamENOSTR,
+        /// <summary>
+        /// No data available (ENODATA).
+        /// </summary>
+        NoDataAvailableENODATA,
+        /// <summary>
+        /// Timer expired (ETIME).
+        /// </summary>
+        TimerExpiredETIME,
+        /// <summary>
+        /// Out of streams resources (ENOSR).
+        /// </summary>
+        OutOfStreamsResourcesENOSR,
+        /// <summary>
+        /// Machine is not on the network (ENONET).
+        /// </summary>
+        MachineIsNotOnTheNetworkENONET,
+        /// <summary>
+        /// Package not installed (ENOPKG).
+        /// </summary>
+        PackageNotInstalledENOPKG,
+        /// <summary>
+        /// Object is remote (EREMOTE).
+        /// </summary>
+        ObjectIsRemoteEREMOTE,
+        /// <summary>
+        /// Link has been severed (ENOLINK).
+        /// </summary>
+        LinkHasBeenSeveredENOLINK,
+        /// <summary>
+        /// Advertise error (EADV).
+        /// </summary>
+        AdvertiseErrorEADV,
+        /// <summary>
+        /// Srmount error (ESRMNT).
+        /// </summary>
+        SrmountErrorESRMNT,
+        /// <summary>
+        /// Communication error on send (ECOMM).
+        /// </summary>
+        CommunicationErrorOnSendECOMM,
+        /// <summary>
+        /// Protocol error (EPROTO).
+        /// </summary>
+        ProtocolErrorEPROTO,
+        /// <summary>
+        /// Multihop attempted (EMULTIHOP).
+        /// </summary>
+        MultihopAttemptedEMULTIHOP,
+        /// <summary>
+        /// RFS specific error (EDOTDOT).
+        /// </summary>
+        RFSSpecificErrorEDOTDOT,
+        /// <summary>
+        /// Bad message (EBADMSG).
+        /// </summary>
+        BadMessageEBADMSG,
+        /// <summary>
+        /// Value too large for defined data type (EOVERFLOW).
+        /// </summary>
+        ValueTooLargeForDefinedDataTypeEOVERFLOW,
+        /// <summary>
+        /// Name not unique on network (ENOTUNIQ).
+        /// </summary>
+        NameNotUniqueOnNetworkENOTUNIQ,
+        /// <summary>
+        /// File descriptor in bad state (EBADFD).
+        /// </summary>
+        FileDescriptorInBadStateEBADFD,
+        /// <summary>
+        /// Remote address changed (EREMCHG).
+        /// </summary>
+        RemoteAddressChangedEREMCHG,
+        /// <summary>
+        /// Can not access a needed shared library (ELIBACC).
+        /// </summary>
+        CanNotAccessANeededSharedLibraryELIBACC,
+        /// <summary>
+        /// Accessing a corrupted shared library (ELIBBAD).
+        /// </summary>
+        AccessingACorruptedSharedLibraryELIBBAD,
+        /// <summary>
+        /// .lib section in a.out corrupted (ELIBSCN).
+        /// </summary>
+        LibSectionInAOutCorruptedELIBSCN,
+        /// <summary>
+        /// Attempting to link in too many shared libraries (ELIBMAX).
+        /// </summary>
+        AttemptingToLinkInTooManySharedLibrariesELIBMAX,
+        /// <summary>
+        /// Cannot exec a shared library directly (ELIBEXEC).
+        /// </summary>
+        CannotExecASharedLibraryDirectlyELIBEXEC,
+        /// <summary>
+        /// Invalid or incomplete multibyte or wide character (EILSEQ).
+        /// </summary>
+        InvalidOrIncompleteMultibyteOrWideCharacterEILSEQ,
+        /// <summary>
+        /// Interrupted system call should be restarted (ERESTART).
+        /// </summary>
+        InterruptedSystemCallShouldBeRestartedERESTART,
+        /// <summary>
+        /// Streams pipe error (ESTRPIPE).
+        /// </summary>
+        StreamsPipeErrorESTRPIPE,
+        /// <summary>
+        /// Too many users (EUSERS).
+        /// </summary>
+        TooManyUsersEUSERS,
+        /// <summary>
+        /// Socket operation on non-socket (ENOTSOCK).
+        /// </summary>
+        SocketOperationOnNonSocketENOTSOCK,
+        /// <summary>
+        /// Destination address required (EDESTADDRREQ).
+        /// </summary>
+        DestinationAddressRequiredEDESTADDRREQ,
+        /// <summary>
+        /// Message too long (EMSGSIZE).
+        /// </summary>
+        MessageTooLongEMSGSIZE,
+        /// <summary>
+        /// Protocol wrong type for socket (EPROTOTYPE).
+        /// </summary>
+        ProtocolWrongTypeForSocketEPROTOTYPE,
+        /// <summary>
+        /// Protocol not available (ENOPROTOOPT).
+        /// </summary>
+        ProtocolNotAvailableENOPROTOOPT,
+        /// <summary>
+        /// Protocol not supported (EPROTONOSUPPORT).
+        /// </summary>
+        ProtocolNotSupportedEPROTONOSUPPORT,
+        /// <summary>
+        /// Socket type not supported (ESOCKTNOSUPPORT).
+        /// </summary>
+        SocketTypeNotSupportedESOCKTNOSUPPORT,
+        /// <summary>
+        /// Operation not supported (EOPNOTSUPP).
+        /// </summary>
+        OperationNotSupportedEOPNOTSUPP,
+        /// <summary>
+        /// Operation not supported (ENOTSUP).
+        /// </summary>
+        OperationNotSupportedENOTSUP = 95,
+        /// <summary>
+        /// Protocol family not supported (EPFNOSUPPORT).
+        /// </summary>
+        ProtocolFamilyNotSupportedEPFNOSUPPORT,
+        /// <summary>
+        /// Address family not supported by protocol (EAFNOSUPPORT).
+        /// </summary>
+        AddressFamilyNotSupportedByProtocolEAFNOSUPPORT,
+        /// <summary>
+        /// Address already in use (EADDRINUSE).
+        /// </summary>
+        AddressAlreadyInUseEADDRINUSE,
+        /// <summary>
+        /// Cannot assign requested address (EADDRNOTAVAIL).
+        /// </summary>
+        CannotAssignRequestedAddressEADDRNOTAVAIL,
+        /// <summary>
+        /// Network is down (ENETDOWN).
+        /// </summary>
+        NetworkIsDownENETDOWN,
+        /// <summary>
+        /// Network is unreachable (ENETUNREACH).
+        /// </summary>
+        NetworkIsUnreachableENETUNREACH,
+        /// <summary>
+        /// Network dropped connection on reset (ENETRESET).
+        /// </summary>
+        NetworkDroppedConnectionOnResetENETRESET,
+        /// <summary>
+        /// Software caused connection abort (ECONNABORTED).
+        /// </summary>
+        SoftwareCausedConnectionAbortECONNABORTED,
+        /// <summary>
+        /// Connection reset by peer (ECONNRESET).
+        /// </summary>
+        ConnectionResetByPeerECONNRESET,
+        /// <summary>
+        /// No buffer space available (ENOBUFS).
+        /// </summary>
+        NoBufferSpaceAvailableENOBUFS,
+        /// <summary>
+        /// Transport endpoint is already connected (EISCONN).
+        /// </summary>
+        TransportEndpointIsAlreadyConnectedEISCONN,
+        /// <summary>
+        /// Transport endpoint is not connected (ENOTCONN).
+        /// </summary>
+        TransportEndpointIsNotConnectedENOTCONN,
+        /// <summary>
+        /// Can not send after transport endpoint shutdown (ESHUTDOWN).
+        /// </summary>
+        CanNotSendAfterTransportEndpointShutdownESHUTDOWN,
+        /// <summary>
+        /// Too many references: cannot splice (ETOOMANYREFS).
+        /// </summary>
+        TooManyReferencesCannotSpliceETOOMANYREFSs,
+        /// <summary>
+        /// Connection timed out (ETIMEDOUT).
+        /// </summary>
+        ConnectionTimedOutETIMEDOUT,
+        /// <summary>
+        /// Connection refused (ECONNREFUSED).
+        /// </summary>
+        ConnectionRefusedECONNREFUSED,
+        /// <summary>
+        /// Host is down (EHOSTDOWN).
+        /// </summary>
+        HostIsDownEHOSTDOWN,
+        /// <summary>
+        /// No route to host (EHOSTUNREACH).
+        /// </summary>
+        NoRouteToHostEHOSTUNREACH,
+        /// <summary>
+        /// Operation already in progress (EALREADY).
+        /// </summary>
+        OperationAlreadyInProgressEALREADY,
+        /// <summary>
+        /// Operation now in progress (EINPROGRESS).
+        /// </summary>
+        OperationNowInProgressEINPROGRESS,
+        /// <summary>
+        /// Stale file handle (ESTALE).
+        /// </summary>
+        StaleFileHandleESTALE,
+        /// <summary>
+        /// Structure needs cleaning (EUCLEAN).
+        /// </summary>
+        StructureNeedsCleaningEUCLEAN,
+        /// <summary>
+        /// Not a XENIX named type file (ENOTNAM).
+        /// </summary>
+        NotAXENIXNamedTypeFileENOTNAM,
+        /// <summary>
+        /// No XENIX semaphores available (ENAVAIL).
+        /// </summary>
+        NoXENIXSemaphoresAvailableENAVAIL,
+        /// <summary>
+        /// Is a named type file (EISNAM).
+        /// </summary>
+        IsANamedTypeFileEISNAM,
+        /// <summary>
+        /// Remote I/O error (EREMOTEIO).
+        /// </summary>
+        RemoteIOErrorEREMOTEIO,
+        /// <summary>
+        /// Disk quota exceeded (EDQUOT).
+        /// </summary>
+        DiskQuotaExceededEDQUOT,
+        /// <summary>
+        /// No medium found (ENOMEDIUM).
+        /// </summary>
+        NoMediumFoundENOMEDIUM,
+        /// <summary>
+        /// Wrong medium type (EMEDIUMTYPE).
+        /// </summary>
+        WrongMediumTypeEMEDIUMTYPE,
+        /// <summary>
+        /// Operation canceled (ECANCELED).
+        /// </summary>
+        OperationCanceledECANCELED,
+        /// <summary>
+        /// Required key not available (ENOKEY).
+        /// </summary>
+        RequiredKeyNotAvailableENOKEY,
+        /// <summary>
+        /// Key has expired (EKEYEXPIRED).
+        /// </summary>
+        KeyHasExpiredEKEYEXPIRED,
+        /// <summary>
+        /// Key has been revoked (EKEYREVOKED).
+        /// </summary>
+        KeyHasBeenRevokedEKEYREVOKED,
+        /// <summary>
+        /// Key was rejected by service (EKEYREJECTED).
+        /// </summary>
+        KeyWasRejectedByServiceEKEYREJECTED,
+        /// <summary>
+        /// Owner died (EOWNERDEAD).
+        /// </summary>
+        OwnerDiedEOWNERDEAD,
+        /// <summary>
+        /// State not recoverable (ENOTRECOVERABLE).
+        /// </summary>
+        StateNotRecoverableENOTRECOVERABLE,
+        /// <summary>
+        /// Operation not possible due to RF-kill (ERFKILL).
+        /// </summary>
+        OperationNotPossibleDueToRFKillERFKILL,
+        /// <summary>
+        /// Memory page has hardware error (EHWPOISON).
+        /// </summary>
+        MemoryPageHasHardwareErrorEHWPOISON,
     };
 
-    /**
-     * @brief contains the available terminal font weights.
-     */
+    /// <summary>
+    /// Contains the available terminal font weights.
+    /// </summary>
     enum class FontWeight
     {
-        /**
-         * @brief Usually rendered as bold weight and/or with bright colors.
-         */
+        /// <summary>
+        /// Usually rendered as bold weight and/or with bright colors.
+        /// </summary>
         Bold = 1,
-        /**
-         * @brief Usually rendered with faded colors.
-         */
+        /// <summary>
+        /// Usually rendered with faded colors.
+        /// </summary>
         Light
     };
 

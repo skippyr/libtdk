@@ -22,7 +22,7 @@
         goto l_keyReadingEnd;                                                                                                                                                      \
     }
 
-namespace tmk
+namespace TMK
 {
     /**
      * @brief A boolean that states the stream TTY cache has been filled.
