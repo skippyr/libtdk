@@ -1108,114 +1108,111 @@ namespace TMK
         unsigned short m_row;
     };
 
-    /**
-     * @brief Represents a region inside of the terminal window.
-     */
+    /// <summary>
+    /// Represents a region inside of the terminal window.
+    /// </summary>
     class Region final
     {
     public:
-        /**
-         * @brief Creates an instance of the Region class.
-         * @returns An instance of the Region class.
-         */
+        /// <summary>
+        /// Creates a region of the Region class.
+        /// </summary>
         Region();
-        /**
-         * @brief Creates an instance of the Region class.
-         * @param totalColumns The total columns of the region.
-         * @param totalRows The total rows of the region.
-         * @returns An instance of the Region class.
-         */
+        /// <summary>
+        /// Creates an instance of the Region class.
+        /// </summary>
+        /// <param name="totalColumns">The total columns of the region.</param>
+        /// <param name="totalRows">The total rows of the region.</param>
         Region(unsigned short totalColumns, unsigned short totalRows);
-        /**
-         * @brief Creates an instance of the Region class.
-         * @param coordinateI The first coordinate of the region.
-         * @param coordinateII The second coordinate of the region. It must be opposite to the first one.
-         * @returns An instance of the Region class.
-         */
+        /// <summary>
+        /// Creates an instance of the Region class.
+        /// </summary>
+        /// <param name="coordinateI">The first coordinate of the region.</param>
+        /// <param name="coordinateII">The second coordinate of the region. It must be opposite to the first one.</param>
         Region(Coordinate coordinateI, Coordinate coordinateII);
-        /**
-         * @brief Gets the total columns of the region.
-         * @returns The total columns of the region.
-         */
-        unsigned short getTotalColumns() const;
-        /**
-         * @brief Gets the total rows of the region.
-         * @returns The total rows of the region.
-         */
-        unsigned short getTotalRows() const;
-        /**
-         * @brief Gets the area of the region.
-         * @returns The area of the region.
-         */
-        unsigned int getArea() const;
-        /**
-         * @brief Gets the top left coordinate of the region.
-         * @returns The top left coordinate of the region.
-         */
-        Coordinate getTopLeftCoordinate() const;
-        /**
-         * @brief Gets the top right coordinate of the region.
-         * @returns The top right coordinate of the region.
-         */
-        Coordinate getTopRightCoordinate() const;
-        /**
-         * @brief Gets the bottom left coordinate of the region.
-         * @returns The bottom left coordinate of the region.
-         */
-        Coordinate getBottomLeftCoordinate() const;
-        /**
-         * @brief Gets the bottom right coordinate of the region.
-         * @returns The bottom right coordinate of the region.
-         */
-        Coordinate getBottomRightCoordinate() const;
-        /**
-         * @brief Checks if the region contains a coordinate.
-         * @param column The column component of the coordinate.
-         * @param row The row component of the coordinate.
-         * @returns A boolean that states the region contains the coordinate.
-         */
-        bool contains(unsigned short column, unsigned short row) const;
-        /**
-         * @brief Checks if the region contains a coordinate.
-         * @param coordinate The coordinate to be checked.
-         * @returns A boolean that states the region contains the coordinate.
-         */
-        bool contains(Coordinate coordinate) const;
+        /// <summary>
+        /// Gets the total columns of the region.
+        /// </summary>
+        /// <returns>The total columns of the region.</returns>
+        unsigned short GetTotalColumns() const;
+        /// <summary>
+        /// Gets the total rows of the region.
+        /// </summary>
+        /// <returns>The total rows of the region.</returns>
+        unsigned short GetTotalRows() const;
+        /// <summary>
+        /// Gets the area of the region.
+        /// </summary>
+        /// <returns>The area of the region.</returns>
+        unsigned int GetArea() const;
+        /// <summary>
+        /// Gets the top left coordinate of the region.
+        /// </summary>
+        /// <returns>The top left coordinate of the region.</returns>
+        Coordinate GetTopLeftCoordinate() const;
+        /// <summary>
+        /// Gets the top right coordinate of the region.
+        /// </summary>
+        /// <returns>The top right coordinate of the region.</returns>
+        Coordinate GetTopRightCoordinate() const;
+        /// <summary>
+        /// Gets the bottom left coordinate of the region.
+        /// </summary>
+        /// <returns>The bottom left coordinate of the region.</returns>
+        Coordinate GetBottomLeftCoordinate() const;
+        /// <summary>
+        /// Gets the bottom right coordinate of the region.
+        /// </summary>
+        /// <returns>The bottom right coordinate of the region.</returns>
+        Coordinate GetBottomRightCoordinate() const;
+        /// <summary>
+        /// Checks if the region contains a coordinate.
+        /// </summary>
+        /// <param name="column">The column component of the coordinate.</param>
+        /// <param name="row">The row component of the coordinate.</param>
+        /// <returns></returns>
+        bool Contains(unsigned short column, unsigned short row) const;
+        /// <summary>
+        /// Checks if the region contains a coordinate.
+        /// </summary>
+        /// <param name="coordinate">The coordinate to be checked.</param>
+        /// <returns>A boolean that states the region contains the coordinate.</returns>
+        bool Contains(Coordinate coordinate) const;
 
     private:
-        /**
-         * @brief The total columns of the region.
-         */
+        /// <summary>
+        /// The total columns of the region.
+        /// </summary>
         unsigned short m_totalColumns;
-        /**
-         * @brief The total rows of the region.
-         */
+        /// <summary>
+        /// The total rows of the region.
+        /// </summary>
         unsigned short m_totalRows;
-        /**
-         * @brief The area of the region.
-         */
+        /// <summary>
+        /// The area of the region.
+        /// </summary>
         unsigned int m_area;
-        /**
-         * @brief The top left coordinate of the region.
-         */
+        /// <summary>
+        /// The top left coordinate of the region.
+        /// </summary>
         Coordinate m_topLeftCoordinate;
-        /**
-         * @brief The top right coordinate of the region.
-         */
+        /// <summary>
+        /// The top right coordinate of the region.
+        /// </summary>
         Coordinate m_topRightCoordinate;
-        /**
-         * @brief The bottom left coordinate of the region.
-         */
+        /// <summary>
+        /// The bottom left coordinate of the region.
+        /// </summary>
         Coordinate m_bottomLeftCoordinate;
-        /**
-         * @brief The bottom right coordinate of the region.
-         */
+        /// <summary>
+        /// The bottom right coordinate of the region.
+        /// </summary>
         Coordinate m_bottomRightCoordinate;
     };
 
-    /**
-     * @brief Represents a color in hex format.
-     */
+    /// <summary>
+    /// Represents a color in hex format.
+    /// </summary>
     class HexColor final
     {
     public:
