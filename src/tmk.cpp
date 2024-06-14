@@ -63,6 +63,40 @@ namespace tmk
 #endif
         }
 
+        /**
+         * @brief Writes an ANSI escape sequence to the terminal output or error streams.
+         * @param format The format to be used. It accepts the same specifiers as the printf function family.
+         * @param arguments The arguments to be formatted.
+         * @throws NoValidTTYException Thrown whenever the standard output and error streams are not TTY.
+         * @throws WideCharacterOrientationException Thrown whenever the standard output or error stream is wide character oriented.
+         */
+        static void writeANSIEscapeSequence(std::string format, std::va_list arguments)
+        {
+            if (!Terminal::OutputStream::isTTY() && !Terminal::ErrorStream::isTTY())
+            {
+                throw NoValidTTYException();
+            }
+            if (std::vfprintf(Terminal::OutputStream::isTTY() ? stdout : stderr, format.c_str(), arguments) < 0)
+            {
+                throw WideCharacterOrientationException();
+            }
+        }
+
+        /**
+         * @brief Writes an ANSI escape sequence to the terminal output or error streams.
+         * @param format The format to be used. It accepts the same specifiers as the printf function family.
+         * @param ... The arguments to be formatted.
+         * @throws NoValidTTYException Thrown whenever the standard output and error streams are not TTY.
+         * @throws WideCharacterOrientationException Thrown whenever the standard output or error stream is wide character oriented.
+         */
+        static void writeANSIEscapeSequence(std::string format, ...)
+        {
+            std::va_list arguments;
+            va_start(arguments, format);
+            Setup::writeANSIEscapeSequence(format, arguments);
+            va_end(arguments);
+        }
+
     private:
         Setup() = delete;
     };
@@ -431,26 +465,6 @@ namespace tmk
         throw InvalidEventTypeException();
     }
 
-    void Terminal::writeANSIEscapeSequence(std::string format, std::va_list arguments)
-    {
-        if (!OutputStream::isTTY() && !ErrorStream::isTTY())
-        {
-            throw NoValidTTYException();
-        }
-        if (std::vfprintf(OutputStream::isTTY() ? stdout : stderr, format.c_str(), arguments) < 0)
-        {
-            throw WideCharacterOrientationException();
-        }
-    }
-
-    void Terminal::writeANSIEscapeSequence(std::string format, ...)
-    {
-        std::va_list arguments;
-        va_start(arguments, format);
-        writeANSIEscapeSequence(format, arguments);
-        va_end(arguments);
-    }
-
     void Terminal::write(std::FILE* file, const char* format, std::va_list arguments, bool hasNewLine)
     {
         Setup::initStreamTTYCache();
@@ -599,38 +613,6 @@ namespace tmk
     }
 
 #ifdef _WIN32
-    DWORD Terminal::getStreamMode(HANDLE handle)
-    {
-        DWORD mode;
-        if (!GetConsoleMode(handle, &mode))
-        {
-            throw NoValidTTYException();
-        }
-        return mode;
-    }
-
-    CONSOLE_SCREEN_BUFFER_INFO Terminal::getStreamWindowBufferInfo(HANDLE handle)
-    {
-        CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-        if (!GetConsoleScreenBufferInfo(handle, &bufferInfo))
-        {
-            throw NoValidTTYException();
-        }
-        return bufferInfo;
-    }
-
-    void Terminal::setStreamMode(HANDLE handle, bool isTTY, DWORD mode)
-    {
-        if (!isTTY)
-        {
-            throw NoValidTTYException();
-        }
-        if (!SetConsoleMode(handle, mode))
-        {
-            throw InvalidStreamAttributesException();
-        }
-    }
-
     std::string Terminal::Encoding::convertUTF16ToUTF8(std::wstring utf16String)
     {
         int utf8Size = WideCharToMultiByte(CP_UTF8, 0, utf16String.c_str(), -1, nullptr, 0, nullptr, nullptr);
@@ -825,7 +807,7 @@ namespace tmk
     {
         try
         {
-            writeANSIEscapeSequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
+            Setup::writeANSIEscapeSequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
         }
         catch (NoValidTTYException&)
         {
@@ -836,7 +818,7 @@ namespace tmk
     {
         try
         {
-            writeANSIEscapeSequence("\x1b[?1049l");
+            Setup::Setup::writeANSIEscapeSequence("\x1b[?1049l");
         }
         catch (NoValidTTYException&)
         {
@@ -847,9 +829,9 @@ namespace tmk
     {
         try
         {
-            writeANSIEscapeSequence("\x1b]0;");
-            writeANSIEscapeSequence(format, arguments);
-            writeANSIEscapeSequence("\7");
+            Setup::writeANSIEscapeSequence("\x1b]0;");
+            Setup::writeANSIEscapeSequence(format, arguments);
+            Setup::writeANSIEscapeSequence("\7");
         }
         catch (NoValidTTYException&)
         {
@@ -868,7 +850,7 @@ namespace tmk
     {
         try
         {
-            writeANSIEscapeSequence("\7");
+            Setup::writeANSIEscapeSequence("\7");
         }
         catch (NoValidTTYException&)
         {
@@ -879,7 +861,7 @@ namespace tmk
     {
         try
         {
-            writeANSIEscapeSequence("\x1b[22;%dm", static_cast<int>(weight));
+            Setup::writeANSIEscapeSequence("\x1b[22;%dm", static_cast<int>(weight));
         }
         catch (NoValidTTYException&)
         {
@@ -890,7 +872,7 @@ namespace tmk
     {
         try
         {
-            writeANSIEscapeSequence("\x1b[%d8;5;%hum", static_cast<int>(layer), color);
+            Setup::writeANSIEscapeSequence("\x1b[%d8;5;%hum", static_cast<int>(layer), color);
         }
         catch (NoValidTTYException&)
         {
@@ -912,7 +894,7 @@ namespace tmk
     {
         try
         {
-            writeANSIEscapeSequence("\x1b[%d8;2;%hu;%hu;%hum", static_cast<int>(layer), red, green, blue);
+            Setup::writeANSIEscapeSequence("\x1b[%d8;2;%hu;%hu;%hum", static_cast<int>(layer), red, green, blue);
         }
         catch (NoValidTTYException&)
         {
@@ -953,7 +935,7 @@ namespace tmk
             {
                 try
                 {
-                    writeANSIEscapeSequence("\x1b[%dm", code);
+                    Setup::writeANSIEscapeSequence("\x1b[%dm", code);
                 }
                 catch (NoValidTTYException&)
                 {
@@ -971,7 +953,7 @@ namespace tmk
     {
         try
         {
-            writeANSIEscapeSequence("\x1b[39;49m");
+            Setup::writeANSIEscapeSequence("\x1b[39;49m");
         }
         catch (NoValidTTYException&)
         {
@@ -982,7 +964,7 @@ namespace tmk
     {
         try
         {
-            writeANSIEscapeSequence("\x1b[22m");
+            Setup::writeANSIEscapeSequence("\x1b[22m");
         }
         catch (NoValidTTYException&)
         {
@@ -997,7 +979,7 @@ namespace tmk
             {
                 try
                 {
-                    writeANSIEscapeSequence("\x1b[%dm", code);
+                    Setup::writeANSIEscapeSequence("\x1b[%dm", code);
                 }
                 catch (NoValidTTYException&)
                 {
@@ -1019,7 +1001,7 @@ namespace tmk
             throw NoValidTTYException();
         }
         InputStream::clear();
-        writeANSIEscapeSequence("\x1b[6n");
+        Setup::writeANSIEscapeSequence("\x1b[6n");
         attributes.c_lflag &= ~(ICANON | ECHO);
         tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
         unsigned short column;
@@ -1043,7 +1025,7 @@ namespace tmk
             {
                 throw OutOfRangeException();
             }
-            writeANSIEscapeSequence("\x1b[%hu;%huH", row + 1, column + 1);
+            Setup::writeANSIEscapeSequence("\x1b[%hu;%huH", row + 1, column + 1);
         }
         catch (NoValidTTYException&)
         {
@@ -1059,7 +1041,7 @@ namespace tmk
     {
         try
         {
-            writeANSIEscapeSequence("\x1b[%d q", static_cast<int>(shape) - isBlinking);
+            Setup::writeANSIEscapeSequence("\x1b[%d q", static_cast<int>(shape) - isBlinking);
         }
         catch (NoValidTTYException&)
         {
@@ -1070,7 +1052,7 @@ namespace tmk
     {
         try
         {
-            writeANSIEscapeSequence("\x1b[?25%c", isVisible ? 'h' : 'l');
+            Setup::writeANSIEscapeSequence("\x1b[?25%c", isVisible ? 'h' : 'l');
         }
         catch (NoValidTTYException&)
         {
@@ -1081,7 +1063,7 @@ namespace tmk
     {
         try
         {
-            writeANSIEscapeSequence("\x1b[0 q");
+            Setup::writeANSIEscapeSequence("\x1b[0 q");
         }
         catch (NoValidTTYException&)
         {
@@ -1092,7 +1074,7 @@ namespace tmk
     {
         try
         {
-            writeANSIEscapeSequence("\x1b[2K\x1b[1G");
+            Setup::writeANSIEscapeSequence("\x1b[2K\x1b[1G");
         }
         catch (NoValidTTYException&)
         {

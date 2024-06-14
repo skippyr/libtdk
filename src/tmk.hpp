@@ -1996,47 +1996,6 @@ namespace tmk
 
     private:
         Terminal() = delete;
-#ifdef _WIN32
-        /**
-         * @brief Gets the mode of a terminal stream.
-         * @param handle The handle of the stream.
-         * @returns The mode of stream.
-         * @throws NoValidTTYException Thrown whenever the stream is not a TTY.
-         */
-        static DWORD getStreamMode(HANDLE handle);
-        /**
-         * @brief Gets the buffer information of the window connected to a terminal stream.
-         * @param handle The handle of the stream.
-         * @returns The buffer information of the window connected to the stream.
-         * @throws NoValidTTYException Thrown whenever the stream is not a TTY.
-         */
-        static CONSOLE_SCREEN_BUFFER_INFO getStreamWindowBufferInfo(HANDLE handle);
-        /**
-         * @brief Sets the mode of a terminal stream.
-         * @param handle The handle of the stream.
-         * @param isTTY A boolean that states the stream is a TTY.
-         * @param mode The mode to be set.
-         * @throws NoValidTTYException Thrown whenever the stream is not a TTY.
-         * @throws InvalidStreamAttributesException Thrown whenever the mode is invalid.
-         */
-        static void setStreamMode(HANDLE handle, bool isTTY, DWORD mode);
-#endif
-        /**
-         * @brief Writes an ANSI escape sequence to the terminal output or error streams.
-         * @param format The format to be used. It accepts the same specifiers as the printf function family.
-         * @param arguments The arguments to be formatted.
-         * @throws NoValidTTYException Thrown whenever the standard output and error streams are not TTY.
-         * @throws WideCharacterOrientationException Thrown whenever the standard output or error stream is wide character oriented.
-         */
-        static void writeANSIEscapeSequence(std::string format, std::va_list arguments);
-        /**
-         * @brief Writes an ANSI escape sequence to the terminal output or error streams.
-         * @param format The format to be used. It accepts the same specifiers as the printf function family.
-         * @param ... The arguments to be formatted.
-         * @throws NoValidTTYException Thrown whenever the standard output and error streams are not TTY.
-         * @throws WideCharacterOrientationException Thrown whenever the standard output or error stream is wide character oriented.
-         */
-        static void writeANSIEscapeSequence(std::string format, ...);
         /**
          * @brief Formats and writes a string to a terminal stream.
          * @param file The file of the stream.
