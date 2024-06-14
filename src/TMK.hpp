@@ -949,117 +949,115 @@ namespace TMK
     class RGBColor;
 
 #ifdef _WIN32
-    /**
-     * @brief Represents an exception thrown whenever an invalid code page tries to be set.
-     */
+    /// <summary>
+    /// Represents an exception thrown whenever an invalid code page tries to be set.
+    /// </summary>
     class InvalidCodePageException final
     {
     };
 #endif
 
-    /**
-     * @brief Represents an exception thrown whenever invalid stream attributes tries to be set.
-     */
+    /// <summary>
+    /// Represents an exception thrown whenever invalid stream attributes tries to be set.
+    /// </summary>
     class InvalidStreamAttributesException final
     {
     };
 
-    /**
-     * @brief Represents an exception thrown whenever a group of streams are wide character oriented.
-     */
+    /// <summary>
+    /// Represents an exception thrown whenever a group of streams are wide character oriented.
+    /// </summary>
     class WideCharacterOrientationException final
     {
     };
 
-    /**
-     * @brief Represents an exception thrown whenever a group of streams are not TTY.
-     */
+    /// <summary>
+    /// Represents an exception thrown whenever a group of streams are not TTY.
+    /// </summary>
     class NoValidTTYException final
     {
     };
 
-    /**
-     * @brief Represents an exception thrown whenever a value is out of a certain range.
-     */
+    /// <summary>
+    /// Represents an exception thrown whenever a value is out of a certain range.
+    /// </summary>
     class OutOfRangeException final
     {
     };
 
-    /**
-     * @brief Represents an exception thrown whenever an invalid event type data tries to be read.
-     */
+    /// <summary>
+    /// Represents an exception thrown whenever an invalid event type data tries to be read.
+    /// </summary>
     class InvalidEventTypeException final
     {
     };
 
-    /**
-     * @brief Represents the command line arguments.
-     */
+    /// <summary>
+    /// Represents the command line arguments.
+    /// </summary>
     class CMDArguments final
     {
     public:
 #ifdef _WIN32
-        /**
-         * @brief Creates an instance of the CMDArguments class.
-         * @param totalArguments The total arguments.
-         * @param utf16Arguments The arguments in UTF-16 encoding.
-         * @param utf8Arguments The arguments in UTF-8 encoding.
-         * @returns An instance of the CMDArguments class.
-         */
+        /// <summary>
+        /// Creates an instance of the CMDArguments class.
+        /// </summary>
+        /// <param name="totalArguments">The total arguments.</param>
+        /// <param name="utf16Arguments">The arguments in UTF-16 encoding.</param>
+        /// <param name="utf8Arguments">The arguments in UTF-8 encoding.</param>
         CMDArguments(int totalArguments, wchar_t** utf16Arguments, char** utf8Arguments);
-        /**
-         * @brief Destroys an instance of the CMDArguments class.
-         */
+        /// <summary>
+        /// Destroys an instance of the CMDArguments class.
+        /// </summary>
         ~CMDArguments();
-        /**
-         * @brief Gets an argument in UTF-16 encoding by using its offset.
-         * @param offset The offset to be used.
-         * @returns The argument in UTF-16 encoding.
-         * @exception OutOfRangeException Thrown whenever the offset is out of the valid range of arguments.
-         */
+        /// <summary>
+        /// Gets an argument in UTF-16 encoding by using its offset.
+        /// </summary>
+        /// <param name="offset">The offset being referred to.</param>
+        /// <returns>The argument in UTF-16 encoding.</returns>
+        /// <exception cref="OutOfRangeException">Thrown when the offset is out of the valid range of arguments.</exception>
         std::wstring getUTF16ArgumentByOffset(std::size_t offset) const;
 #else
-        /**
-         * @brief Creates an instance of the CMDArguments class.
-         * @param totalArguments The total arguments.
-         * @param utf8Arguments The arguments in UTF8 encoding.
-         * @returns An instance of the CMDArguments class.
-         */
+        /// <summary>
+        /// Creates an instance of the CMDArguments class.
+        /// </summary>
+        /// <param name="totalArguments">The total arguments</param>
+        /// <param name="utf8Arguments">The arguments in UTF-8 encoding</param>
         CMDArguments(int totalArguments, char** utf8Arguments);
 #endif
-        /**
-         * @brief Gets the total arguments.
-         * @returns The total arguments.
-         */
+        /// <summary>
+        /// Gets the total arguments.
+        /// </summary>
+        /// <returns>The total arguments.</returns>
         int getTotalArguments() const;
-        /**
-         * @brief Gets an argument in UTF-8 encoding by using its offset.
-         * @param offset The offset to be used.
-         * @returns The argument in UTF-8 encoding.
-         * @throws OutOfRangeException Thrown whenever the offset is out of the valid range of arguments.
-         */
+        /// <summary>
+        /// Gets an argument in UTF-8 encoding by using its offset.
+        /// </summary>
+        /// <param name="offset">The offset being referred to.</param>
+        /// <returns>The argument in UTF-8 encoding.</returns>
+        /// <exception cref="OutOfRangeException">Thrown when the offset is out of the valid range of arguments.</exception>
         std::string getUTF8ArgumentByOffset(std::size_t offset) const;
 
     private:
 #ifdef _WIN32
-        /**
-         * @brief The arguments in UTF-16 encoding.
-         */
+        /// <summary>
+        /// The arguments in UTF-16 encoding.
+        /// </summary>
         wchar_t** m_utf16Arguments;
 #endif
-        /**
-         * @brief The arguments in UTF-8 encoding.
-         */
+        /// <summary>
+        /// The arguments in UTF-8 encoding.
+        /// </summary>
         char** m_utf8Arguments;
-        /**
-         * @brief The total arguments.
-         */
+        /// <summary>
+        /// The total arguments.
+        /// </summary>
         int m_totalArguments;
     };
 
-    /**
-     * @brief Represents a coordinate inside of the terminal window.
-     */
+    /// <summary>
+    /// Represents a coordinate inside of the terminal window.
+    /// </summary>
     class Coordinate final
     {
     public:
