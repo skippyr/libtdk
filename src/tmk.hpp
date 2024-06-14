@@ -1802,37 +1802,6 @@ namespace tmk
         private:
             OutputStream() = delete;
 
-#ifdef _WIN32
-            /**
-             * @brief Gets the handle associated with the standard output stream.
-             * @returns The handle associated with the standard output stream.
-             */
-            static HANDLE getHandle();
-            /**
-             * @brief Gets the standard output mode.
-             * @returns The standard output mode.
-             * @throws NoValidTTYException Thrown whenever the standard output stream is not a TTY.
-             */
-            static DWORD getMode();
-            /**
-             * @brief Gets the buffer info of the window connected to the standard output stream.
-             * @returns The buffer info of the window connected to the standard output stream.
-             * @throws NoValidTTYException Thrown whenever the standard output stream is not a TTY.
-             */
-            static CONSOLE_SCREEN_BUFFER_INFO getWindowBufferInfo();
-            /**
-             * @brief Sets the standard output mode.
-             * @param mode The mode to be set.
-             * @throws NoValidTTYException Thrown whenever the standard output stream is not a TTY.
-             * @throws InvalidStreamAttributesException Thrown whenever the mode is invalid.
-             */
-            static void setMode(DWORD mode);
-#endif
-            /**
-             * @brief Gets the file descriptor associated with the standard output stream.
-             * @returns The file descriptor associated with the standard output stream.
-             */
-            static std::FILE* getFile();
             /**
              * @brief Gets the file descriptor number associated with the standard output stream.
              * @returns The file descriptor number associated with the standard output stream.

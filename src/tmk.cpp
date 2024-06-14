@@ -754,67 +754,40 @@ namespace tmk
         return Terminal::readEvent(allowMouseCapture, wait, filter);
     }
 
-#ifdef _WIN32
-    HANDLE Terminal::OutputStream::getHandle()
-    {
-        return GetStdHandle(STD_OUTPUT_HANDLE);
-    }
-
-    DWORD Terminal::OutputStream::getMode()
-    {
-        return getStreamMode(getHandle());
-    }
-
-    CONSOLE_SCREEN_BUFFER_INFO Terminal::OutputStream::getWindowBufferInfo()
-    {
-        return getStreamWindowBufferInfo(getHandle());
-    }
-
-    void Terminal::OutputStream::setMode(DWORD mode)
-    {
-        setStreamMode(getHandle(), isTTY(), mode);
-    }
-#endif
-
     void Terminal::OutputStream::flush()
     {
-        std::fflush(getFile());
+        std::fflush(stdout);
     }
 
     void Terminal::OutputStream::writeLine(std::string format, std::va_list arguments)
     {
-        Terminal::write(getFile(), format.c_str(), arguments, true);
+        Terminal::write(stdout, format.c_str(), arguments, true);
     }
 
     void Terminal::OutputStream::writeLine(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
-        Terminal::write(getFile(), format.c_str(), arguments, true);
+        Terminal::write(stdout, format.c_str(), arguments, true);
         va_end(arguments);
     }
 
     void Terminal::OutputStream::writeLine()
     {
-        Terminal::write(getFile(), nullptr, nullptr, true);
+        Terminal::write(stdout, nullptr, nullptr, true);
     }
 
     void Terminal::OutputStream::write(std::string format, std::va_list arguments)
     {
-        Terminal::write(getFile(), format.c_str(), arguments, false);
+        Terminal::write(stdout, format.c_str(), arguments, false);
     }
 
     void Terminal::OutputStream::write(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
-        Terminal::write(getFile(), format.c_str(), arguments, false);
+        Terminal::write(stdout, format.c_str(), arguments, false);
         va_end(arguments);
-    }
-
-    std::FILE* Terminal::OutputStream::getFile()
-    {
-        return stdout;
     }
 
     int Terminal::OutputStream::getFileNumber()
