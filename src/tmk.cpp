@@ -412,21 +412,11 @@ namespace tmk
         g_isOutputStreamTTY = IS_TTY(OutputStream);
         g_isErrorStreamTTY = IS_TTY(ErrorStream);
 #ifdef _WIN32
+        HANDLE handle;
+        DWORD mode;
         SetConsoleOutputCP(CP_UTF8);
-        try
-        {
-            OutputStream::setMode(OutputStream::getMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-        }
-        catch (NoValidTTYException&)
-        {
-        }
-        try
-        {
-            ErrorStream::setMode(ErrorStream::getMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-        }
-        catch (NoValidTTYException&)
-        {
-        }
+        (GetConsoleMode((handle = GetStdHandle(STD_OUTPUT_HANDLE)), &mode) || GetConsoleMode((handle = GetStdHandle(STD_ERROR_HANDLE)), &mode)) &&
+            SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
 #endif
     }
 
@@ -436,7 +426,7 @@ namespace tmk
         {
             throw NoValidTTYException();
         }
-        if (std::vfprintf(OutputStream::isTTY() ? OutputStream::getFile() : ErrorStream::getFile(), format.c_str(), arguments) < 0)
+        if (std::vfprintf(OutputStream::isTTY() ? stdout : stderr, format.c_str(), arguments) < 0)
         {
             throw WideCharacterOrientationException();
         }
@@ -453,7 +443,7 @@ namespace tmk
     void Terminal::write(std::FILE* file, const char* format, std::va_list arguments, bool hasNewLine)
     {
         initStreamTTYCache();
-        if (file == ErrorStream::getFile())
+        if (file == stderr)
         {
             OutputStream::flush();
         }
@@ -838,62 +828,35 @@ namespace tmk
         return g_isOutputStreamTTY;
     }
 
-#ifdef _WIN32
-    HANDLE Terminal::ErrorStream::getHandle()
-    {
-        return GetStdHandle(STD_ERROR_HANDLE);
-    }
-
-    DWORD Terminal::ErrorStream::getMode()
-    {
-        return getStreamMode(getHandle());
-    }
-
-    CONSOLE_SCREEN_BUFFER_INFO Terminal::ErrorStream::getWindowBufferInfo()
-    {
-        return getStreamWindowBufferInfo(getHandle());
-    }
-
-    void Terminal::ErrorStream::setMode(DWORD mode)
-    {
-        setStreamMode(getHandle(), isTTY(), mode);
-    }
-#endif
-
     void Terminal::ErrorStream::writeLine(std::string format, std::va_list arguments)
     {
-        Terminal::write(getFile(), format.c_str(), arguments, true);
+        Terminal::write(stderr, format.c_str(), arguments, true);
     }
 
     void Terminal::ErrorStream::writeLine(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
-        Terminal::write(getFile(), format.c_str(), arguments, true);
+        Terminal::write(stderr, format.c_str(), arguments, true);
         va_end(arguments);
     }
 
     void Terminal::ErrorStream::writeLine()
     {
-        Terminal::write(getFile(), nullptr, nullptr, true);
+        Terminal::write(stderr, nullptr, nullptr, true);
     }
 
     void Terminal::ErrorStream::write(std::string format, std::va_list arguments)
     {
-        Terminal::write(getFile(), format.c_str(), arguments, false);
+        Terminal::write(stderr, format.c_str(), arguments, false);
     }
 
     void Terminal::ErrorStream::write(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
-        Terminal::write(getFile(), format.c_str(), arguments, false);
+        Terminal::write(stderr, format.c_str(), arguments, false);
         va_end(arguments);
-    }
-
-    std::FILE* Terminal::ErrorStream::getFile()
-    {
-        return stderr;
     }
 
     int Terminal::ErrorStream::getFileNumber()
@@ -942,7 +905,7 @@ namespace tmk
     {
 #ifdef _WIN32
         CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-        if (!GetConsoleScreenBufferInfo(OutputStream::getHandle(), &bufferInfo) && !GetConsoleScreenBufferInfo(ErrorStream::getHandle(), &bufferInfo))
+        if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) && !GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo))
         {
             throw NoValidTTYException();
         }
@@ -1146,14 +1109,7 @@ namespace tmk
     {
 #ifdef _WIN32
         CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-        try
-        {
-            bufferInfo = OutputStream::getWindowBufferInfo();
-        }
-        catch (NoValidTTYException&)
-        {
-            bufferInfo = ErrorStream::getWindowBufferInfo();
-        }
+        GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) || GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo);
         return Coordinate(bufferInfo.dwCursorPosition.X - bufferInfo.srWindow.Left, bufferInfo.dwCursorPosition.Y - bufferInfo.srWindow.Top);
 #else
         struct termios attributes = InputStream::getTermiosAttributes();
