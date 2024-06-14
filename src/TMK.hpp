@@ -1660,53 +1660,52 @@ namespace TMK
             Input() = delete;
         };
 
-        /**
-         * @brief Represents the standard output stream.
-         */
+        /// <summary>
+        /// Represents the standard output stream.
+        /// </summary>
         class Output final
         {
         public:
-            /**
-             * @brief Flushes the standard output stream buffer.
-             */
-            static void flush();
-            /**
-             * @brief Formats and writes arguments to the standard output stream with a newline character appended at its end.
-             * @param format The format to be used. It accepts the same specifiers as the printf function family.
-             * @param arguments The arguments to be formatted.
-             * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
-             */
-            static void writeLine(std::string format, std::va_list arguments);
-            /**
-             * @brief Formats and writes arguments to the standard output stream with a newline character appended at its end.
-             * @param format The format to be used. It accepts the same specifiers as the printf function family.
-             * @param ... The arguments to be formatted.
-             * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
-             */
-            static void writeLine(std::string format, ...);
-            /**
-             * @brief Writes a newline character to the standard output stream.
-             * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
-             */
-            static void writeLine();
-            /**
-             * @brief Formats and writes arguments to the standard output stream.
-             * @param format The format to be used. It accepts the same specifiers as the printf function family.
-             * @param arguments The arguments to be formatted.
-             * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
-             */
-            static void write(std::string format, std::va_list arguments);
-            /**
-             * @brief Formats and writes arguments to the standard output stream.
-             * @param format The format to be used. It accepts the same specifiers as the printf function family.
-             * @param ... The arguments to be formatted.
-             * @throws WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.
-             */
-            static void write(std::string format, ...);
-            /**
-             * @brief Checks if the standard output stream is connected to an interactive terminal (TTY).
-             * @returns A boolean that states the standard output stream is a TTY.
-             */
+            /// <summary>
+            /// Flushes the standard output stream buffer.
+            /// </summary>
+            static void Flush();
+            /// <summary>
+            /// Formats and writes a string to the standard output stream with a newline character appended at its end.
+            /// </summary>
+            /// <param name="format">The format to be used. It accepts the same specifiers as the printf function family.</param>
+            /// <param name="arguments">The arguments to be formatted.</param>
+            /// <exception cref="WideCharacterOrientationException">Thrown whenever the standard output stream is wide character oriented.</exception>
+            static void WriteLine(std::string format, std::va_list arguments);
+            /// <summary>
+            /// Formats and writes a string to the standard output stream with a newline character appended at its end.
+            /// </summary>
+            /// <param name="format">The format to be used. It accepts the same specifiers as the printf function family.</param>
+            /// <param name="">The arguments to be formatted.</param>
+            static void WriteLine(std::string format, ...);
+            /// <summary>
+            /// Writes a newline character to the standard output stream.
+            /// </summary>
+            /// <exception cref="WideCharacterOrientationException">WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.</exception>
+            static void WriteLine();
+            /// <summary>
+            /// Formats and writes a string to the standard output stream.
+            /// </summary>
+            /// <param name="format">The format to be used. It accepts the same specifiers as the printf function family.</param>
+            /// <param name="arguments">The arguments to be formatted.</param>
+            /// <exception cref="WideCharacterOrientationException">Thrown whenever the standard output stream is wide character oriented.</exception>
+            static void Write(std::string format, std::va_list arguments);
+            /// <summary>
+            /// Formats and writes a string to the standard output stream.
+            /// </summary>
+            /// <param name="format">The format to be used. It accepts the same specifiers as the printf function family.</param>
+            /// <param name="">The arguments to be formatted.</param>
+            /// <exception cref="WideCharacterOrientationException">Thrown whenever the standard output stream is wide character oriented.</exception>
+            static void Write(std::string format, ...);
+            /// <summary>
+            /// Checks if the standard output stream is connected to an interactive terminal (TTY).
+            /// </summary>
+            /// <returns>A boolean that states the standard output stream is a TTY.</returns>
             static bool IsTTY();
 
         private:
@@ -1725,33 +1724,33 @@ namespace TMK
              * @param arguments The arguments to be formatted.
              * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
              */
-            static void writeLine(std::string format, std::va_list arguments);
+            static void WriteLine(std::string format, std::va_list arguments);
             /**
              * @brief Formats and writes arguments to the standard error stream with a newline character appended at its end.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
              * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
              */
-            static void writeLine(std::string format, ...);
+            static void WriteLine(std::string format, ...);
             /**
              * @brief Writes a newline character to the standard error stream.
              * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
              */
-            static void writeLine();
+            static void WriteLine();
             /**
              * @brief Formats and writes arguments to the standard error stream.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param arguments The arguments to be formatted.
              * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
              */
-            static void write(std::string format, std::va_list arguments);
+            static void Write(std::string format, std::va_list arguments);
             /**
              * @brief Formats and writes arguments to the standard error stream.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
              * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
              */
-            static void write(std::string format, ...);
+            static void Write(std::string format, ...);
             /**
              * @brief Checks if the standard error stream is connected to an interactive terminal (TTY).
              * @returns A boolean that states the standard error stream is a TTY.
