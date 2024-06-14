@@ -2022,10 +2022,6 @@ namespace tmk
         static void setStreamMode(HANDLE handle, bool isTTY, DWORD mode);
 #endif
         /**
-         * @brief Initiatializes the terminal stream TTY cache.
-         */
-        static void initStreamTTYCache();
-        /**
          * @brief Writes an ANSI escape sequence to the terminal output or error streams.
          * @param format The format to be used. It accepts the same specifiers as the printf function family.
          * @param arguments The arguments to be formatted.

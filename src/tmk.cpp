@@ -37,6 +37,36 @@ namespace tmk
      */
     bool g_isErrorStreamTTY = false;
 
+    /** @brief Contains methods to setup the environment and library functions. */
+    class Setup
+    {
+    public:
+        /**
+         * @brief Initiatializes the terminal stream TTY cache.
+         */
+        static void initStreamTTYCache()
+        {
+            if (g_hasStreamTTYCache)
+            {
+                return;
+            }
+            g_hasStreamTTYCache = true;
+            g_isInputStreamTTY = IS_TTY(0);
+            g_isOutputStreamTTY = IS_TTY(1);
+            g_isErrorStreamTTY = IS_TTY(2);
+#ifdef _WIN32
+            HANDLE handle;
+            DWORD mode;
+            SetConsoleOutputCP(CP_UTF8);
+            (GetConsoleMode((handle = GetStdHandle(STD_OUTPUT_HANDLE)), &mode) || GetConsoleMode((handle = GetStdHandle(STD_ERROR_HANDLE)), &mode)) &&
+                SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+#endif
+        }
+
+    private:
+        Setup() = delete;
+    };
+
 #ifdef _WIN32
     CMDArguments::CMDArguments(int totalArguments, wchar_t** utf16Arguments, char** utf8Arguments)
         : m_totalArguments(totalArguments), m_utf16Arguments(utf16Arguments), m_utf8Arguments(utf8Arguments)
@@ -401,25 +431,6 @@ namespace tmk
         throw InvalidEventTypeException();
     }
 
-    void Terminal::initStreamTTYCache()
-    {
-        if (g_hasStreamTTYCache)
-        {
-            return;
-        }
-        g_hasStreamTTYCache = true;
-        g_isInputStreamTTY = IS_TTY(0);
-        g_isOutputStreamTTY = IS_TTY(1);
-        g_isErrorStreamTTY = IS_TTY(2);
-#ifdef _WIN32
-        HANDLE handle;
-        DWORD mode;
-        SetConsoleOutputCP(CP_UTF8);
-        (GetConsoleMode((handle = GetStdHandle(STD_OUTPUT_HANDLE)), &mode) || GetConsoleMode((handle = GetStdHandle(STD_ERROR_HANDLE)), &mode)) &&
-            SetConsoleMode(handle, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-#endif
-    }
-
     void Terminal::writeANSIEscapeSequence(std::string format, std::va_list arguments)
     {
         if (!OutputStream::isTTY() && !ErrorStream::isTTY())
@@ -442,7 +453,7 @@ namespace tmk
 
     void Terminal::write(std::FILE* file, const char* format, std::va_list arguments, bool hasNewLine)
     {
-        initStreamTTYCache();
+        Setup::initStreamTTYCache();
         if (file == stderr)
         {
             OutputStream::flush();
@@ -662,7 +673,7 @@ namespace tmk
 
     bool Terminal::InputStream::isTTY()
     {
-        initStreamTTYCache();
+        Setup::initStreamTTYCache();
         return g_isInputStreamTTY;
     }
 
@@ -719,7 +730,7 @@ namespace tmk
 
     bool Terminal::OutputStream::isTTY()
     {
-        initStreamTTYCache();
+        Setup::initStreamTTYCache();
         return g_isOutputStreamTTY;
     }
 
@@ -756,7 +767,7 @@ namespace tmk
 
     bool Terminal::ErrorStream::isTTY()
     {
-        initStreamTTYCache();
+        Setup::initStreamTTYCache();
         return g_isErrorStreamTTY;
     }
 
