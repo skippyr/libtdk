@@ -369,50 +369,50 @@ namespace TMK
         m_bottomRightCoordinate = Coordinate(maximumColumn, maximumRow);
     }
 
-    unsigned short Region::getTotalColumns() const
+    unsigned short Region::GetTotalColumns() const
     {
         return m_totalColumns;
     }
 
-    unsigned short Region::getTotalRows() const
+    unsigned short Region::GetTotalRows() const
     {
         return m_totalRows;
     }
 
-    unsigned int Region::getArea() const
+    unsigned int Region::GetArea() const
     {
         return m_area;
     }
 
-    Coordinate Region::getTopLeftCoordinate() const
+    Coordinate Region::GetTopLeftCoordinate() const
     {
         return m_topLeftCoordinate;
     }
 
-    Coordinate Region::getTopRightCoordinate() const
+    Coordinate Region::GetTopRightCoordinate() const
     {
         return m_topRightCoordinate;
     }
 
-    Coordinate Region::getBottomLeftCoordinate() const
+    Coordinate Region::GetBottomLeftCoordinate() const
     {
         return m_bottomLeftCoordinate;
     }
 
-    Coordinate Region::getBottomRightCoordinate() const
+    Coordinate Region::GetBottomRightCoordinate() const
     {
         return m_bottomRightCoordinate;
     }
 
-    bool Region::contains(unsigned short column, unsigned short row) const
+    bool Region::Contains(unsigned short column, unsigned short row) const
     {
         return column >= m_topLeftCoordinate.GetColumn() && column <= m_topRightCoordinate.GetColumn() && row >= m_topLeftCoordinate.GetRow() &&
                row <= m_bottomLeftCoordinate.GetRow();
     }
 
-    bool Region::contains(Coordinate coordinate) const
+    bool Region::Contains(Coordinate coordinate) const
     {
-        return contains(coordinate.GetColumn(), coordinate.GetRow());
+        return Contains(coordinate.GetColumn(), coordinate.GetRow());
     }
 
     HexColor::HexColor(unsigned int code)
@@ -1039,7 +1039,7 @@ namespace TMK
     {
         try
         {
-            if (!Window::getRegion().contains(column, row))
+            if (!Window::getRegion().Contains(column, row))
             {
                 throw OutOfRangeException();
             }
