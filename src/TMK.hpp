@@ -697,252 +697,252 @@ namespace TMK
         LightWhite
     };
 
-    /**
-     * @brief contains the available terminal cursor shapes.
-     */
+    /// <summary>
+    /// Contains the available terminal cursor shapes.
+    /// </summary>
     enum class CursorShape
     {
-        /**
-         * @brief Fills the whole character cell.
-         */
+        /// <summary>
+        /// Fills the whole character cell.
+        /// </summary>
         Block = 2,
-        /**
-         * @brief Fills a region at the bottom of the character cell.
-         */
+        /// <summary>
+        /// Fills a region at the bottom of the character cell.
+        /// </summary>
         Underline = 4,
-        /**
-         * @brief Fills a region at the left of the character cell.
-         */
+        /// <summary>
+        /// Fills a region at the left of the character cell.
+        /// </summary>
         Bar = 6
     };
 
-    /**
-     * @brief Represents the available terminal event types.
-     */
+    /// <summary>
+    /// Contains the available terminal event types.
+    /// </summary>
     enum class EventType
     {
-        /**
-         * @brief No event is available.
-         */
+        /// <summary>
+        /// No event is available.
+        /// </summary>
         None,
-        /**
-         * @brief The event timer ran out.
-         */
+        /// <summary>
+        /// The event timer ran out.
+        /// </summary>
         TimeOut,
-        /**
-         * @brief The terminal window was resized.
-         */
+        /// <summary>
+        /// The terminal window was resized.
+        /// </summary>
         Resize,
-        /**
-         * @brief The terminal window gained/lost focus.
-         */
+        /// <summary>
+        /// The terminal window gained/lost focus.
+        /// </summary>
         Focus,
-        /**
-         * @brief The mouse was moved or clicked.
-         */
+        /// <summary>
+        /// The mouse was moved or one of its buttons was clicked.
+        /// </summary>
         Mouse,
-        /**
-         * @brief A keyboard key was pressed.
-         */
+        /// <summary>
+        /// A keybord key was pressed.
+        /// </summary>
         Key
     };
 
-    /**
-     * @brief contains the available mouse buttons.
-     */
+    /// <summary>
+    /// Contains the available mouse buttons.
+    /// </summary>
     enum class MouseButton
     {
-        /**
-         * @brief No button.
-         */
+        /// <summary>
+        /// No button.
+        /// </summary>
         None,
-        /**
-         * @brief Left mouse button.
-         */
+        /// <summary>
+        /// The left mouse button.
+        /// </summary>
         Left,
-        /**
-         * @brief Mouse wheel button.
-         */
+        /// <summary>
+        /// The mouse wheel button.
+        /// </summary>
         Wheel,
-        /**
-         * @brief Mouse wheel scroll upwards.
-         */
+        /// <summary>
+        /// Mouse wheel scroll upwards.
+        /// </summary>
         WheelUp,
-        /**
-         * @brief Mouse wheel scroll downwards.
-         */
+        /// <summary>
+        /// Mouse wheel scroll downwards.
+        /// </summary>
         WheelDown,
-        /**
-         * @brief Right mouse button.
-         */
+        /// <summary>
+        /// The right mouse button.
+        /// </summary>
         Right
     };
 
-    /**
-     * @brief contains the available keyboard keys.
-     */
+    /// <summary>
+    /// Contains the available keyboard keys.
+    /// </summary>
     enum class KeyboardKey
     {
 #ifdef _WIN32
-        /**
-         * @brief The left arrow key.
-         */
+        /// <summary>
+        /// The left arrow key.
+        /// </summary>
         LeftArrow = -23,
-        /**
-         * @brief The up arrow key.
-         */
+        /// <summary>
+        /// The up arrow key.
+        /// </summary>
         UpArrow,
-        /**
-         * @brief The right arrow key.
-         */
+        /// <summary>
+        /// The right arrow key.
+        /// </summary>
         RightArrow,
-        /**
-         * @brief The down arrow key.
-         */
+        /// <summary>
+        /// The down arrow key.
+        /// </summary>
         DownArrow,
 #else
-        /**
-         * @brief The up arrow key.
-         */
+        /// <summary>
+        /// The up arrow key.
+        /// </summary>
         UpArrow = -23,
-        /**
-         * @brief The down arrow key.
-         */
+        /// <summary>
+        /// The down arrow key.
+        /// </summary>
         DownArrow,
-        /**
-         * @brief The right arrow key.
-         */
+        /// <summary>
+        /// The right arrow key.
+        /// </summary>
         RightArrow,
-        /**
-         * @brief The left arrow key.
-         */
+        /// <summary>
+        /// The left arrow key.
+        /// </summary>
         LeftArrow,
 #endif
-        /**
-         * @brief The F1 key.
-         */
+        /// <summary>
+        /// The F1 key.
+        /// </summary>
         F1,
-        /**
-         * @brief The F2 key.
-         */
+        /// <summary>
+        /// The F2 key.
+        /// </summary>
         F2,
-        /**
-         * @brief The F3 key.
-         */
+        /// <summary>
+        /// The F3 key.
+        /// </summary>
         F3,
-        /**
-         * @brief The F4 key.
-         */
+        /// <summary>
+        /// The F4 key.
+        /// </summary>
         F4,
-        /**
-         * @brief The F5 key.
-         */
+        /// <summary>
+        /// The F5 key.
+        /// </summary>
         F5,
-        /**
-         * @brief The F6 key.
-         */
+        /// <summary>
+        /// The F6 key.
+        /// </summary>
         F6,
-        /**
-         * @brief The F7 key.
-         */
+        /// <summary>
+        /// The F7 key.
+        /// </summary>
         F7,
-        /**
-         * @brief The F8 key.
-         */
+        /// <summary>
+        /// The F8 key.
+        /// </summary>
         F8,
-        /**
-         * @brief The F9 key.
-         */
+        /// <summary>
+        /// The F9 key.
+        /// </summary>
         F9,
-        /**
-         * @brief The F10 key.
-         */
+        /// <summary>
+        /// The F10 key.
+        /// </summary>
         F10,
-        /**
-         * @brief The F11 key.
-         */
+        /// <summary>
+        /// The F11 key.
+        /// </summary>
         F11,
-        /**
-         * @brief The F12 key.
-         */
+        /// <summary>
+        /// The F12 key.
+        /// </summary>
         F12,
 #ifdef _WIN32
-        /**
-         * @brief The PageUp key.
-         */
+        /// <summary>
+        /// The PageUp key.
+        /// </summary>
         PageUp,
-        /**
-         * @brief The PageDown key.
-         */
+        /// <summary>
+        /// The PageDown key.
+        /// </summary>
         PageDown,
-        /**
-         * @brief The End key.
-         */
+        /// <summary>
+        /// The End key.
+        /// </summary>
         End,
-        /**
-         * @brief The Home key.
-         */
+        /// <summary>
+        /// The Home key.
+        /// </summary>
         Home,
-        /**
-         * @brief The Insert key.
-         */
+        /// <summary>
+        /// The Insert key.
+        /// </summary>
         Insert,
-        /**
-         * @brief The Delete key.
-         */
+        /// <summary>
+        /// The Delete key.
+        /// </summary>
         Delete,
 #else
-        /**
-         * @brief The Home key.
-         */
+        /// <summary>
+        /// The Home key.
+        /// </summary>
         Home,
-        /**
-         * @brief The Insert key.
-         */
+        /// <summary>
+        /// The Insert key.
+        /// </summary>
         Insert,
-        /**
-         * @brief The Delete key.
-         */
+        /// <summary>
+        /// The Delete key.
+        /// </summary>
         Delete,
-        /**
-         * @brief The End key.
-         */
+        /// <summary>
+        /// The End key.
+        /// </summary>
         End,
-        /**
-         * @brief The PageUp key.
-         */
+        /// <summary>
+        /// The PageUp key.
+        /// </summary>
         PageUp,
-        /**
-         * @brief The PageDown key.
-         */
+        /// <summary>
+        /// The PageDown key.
+        /// </summary>
         PageDown,
 #endif
-        /**
-         * @brief The Tab key.
-         */
+        /// <summary>
+        /// The Tab key.
+        /// </summary>
         Tab = 9,
 #if defined(_WIN32) || defined(__APPLE__)
-        /**
-         * @brief The Enter key.
-         */
+        /// <summary>
+        /// The Enter key.
+        /// </summary>
         Enter = 13,
 #else
-        /**
-         * @brief The Enter key.
-         */
+        /// <summary>
+        /// The Enter key.
+        /// </summary>
         Enter,
 #endif
-        /**
-         * @brief The Escape key.
-         */
+        /// <summary>
+        /// The Escape key.
+        /// </summary>
         Escape = 27,
-        /**
-         * @brief The Space bar key.
-         */
+        /// <summary>
+        /// The space bar key.
+        /// </summary>
         SpaceBar = 32,
-        /**
-         * @brief The Backspace key.
-         */
+        /// <summary>
+        /// The Backspace key.
+        /// </summary>
         Backspace = 127
     };
 
