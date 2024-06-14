@@ -3,6 +3,8 @@
 #include <chrono>
 #include <cstdarg>
 #include <functional>
+#include <memory>
+#include <string>
 
 using namespace std::literals::chrono_literals;
 
@@ -14,9 +16,9 @@ using namespace std::literals::chrono_literals;
 namespace tmk
 {
     /**
-     * @brief contains the POSIX exit codes.
+     * @brief Contains the POSIX exit codes.
      */
-    enum class POSIXExitCode
+    enum class ExitCode
     {
         /**
          * @brief Success.
@@ -1638,7 +1640,7 @@ namespace tmk
         /**
          * @brief Represents the standard input stream.
          */
-        class InputStream final
+        class Input final
         {
         public:
             /**
@@ -1673,13 +1675,13 @@ namespace tmk
             static EventInfo readEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter);
 
         private:
-            InputStream() = delete;
+            Input() = delete;
         };
 
         /**
          * @brief Represents the standard output stream.
          */
-        class OutputStream final
+        class Output final
         {
         public:
             /**
@@ -1726,13 +1728,13 @@ namespace tmk
             static bool isTTY();
 
         private:
-            OutputStream() = delete;
+            Output() = delete;
         };
 
         /**
          * @brief Represents the standard error stream.
          */
-        class ErrorStream final
+        class Error final
         {
         public:
             /**
@@ -1775,7 +1777,7 @@ namespace tmk
             static bool isTTY();
 
         private:
-            ErrorStream() = delete;
+            Error() = delete;
         };
 
         /**
@@ -1801,7 +1803,7 @@ namespace tmk
              * @brief Exits the process.
              * @param exitCode The exit code to be used.
              */
-            static void exit(POSIXExitCode exitCode);
+            static void exit(ExitCode exitCode);
 
         private:
             Process() = delete;

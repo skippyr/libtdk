@@ -76,11 +76,11 @@ namespace tmk
          */
         static void writeANSIEscapeSequence(std::string format, std::va_list arguments)
         {
-            if (!Terminal::OutputStream::isTTY() && !Terminal::ErrorStream::isTTY())
+            if (!Terminal::Output::isTTY() && !Terminal::Error::isTTY())
             {
                 throw NoValidTTYException();
             }
-            if (std::vfprintf(Terminal::OutputStream::isTTY() ? stdout : stderr, format.c_str(), arguments) < 0)
+            if (std::vfprintf(Terminal::Output::isTTY() ? stdout : stderr, format.c_str(), arguments) < 0)
             {
                 throw WideCharacterOrientationException();
             }
@@ -113,7 +113,7 @@ namespace tmk
             initStreamTTYCache();
             if (file == stderr)
             {
-                Terminal::OutputStream::flush();
+                Terminal::Output::flush();
             }
             if (format && std::vfprintf(file, format, arguments) < 0)
             {
@@ -134,7 +134,7 @@ namespace tmk
          */
         static EventInfo readEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter)
         {
-            if (!Terminal::InputStream::isTTY() || (!Terminal::OutputStream::isTTY() && !Terminal::ErrorStream::isTTY()))
+            if (!Terminal::Input::isTTY() || (!Terminal::Output::isTTY() && !Terminal::Error::isTTY()))
             {
                 throw NoValidTTYException();
             }
@@ -648,7 +648,7 @@ namespace tmk
     }
 #endif
 
-    void Terminal::InputStream::clear()
+    void Terminal::Input::clear()
     {
 #ifdef _WIN32
         FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
@@ -671,38 +671,38 @@ namespace tmk
 #endif
     }
 
-    bool Terminal::InputStream::isTTY()
+    bool Terminal::Input::isTTY()
     {
         Setup::initStreamTTYCache();
         return g_isInputStreamTTY;
     }
 
-    EventInfo Terminal::InputStream::readEvent(bool allowMouseCapture)
+    EventInfo Terminal::Input::readEvent(bool allowMouseCapture)
     {
         return Setup::readEvent(allowMouseCapture, -1ms, nullptr);
     }
 
-    EventInfo Terminal::InputStream::readEvent(bool allowMouseCapture, std::chrono::milliseconds wait)
+    EventInfo Terminal::Input::readEvent(bool allowMouseCapture, std::chrono::milliseconds wait)
     {
         return Setup::readEvent(allowMouseCapture, wait, nullptr);
     }
 
-    EventInfo Terminal::InputStream::readEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter)
+    EventInfo Terminal::Input::readEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter)
     {
         return Setup::readEvent(allowMouseCapture, wait, filter);
     }
 
-    void Terminal::OutputStream::flush()
+    void Terminal::Output::flush()
     {
         std::fflush(stdout);
     }
 
-    void Terminal::OutputStream::writeLine(std::string format, std::va_list arguments)
+    void Terminal::Output::writeLine(std::string format, std::va_list arguments)
     {
         Setup::write(stdout, format.c_str(), arguments, true);
     }
 
-    void Terminal::OutputStream::writeLine(std::string format, ...)
+    void Terminal::Output::writeLine(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
@@ -710,17 +710,17 @@ namespace tmk
         va_end(arguments);
     }
 
-    void Terminal::OutputStream::writeLine()
+    void Terminal::Output::writeLine()
     {
         Setup::write(stdout, nullptr, nullptr, true);
     }
 
-    void Terminal::OutputStream::write(std::string format, std::va_list arguments)
+    void Terminal::Output::write(std::string format, std::va_list arguments)
     {
         Setup::write(stdout, format.c_str(), arguments, false);
     }
 
-    void Terminal::OutputStream::write(std::string format, ...)
+    void Terminal::Output::write(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
@@ -728,18 +728,18 @@ namespace tmk
         va_end(arguments);
     }
 
-    bool Terminal::OutputStream::isTTY()
+    bool Terminal::Output::isTTY()
     {
         Setup::initStreamTTYCache();
         return g_isOutputStreamTTY;
     }
 
-    void Terminal::ErrorStream::writeLine(std::string format, std::va_list arguments)
+    void Terminal::Error::writeLine(std::string format, std::va_list arguments)
     {
         Setup::write(stderr, format.c_str(), arguments, true);
     }
 
-    void Terminal::ErrorStream::writeLine(std::string format, ...)
+    void Terminal::Error::writeLine(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
@@ -747,17 +747,17 @@ namespace tmk
         va_end(arguments);
     }
 
-    void Terminal::ErrorStream::writeLine()
+    void Terminal::Error::writeLine()
     {
         Setup::write(stderr, nullptr, nullptr, true);
     }
 
-    void Terminal::ErrorStream::write(std::string format, std::va_list arguments)
+    void Terminal::Error::write(std::string format, std::va_list arguments)
     {
         Setup::write(stderr, format.c_str(), arguments, false);
     }
 
-    void Terminal::ErrorStream::write(std::string format, ...)
+    void Terminal::Error::write(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
@@ -765,7 +765,7 @@ namespace tmk
         va_end(arguments);
     }
 
-    bool Terminal::ErrorStream::isTTY()
+    bool Terminal::Error::isTTY()
     {
         Setup::initStreamTTYCache();
         return g_isErrorStreamTTY;
@@ -797,7 +797,7 @@ namespace tmk
         std::exit(exitCode);
     }
 
-    void Terminal::Process::exit(POSIXExitCode exitCode)
+    void Terminal::Process::exit(ExitCode exitCode)
     {
         exit(static_cast<int>(exitCode));
     }
