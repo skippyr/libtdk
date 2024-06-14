@@ -1000,22 +1000,6 @@ namespace tmk
         va_end(arguments);
     }
 
-#ifdef _WIN32
-    void Terminal::Bell::beep(unsigned short frequency, std::chrono::milliseconds duration)
-    {
-        if (frequency < 37 || frequency > 32767 || duration.count() < 0)
-        {
-            throw OutOfRangeException();
-        }
-        ::Beep(frequency, duration.count());
-    }
-
-    void Terminal::Bell::beep()
-    {
-        beep(800, 200ms);
-    }
-#endif
-
     void Terminal::Bell::ring()
     {
         try
