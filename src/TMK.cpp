@@ -282,7 +282,7 @@ namespace TMK
         delete[] m_utf8Arguments;
     }
 
-    std::wstring CMDArguments::getUTF16ArgumentByOffset(std::size_t offset) const
+    std::wstring CMDArguments::GetUTF16ArgumentByOffset(std::size_t offset) const
     {
         if (offset >= m_totalArguments)
         {
@@ -296,12 +296,12 @@ namespace TMK
     }
 #endif
 
-    int CMDArguments::getTotalArguments() const
+    int CMDArguments::GetTotalArguments() const
     {
         return m_totalArguments;
     }
 
-    std::string CMDArguments::getUTF8ArgumentByOffset(std::size_t offset) const
+    std::string CMDArguments::GetUTF8ArgumentByOffset(std::size_t offset) const
     {
         if (offset >= m_totalArguments)
         {
@@ -318,27 +318,27 @@ namespace TMK
     {
     }
 
-    unsigned short Coordinate::getColumn() const
+    unsigned short Coordinate::GetColumn() const
     {
         return m_column;
     }
 
-    unsigned short Coordinate::getRow() const
+    unsigned short Coordinate::GetRow() const
     {
         return m_row;
     }
 
-    void Coordinate::setColumn(unsigned short column)
+    void Coordinate::SetColumn(unsigned short column)
     {
         m_column = column;
     }
 
-    void Coordinate::setRow(unsigned short row)
+    void Coordinate::SetRow(unsigned short row)
     {
         m_row = row;
     }
 
-    std::string Coordinate::toString() const
+    std::string Coordinate::ToString() const
     {
         return "column: " + std::to_string(m_column) + ", row: " + std::to_string(m_row);
     }
@@ -356,10 +356,10 @@ namespace TMK
 
     Region::Region(Coordinate coordinateI, Coordinate coordinateII)
     {
-        unsigned short maximumColumn = (std::max)(coordinateI.getColumn(), coordinateII.getColumn());
-        unsigned short minimumColumn = (std::min)(coordinateI.getColumn(), coordinateII.getColumn());
-        unsigned short maximumRow = (std::max)(coordinateI.getRow(), coordinateII.getRow());
-        unsigned short minimumRow = (std::min)(coordinateI.getRow(), coordinateII.getRow());
+        unsigned short maximumColumn = (std::max)(coordinateI.GetColumn(), coordinateII.GetColumn());
+        unsigned short minimumColumn = (std::min)(coordinateI.GetColumn(), coordinateII.GetColumn());
+        unsigned short maximumRow = (std::max)(coordinateI.GetRow(), coordinateII.GetRow());
+        unsigned short minimumRow = (std::min)(coordinateI.GetRow(), coordinateII.GetRow());
         m_totalColumns = maximumColumn + 1;
         m_totalRows = maximumRow + 1;
         m_area = m_totalColumns * m_totalRows;
@@ -406,13 +406,13 @@ namespace TMK
 
     bool Region::contains(unsigned short column, unsigned short row) const
     {
-        return column >= m_topLeftCoordinate.getColumn() && column <= m_topRightCoordinate.getColumn() && row >= m_topLeftCoordinate.getRow() &&
-               row <= m_bottomLeftCoordinate.getRow();
+        return column >= m_topLeftCoordinate.GetColumn() && column <= m_topRightCoordinate.GetColumn() && row >= m_topLeftCoordinate.GetRow() &&
+               row <= m_bottomLeftCoordinate.GetRow();
     }
 
     bool Region::contains(Coordinate coordinate) const
     {
-        return contains(coordinate.getColumn(), coordinate.getRow());
+        return contains(coordinate.GetColumn(), coordinate.GetRow());
     }
 
     HexColor::HexColor(unsigned int code)
@@ -438,7 +438,7 @@ namespace TMK
         m_code = code;
     }
 
-    std::string HexColor::HexColor::toString(bool hasPrefix, bool hasZeroPadding, bool isUpperCase) const
+    std::string HexColor::HexColor::ToString(bool hasPrefix, bool hasZeroPadding, bool isUpperCase) const
     {
         char buffer[7];
         std::snprintf(buffer, sizeof(buffer), hasZeroPadding ? isUpperCase ? "%06X" : "%06x" : isUpperCase ? "%X" : "%x", m_code);
@@ -487,7 +487,7 @@ namespace TMK
         m_blue = blue;
     }
 
-    std::string RGBColor::toString() const
+    std::string RGBColor::ToString() const
     {
         return "r: " + std::to_string(m_red) + ", g: " + std::to_string(m_green) + ", b: " + std::to_string(m_blue);
     }
@@ -1052,7 +1052,7 @@ namespace TMK
 
     void Terminal::Cursor::setCoordinate(Coordinate coordinate)
     {
-        setCoordinate(coordinate.getColumn(), coordinate.getRow());
+        setCoordinate(coordinate.GetColumn(), coordinate.GetRow());
     }
 
     void Terminal::Cursor::setShape(CursorShape shape, bool isBlinking)

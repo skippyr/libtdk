@@ -1016,7 +1016,7 @@ namespace TMK
         /// <param name="offset">The offset being referred to.</param>
         /// <returns>The argument in UTF-16 encoding.</returns>
         /// <exception cref="OutOfRangeException">Thrown when the offset is out of the valid range of arguments.</exception>
-        std::wstring getUTF16ArgumentByOffset(std::size_t offset) const;
+        std::wstring GetUTF16ArgumentByOffset(std::size_t offset) const;
 #else
         /// <summary>
         /// Creates an instance of the CMDArguments class.
@@ -1029,14 +1029,14 @@ namespace TMK
         /// Gets the total arguments.
         /// </summary>
         /// <returns>The total arguments.</returns>
-        int getTotalArguments() const;
+        int GetTotalArguments() const;
         /// <summary>
         /// Gets an argument in UTF-8 encoding by using its offset.
         /// </summary>
         /// <param name="offset">The offset being referred to.</param>
         /// <returns>The argument in UTF-8 encoding.</returns>
         /// <exception cref="OutOfRangeException">Thrown when the offset is out of the valid range of arguments.</exception>
-        std::string getUTF8ArgumentByOffset(std::size_t offset) const;
+        std::string GetUTF8ArgumentByOffset(std::size_t offset) const;
 
     private:
 #ifdef _WIN32
@@ -1061,52 +1061,50 @@ namespace TMK
     class Coordinate final
     {
     public:
-        /**
-         * @brief Creates an instance of the Coordinate class.
-         * @returns An instance of the Coordinate class.
-         */
+        /// <summary>
+        /// Creates an instance of the Coordinate class.
+        /// </summary>
         Coordinate();
-        /**
-         * @brief Creates an instance of the Coordinate class.
-         * @param column The column component of the coordinate.
-         * @param row The row component of the coordinate.
-         * @returns An instance of the Coordinate class.
-         */
+        /// <summary>
+        /// Creates an instance of the Coordinate class.
+        /// </summary>
+        /// <param name="column">The column component of the coordinate.</param>
+        /// <param name="row">The row component of the coordinate.</param>
         Coordinate(unsigned short column, unsigned short row);
-        /**
-         * @brief Gets the column component of the coordinate.
-         * @returns The column component of the coordinate.
-         */
-        unsigned short getColumn() const;
-        /**
-         * @brief Gets the row component of the coordinate.
-         * @returns The row component of the coordinate.
-         */
-        unsigned short getRow() const;
-        /**
-         * @brief Sets the column component of the coordinate.
-         * @param column The column component to be set.
-         */
-        void setColumn(unsigned short column);
-        /**
-         * @brief Sets the row component of the coordinate.
-         * @param row The row component to be set.
-         */
-        void setRow(unsigned short row);
-        /**
-         * @brief Gets a string representation of the coordinate.
-         * @returns A string representation of the coordinate.
-         */
-        std::string toString() const;
+        /// <summary>
+        /// Gets the column component of the coordinate.
+        /// </summary>
+        /// <returns>The column component of the coordinate.</returns>
+        unsigned short GetColumn() const;
+        /// <summary>
+        /// Gets the rows component of the coordinate.
+        /// </summary>
+        /// <returns>The row component of the coordinate.</returns>
+        unsigned short GetRow() const;
+        /// <summary>
+        /// Sets the column component of the coordinate.
+        /// </summary>
+        /// <param name="column">The column component to be set.</param>
+        void SetColumn(unsigned short column);
+        /// <summary>
+        /// Sets the row component of the coordinate.
+        /// </summary>
+        /// <param name="row">The row component to be set.</param>
+        void SetRow(unsigned short row);
+        /// <summary>
+        /// Gets a string representation of the coordinate.
+        /// </summary>
+        /// <returns>A string representation of the coordinate.</returns>
+        std::string ToString() const;
 
     private:
-        /**
-         * @brief The column component of the coordinate.
-         */
+        /// <summary>
+        /// The column component of the coordinate.
+        /// </summary>
         unsigned short m_column;
-        /**
-         * @brief The row component of the coordinate.
-         */
+        /// <summary>
+        /// The row component of the coordinate.
+        /// </summary>
         unsigned short m_row;
     };
 
@@ -1252,7 +1250,7 @@ namespace TMK
          * @param isUpperCase A boolean that states the string is upper case.
          * @returns A string representation of the color.
          */
-        std::string toString(bool hasPrefix, bool hasZeroPadding, bool isUpperCase) const;
+        std::string ToString(bool hasPrefix, bool hasZeroPadding, bool isUpperCase) const;
 
     private:
         /**
@@ -1320,7 +1318,7 @@ namespace TMK
          * @brief Gets a string representation of the color.
          * @returns A string representation of the color.
          */
-        std::string toString() const;
+        std::string ToString() const;
 
     private:
         /**
