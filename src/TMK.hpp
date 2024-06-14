@@ -1601,60 +1601,60 @@ namespace TMK
         class Encoding final
         {
         public:
-            /**
-             * @brief Converts an UTF-16 encoded string to UTF-8.
-             * @param utf16String The UTF-16 encoded string to be converted.
-             * @returns The converted UTF-8 encoded string.
-             */
-            static std::string convertUTF16ToUTF8(std::wstring utf16String);
-            /**
-             * @brief Converts an UTF-8 encoded string to UTF-16.
-             * @param utf8String The UTF-8 encoded string to be converted.
-             * @returns The converted UTF-16 encoded string.
-             */
-            static std::wstring convertUTF8ToUTF16(std::string utf8String);
+            /// <summary>
+            /// Converts an UTF-16 encoded string to UTF-8.
+            /// </summary>
+            /// <param name="utf16String">The UTF-16 encoded string to be converted.</param>
+            /// <returns>The converted UTF-8 encoded string.</returns>
+            static std::string ConvertUTF16ToUTF8(std::wstring utf16String);
+            /// <summary>
+            /// Converts an UTF-8 encoded string to UTF-16.
+            /// </summary>
+            /// <param name="utf8String">The UTF-8 encoded string to be converted.</param>
+            /// <returns></returns>
+            static std::wstring ConvertUTF8ToUTF16(std::string utf8String);
 
         private:
             Encoding() = delete;
         };
 #endif
 
-        /**
-         * @brief Represents the standard input stream.
-         */
+        /// <summary>
+        /// Represents the standard input stream.
+        /// </summary>
         class Input final
         {
         public:
-            /**
-             * @brief Clears the standard input buffer.
-             */
-            static void clear();
-            /**
-             * @brief Checks if the standard input stream is connected to an interactive terminal (TTY).
-             * @param A boolean that states the standard input stream is a TTY.
-             */
-            static bool isTTY();
-            /**
-             * @brief Reads a terminal event.
-             * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
-             * @returns The information about the event read.
-             */
-            static EventInfo readEvent(bool allowMouseCapture);
-            /**
-             * @brief Reads a terminal event.
-             * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
-             * @param wait The time to wait for an event. If zero, it returns immediately.
-             * @returns The information about the event read.
-             */
-            static EventInfo readEvent(bool allowMouseCapture, std::chrono::milliseconds wait);
-            /**
-             * @brief Reads a terminal event.
-             * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
-             * @param wait The time to wait for an event. If zero, it returns immediately.
-             * @param filter A function to be used to filter events while the timer is running.
-             * @returns The information about the event read.
-             */
-            static EventInfo readEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter);
+            /// <summary>
+            /// Clears the standard input buffer.
+            /// </summary>
+            static void Clear();
+            /// <summary>
+            /// Checks if the standard input stream is connected to an interactive terminal (TTY).
+            /// </summary>
+            /// <returns>A boolean that states the standard input stream is a TTY.</returns>
+            static bool IsTTY();
+            /// <summary>
+            /// Reads a terminal event.
+            /// </summary>
+            /// <param name="allowMouseCapture">A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.</param>
+            /// <returns>The information about the event read.</returns>
+            static EventInfo ReadEvent(bool allowMouseCapture);
+            /// <summary>
+            /// Reads a terminal event.
+            /// </summary>
+            /// <param name="allowMouseCapture">A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.</param>
+            /// <param name="wait">The time to wait for an event. If zero, it returns immediatedl.</param>
+            /// <returns>The information about the event read.</returns>
+            static EventInfo ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait);
+            /// <summary>
+            /// Reads a terminal event.
+            /// </summary>
+            /// <param name="allowMouseCapture">A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.</param>
+            /// <param name="wait">The time to wait for an event. If zero, it returns immediately.</param>
+            /// <param name="filter">A function to be used to filter events while the timer is running.</param>
+            /// <returns>The information about the event read.</returns>
+            static EventInfo ReadEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter);
 
         private:
             Input() = delete;
@@ -1707,7 +1707,7 @@ namespace TMK
              * @brief Checks if the standard output stream is connected to an interactive terminal (TTY).
              * @returns A boolean that states the standard output stream is a TTY.
              */
-            static bool isTTY();
+            static bool IsTTY();
 
         private:
             Output() = delete;
@@ -1756,7 +1756,7 @@ namespace TMK
              * @brief Checks if the standard error stream is connected to an interactive terminal (TTY).
              * @returns A boolean that states the standard error stream is a TTY.
              */
-            static bool isTTY();
+            static bool IsTTY();
 
         private:
             Error() = delete;

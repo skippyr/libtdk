@@ -244,7 +244,7 @@ namespace TMK
                     eventInfo = KeyEvent(key, record.Event.KeyEvent.dwControlKeyState & (LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED),
                                          record.Event.KeyEvent.dwControlKeyState & (LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED), record.Event.KeyEvent.dwControlKeyState & SHIFT_PRESSED);
                 }
-                if (eventInfo.getType() != EventType::None && eventInfo.getType() != EventType::TimeOut)
+                if (eventInfo.GetType() != EventType::None && eventInfo.GetType() != EventType::TimeOut)
                 {
                     if (filter && !filter(eventInfo))
                     {
@@ -549,7 +549,7 @@ namespace TMK
     {
     }
 
-    int KeyEvent::getKey() const
+    int KeyEvent::GetKey() const
     {
         return m_key;
     }
@@ -589,12 +589,12 @@ namespace TMK
     {
     }
 
-    EventType EventInfo::getType() const
+    EventType EventInfo::GetType() const
     {
         return m_type;
     }
 
-    FocusEvent EventInfo::getFocusEvent() const
+    FocusEvent EventInfo::GetFocusEvent() const
     {
         if (m_type == EventType::Focus)
         {
@@ -603,7 +603,7 @@ namespace TMK
         throw InvalidEventTypeException();
     }
 
-    ResizeEvent EventInfo::getResizeEvent() const
+    ResizeEvent EventInfo::GetResizeEvent() const
     {
         if (m_type == EventType::Resize)
         {
@@ -612,7 +612,7 @@ namespace TMK
         throw InvalidEventTypeException();
     }
 
-    MouseEvent EventInfo::getMouseEvent() const
+    MouseEvent EventInfo::GetMouseEvent() const
     {
         if (m_type == EventType::Mouse)
         {
@@ -621,7 +621,7 @@ namespace TMK
         throw InvalidEventTypeException();
     }
 
-    KeyEvent EventInfo::getKeyEvent() const
+    KeyEvent EventInfo::GetKeyEvent() const
     {
         if (m_type == EventType::Key)
         {
@@ -631,7 +631,7 @@ namespace TMK
     }
 
 #ifdef _WIN32
-    std::string Terminal::Encoding::convertUTF16ToUTF8(std::wstring utf16String)
+    std::string Terminal::Encoding::ConvertUTF16ToUTF8(std::wstring utf16String)
     {
         int utf8Size = WideCharToMultiByte(CP_UTF8, 0, utf16String.c_str(), -1, nullptr, 0, nullptr, nullptr);
         std::unique_ptr<char[]> utf8Buffer = std::make_unique<char[]>(utf8Size);
@@ -639,7 +639,7 @@ namespace TMK
         return utf8Buffer.get();
     }
 
-    std::wstring Terminal::Encoding::convertUTF8ToUTF16(std::string utf8String)
+    std::wstring Terminal::Encoding::ConvertUTF8ToUTF16(std::string utf8String)
     {
         int utf16Size = MultiByteToWideChar(CP_UTF8, 0, utf8String.c_str(), -1, nullptr, 0);
         std::unique_ptr<WCHAR[]> utf16Buffer = std::make_unique<WCHAR[]>(utf16Size);
