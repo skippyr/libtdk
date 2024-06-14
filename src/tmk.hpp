@@ -1997,14 +1997,6 @@ namespace tmk
     private:
         Terminal() = delete;
         /**
-         * @brief Formats and writes a string to a terminal stream.
-         * @param file The file of the stream.
-         * @param format The format to be used. It accepts the same specifiers as the printf function family.
-         * @param arguments The arguments to be formatted.
-         * @param hasNewLine A boolean that states a newline character should be appended at the end of the string.
-         */
-        static void write(std::FILE* file, const char* format, std::va_list arguments, bool hasNewLine);
-        /**
          * @brief Reads a terminal event.
          * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
          * @param wait The time to wait for an event. If zero, it returns immediately. If negative, it waits until an event become available.

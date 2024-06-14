@@ -97,6 +97,30 @@ namespace tmk
             va_end(arguments);
         }
 
+        /**
+         * @brief Formats and writes a string to a terminal stream.
+         * @param file The file of the stream.
+         * @param format The format to be used. It accepts the same specifiers as the printf function family.
+         * @param arguments The arguments to be formatted.
+         * @param hasNewLine A boolean that states a newline character should be appended at the end of the string.
+         */
+        static void write(std::FILE* file, const char* format, std::va_list arguments, bool hasNewLine)
+        {
+            initStreamTTYCache();
+            if (file == stderr)
+            {
+                Terminal::OutputStream::flush();
+            }
+            if (format && std::vfprintf(file, format, arguments) < 0)
+            {
+                throw WideCharacterOrientationException();
+            }
+            if (hasNewLine && std::fputc('\n', file) == EOF)
+            {
+                throw WideCharacterOrientationException();
+            }
+        }
+
     private:
         Setup() = delete;
     };
@@ -465,23 +489,6 @@ namespace tmk
         throw InvalidEventTypeException();
     }
 
-    void Terminal::write(std::FILE* file, const char* format, std::va_list arguments, bool hasNewLine)
-    {
-        Setup::initStreamTTYCache();
-        if (file == stderr)
-        {
-            OutputStream::flush();
-        }
-        if (format && std::vfprintf(file, format, arguments) < 0)
-        {
-            throw WideCharacterOrientationException();
-        }
-        if (hasNewLine && std::fputc('\n', file) == EOF)
-        {
-            throw WideCharacterOrientationException();
-        }
-    }
-
     EventInfo Terminal::readEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter)
     {
         if (!InputStream::isTTY() || (!OutputStream::isTTY() && !ErrorStream::isTTY()))
@@ -681,32 +688,32 @@ namespace tmk
 
     void Terminal::OutputStream::writeLine(std::string format, std::va_list arguments)
     {
-        Terminal::write(stdout, format.c_str(), arguments, true);
+        Setup::write(stdout, format.c_str(), arguments, true);
     }
 
     void Terminal::OutputStream::writeLine(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
-        Terminal::write(stdout, format.c_str(), arguments, true);
+        Setup::write(stdout, format.c_str(), arguments, true);
         va_end(arguments);
     }
 
     void Terminal::OutputStream::writeLine()
     {
-        Terminal::write(stdout, nullptr, nullptr, true);
+        Setup::write(stdout, nullptr, nullptr, true);
     }
 
     void Terminal::OutputStream::write(std::string format, std::va_list arguments)
     {
-        Terminal::write(stdout, format.c_str(), arguments, false);
+        Setup::write(stdout, format.c_str(), arguments, false);
     }
 
     void Terminal::OutputStream::write(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
-        Terminal::write(stdout, format.c_str(), arguments, false);
+        Setup::write(stdout, format.c_str(), arguments, false);
         va_end(arguments);
     }
 
@@ -718,32 +725,32 @@ namespace tmk
 
     void Terminal::ErrorStream::writeLine(std::string format, std::va_list arguments)
     {
-        Terminal::write(stderr, format.c_str(), arguments, true);
+        Setup::write(stderr, format.c_str(), arguments, true);
     }
 
     void Terminal::ErrorStream::writeLine(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
-        Terminal::write(stderr, format.c_str(), arguments, true);
+        Setup::write(stderr, format.c_str(), arguments, true);
         va_end(arguments);
     }
 
     void Terminal::ErrorStream::writeLine()
     {
-        Terminal::write(stderr, nullptr, nullptr, true);
+        Setup::write(stderr, nullptr, nullptr, true);
     }
 
     void Terminal::ErrorStream::write(std::string format, std::va_list arguments)
     {
-        Terminal::write(stderr, format.c_str(), arguments, false);
+        Setup::write(stderr, format.c_str(), arguments, false);
     }
 
     void Terminal::ErrorStream::write(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
-        Terminal::write(stderr, format.c_str(), arguments, false);
+        Setup::write(stderr, format.c_str(), arguments, false);
         va_end(arguments);
     }
 
