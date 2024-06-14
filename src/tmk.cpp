@@ -7,9 +7,9 @@
 #endif
 
 #ifdef _WIN32
-#define IS_TTY(a_stream) _isatty(a_stream::getFileNumber())
+#define IS_TTY(a_streamFileNumber) _isatty(a_streamFileNumber)
 #else
-#define IS_TTY(a_stream) isatty(a_stream::getFileNumber())
+#define IS_TTY(a_streamFileNumber) isatty(a_streamFileNumber)
 #endif
 #define PARSE_KEY(a_condition, a_key)                                                                                                                                              \
     if (a_condition)                                                                                                                                                               \
@@ -408,9 +408,9 @@ namespace tmk
             return;
         }
         g_hasStreamTTYCache = true;
-        g_isInputStreamTTY = IS_TTY(InputStream);
-        g_isOutputStreamTTY = IS_TTY(OutputStream);
-        g_isErrorStreamTTY = IS_TTY(ErrorStream);
+        g_isInputStreamTTY = IS_TTY(0);
+        g_isOutputStreamTTY = IS_TTY(1);
+        g_isErrorStreamTTY = IS_TTY(2);
 #ifdef _WIN32
         HANDLE handle;
         DWORD mode;
@@ -637,94 +637,26 @@ namespace tmk
     }
 #endif
 
-#ifdef _WIN32
-    HANDLE Terminal::InputStream::getHandle()
-    {
-        return GetStdHandle(STD_INPUT_HANDLE);
-    }
-
-    DWORD Terminal::InputStream::getMode()
-    {
-        return getStreamMode(getHandle());
-    }
-
-    DWORD Terminal::InputStream::getTotalEventsCached()
-    {
-        DWORD totalEvents;
-        if (!GetNumberOfConsoleInputEvents(getHandle(), &totalEvents))
-        {
-            throw NoValidTTYException();
-        }
-        return totalEvents;
-    }
-
-    void Terminal::InputStream::setMode(DWORD mode)
-    {
-        setStreamMode(getHandle(), isTTY(), mode);
-    }
-#else
-    struct termios Terminal::InputStream::getTermiosAttributes()
-    {
-        struct termios attributes;
-        if (tcgetattr(getFileNumber(), &attributes))
-        {
-            throw NoValidTTYException();
-        }
-        return attributes;
-    }
-
-    void Terminal::InputStream::setTermiosAttributes(struct termios& attributes)
-    {
-        if (!isTTY())
-        {
-            throw NoValidTTYException();
-        }
-        if (tcsetattr(getFileNumber(), TCSANOW, &attributes))
-        {
-            throw InvalidStreamAttributesException();
-        }
-    }
-
-    void Terminal::InputStream::setFCNTLBlockingState(bool isToEnable)
-    {
-        int flags = fcntl(getFileNumber(), F_GETFL);
-        fcntl(getFileNumber(), F_SETFL, isToEnable ? flags & ~O_NONBLOCK : flags | O_NONBLOCK);
-    }
-#endif
-
-    std::FILE* Terminal::InputStream::getFile()
-    {
-        return stdin;
-    }
-
-    int Terminal::InputStream::getFileNumber()
-    {
-        return 0;
-    }
-
     void Terminal::InputStream::clear()
     {
 #ifdef _WIN32
-        FlushConsoleInputBuffer(getHandle());
+        FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 #else
         struct termios attributes;
-        try
-        {
-            attributes = getTermiosAttributes();
-        }
-        catch (NoValidTTYException&)
+        int flags = fcntl(STDIN_FILENO, F_GETFL);
+        if (tcgetattr(STDIN_FILENO, &attributes))
         {
             return;
         }
         attributes.c_lflag &= ~(ICANON | ECHO);
-        setTermiosAttributes(attributes);
-        setFCNTLBlockingState(false);
-        while (readByte() != EOF)
+        tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+        fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
+        while (std::getchar() != EOF)
         {
         }
         attributes.c_lflag |= ICANON | ECHO;
-        setTermiosAttributes(attributes);
-        setFCNTLBlockingState(true);
+        tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+        fcntl(STDIN_FILENO, F_SETFL, flags);
 #endif
     }
 
@@ -732,11 +664,6 @@ namespace tmk
     {
         initStreamTTYCache();
         return g_isInputStreamTTY;
-    }
-
-    char Terminal::InputStream::readByte()
-    {
-        return std::getchar();
     }
 
     EventInfo Terminal::InputStream::readEvent(bool allowMouseCapture)
@@ -790,11 +717,6 @@ namespace tmk
         va_end(arguments);
     }
 
-    int Terminal::OutputStream::getFileNumber()
-    {
-        return 1;
-    }
-
     bool Terminal::OutputStream::isTTY()
     {
         initStreamTTYCache();
@@ -830,11 +752,6 @@ namespace tmk
         va_start(arguments, format);
         Terminal::write(stderr, format.c_str(), arguments, false);
         va_end(arguments);
-    }
-
-    int Terminal::ErrorStream::getFileNumber()
-    {
-        return 2;
     }
 
     bool Terminal::ErrorStream::isTTY()
@@ -1085,16 +1002,20 @@ namespace tmk
         GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &bufferInfo) || GetConsoleScreenBufferInfo(GetStdHandle(STD_ERROR_HANDLE), &bufferInfo);
         return Coordinate(bufferInfo.dwCursorPosition.X - bufferInfo.srWindow.Left, bufferInfo.dwCursorPosition.Y - bufferInfo.srWindow.Top);
 #else
-        struct termios attributes = InputStream::getTermiosAttributes();
+        struct termios attributes;
+        if (tcgetattr(STDIN_FILENO, &attributes))
+        {
+            throw NoValidTTYException();
+        }
         InputStream::clear();
         writeANSIEscapeSequence("\x1b[6n");
         attributes.c_lflag &= ~(ICANON | ECHO);
-        InputStream::setTermiosAttributes(attributes);
+        tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
         unsigned short column;
         unsigned short row;
         int totalMatchesRead = std::scanf("\x1b[%hu;%huR", &row, &column);
         attributes.c_lflag |= ICANON | ECHO;
-        InputStream::setTermiosAttributes(attributes);
+        tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
         if (totalMatchesRead != 2)
         {
             throw WideCharacterOrientationException();

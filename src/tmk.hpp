@@ -1649,8 +1649,6 @@ namespace tmk
          */
         class InputStream final
         {
-            friend class Terminal;
-
         public:
             /**
              * @brief Clears the standard input buffer.
@@ -1661,11 +1659,6 @@ namespace tmk
              * @param A boolean that states the standard input stream is a TTY.
              */
             static bool isTTY();
-            /**
-             * @brief Reads a byte.
-             * @returns The byte read or EOF if the standard input stream is closed or it is wide character oriented.
-             */
-            static char readByte();
             /**
              * @brief Reads a terminal event.
              * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
@@ -1690,62 +1683,6 @@ namespace tmk
 
         private:
             InputStream() = delete;
-
-#ifdef _WIN32
-            /**
-             * @brief Gets the handle associated with the standard input stream.
-             * @returns The handle associated with the standard input stream.
-             */
-            static HANDLE getHandle();
-            /**
-             * @brief Gets the standard input mode.
-             * @returns The standard input mode.
-             * @throws NoValidTTYException Thrown whenever the standard input stream is not a TTY.
-             */
-            static DWORD getMode();
-            /**
-             * @brief Gets the total events cached in the standard input buffer.
-             * @returns The total events cached in the standard input buffer.
-             * @throws NoValidTTYException Thrown whenever the standard input stream is not a TTY.
-             */
-            static DWORD getTotalEventsCached();
-            /**
-             * @brief Sets the standard input mode.
-             * @param mode The mode to be set.
-             * @throws NoValidTTYException Thrown whenever the standard input stream is not a TTY.
-             * @throws InvalidStreamAttributesException Thrown whenever the mode is invalid.
-             */
-            static void setMode(DWORD mode);
-#else
-            /**
-             * @brief Gets the termios attributes of the standard input stream.
-             * @returns The termios attributes of the standard input stream.
-             * @throws NoValidTTYException Thrown whenever the standard input stream is not a TTY.
-             */
-            static struct termios getTermiosAttributes();
-            /**
-             * @brief Sets the termios attributes of the standard input stream.
-             * @param attributes The attributes to be set.
-             * @throws NoValidTTYException Thrown whenever the standard input stream is not a TTY.
-             * @throws InvalidStreamAttributesException Thrown whenever the attributes given are invalid.
-             */
-            static void setTermiosAttributes(struct termios& attributes);
-            /**
-             * @brief Sets the FCNTL blocking state.
-             * @param isToEnable A boolean that states the blocking state should be enabled.
-             */
-            static void setFCNTLBlockingState(bool isToEnable);
-#endif
-            /**
-             * @brief Gets the file descriptor associated with the standard input stream.
-             * @param The file descriptor associated with the standard input stream.
-             */
-            static std::FILE* getFile();
-            /**
-             * @brief Gets the file descriptor number associated with the standard input stream.
-             * @param The file descriptor number associated with the standard input stream.
-             */
-            static int getFileNumber();
         };
 
         /**
@@ -1753,8 +1690,6 @@ namespace tmk
          */
         class OutputStream final
         {
-            friend class Terminal;
-
         public:
             /**
              * @brief Flushes the standard output stream buffer.
@@ -1801,12 +1736,6 @@ namespace tmk
 
         private:
             OutputStream() = delete;
-
-            /**
-             * @brief Gets the file descriptor number associated with the standard output stream.
-             * @returns The file descriptor number associated with the standard output stream.
-             */
-            static int getFileNumber();
         };
 
         /**
@@ -1814,8 +1743,6 @@ namespace tmk
          */
         class ErrorStream final
         {
-            friend class Terminal;
-
         public:
             /**
              * @brief Formats and writes arguments to the standard error stream with a newline character appended at its end.
@@ -1858,12 +1785,6 @@ namespace tmk
 
         private:
             ErrorStream() = delete;
-
-            /**
-             * @brief Gets the file descriptor number associated with the standard error stream.
-             * @returns The file descriptor number associated with the standard error stream.
-             */
-            static int getFileNumber();
         };
 
         /**
