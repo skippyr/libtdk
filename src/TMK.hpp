@@ -580,120 +580,120 @@ namespace TMK
         Light
     };
 
-    /**
-     * @brief contains the available terminal font layers.
-     */
+    /// <summary>
+    /// Contains the available terminal font layers.
+    /// </summary>
     enum class FontLayer
     {
-        /**
-         * @brief Refers to the graphemes.
-         */
+        /// <summary>
+        /// Refers to the graphemes.
+        /// </summary>
         Foreground = 3,
-        /**
-         * @brief Refers to the background of the graphemes.
-         */
+        /// <summary>
+        /// Refers to the background of the graphemes.
+        /// </summary>
         Background
     };
 
-    /**
-     * @brief Represents the available terminal effects.
-     */
+    /// <summary>
+    /// Contains the available terminal effects.
+    /// </summary>
     enum class FontEffect
     {
-        /**
-         * @brief Makes the text curly.
-         */
+        /// <summary>
+        /// Makes the text curly.
+        /// </summary>
         Italic = 1 << 3,
-        /**
-         * @brief Draws a horizontal line crossing below the text.
-         */
+        /// <summary>
+        /// Draws a horizontal line crossing below the text.
+        /// </summary>
         Underline = 1 << 4,
-        /**
-         * @brief Makes the text blink indefinitely.
-         */
+        /// <summary>
+        /// Makes the text blink indefinitely.
+        /// </summary>
         Blink = 1 << 5,
-        /**
-         * @brief Swaps the background and foreground colors.
-         */
+        /// <summary>
+        /// Swaps the background and foreground colors.
+        /// </summary>
         Negative = 1 << 7,
-        /**
-         * @brief Makes the text hard to see or invisible.
-         */
+        /// <summary>
+        /// Makes the text hard to see or invisible.
+        /// </summary>
         Hidden = 1 << 8,
-        /**
-         * @brief Draws a horizontal line crossing through the middle of the text.
-         */
+        /// <summary>
+        /// Draws a horizontal line crossing through the middle of the text.
+        /// </summary>
         Strike = 1 << 9
     };
 
-    /**
-     * @brief contains the ANSI codes of the first 16 colors of the XTerm color palette.
-     */
+    /// <summary>
+    /// Contains the ANSI codes of the first 16 colors of the XTerm color palette.
+    /// </summary>
     enum class XColor
     {
-        /**
-         * @brief The dark variant of the black color.
-         */
+        /// <summary>
+        /// The dark variant of the black color.
+        /// </summary>
         DarkBlack,
-        /**
-         * @brief The dark variant of the red color.
-         */
+        /// <summary>
+        /// The dark variant of the red color.
+        /// </summary>
         DarkRed,
-        /**
-         * @brief The dark variant of the green color.
-         */
+        /// <summary>
+        /// The dark variant of the green color.
+        /// </summary>
         DarkGreen,
-        /**
-         * @brief The dark variant of the yellow color.
-         */
+        /// <summary>
+        /// The dark variant of the yellow color.
+        /// </summary>
         DarkYellow,
-        /**
-         * @brief The dark variant of the blue color.
-         */
+        /// <summary>
+        /// The dark variant of the blue color.
+        /// </summary>
         DarkBlue,
-        /**
-         * @brief The dark variant of the magenta color.
-         */
+        /// <summary>
+        /// The dark variant of the magenta color.
+        /// </summary>
         DarkMagenta,
-        /**
-         * @brief The dark variant of the cyan color.
-         */
+        /// <summary>
+        /// The dark variant of the cyan color.
+        /// </summary>
         DarkCyan,
-        /**
-         * @brief The dark variant of the white color.
-         */
+        /// <summary>
+        /// The dark variant of the white color.
+        /// </summary>
         DarkWhite,
-        /**
-         * @brief The light variant of the black color.
-         */
+        /// <summary>
+        /// The light variant of the black color.
+        /// </summary>
         LightBlack,
-        /**
-         * @brief The light variant of the red color.
-         */
+        /// <summary>
+        /// The light variant of the red color.
+        /// </summary>
         LightRed,
-        /**
-         * @brief The light variant of the green color.
-         */
+        /// <summary>
+        /// The light variant of the green color.
+        /// </summary>
         LightGreen,
-        /**
-         * @brief The light variant of the yellow color.
-         */
+        /// <summary>
+        /// The light variant of the yellow color.
+        /// </summary>
         LightYellow,
-        /**
-         * @brief The light variant of the blue color.
-         */
+        /// <summary>
+        /// The light variant of the blue color.
+        /// </summary>
         LightBlue,
-        /**
-         * @brief The light variant of the magenta color.
-         */
+        /// <summary>
+        /// The light variant of the magenta color.
+        /// </summary>
         LightMagenta,
-        /**
-         * @brief The light variant of the cyan color.
-         */
+        /// <summary>
+        /// The light variant of the cyan color.
+        /// </summary>
         LightCyan,
-        /**
-         * @brief The light variant of the white color.
-         */
+        /// <summary>
+        /// The light variant of the white color.
+        /// </summary>
         LightWhite
     };
 
