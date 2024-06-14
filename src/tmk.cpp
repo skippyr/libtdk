@@ -412,7 +412,7 @@ namespace tmk
         g_isOutputStreamTTY = IS_TTY(OutputStream);
         g_isErrorStreamTTY = IS_TTY(ErrorStream);
 #ifdef _WIN32
-        Encoding::setOutputCodePage(CP_UTF8);
+        SetConsoleOutputCP(CP_UTF8);
         try
         {
             OutputStream::setMode(OutputStream::getMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
@@ -627,14 +627,6 @@ namespace tmk
         if (!SetConsoleMode(handle, mode))
         {
             throw InvalidStreamAttributesException();
-        }
-    }
-
-    void Terminal::Encoding::setOutputCodePage(UINT codePage)
-    {
-        if (!SetConsoleOutputCP(codePage))
-        {
-            throw InvalidCodePageException();
         }
     }
 

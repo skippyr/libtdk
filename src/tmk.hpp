@@ -1625,8 +1625,6 @@ namespace tmk
          */
         class Encoding final
         {
-            friend class Terminal;
-
         public:
             /**
              * @brief Converts an UTF-16 encoded string to UTF-8.
@@ -1643,13 +1641,6 @@ namespace tmk
 
         private:
             Encoding() = delete;
-
-            /**
-             * @brief Sets the output code page.
-             * @param codePage The code page to be used.
-             * @throws InvalidCodePageException Thrown whenever the code page is invalid.
-             */
-            static void setOutputCodePage(UINT codePage);
         };
 #endif
 
