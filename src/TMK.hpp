@@ -1254,362 +1254,350 @@ namespace TMK
         unsigned int m_code;
     };
 
-    /**
-     * @brief Represents a color in RGB format.
-     */
+    /// <summary>
+    /// Represents a color in RGB format.
+    /// </summary>
     class RGBColor final
     {
     public:
-        /**
-         * @brief Creates an instance of the RGBColor class.
-         * @returns An instance of the RGBColor class.
-         */
+        /// <summary>
+        /// Creates an instance of the RGBColor class.
+        /// </summary>
         RGBColor();
-        /**
-         * @brief Creates an instance of the RGBColor class.
-         * @param red The red component of the color.
-         * @param green The green component of the color.
-         * @param blue The blue component of the color.
-         * @returns An instance of the RGBColor class.
-         */
+        /// <summary>
+        /// Creates an instance of the RGBColor class.
+        /// </summary>
+        /// <param name="red">The red component of the color.</param>
+        /// <param name="green">The green component of the color.</param>
+        /// <param name="blue">The blue component of the color.</param>
         RGBColor(unsigned char red, unsigned char green, unsigned char blue);
-        /**
-         * @brief Creates an instance of the RGBColor class.
-         * @param color A color in hex format to be converted.
-         * @returns An instance of the RGBColor class.
-         */
+        /// <summary>
+        /// Creates an instance of the RGBColor class.
+        /// </summary>
+        /// <param name="color">A color in hex format to be converted.</param>
         RGBColor(HexColor color);
-        /**
-         * @brief Gets the red component of the color.
-         * @returns The red component of the color.
-         */
-        unsigned char getRed() const;
-        /**
-         * @brief Gets the green component of the color.
-         * @returns The green component of the color.
-         */
-        unsigned char getGreen() const;
-        /**
-         * @brief Gets the blue component of the color.
-         * @returns The blue component of the color.
-         */
-        unsigned char getBlue() const;
-        /**
-         * @brief Sets the red component of the color.
-         * @param red The red component to be set.
-         */
-        void setRed(unsigned char red);
-        /**
-         * @brief Sets the green component of the color.
-         * @param green The green component to be set.
-         */
-        void setGreen(unsigned char green);
-        /**
-         * @brief Sets the blue component of the color.
-         * @param blue The blue component to be set.
-         */
-        void setBlue(unsigned char blue);
-        /**
-         * @brief Gets a string representation of the color.
-         * @returns A string representation of the color.
-         */
+        /// <summary>
+        /// Gets the red component of the color.
+        /// </summary>
+        /// <returns>The red component of the color.</returns>
+        unsigned char GetRed() const;
+        /// <summary>
+        /// Gets the green component of the color.
+        /// </summary>
+        /// <returns>The green component of the color.</returns>
+        unsigned char GetGreen() const;
+        /// <summary>
+        /// Gets the blue component of the color.
+        /// </summary>
+        /// <returns>The blue component of the color.</returns>
+        unsigned char GetBlue() const;
+        /// <summary>
+        /// Sets the red component of the color.
+        /// </summary>
+        /// <param name="red">The red component to be set.</param>
+        void SetRed(unsigned char red);
+        /// <summary>
+        /// Sets the green component of the color.
+        /// </summary>
+        /// <param name="green">The green component to be set.</param>
+        void SetGreen(unsigned char green);
+        /// <summary>
+        /// Sets the blue component of the color.
+        /// </summary>
+        /// <param name="blue">The blue component to be set.</param>
+        void SetBlue(unsigned char blue);
+        /// <summary>
+        /// Gets a string representation of the color.
+        /// </summary>
+        /// <returns>A string representation of the color.</returns>
         std::string ToString() const;
 
     private:
-        /**
-         * @brief The red component of the color.
-         */
+        /// <summary>
+        /// The red component of the color.
+        /// </summary>
         unsigned char m_red;
-        /**
-         * @brief The green component of the color.
-         */
+        /// <summary>
+        /// The green component of the color.
+        /// </summary>
         unsigned char m_green;
-        /**
-         * @brief The blue component of the color.
-         */
+        /// <summary>
+        /// The blue component of the color.
+        /// </summary>
         unsigned char m_blue;
     };
 
-    /**
-     * @brief Represents a terminal focus event.
-     */
+    /// <summary>
+    /// Represents a terminal focus event.
+    /// </summary>
     class FocusEvent final
     {
     public:
-        /**
-         * @brief Creates an instance of the FocusEvent class.
-         * @param hasFocus A boolean that states the terminal window has gained focus.
-         * @returns An instance of the FocusEvent class.
-         */
+        /// <summary>
+        /// Creates an instance of the FocusEvent class.
+        /// </summary>
+        /// <param name="hasFocus">A boolean that states the terminal window has gained focus.</param>
         FocusEvent(bool hasFocus);
-        /**
-         * @brief Checks if the terminal window has gained focus.
-         * @returns A boolean that states the terminal window has gained focus.
-         */
-        bool hasFocus() const;
+        /// <summary>
+        /// Checks if the terminal window has gained focus.
+        /// </summary>
+        /// <returns>A boolean that states the terminal window has gained focus.</returns>
+        bool HasFocus() const;
 
     private:
-        /**
-         * @brief A boolean that states the terminal window has gained focus.
-         */
+        /// <summary>
+        /// A boolean that states the terminal window has gained focus.
+        /// </summary>
         bool m_hasFocus;
     };
 
-    /**
-     * @brief Represents a terminal window resize event.
-     */
+    /// <summary>
+    /// Represents a terminal window resize event.
+    /// </summary>
     class ResizeEvent final
     {
     public:
-        /**
-         * @brief Creates an instance of the ResizeEvent class.
-         * @returns An instance of the ResizeEvent class.
-         */
+        /// <summary>
+        /// Creates an instance of the ResizeEvent class.
+        /// </summary>
         ResizeEvent();
-        /**
-         * @brief Gets the terminal window region.
-         * @returns The terminal window region.
-         */
-        Region getRegion() const;
+        /// <summary>
+        /// Gets the terminal window region.
+        /// </summary>
+        /// <returns>The terminal window region.</returns>
+        Region GetRegion() const;
 
     private:
-        /**
-         * @brief The terminal window region.
-         */
+        /// <summary>
+        /// The terminal window region.
+        /// </summary>
         Region m_region;
     };
 
-    /**
-     * @brief Represents a terminal mouse event.
-     */
+    /// <summary>
+    /// Represents a terminal mouse event.
+    /// </summary>
     class MouseEvent final
     {
     public:
-        /**
-         * @brief Creates an instance of the MouseEvent class.
-         * @param coordinate The mouse coordinate.
-         * @param button The mouse button pressed.
-         * @param isDragging A boolean that states the mouse was being dragged.
-         * @param hasCtrl A boolean that states the Ctrl key was being holded.
-         * @param hasAlt A boolean that states the Alt key was being holded.
-         * @param hasShift A boolean that states the Shift key was being holded.
-         * @returns An instance of the MouseEvent class.
-         */
-        MouseEvent(Coordinate coordinate, MouseButton button, bool isDragging, bool hasCtrl, bool hasAlt, bool hasShift);
-        /**
-         * @brief Gets the mouse coordinate.
-         * @returns The mouse coordinate.
-         */
-        Coordinate getCoordinate() const;
-        /**
-         * @brief Gets the mouse button pressed.
-         * @returns The mouse button pressed.
-         */
-        MouseButton getButton() const;
-        /**
-         * @brief Checks if the mouse was being dragged.
-         * @returns A boolean that states the mouse was being dragged.
-         */
-        bool isDragging() const;
-        /**
-         * @brief Checks if the Ctrl was being holded.
-         * @returns A boolean that states the Ctrl key was being holded.
-         */
-        bool hasCtrl() const;
-        /**
-         * @brief Checks if the Alt was being holded.
-         * @returns A boolean that states the Alt key was being holded.
-         */
-        bool hasAlt() const;
-        /**
-         * @brief Checks if the Shift was being holded.
-         * @returns A boolean that states the Shift key was being holded.
-         */
-        bool hasShift() const;
+        /// <summary>
+        /// Creates an instance of the MouseEvent class.
+        /// </summary>
+        /// <param name="coordinate">The mouse coordinate.</param>
+        /// <param name="button">The mouse button presssed.</param>
+        /// <param name="isDragging">A boolean that states the mouse was being dragged.</param>
+        /// <param name="hasCtrl">A boolean that states the Ctrl key was being holded.</param>
+        /// <param name="hasAlt">A boolean that states the Alt key was being holded.</param>
+        /// <param name="hasShift">A boolean that states the Shift key was being holded.</param>
+        MouseEvent(Coordinate coordinate, MouseButton button, bool isDragging, bool hasCtrl, bool hasAlt, bool HasShift);
+        /// <summary>
+        /// Gets the mouse coordinate.
+        /// </summary>
+        /// <returns>The mouse coordinate.</returns>
+        Coordinate GetCoordinate() const;
+        /// <summary>
+        /// Gets the mouse button pressed.
+        /// </summary>
+        /// <returns>The mouse button pressed.</returns>
+        MouseButton GetButton() const;
+        /// <summary>
+        /// Checks if the mouse was being dragged.
+        /// </summary>
+        /// <returns>A boolean that states the mouse was being dragged.</returns>
+        bool IsDragging() const;
+        /// <summary>
+        /// Checks if the Ctrl key was being holded.
+        /// </summary>
+        /// <returns>A boolean that states the Ctrl key was being holded.</returns>
+        bool HasCtrl() const;
+        /// <summary>
+        /// Checks if the Alt key was being holded.
+        /// </summary>
+        /// <returns>A boolean that states the Alt key was being holded.</returns>
+        bool HasAlt() const;
+        /// <summary>
+        /// Checks if the Shift key was being holded.
+        /// </summary>
+        /// <returns>A boolean that states the Shift key was being holded.</returns>
+        bool HasShift() const;
 
     private:
-        /**
-         * @brief The mouse coordinate.
-         */
+        /// <summary>
+        /// The mouse coordinate.
+        /// </summary>
         Coordinate m_coordinate;
-        /**
-         * @brief The mouse button pressed.
-         */
+        /// <summary>
+        /// The mouse buttton pressed.
+        /// </summary>
         MouseButton m_button;
-        /**
-         * @brief A boolean that states the mouse was being dragged.
-         */
+        /// <summary>
+        /// A boolean that states the mouse was being dragged.
+        /// </summary>
         bool m_isDragging;
-        /**
-         * @brief A boolean that states the Ctrl key was being holded.
-         */
+        /// <summary>
+        /// A boolean that states the Ctrl key was being holded.
+        /// </summary>
         bool m_hasCtrl;
-        /**
-         * @brief A boolean that states the Alt key was being holded.
-         */
+        /// <summary>
+        /// A boolean that states the Alt key was being holded.
+        /// </summary>
         bool m_hasAlt;
-        /**
-         * @brief A boolean that states the Shift key was being holded.
-         */
+        /// <summary>
+        /// A boolean that states the Shift key was being holded.
+        /// </summary>
         bool m_hasShift;
     };
 
-    /**
-     * @brief Represents a terminal key event.
-     */
+    /// <summary>
+    /// Represents a terminal key event.
+    /// </summary>
     class KeyEvent final
     {
     public:
-        /**
-         * @brief Creates an instance of the KeyEvent class.
-         * @param key The key pressed. It may be an UTF-8 grapheme or an enumerator from the KeyboardKey enum class.
-         * @param hasCtrl A boolean that states the Ctrl key was being holded.
-         * @param hasAlt A boolean that states the Alt key was being holded.
-         * @param hasShift A boolean that states the Shift key was being holded.
-         * @returns An instance of the KeyEvent class.
-         */
+        /// <summary>
+        /// Creates an instance of the KeyEvent class.
+        /// </summary>
+        /// <param name="key">The key pressed. It may be an UTF-8 grapheme or an enumerator from the KeyboardKey enum class.</param>
+        /// <param name="hasCtrl">A boolean that states the Ctrl key was being holded.</param>
+        /// <param name="hasAlt">A boolean that states the Alt key was being holded.</param>
+        /// <param name="hasShift">A boolean that states the Shift key was being holded.</param>
         KeyEvent(int key, bool hasCtrl, bool hasAlt, bool hasShift);
-        /**
-         * @brief Gets the key pressed.
-         * @returns The key pressed. It may be an UTF-8 grapheme or an enumerator from the KeyboardKey enum class.
-         */
-        int getKey() const;
-        /**
-         * @brief Checks if the Ctrl key was being holded.
-         * @returns A boolean that states the Ctrl key was being holded.
-         */
-        bool hasCtrl() const;
-        /**
-         * @brief Checks if the Alt was being holded.
-         * @returns A boolean that states the Alt key was being holded.
-         */
-        bool hasAlt() const;
-        /**
-         * @brief Checks if the Shift was being holded.
-         * @returns A boolean that states the Shift key was being holded.
-         */
-        bool hasShift() const;
+        /// <summary>
+        /// Gets the key pressed.
+        /// </summary>
+        /// <returns>The key pressed. It may be an UTF-8 grapheme or an enumerator from the KeyboardKey enum class.</returns>
+        int GetKey() const;
+        /// <summary>
+        /// Checks if the Ctrl key was being holded.
+        /// </summary>
+        /// <returns>A boolean that states the Ctrl key was being holded.</returns>
+        bool HasCtrl() const;
+        /// <summary>
+        /// Checks if the Alt key was being holded.
+        /// </summary>
+        /// <returns>A boolean that states the Alt key was being holded.</returns>
+        bool HasAlt() const;
+        /// <summary>
+        /// Checks if the Shift key was being holded.
+        /// </summary>
+        /// <returns>A boolean that states the Shift key was being holded.</returns>
+        bool HasShift() const;
 
     private:
-        /**
-         * @brief The key pressed. It may be an UTF-8 grapheme or an enumerator from the KeyboardKey enum class.
-         */
+        /// <summary>
+        /// The key pressed. It may be an UTF-8 grapheme or an enumerator from the KeyboardKey enum class.
+        /// </summary>
         int m_key;
-        /**
-         * @brief A boolean that states the Ctrl key was being holded.
-         */
+        /// <summary>
+        /// A boolean that states the Ctrl key was being holded.
+        /// </summary>
         bool m_hasCtrl;
-        /**
-         * @brief A boolean that states the Alt key was being holded.
-         */
+        /// <summary>
+        /// A boolean that states the Alt key was being holded.
+        /// </summary>
         bool m_hasAlt;
-        /**
-         * @brief A boolean that states the Shift key was being holded.
-         */
+        /// <summary>
+        /// A boolean that states the Shift key was being holded.
+        /// </summary>
         bool m_hasShift;
     };
 
-    /**
-     * @brief Represents the information of a terminal event.
-     */
+    /// <summary>
+    /// Represents the information of a terminal event.
+    /// </summary>
     class EventInfo final
     {
     public:
-        /**
-         * @brief Creates an instance of the EventInfo class.
-         * @param type The event type.
-         * @returns An instance of the EventInfo class.
-         */
+        /// <summary>
+        /// Creates an instance of the EventInfo class.
+        /// </summary>
+        /// <param name="type">The event type.</param>
         EventInfo(EventType type);
-        /**
-         * @brief Creates an instance of the EventInfo class.
-         * @param focusEvent A focus event to be converted.
-         * @returns An instance of the EventInfo class.
-         */
+        /// <summary>
+        /// Creates an instance of the EventInfo class.
+        /// </summary>
+        /// <param name="focusEvent">A focus event to be converted.</param>
         EventInfo(FocusEvent focusEvent);
-        /**
-         * @brief Creates an instance of the EventInfo class.
-         * @param resizeEvent A resize event to be converted.
-         * @returns An instance of the EventInfo class.
-         */
+        /// <summary>
+        /// Creates an instance of the EventInfo class.
+        /// </summary>
+        /// <param name="resizeEvent">A resize event to be converted.</param>
         EventInfo(ResizeEvent resizeEvent);
-        /**
-         * @brief Creates an instance of the EventInfo class.
-         * @param mouseEvent A mouse event to be converted.
-         * @returns An instance of the EventInfo class.
-         */
+        /// <summary>
+        /// Creates an instance of the EventInfo class.
+        /// </summary>
+        /// <param name="mouseEvent">A mouse event to be converted.</param>
         EventInfo(MouseEvent mouseEvent);
-        /**
-         * @brief Creates an instance of the EventInfo class.
-         * @param keyEvent A key event to be converted.
-         * @returns An instance of the EventInfo class.
-         */
+        /// <summary>
+        /// Creates an instance of the EventInfo class.
+        /// </summary>
+        /// <param name="keyEvent">A key event to be converted.</param>
         EventInfo(KeyEvent keyEvent);
-        /**
-         * @brief Gets the event type.
-         * @returns The event type.
-         */
-        EventType getType() const;
-        /**
-         * @brief Gets the focus event read.
-         * @returns The focus event read.
-         * @throws InvalidEventTypeException Thrown whenever the event type is not a focus event.
-         */
-        FocusEvent getFocusEvent() const;
-        /**
-         * @brief Gets the resize event read.
-         * @returns The resize event read.
-         * @throws InvalidEventTypeException Thrown whenever the event type is not a resize event.
-         */
-        ResizeEvent getResizeEvent() const;
-        /**
-         * @brief Gets the mouse event read.
-         * @returns The mouse event read.
-         * @throws InvalidEventTypeException Thrown whenever the event type is not a mouse event.
-         */
-        MouseEvent getMouseEvent() const;
-        /**
-         * @brief Gets the key event read.
-         * @returns The key event read.
-         * @throws InvalidEventTypeException Thrown whenever the event type is not a key event.
-         */
-        KeyEvent getKeyEvent() const;
+        /// <summary>
+        /// Gets the event type.
+        /// </summary>
+        /// <returns>The event type.</returns>
+        EventType GetType() const;
+        /// <summary>
+        /// Gets the focus event read.
+        /// </summary>
+        /// <returns>The focus event read.</returns>
+        /// <exception cref="InvalidEventTypeException">Thrown whenever the event type is not a focus event.</exception>
+        FocusEvent GetFocusEvent() const;
+        /// <summary>
+        /// Gets the resize event read.
+        /// </summary>
+        /// <returns>The resize event read.</returns>
+        /// <exception cref="InvalidEventTypeException">Thrown whenever the event type is not a resize event.</exception>
+        ResizeEvent GetResizeEvent() const;
+        /// <summary>
+        /// Gets the mouse event read.
+        /// </summary>
+        /// <returns>The mouse event read.</returns>
+        /// <exception cref="InvalidEventTypeException">Thrown whenever the event type is not a mouse event.</exception>
+        MouseEvent GetMouseEvent() const;
+        /// <summary>
+        /// Gets the key event read.
+        /// </summary>
+        /// <returns>The key event read.</returns>
+        /// <exception cref="InvalidEventTypeException">Thrown whenever the event type is not a key event.</exception>
+        KeyEvent GetKeyEvent() const;
 
     private:
-        /**
-         * @brief The event type.
-         */
+        /// <summary>
+        /// The event type.
+        /// </summary>
         EventType m_type;
         union {
-            /**
-             * @brief The focus event read.
-             */
+            /// <summary>
+            /// The focus event read.
+            /// </summary>
             FocusEvent m_focusEvent;
-            /**
-             * @brief The resize event read.
-             */
+            /// <summary>
+            /// The resize event read.
+            /// </summary>
             ResizeEvent m_resizeEvent;
-            /**
-             * @brief The mouse event read.
-             */
+            /// <summary>
+            /// The mouse event read.
+            /// </summary>
             MouseEvent m_mouseEvent;
-            /**
-             * @brief The key event read.
-             */
+            /// <summary>
+            /// The key event read.
+            /// </summary>
             KeyEvent m_keyEvent;
         };
     };
 
-    /**
-     * @brief Represents the terminal.
-     */
+    /// <summary>
+    /// Represents the terminal.
+    /// </summary>
     class Terminal final
     {
     public:
 #ifdef _WIN32
-        /**
-         * @brief Represents the terminal encoding.
-         */
+        /// <summary>
+        /// Represents the terminal encoding.
+        /// </summary>
         class Encoding final
         {
         public:
@@ -1813,7 +1801,7 @@ namespace TMK
              * @brief Gets the terminal window geometry.
              * @returns The terminal window geometry.
              */
-            static Region getRegion();
+            static Region GetRegion();
             /**
              * @brief Opens the alternate window.
              */
@@ -1944,7 +1932,7 @@ namespace TMK
              * standard output and error streams are not TTY.
              * @throws WideCharacterOrientationException Thrown, on Linux, whenever the standard input stream is wide character oriented.
              */
-            static Coordinate getCoordinate();
+            static Coordinate GetCoordinate();
             /**
              * @brief Sets the terminal cursor coordinate.
              * @param column The column component of the coordinate.

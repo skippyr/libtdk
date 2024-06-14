@@ -3,9 +3,9 @@
 #include <io.h>
 #else
 #include <fcntl.h>
+#include <sys/ioctl.h>
 #include <termios.h>
 #include <unistd.h>
-#include <sys/ioctl.h>
 #endif
 
 #include "tmk.hpp"
@@ -417,19 +417,19 @@ namespace TMK
 
     HexColor::HexColor(unsigned int code)
     {
-        setCode(code);
+        SetCode(code);
     }
 
-    HexColor::HexColor(RGBColor color) : m_code(color.getRed() << 16 | color.getGreen() << 8 | color.getBlue())
+    HexColor::HexColor(RGBColor color) : m_code(color.GetRed() << 16 | color.GetGreen() << 8 | color.GetBlue())
     {
     }
 
-    unsigned int HexColor::getCode() const
+    unsigned int HexColor::GetCode() const
     {
         return m_code;
     }
 
-    void HexColor::setCode(unsigned int code)
+    void HexColor::SetCode(unsigned int code)
     {
         if (code > 0xffffff)
         {
@@ -453,36 +453,36 @@ namespace TMK
     {
     }
 
-    RGBColor::RGBColor(HexColor color) : m_red(color.getCode() >> 16 & 0xff), m_green(color.getCode() >> 8 & 0xff), m_blue(color.getCode() & 0xff)
+    RGBColor::RGBColor(HexColor color) : m_red(color.GetCode() >> 16 & 0xff), m_green(color.GetCode() >> 8 & 0xff), m_blue(color.GetCode() & 0xff)
     {
     }
 
-    unsigned char RGBColor::getRed() const
+    unsigned char RGBColor::GetRed() const
     {
         return m_red;
     }
 
-    unsigned char RGBColor::getGreen() const
+    unsigned char RGBColor::GetGreen() const
     {
         return m_green;
     }
 
-    unsigned char RGBColor::getBlue() const
+    unsigned char RGBColor::GetBlue() const
     {
         return m_blue;
     }
 
-    void RGBColor::setRed(unsigned char red)
+    void RGBColor::SetRed(unsigned char red)
     {
         m_red = red;
     }
 
-    void RGBColor::setGreen(unsigned char green)
+    void RGBColor::SetGreen(unsigned char green)
     {
         m_green = green;
     }
 
-    void RGBColor::setBlue(unsigned char blue)
+    void RGBColor::SetBlue(unsigned char blue)
     {
         m_blue = blue;
     }
@@ -496,51 +496,51 @@ namespace TMK
     {
     }
 
-    bool FocusEvent::hasFocus() const
+    bool FocusEvent::HasFocus() const
     {
         return m_hasFocus;
     }
 
-    ResizeEvent::ResizeEvent() : m_region(Terminal::Window::getRegion())
+    ResizeEvent::ResizeEvent() : m_region(Terminal::Window::GetRegion())
     {
     }
 
-    Region ResizeEvent::getRegion() const
+    Region ResizeEvent::GetRegion() const
     {
         return m_region;
     }
 
-    MouseEvent::MouseEvent(Coordinate coordinate, MouseButton button, bool isDragging, bool hasCtrl, bool hasAlt, bool hasShift)
-        : m_coordinate(coordinate), m_button(button), m_isDragging(isDragging), m_hasCtrl(hasCtrl), m_hasAlt(hasAlt), m_hasShift(hasShift)
+    MouseEvent::MouseEvent(Coordinate coordinate, MouseButton button, bool isDragging, bool hasCtrl, bool hasAlt, bool HasShift)
+        : m_coordinate(coordinate), m_button(button), m_isDragging(isDragging), m_hasCtrl(hasCtrl), m_hasAlt(hasAlt), m_hasShift(HasShift)
     {
     }
 
-    Coordinate MouseEvent::getCoordinate() const
+    Coordinate MouseEvent::GetCoordinate() const
     {
         return m_coordinate;
     }
 
-    MouseButton MouseEvent::getButton() const
+    MouseButton MouseEvent::GetButton() const
     {
         return m_button;
     }
 
-    bool MouseEvent::isDragging() const
+    bool MouseEvent::IsDragging() const
     {
         return m_isDragging;
     }
 
-    bool MouseEvent::hasCtrl() const
+    bool MouseEvent::HasCtrl() const
     {
         return m_hasCtrl;
     }
 
-    bool MouseEvent::hasAlt() const
+    bool MouseEvent::HasAlt() const
     {
         return m_hasAlt;
     }
 
-    bool MouseEvent::hasShift() const
+    bool MouseEvent::HasShift() const
     {
         return m_hasShift;
     }
@@ -554,17 +554,17 @@ namespace TMK
         return m_key;
     }
 
-    bool KeyEvent::hasCtrl() const
+    bool KeyEvent::HasCtrl() const
     {
         return m_hasCtrl;
     }
 
-    bool KeyEvent::hasAlt() const
+    bool KeyEvent::HasAlt() const
     {
         return m_hasAlt;
     }
 
-    bool KeyEvent::hasShift() const
+    bool KeyEvent::HasShift() const
     {
         return m_hasShift;
     }
@@ -802,7 +802,7 @@ namespace TMK
         exit(static_cast<int>(exitCode));
     }
 
-    Region Terminal::Window::getRegion()
+    Region Terminal::Window::GetRegion()
     {
 #ifdef _WIN32
         CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
@@ -921,7 +921,7 @@ namespace TMK
 
     void Terminal::Font::setRGBColor(RGBColor color, FontLayer layer)
     {
-        setRGBColor(color.getRed(), color.getGreen(), color.getBlue(), layer);
+        setRGBColor(color.GetRed(), color.GetGreen(), color.GetBlue(), layer);
     }
 
     void Terminal::Font::setHexColor(unsigned int hex, FontLayer layer)
@@ -1006,7 +1006,7 @@ namespace TMK
         }
     }
 
-    Coordinate Terminal::Cursor::getCoordinate()
+    Coordinate Terminal::Cursor::GetCoordinate()
     {
 #ifdef _WIN32
         CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
@@ -1039,7 +1039,7 @@ namespace TMK
     {
         try
         {
-            if (!Window::getRegion().Contains(column, row))
+            if (!Window::GetRegion().Contains(column, row))
             {
                 throw OutOfRangeException();
             }
@@ -1125,22 +1125,22 @@ namespace TMK
 
     bool operator==(HexColor colorI, HexColor colorII)
     {
-        return colorI.getCode() == colorII.getCode();
+        return colorI.GetCode() == colorII.GetCode();
     }
 
     bool operator!=(HexColor colorI, HexColor colorII)
     {
-        return colorI.getCode() != colorII.getCode();
+        return colorI.GetCode() != colorII.GetCode();
     }
 
     bool operator==(RGBColor colorI, RGBColor colorII)
     {
-        return colorI.getRed() == colorII.getRed() && colorI.getGreen() == colorII.getGreen() && colorI.getBlue() == colorII.getBlue();
+        return colorI.GetRed() == colorII.GetRed() && colorI.GetGreen() == colorII.GetGreen() && colorI.GetBlue() == colorII.GetBlue();
     }
 
     bool operator!=(RGBColor colorI, RGBColor colorII)
     {
-        return colorI.getRed() != colorII.getRed() && colorI.getGreen() != colorII.getGreen() && colorI.getBlue() != colorII.getBlue();
+        return colorI.GetRed() != colorII.GetRed() && colorI.GetGreen() != colorII.GetGreen() && colorI.GetBlue() != colorII.GetBlue();
     }
 
     bool operator==(HexColor hexColor, RGBColor rgbColor)
