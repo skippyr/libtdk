@@ -3,15 +3,6 @@
 #include <chrono>
 #include <cstdarg>
 #include <functional>
-#include <iostream>
-
-#ifdef _WIN32
-#include <Windows.h>
-#else
-#include <fcntl.h>
-#include <termios.h>
-#include <unistd.h>
-#endif
 
 using namespace std::literals::chrono_literals;
 
@@ -1996,14 +1987,6 @@ namespace tmk
 
     private:
         Terminal() = delete;
-        /**
-         * @brief Reads a terminal event.
-         * @param allowMouseCapture A boolean that states mouse events should be captured. If enabled, mouse selection will be disabled until it returns.
-         * @param wait The time to wait for an event. If zero, it returns immediately. If negative, it waits until an event become available.
-         * @param filter A function to be used to filter events while the timer is running.
-         * @returns The information about the event read.
-         */
-        static EventInfo readEvent(bool allowMouseCapture, std::chrono::milliseconds wait, std::function<bool(EventInfo&)> filter);
     };
 
     /**
