@@ -18,7 +18,7 @@ namespace TMK
     typedef char byte;
 
     /// <summary>
-    /// Contains the POSIX exit codes.
+    /// Contains the Linux exit codes.
     /// </summary>
     enum class ExitCode
     {
@@ -203,23 +203,23 @@ namespace TMK
         /// </summary>
         NoMessageOfDesiredTypeENOMSG = 42,
         /// <summary>
-        /// Identifier removed (EIDRM).
+        /// Identifier removed (EIDRM): thrown when an inter-process communication resource is removed during operations.
         /// </summary>
         IdentifierRemovedEIDRM,
         /// <summary>
-        /// Channel number out of range (ECHRNG).
+        /// Channel number out of range (ECHRNG): thrown an invalid device channel number is referenced.
         /// </summary>
         ChannelNumberOutOfRangeECHRNG,
         /// <summary>
-        /// Level 2 not synchronized (EL2NSYNC).
+        /// Level 2 not synchronized (EL2NSYNC): thrown when a netlink operation fails due to a synchronization issue.
         /// </summary>
         Level2NotSynchronizedEL2NSYNC,
         /// <summary>
-        /// Level 3 halted (EL3HLT).
+        /// Level 3 halted (EL3HLT): thrown when a required hardware state is not available.
         /// </summary>
         Level3HaltedEL3HLT,
         /// <summary>
-        /// Level 3 reset (EL3RST).
+        /// Level 3 reset (EL3RST): thrown when a device or subsystem reset fails.
         /// </summary>
         Level3ResetEL3RST,
         /// <summary>
