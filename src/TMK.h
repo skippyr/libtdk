@@ -35,11 +35,11 @@ namespace TMK
         /// </summary>
         OperationNotPermittedEPERM = 1,
         /// <summary>
-        /// No such file or directory (ENOENT): thrown when an entry does not exists in the file system.
+        /// No such file or directory (ENOENT): thrown when a non-existent file system entry is referenced.
         /// </summary>
         NoSuchFileOrDirectoryENOENT,
         /// <summary>
-        /// No such process (ESRCH): thrown when a process does not exists in the kernel process table.
+        /// No such process (ESRCH): thrown when a non-existent process is referenced.
         /// </summary>
         NoSuchProcessESRCH,
         /// <summary>
@@ -47,27 +47,27 @@ namespace TMK
         /// </summary>
         InterruptedSystemCallEINTR,
         /// <summary>
-        /// Input/output error (EIO).
+        /// Input or output error (EIO): thrown when an input or output operation fails without further description.
         /// </summary>
         InputOutputErrorEIO,
         /// <summary>
-        /// No such device or address (ENXIO).
+        /// No such device or address (ENXIO): thrown when a non-existent device is referenced.
         /// </summary>
         NoSuchDeviceOrAddressENXIO,
         /// <summary>
-        /// Argument list too long (E2BIG).
+        /// Argument list too long (E2BIG): thrown when a process is executed with more command line arguments than the system allows.
         /// </summary>
         ArgumentListTooLongE2BIG,
         /// <summary>
-        /// Exec format error (ENOEXEC).
+        /// Exec format error (ENOEXEC): thrown when a binary can not be executed without futher description.
         /// </summary>
         ExecFormatErrorENOEXEC,
         /// <summary>
-        /// Bad file descriptor (EBADF).
+        /// Bad file descriptor (EBADF): thrown when an invalid file descriptor is referenced.
         /// </summary>
         BadFileDescriptorEBADF,
         /// <summary>
-        /// No child processes (ECHILD).
+        /// No child processes (ECHILD): thrown when a group of processes referenced in a wait call does not exist or is not owned by the calling process.
         /// </summary>
         NoChildProcessesECHILD,
         /// <summary>
