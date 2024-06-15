@@ -179,27 +179,27 @@ namespace TMK
         /// </summary>
         ResourceDeadlockAvoidedEDEADLOCK = 35,
         /// <summary>
-        /// File name too long (ENAMETOOLONG).
+        /// File name too long (ENAMETOOLONG): thrown when a file system entry has a name that reaches the system limit.
         /// </summary>
         FileNameTooLongENAMETOOLONG,
         /// <summary>
-        /// No locks available (ENOLCK).
+        /// No locks available (ENOLCK): thrown when there are no network file system (NFS) locks available.
         /// </summary>
         NoLocksAvailableENOLCK,
         /// <summary>
-        /// Function not implemented (ENOSYS).
+        /// Function not implemented (ENOSYS): thrown when a non-existent system call or function is referenced.
         /// </summary>
         FunctionNotImplementedENOSYS,
         /// <summary>
-        /// Directory not empty (ENOTEMPTY).
+        /// Directory not empty (ENOTEMPTY): thrown an operation can not be performed on a non-empty directory.
         /// </summary>
         DirectoryNotEmptyENOTEMPTY,
         /// <summary>
-        /// Too many levels of symbolic links (ELOOP).
+        /// Too many levels of symbolic links (ELOOP): thrown an operation can not be performed due to recursive calls on symbolic links.
         /// </summary>
         TooManyLevelsOfSymbolicLinksELOOP,
         /// <summary>
-        /// No message of desired type (ENOMSG): thrown when a message queue type does match a desired type.
+        /// No message of desired type (ENOMSG): thrown when a message queue does match a desired type.
         /// </summary>
         NoMessageOfDesiredTypeENOMSG = 42,
         /// <summary>
