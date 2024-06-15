@@ -526,39 +526,39 @@ namespace TMK
         /// </summary>
         WrongMediumTypeEMEDIUMTYPE,
         /// <summary>
-        /// Operation canceled (ECANCELED).
+        /// Operation canceled (ECANCELED): thrown when an asynchronous operation is canceled before it has been completed.
         /// </summary>
         OperationCanceledECANCELED,
         /// <summary>
-        /// Required key not available (ENOKEY).
+        /// Required key not available (ENOKEY): thrown when a required cryptographic key is not available.
         /// </summary>
         RequiredKeyNotAvailableENOKEY,
         /// <summary>
-        /// Key has expired (EKEYEXPIRED).
+        /// Key has expired (EKEYEXPIRED): thrown when a cryptographic key has expired thus became invalid.
         /// </summary>
         KeyHasExpiredEKEYEXPIRED,
         /// <summary>
-        /// Key has been revoked (EKEYREVOKED).
+        /// Key has been revoked (EKEYREVOKED): thrown when a cryptographic key has been revoked thus became invalid.
         /// </summary>
         KeyHasBeenRevokedEKEYREVOKED,
         /// <summary>
-        /// Key was rejected by service (EKEYREJECTED).
+        /// Key was rejected by service (EKEYREJECTED): thrown when a cryptographic key is rejected by a service due to not match its criteria.
         /// </summary>
         KeyWasRejectedByServiceEKEYREJECTED,
         /// <summary>
-        /// Owner died (EOWNERDEAD).
+        /// Owner died (EOWNERDEAD): thrown when the process owner of a mutex dies without releasing it.
         /// </summary>
         OwnerDiedEOWNERDEAD,
         /// <summary>
-        /// State not recoverable (ENOTRECOVERABLE).
+        /// State not recoverable (ENOTRECOVERABLE): thrown when the previous state of a mutex can not be restored after it has been unlocked.
         /// </summary>
         StateNotRecoverableENOTRECOVERABLE,
         /// <summary>
-        /// Operation not possible due to RF-kill (ERFKILL).
+        /// Operation not possible due to RF-kill (ERFKILL): thrown when an operation is canceled by the RF-kill feature.
         /// </summary>
         OperationNotPossibleDueToRFKillERFKILL,
         /// <summary>
-        /// Memory page has hardware error (EHWPOISON).
+        /// Memory page has hardware error (EHWPOISON): thrown when a memory page becomes corrupted.
         /// </summary>
         MemoryPageHasHardwareErrorEHWPOISON
     };
