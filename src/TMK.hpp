@@ -1620,19 +1620,19 @@ namespace TMK
 #endif
 
         /// <summary>
-        /// Represents the standard input stream.
+        /// Represents the terminal input stream.
         /// </summary>
         class Input final
         {
         public:
             /// <summary>
-            /// Clears the standard input buffer.
+            /// Clears the terminal input buffer.
             /// </summary>
             static void Clear();
             /// <summary>
-            /// Checks if the standard input stream is connected to an interactive terminal (TTY).
+            /// Checks if the terminal input stream is connected to an interactive terminal (TTY).
             /// </summary>
-            /// <returns>A boolean that states the standard input stream is a TTY.</returns>
+            /// <returns>A boolean that states the terminal input stream is a TTY.</returns>
             static bool IsTTY();
             /// <summary>
             /// Reads a terminal event.
@@ -1661,51 +1661,52 @@ namespace TMK
         };
 
         /// <summary>
-        /// Represents the standard output stream.
+        /// Represents the terminal output stream.
         /// </summary>
         class Output final
         {
         public:
             /// <summary>
-            /// Flushes the standard output stream buffer.
+            /// Flushes the terminal output stream buffer.
             /// </summary>
             static void Flush();
             /// <summary>
-            /// Formats and writes a string to the standard output stream with a newline character appended at its end.
+            /// Formats and writes a string to the terminal output stream with a newline character appended at its end.
             /// </summary>
             /// <param name="format">The format to be used. It accepts the same specifiers as the printf function family.</param>
             /// <param name="arguments">The arguments to be formatted.</param>
-            /// <exception cref="WideCharacterOrientationException">Thrown whenever the standard output stream is wide character oriented.</exception>
+            /// <exception cref="WideCharacterOrientationException">Thrown whenever the terminal output stream is wide character oriented.</exception>
             static void WriteLine(std::string format, std::va_list arguments);
             /// <summary>
-            /// Formats and writes a string to the standard output stream with a newline character appended at its end.
+            /// Formats and writes a string to the terminal output stream with a newline character appended at its end.
             /// </summary>
             /// <param name="format">The format to be used. It accepts the same specifiers as the printf function family.</param>
             /// <param name="">The arguments to be formatted.</param>
             static void WriteLine(std::string format, ...);
             /// <summary>
-            /// Writes a newline character to the standard output stream.
+            /// Writes a newline character to the terminal output stream.
             /// </summary>
-            /// <exception cref="WideCharacterOrientationException">WideCharacterOrientationException Thrown whenever the standard output stream is wide character oriented.</exception>
+            /// <exception cref="WideCharacterOrientationException">WideCharacterOrientationException Thrown whenever the terminal output stream is wide character
+            /// oriented.</exception>
             static void WriteLine();
             /// <summary>
-            /// Formats and writes a string to the standard output stream.
+            /// Formats and writes a string to the terminal output stream.
             /// </summary>
             /// <param name="format">The format to be used. It accepts the same specifiers as the printf function family.</param>
             /// <param name="arguments">The arguments to be formatted.</param>
-            /// <exception cref="WideCharacterOrientationException">Thrown whenever the standard output stream is wide character oriented.</exception>
+            /// <exception cref="WideCharacterOrientationException">Thrown whenever the terminal output stream is wide character oriented.</exception>
             static void Write(std::string format, std::va_list arguments);
             /// <summary>
-            /// Formats and writes a string to the standard output stream.
+            /// Formats and writes a string to the terminal output stream.
             /// </summary>
             /// <param name="format">The format to be used. It accepts the same specifiers as the printf function family.</param>
             /// <param name="">The arguments to be formatted.</param>
-            /// <exception cref="WideCharacterOrientationException">Thrown whenever the standard output stream is wide character oriented.</exception>
+            /// <exception cref="WideCharacterOrientationException">Thrown whenever the terminal output stream is wide character oriented.</exception>
             static void Write(std::string format, ...);
             /// <summary>
-            /// Checks if the standard output stream is connected to an interactive terminal (TTY).
+            /// Checks if the terminal output stream is connected to an interactive terminal (TTY).
             /// </summary>
-            /// <returns>A boolean that states the standard output stream is a TTY.</returns>
+            /// <returns>A boolean that states the terminal output stream is a TTY.</returns>
             static bool IsTTY();
 
         private:
@@ -1713,48 +1714,48 @@ namespace TMK
         };
 
         /// <summary>
-        /// Represents the standard error stream.
+        /// Represents the terminal error stream.
         /// </summary>
         class Error final
         {
         public:
             /// <summary>
-            /// Formats and writes a string to the standard error stream with a newline character appended at its end.
+            /// Formats and writes a string to the terminal error stream with a newline character appended at its end.
             /// </summary>
             /// <param name="format">The format to be used. It accepts the same specifiers as the printf function family.</param>
             /// <param name="arguments">The arguments to be formatted.</param>
-            /// <exception cref="WideCharacterOrientationException">Thrown whenever the standard error stream is wide character oriented.</exception>
+            /// <exception cref="WideCharacterOrientationException">Thrown whenever the terminal error stream is wide character oriented.</exception>
             static void WriteLine(std::string format, std::va_list arguments);
             /// <summary>
-            /// Formats and writes a string to the standard error stream with a newline character appended at its end.
+            /// Formats and writes a string to the terminal error stream with a newline character appended at its end.
             /// </summary>
             /// <param name="format">The format to be used. It accepts the same specifiers as the printf function family.</param>
             /// <param name="">The arguments to be formatted.</param>
-            /// <exception cref="WideCharacterOrientationException">Thrown whenever the standard error stream is wide character oriented.</exception>
+            /// <exception cref="WideCharacterOrientationException">Thrown whenever the terminal error stream is wide character oriented.</exception>
             static void WriteLine(std::string format, ...);
             /// <summary>
-            /// Writes a newline character to the standard error stream.
+            /// Writes a newline character to the terminal error stream.
             /// </summary>
-            /// <exception cref="WideCharacterOrientationException">Thrown whenever the standard error stream is wide character oriented.</exception>
+            /// <exception cref="WideCharacterOrientationException">Thrown whenever the terminal error stream is wide character oriented.</exception>
             static void WriteLine();
             /// <summary>
-            /// Formats and writes a string to the standard error stream. 
+            /// Formats and writes a string to the terminal error stream.
             /// </summary>
             /// <param name="format">The format to be used. It accepts the same specifiers as the printf function family.</param>
             /// <param name="arguments">The arguments to be formatted.</param>
-            /// <exception cref="WideCharacterOrientationException">Thrown whenever the standard error stream is wide character oriented.</exception>
+            /// <exception cref="WideCharacterOrientationException">Thrown whenever the terminal error stream is wide character oriented.</exception>
             static void Write(std::string format, std::va_list arguments);
             /// <summary>
-            /// Formats and writes a string to the standard error stream.
+            /// Formats and writes a string to the terminal error stream.
             /// </summary>
             /// <param name="format">The format to be used. It accepts the same specifiers as the printf function family.</param>
             /// <param name="">The arguments to be formatted.</param>
-            /// <exception cref="WideCharacterOrientationException">Thrown whenever the standard error stream is wide character oriented.</exception>
+            /// <exception cref="WideCharacterOrientationException">Thrown whenever the terminal error stream is wide character oriented.</exception>
             static void Write(std::string format, ...);
             /// <summary>
-            /// Checks if the standard error stream is connected to an interactive terminal (TTY).
+            /// Checks if the terminal error stream is connected to an interactive terminal (TTY).
             /// </summary>
-            /// <returns>A boolean that states the standard error stream is a TTY.</returns>
+            /// <returns>A boolean that states the terminal error stream is a TTY.</returns>
             static bool IsTTY();
 
         private:
@@ -1790,60 +1791,60 @@ namespace TMK
             Process() = delete;
         };
 
-        /**
-         * @brief Represents the terminal window.
-         */
+        /// <summary>
+        /// Represents the terminal window.
+        /// </summary>
         class Window final
         {
         public:
-            /**
-             * @brief Gets the terminal window geometry.
-             * @returns The terminal window geometry.
-             */
+            /// <summary>
+            /// Gets the terminal window region.
+            /// </summary>
+            /// <returns>The terminal window region.</returns>
             static Region GetRegion();
-            /**
-             * @brief Opens the alternate window.
-             */
+            /// <summary>
+            /// Opens the alternate window.
+            /// </summary>
             static void OpenAlternateWindow();
-            /**
-             * @brief Closes the alternate window.
-             */
+            /// <summary>
+            /// Closes the alternate window.
+            /// </summary>
             static void CloseAlternateWindow();
-            /**
-             * @brief Sets the terminal window title.
-             * @param format The format to be used. It accepts the same specifiers as the printf function family.
-             * @param arguments The arguments to be formatted.
-             */
+            /// <summary>
+            /// Formats and sets the terminal window title.
+            /// </summary>
+            /// <param name="format">The format to be used. It accepts the same specifiers as the printf function family.</param>
+            /// <param name="arguments">The arguments to be formatted.</param>
             static void SetTitle(std::string format, std::va_list arguments);
-            /**
-             * @brief Sets the terminal window title.
-             * @param format The format to be used. It accepts the same specifiers as the printf function family.
-             * @param ... The arguments to be formatted.
-             */
+            /// <summary>
+            /// Formats and sets the terminal window title.
+            /// </summary>
+            /// <param name="format">The format to be used. It accepts the same specifiers as the printf function family.</param>
+            /// <param name="">The arguments to be formatted.</param>
             static void SetTitle(std::string format, ...);
 
         private:
             Window() = delete;
         };
 
-        /**
-         * @brief Represents the terminal bell.
-         */
+        /// <summary>
+        /// Represents the terminal bell.
+        /// </summary>
         class Bell final
         {
         public:
-            /**
-             * @brief Rings the terminal bell.
-             */
+            /// <summary>
+            /// Rings the terminal bell.
+            /// </summary>
             static void Ring();
 
         private:
             Bell() = delete;
         };
 
-        /**
-         * @brief Represents the terminal font.
-         */
+        /// <summary>
+        /// Represents the terminal font.
+        /// </summary>
         class Font final
         {
         public:
@@ -1918,51 +1919,51 @@ namespace TMK
             Font() = delete;
         };
 
-        /**
-         * @brief Represents the terminal cursor.
-         */
+        /// <summary>
+        /// Represents the terminal cursor.
+        /// </summary>
         class Cursor final
         {
         public:
-            /**
-             * @brief Gets the terminal cursor coordinate. On Linux, as it parses a terminal answer given through the standard input stream, its buffer will always be cleared.
-             * @returns The terminal cursor coordinate.
-             * @throws NoValidTTYException Thrown, on Windows, whenever the standard output and error streams are not TTY; and, on Linux, whenever the standard input or the
-             * standard output and error streams are not TTY.
-             * @throws WideCharacterOrientationException Thrown, on Linux, whenever the standard input stream is wide character oriented.
-             */
+            /// <summary>
+            /// Gets the terminal cursor coordinate. On Linux, as it parses a terminal answer given through the terminal input stream, its buffer will always be cleared.
+            /// </summary>
+            /// <returns>The terminal cursor coordinate.</returns>
+            /// <exception cref="NoValidTTYException">Thrown, on Windows, when the terminal output and error streams are not TTY; and, on Linux, when the terminal input or the
+            /// terminal output and error streams are not TTY.</exception>
+            /// <exception cref="WideCharacterOrientationException">Thrown, on Linux, when the terminal input stream is wide character oriented.</exception>
             static Coordinate GetCoordinate();
-            /**
-             * @brief Sets the terminal cursor coordinate.
-             * @param column The column component of the coordinate.
-             * @param row The row component of the coordinate.
-             * @throws OutOfRangeException Thrown whenever the coordinate is outside of the terminal window boundaries.
-             */
-            static void setCoordinate(unsigned short column, unsigned short row);
-            /**
-             * @brief Sets the terminal cursor coordinate.
-             * @param coordinate The coordinate to be set.
-             * @throws OutOfRangeException Thrown whenever the coordinate is outside of the terminal window boundaries.
-             */
-            static void setCoordinate(Coordinate coordinate);
-            /**
-             * @brief Sets the terminal cursor shape.
-             * @param shape The shape to be set.
-             */
-            static void setShape(CursorShape shape, bool isBlinking);
-            /**
-             * @brief Sets the terminal cursor visibility.
-             * @param isVisible A boolean that states the cursor should be visible.
-             */
-            static void setVisibility(bool isVisible);
-            /**
-             * @brief Resets the terminal cursor shape.
-             */
-            static void resetShape();
-            /**
-             * @brief Clears the terminal cursor line.
-             */
-            static void clearLine();
+            /// <summary>
+            /// Sets the terminal cursor coordinate.
+            /// </summary>
+            /// <param name="column">The column component of the coordinate.</param>
+            /// <param name="row">The row component of the coordinate.</param>
+            static void SetCoordinate(unsigned short column, unsigned short row);
+            /// <summary>
+            /// Sets the terminal cursor coordinate.
+            /// </summary>
+            /// <param name="coordinate">The coordinate to be set.</param>
+            /// <exception cref="OutOfRangeException">Thrown when the coordinate is outside of the terminal window boundaries.</exception>
+            static void SetCoordinate(Coordinate coordinate);
+            /// <summary>
+            /// Sets the terminal cursor shape.
+            /// </summary>
+            /// <param name="shape">The shape to be set</param>
+            /// <param name="isBlinking">A boolean that states the terminal cursor should be blinking.</param>
+            static void SetShape(CursorShape shape, bool isBlinking);
+            /// <summary>
+            /// Sets the terminal cursor visibility.
+            /// </summary>
+            /// <param name="isVisible">A boolean that states the cursor should be visible.</param>
+            static void SetVisibility(bool isVisible);
+            /// <summary>
+            /// Resets the terminal cursor shape.
+            /// </summary>
+            static void ResetShape();
+            /// <summary>
+            /// Clears the terminal cursor line.
+            /// </summary>
+            static void ClearLine();
 
         private:
             Cursor() = delete;
