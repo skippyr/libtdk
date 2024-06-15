@@ -382,23 +382,23 @@ namespace TMK
         /// </summary>
         DestinationAddressRequiredEDESTADDRREQ,
         /// <summary>
-        /// Message too long (EMSGSIZE).
+        /// Message too long (EMSGSIZE): thrown when the message sent through a socket exceeds a pre-defined limit.
         /// </summary>
         MessageTooLongEMSGSIZE,
         /// <summary>
-        /// Protocol wrong type for socket (EPROTOTYPE).
+        /// Protocol wrong type for socket (EPROTOTYPE): thrown when a protocol or socket does not supports a requested operation.
         /// </summary>
         ProtocolWrongTypeForSocketEPROTOTYPE,
         /// <summary>
-        /// Protocol not available (ENOPROTOOPT).
+        /// Protocol not available (ENOPROTOOPT): thrown when the protocol requested is not available in the system.
         /// </summary>
         ProtocolNotAvailableENOPROTOOPT,
         /// <summary>
-        /// Protocol not supported (EPROTONOSUPPORT).
+        /// Protocol not supported (EPROTONOSUPPORT): thrown when the protocol requested is not available in the system.
         /// </summary>
         ProtocolNotSupportedEPROTONOSUPPORT,
         /// <summary>
-        /// Socket type not supported (ESOCKTNOSUPPORT).
+        /// Socket type not supported (ESOCKTNOSUPPORT): thrown when the socket type requested is not available in the system.
         /// </summary>
         SocketTypeNotSupportedESOCKTNOSUPPORT,
         /// <summary>
