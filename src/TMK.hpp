@@ -1973,95 +1973,95 @@ namespace TMK
         Terminal() = delete;
     };
 
-    /**
-     * @brief Concatenates two effects together in order to create a bitmask.
-     * @param effectI The first effect.
-     * @param effectII The second effect.
-     * @returns A bitmask containing both effects.
-     */
+    /// <summary>
+    /// Concatenates two effects together creating a bitmask.
+    /// </summary>
+    /// <param name="effectI">The first effect.</param>
+    /// <param name="effectII">The second effect.</param>
+    /// <returns>A bitmask containing both effects.</returns>
     int operator|(FontEffect effectI, FontEffect effectII);
-    /**
-     * @brief Checks if a code and a keyboard key are equal.
-     * @param code The code to be checked.
-     * @param key The key to be used as reference.
-     * @returns A boolean that states both are equal.
-     */
+    /// <summary>
+    /// Checks if a code and a keyboard key are equal.
+    /// </summary>
+    /// <param name="code">The code.</param>
+    /// <param name="key">The key.</param>
+    /// <returns>A boolean that states both are equal.</returns>
     bool operator==(int code, KeyboardKey key);
-    /**
-     * @brief Checks if a keyboard key and a code are equal.
-     * @param key The key to be checked.
-     * @param code The code to be used as reference.
-     * @returns A boolean that states both are equal.
-     */
+    /// <summary>
+    /// Checks if a keyboard key and a code are equal.
+    /// </summary>
+    /// <param name="key">The key.</param>
+    /// <param name="code">The code.</param>
+    /// <returns>A boolean that states both are equal.</returns>
     bool operator==(KeyboardKey key, int code);
-    /**
-     * @brief Checks if a code and a keyboard key are different.
-     * @param code The code to be checked.
-     * @param key The key to be used as reference.
-     * @returns A boolean that states both are different.
-     */
+    /// <summary>
+    /// Checks if a code and a keyboard key are different.
+    /// </summary>
+    /// <param name="code">The code.</param>
+    /// <param name="key">The key.</param>
+    /// <returns>A boolean that states both are different.</returns>
     bool operator!=(int code, KeyboardKey key);
-    /**
-     * @brief Checks if a keyboard key and a code are different.
-     * @param key The key to be checked.
-     * @param code The code to be used as reference.
-     * @returns A boolean that states both are different.
-     */
+    /// <summary>
+    /// Checks if a keyboard key and a code are different.
+    /// </summary>
+    /// <param name="key">The key.</param>
+    /// <param name="code">The code.</param>
+    /// <returns>A boolean that states both are different.</returns>
     bool operator!=(KeyboardKey key, int code);
-    /**
-     * @brief Checks if two hex colors are equal.
-     * @param colorI The first color.
-     * @param colorII The second color.
-     * @returns A boolean that states both colors are equal.
-     */
+    /// <summary>
+    /// Checks if two hex colors are equal.
+    /// </summary>
+    /// <param name="colorI">The first color.</param>
+    /// <param name="colorII">The second color.</param>
+    /// <returns>A boolean that states both are equal.</returns>
     bool operator==(HexColor colorI, HexColor colorII);
-    /**
-     * @brief Checks if two hex colors are different.
-     * @param colorI The first color.
-     * @param colorII The second color.
-     * @returns A boolean that states both colors are different.
-     */
+    /// <summary>
+    /// Checks if two hex colors are different.
+    /// </summary>
+    /// <param name="colorI">The first color.</param>
+    /// <param name="colorII">The second color.</param>
+    /// <returns>A boolean that states both are different.</returns>
     bool operator!=(HexColor colorI, HexColor colorII);
-    /**
-     * @brief Checks if two RGB colors are equal.
-     * @param colorI The first color.
-     * @param colorII The second color.
-     * @returns A boolean that states both colors are equal.
-     */
+    /// <summary>
+    /// Checks if two RGB colors are equal.
+    /// </summary>
+    /// <param name="colorI">The first color.</param>
+    /// <param name="colorII">The second color.</param>
+    /// <returns>A boolean that states both are equal.</returns>
     bool operator==(RGBColor colorI, RGBColor colorII);
-    /**
-     * @brief Checks if two RGB colors are different.
-     * @param colorI The first color.
-     * @param colorII The second color.
-     * @returns A boolean that states both colors are different.
-     */
+    /// <summary>
+    /// Checks if two RGB colors are different.
+    /// </summary>
+    /// <param name="colorI">The first color.</param>
+    /// <param name="colorII">The second color.</param>
+    /// <returns>A boolean that states both are different.</returns>
     bool operator!=(RGBColor colorI, RGBColor colorII);
-    /**
-     * @brief Checks if a hex color is equal to an RGB one.
-     * @param hexColor The hex color.
-     * @param rgbColor The RGB color.
-     * @returns A boolean that states both colors are equal.
-     */
+    /// <summary>
+    /// Checks if a hex color and an RGB one are equal.
+    /// </summary>
+    /// <param name="hexColor">The hex color.</param>
+    /// <param name="rgbColor">The RGB color.</param>
+    /// <returns>A boolean that states both are equal.</returns>
     bool operator==(HexColor hexColor, RGBColor rgbColor);
-    /**
-     * @brief Checks if a hex color is different to an RGB one.
-     * @param hexColor The hex color.
-     * @param rgbColor The RGB color.
-     * @returns A boolean that states both colors are different.
-     */
+    /// <summary>
+    /// Checks if a hex color and an RGB one are different.
+    /// </summary>
+    /// <param name="hexColor">The hex color.</param>
+    /// <param name="rgbColor">The RGB color.</param>
+    /// <returns>A boolean that states both are different.</returns>
     bool operator!=(HexColor hexColor, RGBColor rgbColor);
-    /**
-     * @brief Checks if an RGB color is equal to a hex one.
-     * @param rgbColor The RGB color.
-     * @param hexColor The hex color.
-     * @returns A boolean that states both colors are equal.
-     */
+    /// <summary>
+    /// Checks if an RGB color and a hex one are equal.
+    /// </summary>
+    /// <param name="rgbColor">The RGB color.</param>
+    /// <param name="hexColor">The hex color.</param>
+    /// <returns>A boolean that states both are equal.</returns>
     bool operator==(RGBColor rgbColor, HexColor hexColor);
-    /**
-     * @brief Checks if an RGB color is different to a hex one.
-     * @param rgbColor The RGB color.
-     * @param hexColor The hex color.
-     * @returns A boolean that states both colors are different.
-     */
+    /// <summary>
+    /// Checks if an RGB color and a hex one are different.
+    /// </summary>
+    /// <param name="rgbColor">The RGB color.</param>
+    /// <param name="hexColor">The hex color.</param>
+    /// <returns>A boolean that states both are different.</returns>
     bool operator!=(RGBColor rgbColor, HexColor hexColor);
 }
