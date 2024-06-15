@@ -323,23 +323,23 @@ namespace TMK
         /// </summary>
         RFSSpecificErrorEDOTDOT,
         /// <summary>
-        /// Bad message (EBADMSG): thrown whenever a message received through a connection does not match its protocol.
+        /// Bad message (EBADMSG): thrown when a message received through a connection does not match its protocol.
         /// </summary>
         BadMessageEBADMSG,
         /// <summary>
-        /// Value too large for defined data type (EOVERFLOW).
+        /// Value too large for defined data type (EOVERFLOW): thrown when a value can not be hold by a type, such as a variable overflow.
         /// </summary>
         ValueTooLargeForDefinedDataTypeEOVERFLOW,
         /// <summary>
-        /// Name not unique on network (ENOTUNIQ).
+        /// Name not unique on network (ENOTUNIQ): thrown when the name provided to perform a network operation is not unique.
         /// </summary>
         NameNotUniqueOnNetworkENOTUNIQ,
         /// <summary>
-        /// File descriptor in bad state (EBADFD).
+        /// File descriptor in bad state (EBADFD): thrown when an operation is attemped on an invalid file descriptor.
         /// </summary>
         FileDescriptorInBadStateEBADFD,
         /// <summary>
-        /// Remote address changed (EREMCHG).
+        /// Remote address changed (EREMCHG): thrown when a remote address is changed during connection.
         /// </summary>
         RemoteAddressChangedEREMCHG,
         /// <summary>
