@@ -31,7 +31,7 @@ namespace TMK
         /// </summary>
         Failure,
         /// <summary>
-        /// Operation not permitted (EPERM): thrown when the current user does not have enough privileges to complete an operation.
+        /// Operation not permitted (EPERM): thrown when the current user does not have enough privileges to complete an operation without further description.
         /// </summary>
         OperationNotPermittedEPERM = 1,
         /// <summary>
@@ -71,31 +71,31 @@ namespace TMK
         /// </summary>
         NoChildProcessesECHILD,
         /// <summary>
-        /// Resource temporarily unavailable (EAGAIN).
+        /// Resource temporarily unavailable (EAGAIN): thrown when a hardware or software resource is currently unavailable or can not be completed.
         /// </summary>
         ResourceTemporarilyUnavailableEAGAIN,
         /// <summary>
-        /// Resource temporarily unavailable (EWOULDBLOCK).
+        /// Resource temporarily unavailable (EWOULDBLOCK): thrown when a hardware or software resource is currently unavailable or can not be completed..
         /// </summary>
         ResourceTemporarilyUnavailableEWOULDBLOCK = 11,
         /// <summary>
-        /// Can not allocate memory (ENOMEM).
+        /// Can not allocate memory (ENOMEM): thrown when the system does not have more memory available.
         /// </summary>
         CanNotAllocateMemoryENOMEM,
         /// <summary>
-        /// Permission denied (EACCES).
+        /// Permission denied (EACCES): thrown when the current user does not have enough privileges to complete a file system operation.
         /// </summary>
         PermissionDeniedEACCES,
         /// <summary>
-        /// Bad address (EFAULT).
+        /// Bad address (EFAULT): thrown when a process attemps to access a not owned memory address.
         /// </summary>
         BadAddressEFAULT,
         /// <summary>
-        /// Block device required (ENOTBLK).
+        /// Block device required (ENOTBLK): thrown when an invalid resource is reference in place of a block device.
         /// </summary>
         BlockDeviceRequiredENOTBLK,
         /// <summary>
-        /// Device or resource busy (EBUSY).
+        /// Device or resource busy (EBUSY): thrown when a referenced resource is currently in use by a process.
         /// </summary>
         DeviceOrResourceBusyEBUSY,
         /// <summary>
