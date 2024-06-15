@@ -386,7 +386,7 @@ namespace TMK
         /// </summary>
         MessageTooLongEMSGSIZE,
         /// <summary>
-        /// Protocol wrong type for socket (EPROTOTYPE): thrown when a protocol or socket does not supports a requested operation.
+        /// Protocol wrong type for socket (EPROTOTYPE): thrown when a socket fails due to an invalid use of its protocol.
         /// </summary>
         ProtocolWrongTypeForSocketEPROTOTYPE,
         /// <summary>
@@ -402,23 +402,23 @@ namespace TMK
         /// </summary>
         SocketTypeNotSupportedESOCKTNOSUPPORT,
         /// <summary>
-        /// Operation not supported (EOPNOTSUPP).
+        /// Operation not supported (EOPNOTSUPP): thrown when a socket does not support a protocol.
         /// </summary>
         OperationNotSupportedEOPNOTSUPP,
         /// <summary>
-        /// Operation not supported (ENOTSUP).
+        /// Operation not supported (ENOTSUP): thrown when a socket does not support a protocol.
         /// </summary>
         OperationNotSupportedENOTSUP = 95,
         /// <summary>
-        /// Protocol family not supported (EPFNOSUPPORT).
+        /// Protocol family not supported (EPFNOSUPPORT): thrown when a protocol family is not supported by the system.
         /// </summary>
         ProtocolFamilyNotSupportedEPFNOSUPPORT,
         /// <summary>
-        /// Address family not supported by protocol (EAFNOSUPPORT).
+        /// Address family not supported by protocol (EAFNOSUPPORT): thrown when an invalid address family is used in a protocol.
         /// </summary>
         AddressFamilyNotSupportedByProtocolEAFNOSUPPORT,
         /// <summary>
-        /// Address already in use (EADDRINUSE).
+        /// Address already in use (EADDRINUSE): thrown when a socket is attemped to be bind to an address that is already in use.
         /// </summary>
         AddressAlreadyInUseEADDRINUSE,
         /// <summary>
