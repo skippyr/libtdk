@@ -39,6 +39,10 @@ namespace TMK
     {
     }
 
+    InvalidStreamAttributesException::InvalidStreamAttributesException(std::string description) noexcept : Exception(description)
+    {
+    }
+
     bool Terminal::s_hasInitializedStreamRedirectionCache = false;
     bool Terminal::s_isInputRedirected = true;
     bool Terminal::s_isOutputRedirected = true;
@@ -85,15 +89,33 @@ namespace TMK
         DWORD mode;
         if (!GetConsoleMode(GetHandle(), &mode))
         {
-            throw StreamRedirectionException("can not get mode of the output stream due to it is being redirected.");
+            throw StreamRedirectionException("can not get mode of the terminal output stream due to it is redirected.");
         }
         return 0;
+    }
+
+    void Terminal::Output::SetMode(DWORD mode)
+    {
+        if (IsRedirected())
+        {
+            throw StreamRedirectionException("can not set the terminal output mode due to it is redirected.");
+        }
+        if (!SetConsoleMode(GetHandle(), mode))
+        {
+            throw InvalidStreamAttributesException("can not set the terminal output mode due to it is invalid.");
+        }
     }
 #endif
 
     int Terminal::Output::GetFileID() noexcept
     {
         return 1;
+    }
+
+    bool Terminal::Output::IsRedirected() noexcept
+    {
+        InitializeStreamRedirectionCache();
+        return s_isOutputRedirected;
     }
 
 #ifdef _WIN32

@@ -602,7 +602,7 @@ namespace TMK
     /// <summary>
     /// Represents an exception thrown when a group of streams are redirected.
     /// </summary>
-    class StreamRedirectionException : public Exception<ExitCode::InputOutputErrorEIO>
+    class StreamRedirectionException final : public Exception<ExitCode::DeviceNotAStreamENOSTR>
     {
     public:
         /// <summary>
@@ -610,6 +610,19 @@ namespace TMK
         /// </summary>
         /// <param name="description">The description of why the exception was thrown.</param>
         StreamRedirectionException(std::string description) noexcept;
+    };
+
+    /// <summary>
+    /// Represents an exception thrown when attributes of a terminal stream is invalid.
+    /// </summary>
+    class InvalidStreamAttributesException final : public Exception<ExitCode::InvalidArgumentEINVAL>
+    {
+    public:
+        /// <summary>
+        /// Creates an instance of the InvalidStreamAttributesException class.
+        /// </summary>
+        /// <param name="description">The description of why the exception was thrown.</param>
+        InvalidStreamAttributesException(std::string description) noexcept;
     };
 
     /// <summary>
@@ -655,14 +668,27 @@ namespace TMK
             /// </summary>
             static HANDLE GetHandle() noexcept;
             /// <summary>
-            /// Gets the mode related to the terminal output stream.
+            /// Gets the mode of the terminal output stream.
             /// </summary>
+            /// <exception cref="StreamRedirectionException">Thrown when the terminal output stream is redirected.</exception>
             static DWORD GetMode();
+            /// <summary>
+            /// Sets the mode of the terminal output stream.
+            /// </summary>
+            /// <param name="mode">The mode to be set.</param>
+            /// <exception cref="StreamRedirectionException">Thrown when the terminal output stream is redirected.</exception>
+            /// <exception cref="InvalidStreamAttributesException">Thrown when the mode is invalid.</exception>
+            static void SetMode(DWORD mode);
 #endif
             /// <summary>
             /// Gets the file ID related to the terminal output stream.
             /// </summary>
             static int GetFileID() noexcept;
+            /// <summary>
+            /// Checks if the terminal output stream is redirected.
+            /// </summary>
+            /// <returns>A boolean that states the output stream is redirected.</returns>
+            static bool IsRedirected() noexcept;
 
         private:
             /// <summary>
@@ -701,15 +727,15 @@ namespace TMK
         /// </summary>
         static bool s_hasInitializedStreamRedirectionCache;
         /// <summary>
-        /// A boolean that states the terminal input stream is being redirected.
+        /// A boolean that states the terminal input stream is redirected.
         /// </summary>
         static bool s_isInputRedirected;
         /// <summary>
-        /// A boolean that states the terminal output stream is being redirected.
+        /// A boolean that states the terminal output stream is redirected.
         /// </summary>
         static bool s_isOutputRedirected;
         /// <summary>
-        /// A boolean that states the terminal error stream is being redirected.
+        /// A boolean that states the terminal error stream is redirected.
         /// </summary>
         static bool s_isErrorRedirected;
 
