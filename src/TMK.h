@@ -446,7 +446,7 @@ namespace TMK
         /// </summary>
         ConnectionResetByPeerECONNRESET,
         /// <summary>
-        /// No buffer space available (ENOBUFS): throw when the total of network buffer has exceed the system limit.
+        /// No buffer space available (ENOBUFS): thrown when the total of network buffer has exceed the system limit.
         /// </summary>
         NoBufferSpaceAvailableENOBUFS,
         /// <summary>
@@ -458,23 +458,23 @@ namespace TMK
         /// </summary>
         TransportEndpointIsNotConnectedENOTCONN,
         /// <summary>
-        /// Can not send after transport endpoint shutdown (ESHUTDOWN).
+        /// Can not send after transport endpoint shutdown (ESHUTDOWN): thrown when an operation is attemped on a socket that has been shutdown.
         /// </summary>
         CanNotSendAfterTransportEndpointShutdownESHUTDOWN,
         /// <summary>
-        /// Too many references: cannot splice (ETOOMANYREFS).
+        /// Too many references: cannot splice (ETOOMANYREFS): thrown when there are too many references to a kernel object.
         /// </summary>
         TooManyReferencesCannotSpliceETOOMANYREFSs,
         /// <summary>
-        /// Connection timed out (ETIMEDOUT).
+        /// Connection timed out (ETIMEDOUT): thrown when a connection can not be stablished in a given time.
         /// </summary>
         ConnectionTimedOutETIMEDOUT,
         /// <summary>
-        /// Connection refused (ECONNREFUSED).
+        /// Connection refused (ECONNREFUSED): thrown when a connection can not be stablished due to no host been listening to it.
         /// </summary>
         ConnectionRefusedECONNREFUSED,
         /// <summary>
-        /// Host is down (EHOSTDOWN).
+        /// Host is down (EHOSTDOWN): thrown when a connection can not be stablished because the host being reached is down.
         /// </summary>
         HostIsDownEHOSTDOWN,
         /// <summary>
