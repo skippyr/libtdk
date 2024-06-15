@@ -311,19 +311,19 @@ namespace TMK
         /// </summary>
         CommunicationErrorOnSendECOMM,
         /// <summary>
-        /// Protocol error (EPROTO).
+        /// Protocol error (EPROTO): thrown when there is an error at the protocol of the network layer.
         /// </summary>
         ProtocolErrorEPROTO,
         /// <summary>
-        /// Multihop attempted (EMULTIHOP).
+        /// Multihop attempted (EMULTIHOP): thrown when an operation attemps routing hopping without permissions or support.
         /// </summary>
         MultihopAttemptedEMULTIHOP,
         /// <summary>
-        /// RFS specific error (EDOTDOT).
+        /// RFS specific error (EDOTDOT): thrown when there is an error in the RFS system.
         /// </summary>
         RFSSpecificErrorEDOTDOT,
         /// <summary>
-        /// Bad message (EBADMSG).
+        /// Bad message (EBADMSG): thrown whenever a message received through a connection does not match its protocol.
         /// </summary>
         BadMessageEBADMSG,
         /// <summary>
