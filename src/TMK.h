@@ -239,35 +239,35 @@ namespace TMK
         /// </summary>
         Level2HaltedEL2HLT,
         /// <summary>
-        /// Invalid exchange (EBADE).
+        /// Invalid exchange (EBADE): thrown when an invalid exchange is specified to a system call.
         /// </summary>
         InvalidExchangeEBADE,
         /// <summary>
-        /// Invalid request descriptor (EBADR).
+        /// Invalid request descriptor (EBADR): thrown when an invalid request descriptor is specified to a system call.
         /// </summary>
         InvalidRequestDescriptorEBADR,
         /// <summary>
-        /// Exchange full (EXFULL).
+        /// Exchange full (EXFULL): thrown when a communication exchange queue is full.
         /// </summary>
         ExchangeFullEXFULL,
         /// <summary>
-        /// No anode (ENOANO).
+        /// No anode (ENOANO): thrown when a non-existent anode is referenced.
         /// </summary>
         NoAnodeENOANO,
         /// <summary>
-        /// Invalid request code (EBADRQC).
+        /// Invalid request code (EBADRQC): thrown when an invalid system call code is used.
         /// </summary>
         InvalidRequestCodeEBADRQC,
         /// <summary>
-        /// Invalid slot (EBADSLT).
+        /// Invalid slot (EBADSLT): thrown when an invalid slot number is specified in a system call.
         /// </summary>
         InvalidSlotEBADSLT,
         /// <summary>
-        /// Bad font file format (EBFONT).
+        /// Bad font file format (EBFONT): thrown when an font file is invalid or corrupted.
         /// </summary>
         BadFontFileFormatEBFONT = 59,
         /// <summary>
-        /// Device not a stream (ENOSTR).
+        /// Device not a stream (ENOSTR): thrown when a file descriptor referenced does not supports streaming operations.
         /// </summary>
         DeviceNotAStreamENOSTR,
         /// <summary>
