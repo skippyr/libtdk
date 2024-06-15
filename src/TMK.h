@@ -223,19 +223,19 @@ namespace TMK
         /// </summary>
         Level3ResetEL3RST,
         /// <summary>
-        /// Link number out of range (ELNRNG).
+        /// Link number out of range (ELNRNG): thrown when an invalid hard or symbolic link is referenced.
         /// </summary>
         LinkNumberOutOfRangeELNRNG,
         /// <summary>
-        /// Protocol driver not attached (EUNATCH).
+        /// Protocol driver not attached (EUNATCH): thrown when a terminal device is not attached to a protocol driver.
         /// </summary>
         ProtocolDriverNotAttachedEUNATCH,
         /// <summary>
-        /// No CSI structure available (ENOCSI).
+        /// No CSI structure available (ENOCSI): thrown when a terminal CSI structure is not available or invalid.
         /// </summary>
         NoCSIStructureAvailableENOCSI,
         /// <summary>
-        /// Level 2 halted (EL2HLT).
+        /// Level 2 halted (EL2HLT): thrown when the requested networking protocol is unavailable in the system.
         /// </summary>
         Level2HaltedEL2HLT,
         /// <summary>
