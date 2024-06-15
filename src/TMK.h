@@ -631,6 +631,28 @@ namespace TMK
     class Terminal final
     {
     public:
+#ifdef _WIN32
+        /// <summary>
+        /// Represents the terminal encoding.
+        /// </summary>
+        class Encoding final
+        {
+        public:
+            /// <summary>
+            /// Sets the code page of the terminal output stream.
+            /// </summary>
+            /// <param name="codePage">The code page to be set.</param>
+            /// <exception cref="InvalidStreamAttributesException">Thrown when the code page is invalid.</exception>
+            static void SetOutputCodePage(UINT codePage);
+
+        private:
+            /// <summary>
+            /// Creates an instance of the Encoding class.
+            /// </summary>
+            Encoding() noexcept = delete;
+        };
+#endif
+
         /// <summary>
         /// Represents the terminal input stream.
         /// </summary>
@@ -773,7 +795,7 @@ namespace TMK
 
 #ifdef _WIN32
         /// <summary>
-        /// Initializes the virtual terminal processing on Windows terminals: allowing them to parse ANSI escape sequences.
+        /// Initializes the virtual terminal processing: allowing it to parse ANSI escape sequences.
         /// </summary>
         static void InitializeVirtualTerminalProcessing() noexcept;
 #endif

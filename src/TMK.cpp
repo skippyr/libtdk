@@ -51,6 +51,20 @@ namespace TMK
 #ifdef _WIN32
     void Terminal::InitializeVirtualTerminalProcessing() noexcept
     {
+        try
+        {
+            Output::SetMode(Output::GetMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+        }
+        catch (StreamRedirectionException&)
+        {
+            try
+            {
+                Error::SetMode(Error::GetMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+            }
+            catch (StreamRedirectionException&)
+            {
+            }
+        }
     }
 #endif
 
@@ -64,6 +78,10 @@ namespace TMK
         s_isInputRedirected = ISATTY(Input::GetFileID());
         s_isOutputRedirected = ISATTY(Output::GetFileID());
         s_isErrorRedirected = ISATTY(Error::GetFileID());
+#ifdef _WIN32
+        Encoding::SetOutputCodePage(CP_UTF8);
+        InitializeVirtualTerminalProcessing();
+#endif
     }
 
     DWORD Terminal::GetStreamMode(HANDLE handle, const std::string& name)
@@ -87,6 +105,15 @@ namespace TMK
             throw InvalidStreamAttributesException("can not set the terminal " + name + " mode due to it is invalid.");
         }
     }
+
+    void Terminal::Encoding::SetOutputCodePage(UINT codePage)
+    {
+        if (!SetConsoleOutputCP(codePage))
+        {
+            throw InvalidStreamAttributesException("can not set the code page of the terminal output stream due to it is being invalid.");
+        }
+    }
+
 #ifdef _WIN32
     HANDLE Terminal::Input::GetHandle() noexcept
     {
