@@ -27,7 +27,7 @@ namespace TMK
         /// </summary>
         Success,
         /// <summary>
-        /// Generic failed execution: thrown when the program execution had an error without further description.
+        /// Generic failed execution: thrown when the program execution failed without further description.
         /// </summary>
         Failure,
         /// <summary>
@@ -51,7 +51,7 @@ namespace TMK
         /// </summary>
         InputOutputErrorEIO,
         /// <summary>
-        /// No such device or address (ENXIO): thrown when a non-existent device is referenced.
+        /// No such device or address (ENXIO): thrown when an invalid device or device address is referenced.
         /// </summary>
         NoSuchDeviceOrAddressENXIO,
         /// <summary>
@@ -99,31 +99,31 @@ namespace TMK
         /// </summary>
         DeviceOrResourceBusyEBUSY,
         /// <summary>
-        /// File exists (EEXIST).
+        /// File exists (EEXIST): thrown when a referenced file system entry already exists.
         /// </summary>
         FileExistsEEXIST,
         /// <summary>
-        /// Invalid cross-device link (EXDEV).
+        /// Invalid cross-device link (EXDEV): thrown when a file transfer operating between two file systems fails without further description.
         /// </summary>
         InvalidCrossDeviceLinkEXDEV,
         /// <summary>
-        /// No such device (ENODEV).
+        /// No such device (ENODEV): thrown when a non-existent device is referenced.
         /// </summary>
         NoSuchDeviceENODEV,
         /// <summary>
-        /// Not a directory (ENOTDIR).
+        /// Not a directory (ENOTDIR): thrown when an invalid file system entry is referenced in place of a directory.
         /// </summary>
         NotADirectoryENOTDIR,
         /// <summary>
-        /// Is a directory (EISDIR).
+        /// Is a directory (EISDIR): thrown when an invalid operation is attemped on a directory.
         /// </summary>
         IsADirectoryEISDIR,
         /// <summary>
-        /// Invalid argument (EINVAL).
+        /// Invalid argument (EINVAL): thrown when an operation is attemped with invalid arguments, such as a system call or function.
         /// </summary>
         InvalidArgumentEINVAL,
         /// <summary>
-        /// Too many open files in system (ENFILE).
+        /// Too many open files in system (ENFILE): when the system can not open more file descriptors due to its limit has been reached.
         /// </summary>
         TooManyOpenFilesInSystemENFILE,
         /// <summary>
