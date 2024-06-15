@@ -494,35 +494,35 @@ namespace TMK
         /// </summary>
         StaleFileHandleESTALE,
         /// <summary>
-        /// Structure needs cleaning (EUCLEAN).
+        /// Structure needs cleaning (EUCLEAN): thrown when the file system structure needs cleaning.
         /// </summary>
         StructureNeedsCleaningEUCLEAN,
         /// <summary>
-        /// Not a XENIX named type file (ENOTNAM).
+        /// Not a XENIX named type file (ENOTNAM): thrown when an invalid file is referenced in place of a named type file.
         /// </summary>
         NotAXENIXNamedTypeFileENOTNAM,
         /// <summary>
-        /// No XENIX semaphores available (ENAVAIL).
+        /// No XENIX semaphores available (ENAVAIL): thrown when the total of semaphores exceeds the system limit.
         /// </summary>
         NoXENIXSemaphoresAvailableENAVAIL,
         /// <summary>
-        /// Is a named type file (EISNAM).
+        /// Is a named type file (EISNAM): thrown when a named type file is referenced in place of a non-named type file.
         /// </summary>
         IsANamedTypeFileEISNAM,
         /// <summary>
-        /// Remote I/O error (EREMOTEIO).
+        /// Remote I/O error (EREMOTEIO): thrown when an input or output error has happened when accessing a remote file system.
         /// </summary>
         RemoteIOErrorEREMOTEIO,
         /// <summary>
-        /// Disk quota exceeded (EDQUOT).
+        /// Disk quota exceeded (EDQUOT): thrown when a write operation is attemped to be performed while the disk quote is at limit.
         /// </summary>
         DiskQuotaExceededEDQUOT,
         /// <summary>
-        /// No medium found (ENOMEDIUM).
+        /// No medium found (ENOMEDIUM): thrown when no medium is found in the drive.
         /// </summary>
         NoMediumFoundENOMEDIUM,
         /// <summary>
-        /// Wrong medium type (EMEDIUMTYPE).
+        /// Wrong medium type (EMEDIUMTYPE): thrown when the inserted medium is not supported by the drive or is not formatted.
         /// </summary>
         WrongMediumTypeEMEDIUMTYPE,
         /// <summary>
