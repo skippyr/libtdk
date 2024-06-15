@@ -151,31 +151,31 @@ namespace TMK
         /// </summary>
         IllegalSeekESPIPE,
         /// <summary>
-        /// Read-only file system (EROFS).
+        /// Read-only file system (EROFS): thrown when a write operation is attemped on a read-only file system.
         /// </summary>
         ReadOnlyFileSystemEROFS,
         /// <summary>
-        /// Too many links (EMLINK).
+        /// Too many links (EMLINK): thrown when a file reaches the system limit of hard links.
         /// </summary>
         TooManyLinksEMLINK,
         /// <summary>
-        /// Broken pipe (EPIPE).
+        /// Broken pipe (EPIPE): thrown when a write operation is attemped a closed pipe.
         /// </summary>
         BrokenPipeEPIPE,
         /// <summary>
-        /// Numerical argument out of domain (EDOM).
+        /// Numerical argument out of domain (EDOM): thrown when an argument of invalid domain is used in a math operation.
         /// </summary>
         NumericalArgumentOutOfDomainEDOM,
         /// <summary>
-        /// Numerical result out of range (ERANGE).
+        /// Numerical result out of range (ERANGE): thrown when a value can not be represented within a given range, such as when a number variable overflows.
         /// </summary>
         NumericalResultOutOfRangeERANGE,
         /// <summary>
-        /// Resource deadlock avoided (EDEADLK).
+        /// Resource deadlock avoided (EDEADLK): thrown when two processes depend on resources of each other to complete an operation.
         /// </summary>
         ResourceDeadlockAvoidedEDEADLK,
         /// <summary>
-        /// Resource deadlock avoided (EDEADLOCK).
+        /// Resource deadlock avoided (EDEADLOCK): thrown when two processes depend on resources of each other to complete an operation.
         /// </summary>
         ResourceDeadlockAvoidedEDEADLOCK = 35,
         /// <summary>
