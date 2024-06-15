@@ -31,7 +31,7 @@ namespace TMK
         /// </summary>
         Failure,
         /// <summary>
-        /// Operation not permitted (EPERM): thrown when the current user does not have enough privileges to complete an operation without further description.
+        /// Operation not permitted (EPERM): thrown when the current user does not have enough privileges to complete an operation.
         /// </summary>
         OperationNotPermittedEPERM = 1,
         /// <summary>
@@ -47,7 +47,7 @@ namespace TMK
         /// </summary>
         InterruptedSystemCallEINTR,
         /// <summary>
-        /// Input or output error (EIO): thrown when an input or output operation fails without further description.
+        /// Input or output error (EIO): thrown when an input or output operation fails.
         /// </summary>
         InputOutputErrorEIO,
         /// <summary>
@@ -103,7 +103,7 @@ namespace TMK
         /// </summary>
         FileExistsEEXIST,
         /// <summary>
-        /// Invalid cross-device link (EXDEV): thrown when a file transfer operating between two file systems fails without further description.
+        /// Invalid cross-device link (EXDEV): thrown when a file transfer operating between two file systems fails.
         /// </summary>
         InvalidCrossDeviceLinkEXDEV,
         /// <summary>
@@ -271,43 +271,43 @@ namespace TMK
         /// </summary>
         DeviceNotAStreamENOSTR,
         /// <summary>
-        /// No data available (ENODATA).
+        /// No data available (ENODATA): thrown when no data is available during a non-blocking reading operation.
         /// </summary>
         NoDataAvailableENODATA,
         /// <summary>
-        /// Timer expired (ETIME).
+        /// Timer expired (ETIME): thrown when a timer associated to an operation expires before it has been completed.
         /// </summary>
         TimerExpiredETIME,
         /// <summary>
-        /// Out of streams resources (ENOSR).
+        /// Out of streams resources (ENOSR): thrown when the system can not allocate resources for streaming operations.
         /// </summary>
         OutOfStreamsResourcesENOSR,
         /// <summary>
-        /// Machine is not on the network (ENONET).
+        /// Machine is not on the network (ENONET): thrown when an operation fails due to the machine not being connected to a network.
         /// </summary>
         MachineIsNotOnTheNetworkENONET,
         /// <summary>
-        /// Package not installed (ENOPKG).
+        /// Package not installed (ENOPKG): thrown when a package or component is not installed in the system.
         /// </summary>
         PackageNotInstalledENOPKG,
         /// <summary>
-        /// Object is remote (EREMOTE).
+        /// Object is remote (EREMOTE): thrown when an object referred is on a remote system.
         /// </summary>
         ObjectIsRemoteEREMOTE,
         /// <summary>
-        /// Link has been severed (ENOLINK).
+        /// Link has been severed (ENOLINK): thrown when the connection to a resource has been closed.
         /// </summary>
         LinkHasBeenSeveredENOLINK,
         /// <summary>
-        /// Advertise error (EADV).
+        /// Advertise error (EADV): thrown when a connection advertisement fails.
         /// </summary>
         AdvertiseErrorEADV,
         /// <summary>
-        /// Srmount error (ESRMNT).
+        /// Srmount error (ESRMNT): thrown when mouting a device using the obsolete srmount feature fails.
         /// </summary>
         SrmountErrorESRMNT,
         /// <summary>
-        /// Communication error on send (ECOMM).
+        /// Communication error on send (ECOMM): thrown when a communication fails during a send operation.
         /// </summary>
         CommunicationErrorOnSendECOMM,
         /// <summary>
