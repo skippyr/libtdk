@@ -129,15 +129,33 @@ namespace TMK
         return s_isOutputRedirected;
     }
 
+    const std::string Terminal::Error::m_name = "error";
+
 #ifdef _WIN32
     HANDLE Terminal::Error::GetHandle() noexcept
     {
         return GetStdHandle(STD_ERROR_HANDLE);
+    }
+
+    DWORD Terminal::Error::GetMode()
+    {
+        return GetStreamMode(GetHandle(), m_name);
+    }
+
+    void Terminal::Error::SetMode(DWORD mode)
+    {
+        return SetStreamMode(GetHandle(), IsRedirected(), m_name, mode);
     }
 #endif
 
     int Terminal::Error::GetFileID() noexcept
     {
         return 2;
+    }
+
+    bool Terminal::Error::IsRedirected() noexcept
+    {
+        InitializeStreamRedirectionCache();
+        return s_isErrorRedirected;
     }
 }
