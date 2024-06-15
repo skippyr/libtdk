@@ -1761,29 +1761,29 @@ namespace TMK
             Error() = delete;
         };
 
-        /**
-         * @brief Represents the terminal process.
-         */
+        /// <summary>
+        /// Represents the terminal process.
+        /// </summary>
         class Process final
         {
         public:
-            /**
-             * @brief Gets and treats the command line arguments.
-             * @param rawTotalArguments The total arguments given as first parameter of the main function.
-             * @param rawArguments The arguments given as second parameter of the main function.
-             * @returns The treated arguments.
-             */
+            /// <summary>
+            /// Gets and treats the command line arguments.
+            /// </summary>
+            /// <param name="totalRawCMDArguments">The total arguments given as first parameter of the main function.</param>
+            /// <param name="rawCMDArguments">The arguments given as second parameter of the main function.</param>
+            /// <returns>The treated arguments.</returns>
             static CMDArguments GetCMDArguments(int totalRawCMDArguments, char** rawCMDArguments);
-            /**
-             * @brief Exits the process.
-             * @param exitCode The Exit code to be used. It must be a value in range from 0 to 255.
-             * @throws OutOfRangeException Thrown whenever the Exit code is out of the valid range.
-             */
+            /// <summary>
+            /// Exists the process.
+            /// </summary>
+            /// <param name="exitCode">The exit code to be used. It must be a value in range from 0 to 255.</param>
+            /// <exception cref="OutOfRangeException">Thrown whenever the exit code is out of the valid range.</exception>
             static void Exit(int exitCode);
-            /**
-             * @brief Exits the process.
-             * @param exitCode The Exit code to be used.
-             */
+            /// <summary>
+            /// Exits the process.
+            /// </summary>
+            /// <param name="exitCode">The exit code to be used. It must be a value in range from 0 to 255.</param>
             static void Exit(ExitCode exitCode);
 
         private:
