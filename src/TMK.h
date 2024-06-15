@@ -13,11 +13,6 @@
 namespace TMK
 {
     /// <summary>
-    /// Represents a byte.
-    /// </summary>
-    typedef char byte;
-
-    /// <summary>
     /// Contains the Linux exit codes.
     /// </summary>
     enum class ExitCode
@@ -367,23 +362,23 @@ namespace TMK
         /// </summary>
         InvalidOrIncompleteMultibyteOrWideCharacterEILSEQ,
         /// <summary>
-        /// Interrupted system call should be restarted (ERESTART).
+        /// Interrupted system call should be restarted (ERESTART): thrown when a system call is interrupted by a signal handler and must be attemped again.
         /// </summary>
         InterruptedSystemCallShouldBeRestartedERESTART,
         /// <summary>
-        /// Streams pipe error (ESTRPIPE).
+        /// Streams pipe error (ESTRPIPE): thrown when a write operation is perfomed in a closed stream.
         /// </summary>
         StreamsPipeErrorESTRPIPE,
         /// <summary>
-        /// Too many users (EUSERS).
+        /// Too many users (EUSERS): thrown when the system limit on the total number of network connections or users has been reached.
         /// </summary>
         TooManyUsersEUSERS,
         /// <summary>
-        /// Socket operation on non-socket (ENOTSOCK).
+        /// Socket operation on non-socket (ENOTSOCK): thrown when an invalid file system entry is referenced in place of a socket.
         /// </summary>
         SocketOperationOnNonSocketENOTSOCK,
         /// <summary>
-        /// Destination address required (EDESTADDRREQ).
+        /// Destination address required (EDESTADDRREQ): thrown when no destination address is provided for a network operation.
         /// </summary>
         DestinationAddressRequiredEDESTADDRREQ,
         /// <summary>
@@ -701,7 +696,7 @@ namespace TMK
             /// <returns>The byte read.</returns>
             /// <exception cref="StreamRedirectionException">Thrown when the terminal input stream is redirected.</exception>
             /// <exception cref="WideCharacterOrientationException">Thrown whenever the terminal input stream is wide character oriented.</exception>
-            static byte ReadByte();
+            static char ReadByte();
 
         private:
             /// <summary>
