@@ -13,32 +13,37 @@
 namespace TMK
 {
     /// <summary>
+    /// Represents a byte.
+    /// </summary>
+    typedef char byte;
+
+    /// <summary>
     /// Contains the POSIX exit codes.
     /// </summary>
     enum class ExitCode
     {
         /// <summary>
-        /// Successful execution.
+        /// Successful execution: thrown when the program execution succeeds.
         /// </summary>
         Success,
         /// <summary>
-        /// Generic failed execution.
+        /// Generic failed execution: thrown when the program execution had an error without further description.
         /// </summary>
         Failure,
         /// <summary>
-        /// Operation not permitted (EPERM).
+        /// Operation not permitted (EPERM): thrown when the current user does not have enough privileges to complete an operation.
         /// </summary>
         OperationNotPermittedEPERM = 1,
         /// <summary>
-        /// No such file or directory (ENOENT).
+        /// No such file or directory (ENOENT): thrown when an entry does not exists in the file system.
         /// </summary>
         NoSuchFileOrDirectoryENOENT,
         /// <summary>
-        /// No such process (ESRCH).
+        /// No such process (ESRCH): thrown when a process does not exists in the kernel process table.
         /// </summary>
         NoSuchProcessESRCH,
         /// <summary>
-        /// Interrupted system call (EINTR).
+        /// Interrupted system call (EINTR): thrown when a blocking system call is interrupted by a signal handler.
         /// </summary>
         InterruptedSystemCallEINTR,
         /// <summary>
@@ -194,7 +199,7 @@ namespace TMK
         /// </summary>
         TooManyLevelsOfSymbolicLinksELOOP,
         /// <summary>
-        /// No message of desired type (ENOMSG).
+        /// No message of desired type (ENOMSG): thrown when a message queue type does match a desired type.
         /// </summary>
         NoMessageOfDesiredTypeENOMSG = 42,
         /// <summary>
@@ -625,6 +630,10 @@ namespace TMK
         InvalidStreamAttributesException(std::string description) noexcept;
     };
 
+    class WideCharacterOrientationException final : public Exception<ExitCode::NoMessageOfDesiredTypeENOMSG>
+    {
+    };
+
     /// <summary>
     /// Represents the terminal.
     /// </summary>
@@ -686,6 +695,13 @@ namespace TMK
             /// </summary>
             /// <returns>A boolean that states the terminal input stream is redirected.</returns>
             static bool IsRedirected() noexcept;
+            /// <summary>
+            /// Reads a byte from the terminal input buffer. If it is empty, it waits until the Enter key is pressed.
+            /// </summary>
+            /// <returns>The byte read.</returns>
+            /// <exception cref="StreamRedirectionException">Thrown when the terminal input stream is redirected.</exception>
+            /// <exception cref="WideCharacterOrientationException">Thrown whenever the terminal input stream is wide character oriented.</exception>
+            static byte ReadByte();
 
         private:
             /// <summary>
