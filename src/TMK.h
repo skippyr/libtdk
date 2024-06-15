@@ -692,6 +692,11 @@ namespace TMK
 
         private:
             /// <summary>
+            /// The name of the terminal output stream.
+            /// </summary>
+            static const std::string m_name;
+
+            /// <summary>
             /// Creates an instance of the Output class.
             /// </summary>
             Output() noexcept = delete;
@@ -748,12 +753,29 @@ namespace TMK
         /// <summary>
         /// Initializes the virtual terminal processing on Windows terminals: allowing them to parse ANSI escape sequences.
         /// </summary>
-        static void InitializeVirtualTerminalProcessing();
+        static void InitializeVirtualTerminalProcessing() noexcept;
 #endif
 
         /// <summary>
         /// Initializes the stream redirection cache.
         /// </summary>
-        static void InitializeStreamRedirectionCache();
+        static void InitializeStreamRedirectionCache() noexcept;
+        /// <summary>
+        /// Gets the mode of a terminal stream.
+        /// </summary>
+        /// <param name="handle">The handle of the stream.</param>
+        /// <param name="name">The name of the stream.</param>
+        /// <exception cref="StreamRedirectionException">Thrown when the stream is redirected.</exception>
+        static DWORD GetStreamMode(HANDLE handle, const std::string& name);
+        /// <summary>
+        /// Sets the mode of a terminal stream.
+        /// </summary>
+        /// <param name="handle">The handle of the stream.</param>
+        /// <param name="isRedirected">A boolean that states the stream is redirected.</param>
+        /// <param name="name">The name of the stream.</param>
+        /// <param name="mode">The mode of the stream.</param>
+        /// <exception cref="StreamRedirectionException">Thrown when the stream is redirected.</exception>
+        /// <exception cref="InvalidStreamAttributesException">Thrown when the mode is invalid.</exception>
+        static void SetStreamMode(HANDLE handle, bool isRedirected, const std::string& name, DWORD mode);
     };
 }

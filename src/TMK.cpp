@@ -49,12 +49,12 @@ namespace TMK
     bool Terminal::s_isErrorRedirected = true;
 
 #ifdef _WIN32
-    void Terminal::InitializeVirtualTerminalProcessing()
+    void Terminal::InitializeVirtualTerminalProcessing() noexcept
     {
     }
 #endif
 
-    void Terminal::InitializeStreamRedirectionCache()
+    void Terminal::InitializeStreamRedirectionCache() noexcept
     {
         if (s_hasInitializedStreamRedirectionCache)
         {
@@ -66,6 +66,27 @@ namespace TMK
         s_isErrorRedirected = ISATTY(Error::GetFileID());
     }
 
+    DWORD Terminal::GetStreamMode(HANDLE handle, const std::string& name)
+    {
+        DWORD mode;
+        if (!GetConsoleMode(handle, &mode))
+        {
+            throw StreamRedirectionException("can not get mode of the terminal " + name + " stream due to it is redirected.");
+        }
+        return mode;
+    }
+
+    void Terminal::SetStreamMode(HANDLE handle, bool isRedirected, const std::string& name, DWORD mode)
+    {
+        if (isRedirected)
+        {
+            throw StreamRedirectionException("can not set the terminal " + name + " mode due to it is redirected.");
+        }
+        if (!SetConsoleMode(handle, mode))
+        {
+            throw InvalidStreamAttributesException("can not set the terminal " + name + " mode due to it is invalid.");
+        }
+    }
 #ifdef _WIN32
     HANDLE Terminal::Input::GetHandle() noexcept
     {
@@ -78,6 +99,8 @@ namespace TMK
         return 0;
     }
 
+    const std::string Terminal::Output::m_name = "output";
+
 #ifdef _WIN32
     HANDLE Terminal::Output::GetHandle() noexcept
     {
@@ -86,24 +109,12 @@ namespace TMK
 
     DWORD Terminal::Output::GetMode()
     {
-        DWORD mode;
-        if (!GetConsoleMode(GetHandle(), &mode))
-        {
-            throw StreamRedirectionException("can not get mode of the terminal output stream due to it is redirected.");
-        }
-        return 0;
+        return GetStreamMode(GetHandle(), m_name);
     }
 
     void Terminal::Output::SetMode(DWORD mode)
     {
-        if (IsRedirected())
-        {
-            throw StreamRedirectionException("can not set the terminal output mode due to it is redirected.");
-        }
-        if (!SetConsoleMode(GetHandle(), mode))
-        {
-            throw InvalidStreamAttributesException("can not set the terminal output mode due to it is invalid.");
-        }
+        SetStreamMode(GetHandle(), IsRedirected(), m_name, mode);
     }
 #endif
 
