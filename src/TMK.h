@@ -664,14 +664,35 @@ namespace TMK
             /// Gets the handle related to the terminal input stream.
             /// </summary>
             static HANDLE GetHandle() noexcept;
+            /// <summary>
+            /// Gets the mode of the terminal input stream.
+            /// </summary>
+            /// <exception cref="StreamRedirectionException">Thrown when the terminal input stream is redirected.</exception>
+            static DWORD GetMode();
+            /// <summary>
+            /// Sets the mode of the terminal input stream.
+            /// </summary>
+            /// <param name="mode">The mode to be set.</param>
+            /// <exception cref="StreamRedirectionException">Thrown when the terminal input stream is redirected.</exception>
+            /// <exception cref="InvalidStreamAttributesException">Thrown when the mode is invalid.</exception>
+            static void SetMode(DWORD mode);
 #endif
-
             /// <summary>
             /// Gets the file ID related to the terminal input stream.
             /// </summary>
             static int GetFileID() noexcept;
+            /// <summary>
+            /// Checks if the terminal input stream is redirected.
+            /// </summary>
+            /// <returns>A boolean that states the terminal input stream is redirected.</returns>
+            static bool IsRedirected() noexcept;
 
         private:
+            /// <summary>
+            /// The name of the terminal input stream.
+            /// </summary>
+            static const std::string m_name;
+
             /// <summary>
             /// Creates an instance of the Input class.
             /// </summary>

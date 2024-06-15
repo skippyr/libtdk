@@ -114,16 +114,34 @@ namespace TMK
         }
     }
 
+    const std::string Terminal::Input::m_name = "input";
+
 #ifdef _WIN32
     HANDLE Terminal::Input::GetHandle() noexcept
     {
         return GetStdHandle(STD_INPUT_HANDLE);
+    }
+
+    DWORD Terminal::Input::GetMode()
+    {
+        return GetStreamMode(GetHandle(), m_name);
+    }
+
+    void Terminal::Input::SetMode(DWORD mode)
+    {
+        SetStreamMode(GetHandle(), IsRedirected(), m_name, mode);
     }
 #endif
 
     int Terminal::Input::GetFileID() noexcept
     {
         return 0;
+    }
+
+    bool Terminal::Input::IsRedirected() noexcept
+    {
+        InitializeStreamRedirectionCache();
+        return s_isInputRedirected;
     }
 
     const std::string Terminal::Output::m_name = "output";
