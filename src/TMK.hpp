@@ -15,7 +15,7 @@ using namespace std::literals::chrono_literals;
 namespace TMK
 {
     /// <summary>
-    /// Contains the POSIX exit codes.
+    /// Contains the POSIX Exit codes.
     /// </summary>
     enum class ExitCode
     {
@@ -1712,49 +1712,49 @@ namespace TMK
             Output() = delete;
         };
 
-        /**
-         * @brief Represents the standard error stream.
-         */
+        /// <summary>
+        /// Represents the standard error stream.
+        /// </summary>
         class Error final
         {
         public:
-            /**
-             * @brief Formats and writes arguments to the standard error stream with a newline character appended at its end.
-             * @param format The format to be used. It accepts the same specifiers as the printf function family.
-             * @param arguments The arguments to be formatted.
-             * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
-             */
+            /// <summary>
+            /// Formats and writes a string to the standard error stream with a newline character appended at its end.
+            /// </summary>
+            /// <param name="format">The format to be used. It accepts the same specifiers as the printf function family.</param>
+            /// <param name="arguments">The arguments to be formatted.</param>
+            /// <exception cref="WideCharacterOrientationException">Thrown whenever the standard error stream is wide character oriented.</exception>
             static void WriteLine(std::string format, std::va_list arguments);
-            /**
-             * @brief Formats and writes arguments to the standard error stream with a newline character appended at its end.
-             * @param format The format to be used. It accepts the same specifiers as the printf function family.
-             * @param ... The arguments to be formatted.
-             * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
-             */
+            /// <summary>
+            /// Formats and writes a string to the standard error stream with a newline character appended at its end.
+            /// </summary>
+            /// <param name="format">The format to be used. It accepts the same specifiers as the printf function family.</param>
+            /// <param name="">The arguments to be formatted.</param>
+            /// <exception cref="WideCharacterOrientationException">Thrown whenever the standard error stream is wide character oriented.</exception>
             static void WriteLine(std::string format, ...);
-            /**
-             * @brief Writes a newline character to the standard error stream.
-             * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
-             */
+            /// <summary>
+            /// Writes a newline character to the standard error stream.
+            /// </summary>
+            /// <exception cref="WideCharacterOrientationException">Thrown whenever the standard error stream is wide character oriented.</exception>
             static void WriteLine();
-            /**
-             * @brief Formats and writes arguments to the standard error stream.
-             * @param format The format to be used. It accepts the same specifiers as the printf function family.
-             * @param arguments The arguments to be formatted.
-             * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
-             */
+            /// <summary>
+            /// Formats and writes a string to the standard error stream. 
+            /// </summary>
+            /// <param name="format">The format to be used. It accepts the same specifiers as the printf function family.</param>
+            /// <param name="arguments">The arguments to be formatted.</param>
+            /// <exception cref="WideCharacterOrientationException">Thrown whenever the standard error stream is wide character oriented.</exception>
             static void Write(std::string format, std::va_list arguments);
-            /**
-             * @brief Formats and writes arguments to the standard error stream.
-             * @param format The format to be used. It accepts the same specifiers as the printf function family.
-             * @param ... The arguments to be formatted.
-             * @throws WideCharacterOrientationException Thrown whenever the standard error stream is wide character oriented.
-             */
+            /// <summary>
+            /// Formats and writes a string to the standard error stream.
+            /// </summary>
+            /// <param name="format">The format to be used. It accepts the same specifiers as the printf function family.</param>
+            /// <param name="">The arguments to be formatted.</param>
+            /// <exception cref="WideCharacterOrientationException">Thrown whenever the standard error stream is wide character oriented.</exception>
             static void Write(std::string format, ...);
-            /**
-             * @brief Checks if the standard error stream is connected to an interactive terminal (TTY).
-             * @returns A boolean that states the standard error stream is a TTY.
-             */
+            /// <summary>
+            /// Checks if the standard error stream is connected to an interactive terminal (TTY).
+            /// </summary>
+            /// <returns>A boolean that states the standard error stream is a TTY.</returns>
             static bool IsTTY();
 
         private:
@@ -1773,18 +1773,18 @@ namespace TMK
              * @param rawArguments The arguments given as second parameter of the main function.
              * @returns The treated arguments.
              */
-            static CMDArguments getCMDArguments(int totalRawCMDArguments, char** rawCMDArguments);
+            static CMDArguments GetCMDArguments(int totalRawCMDArguments, char** rawCMDArguments);
             /**
              * @brief Exits the process.
-             * @param exitCode The exit code to be used. It must be a value in range from 0 to 255.
-             * @throws OutOfRangeException Thrown whenever the exit code is out of the valid range.
+             * @param exitCode The Exit code to be used. It must be a value in range from 0 to 255.
+             * @throws OutOfRangeException Thrown whenever the Exit code is out of the valid range.
              */
-            static void exit(int exitCode);
+            static void Exit(int exitCode);
             /**
              * @brief Exits the process.
-             * @param exitCode The exit code to be used.
+             * @param exitCode The Exit code to be used.
              */
-            static void exit(ExitCode exitCode);
+            static void Exit(ExitCode exitCode);
 
         private:
             Process() = delete;
@@ -1804,23 +1804,23 @@ namespace TMK
             /**
              * @brief Opens the alternate window.
              */
-            static void openAlternateWindow();
+            static void OpenAlternateWindow();
             /**
              * @brief Closes the alternate window.
              */
-            static void closeAlternateWindow();
+            static void CloseAlternateWindow();
             /**
              * @brief Sets the terminal window title.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param arguments The arguments to be formatted.
              */
-            static void setTitle(std::string format, std::va_list arguments);
+            static void SetTitle(std::string format, std::va_list arguments);
             /**
              * @brief Sets the terminal window title.
              * @param format The format to be used. It accepts the same specifiers as the printf function family.
              * @param ... The arguments to be formatted.
              */
-            static void setTitle(std::string format, ...);
+            static void SetTitle(std::string format, ...);
 
         private:
             Window() = delete;
@@ -1835,7 +1835,7 @@ namespace TMK
             /**
              * @brief Rings the terminal bell.
              */
-            static void ring();
+            static void Ring();
 
         private:
             Bell() = delete;
@@ -1851,19 +1851,19 @@ namespace TMK
              * @brief Sets the terminal font weight.
              * @param weight The weight to be set.
              */
-            static void setWeight(FontWeight weight);
+            static void SetWeight(FontWeight weight);
             /**
              * @brief Sets an XTerm color into the terminal font.
              * @param color The ANSI code of the color.
              * @param layer The layer of the font to be affected.
              */
-            static void setXColor(unsigned char color, FontLayer layer);
+            static void SetXColor(unsigned char color, FontLayer layer);
             /**
              * @brief Sets an XTerm color into the terminal font.
              * @param color The ANSI code of the color.
              * @param layer The layer of the font to be affected.
              */
-            static void setXColor(XColor color, FontLayer layer);
+            static void SetXColor(XColor color, FontLayer layer);
             /**
              * @brief Sets an RGB color into the terminal font.
              * @param red The red component of the color.
@@ -1871,48 +1871,48 @@ namespace TMK
              * @param blue The blue component of the color.
              * @param layer The layer of the font to be affected.
              */
-            static void setRGBColor(unsigned char red, unsigned char green, unsigned char blue, FontLayer layer);
+            static void SetRGBColor(unsigned char red, unsigned char green, unsigned char blue, FontLayer layer);
             /**
              * @brief Sets an RGB color into the terminal font.
              * @param color The color to be applied.
              * @param layer The layer of the font to be affected.
              */
-            static void setRGBColor(RGBColor color, FontLayer layer);
+            static void SetRGBColor(RGBColor color, FontLayer layer);
             /**
              * @brief Sets a hex color into the terminal font.
              * @param color The hex code of the color.
              * @param layer The layer of the font to be affected.
              */
-            static void setHexColor(unsigned int hex, FontLayer layer);
+            static void SetHexColor(unsigned int hex, FontLayer layer);
             /**
              * @brief Sets a hex color into the terminal font.
              * @param color The color to be applied.
              * @param layer The layer of the font to be affected.
              */
-            static void setHexColor(HexColor color, FontLayer layer);
+            static void SetHexColor(HexColor color, FontLayer layer);
             /**
              * @brief Sets the terminal effects flagged in a bitmask.
              * @param effect The bitmask containing the effects. It must be composed by enumerators from the FontEffect enum class.
              * @throws OutOfRangeException Thrown whenever an invalid effect is used to compose the bitmask.
              */
-            static void setEffects(int effect);
+            static void SetEffects(int effect);
             /**
              * @brief Sets a terminal effect.
              * @param effect The effect to be set.
              */
-            static void setEffects(FontEffect effect);
+            static void SetEffects(FontEffect effect);
             /**
              * @brief Resets the terminal font colors.
              */
-            static void resetColors();
+            static void ResetColors();
             /**
              * @brief Resets the terminal font weight.
              */
-            static void resetWeight();
+            static void ResetWeight();
             /**
              * @brief Resets the terminal effects.
              */
-            static void resetEffects();
+            static void ResetEffects();
 
         private:
             Font() = delete;

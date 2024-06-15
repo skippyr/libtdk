@@ -771,7 +771,7 @@ namespace TMK
         return g_isErrorStreamTTY;
     }
 
-    CMDArguments Terminal::Process::getCMDArguments(int totalRawCMDArguments, char** rawCMDArguments)
+    CMDArguments Terminal::Process::GetCMDArguments(int totalRawCMDArguments, char** rawCMDArguments)
     {
 #ifdef _WIN32
         LPWSTR* utf16Arguments = CommandLineToArgvW(GetCommandLineW(), &totalRawCMDArguments);
@@ -788,7 +788,7 @@ namespace TMK
 #endif
     }
 
-    void Terminal::Process::exit(int exitCode)
+    void Terminal::Process::Exit(int exitCode)
     {
         if (exitCode < 0 || exitCode > 255)
         {
@@ -797,9 +797,9 @@ namespace TMK
         std::exit(exitCode);
     }
 
-    void Terminal::Process::exit(ExitCode exitCode)
+    void Terminal::Process::Exit(ExitCode exitCode)
     {
-        exit(static_cast<int>(exitCode));
+        Exit(static_cast<int>(exitCode));
     }
 
     Region Terminal::Window::GetRegion()
@@ -821,7 +821,7 @@ namespace TMK
 #endif
     }
 
-    void Terminal::Window::openAlternateWindow()
+    void Terminal::Window::OpenAlternateWindow()
     {
         try
         {
@@ -832,7 +832,7 @@ namespace TMK
         }
     }
 
-    void Terminal::Window::closeAlternateWindow()
+    void Terminal::Window::CloseAlternateWindow()
     {
         try
         {
@@ -843,7 +843,7 @@ namespace TMK
         }
     }
 
-    void Terminal::Window::setTitle(std::string format, std::va_list arguments)
+    void Terminal::Window::SetTitle(std::string format, std::va_list arguments)
     {
         try
         {
@@ -856,15 +856,15 @@ namespace TMK
         }
     }
 
-    void Terminal::Window::setTitle(std::string format, ...)
+    void Terminal::Window::SetTitle(std::string format, ...)
     {
         std::va_list arguments;
         va_start(arguments, format);
-        setTitle(format, arguments);
+        SetTitle(format, arguments);
         va_end(arguments);
     }
 
-    void Terminal::Bell::ring()
+    void Terminal::Bell::Ring()
     {
         try
         {
@@ -875,7 +875,7 @@ namespace TMK
         }
     }
 
-    void Terminal::Font::setWeight(FontWeight weight)
+    void Terminal::Font::SetWeight(FontWeight weight)
     {
         try
         {
@@ -886,7 +886,7 @@ namespace TMK
         }
     }
 
-    void Terminal::Font::setXColor(unsigned char color, FontLayer layer)
+    void Terminal::Font::SetXColor(unsigned char color, FontLayer layer)
     {
         try
         {
@@ -897,18 +897,18 @@ namespace TMK
         }
     }
 
-    void Terminal::Font::setXColor(XColor color, FontLayer layer)
+    void Terminal::Font::SetXColor(XColor color, FontLayer layer)
     {
         try
         {
-            Terminal::Font::setXColor(static_cast<unsigned char>(color), layer);
+            Terminal::Font::SetXColor(static_cast<unsigned char>(color), layer);
         }
         catch (NoValidTTYException&)
         {
         }
     }
 
-    void Terminal::Font::setRGBColor(unsigned char red, unsigned char green, unsigned char blue, FontLayer layer)
+    void Terminal::Font::SetRGBColor(unsigned char red, unsigned char green, unsigned char blue, FontLayer layer)
     {
         try
         {
@@ -919,22 +919,22 @@ namespace TMK
         }
     }
 
-    void Terminal::Font::setRGBColor(RGBColor color, FontLayer layer)
+    void Terminal::Font::SetRGBColor(RGBColor color, FontLayer layer)
     {
-        setRGBColor(color.GetRed(), color.GetGreen(), color.GetBlue(), layer);
+        SetRGBColor(color.GetRed(), color.GetGreen(), color.GetBlue(), layer);
     }
 
-    void Terminal::Font::setHexColor(unsigned int hex, FontLayer layer)
+    void Terminal::Font::SetHexColor(unsigned int hex, FontLayer layer)
     {
-        setRGBColor(RGBColor(HexColor(hex)), layer);
+        SetRGBColor(RGBColor(HexColor(hex)), layer);
     }
 
-    void Terminal::Font::setHexColor(HexColor color, FontLayer layer)
+    void Terminal::Font::SetHexColor(HexColor color, FontLayer layer)
     {
-        setRGBColor(RGBColor(color), layer);
+        SetRGBColor(RGBColor(color), layer);
     }
 
-    void Terminal::Font::setEffects(int effects)
+    void Terminal::Font::SetEffects(int effects)
     {
         for (std::size_t offset = 6; offset < 32; ++offset)
         {
@@ -962,12 +962,12 @@ namespace TMK
         }
     }
 
-    void Terminal::Font::setEffects(FontEffect effect)
+    void Terminal::Font::SetEffects(FontEffect effect)
     {
-        setEffects(static_cast<int>(effect));
+        SetEffects(static_cast<int>(effect));
     }
 
-    void Terminal::Font::resetColors()
+    void Terminal::Font::ResetColors()
     {
         try
         {
@@ -978,7 +978,7 @@ namespace TMK
         }
     }
 
-    void Terminal::Font::resetWeight()
+    void Terminal::Font::ResetWeight()
     {
         try
         {
@@ -989,7 +989,7 @@ namespace TMK
         }
     }
 
-    void Terminal::Font::resetEffects()
+    void Terminal::Font::ResetEffects()
     {
         for (std::size_t code = 23; code < 30; ++code)
         {
