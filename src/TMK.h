@@ -422,39 +422,39 @@ namespace TMK
         /// </summary>
         AddressAlreadyInUseEADDRINUSE,
         /// <summary>
-        /// Cannot assign requested address (EADDRNOTAVAIL).
+        /// Cannot assign requested address (EADDRNOTAVAIL): thrown when an address can not be bind to a socket due to it is being unavailable.
         /// </summary>
         CannotAssignRequestedAddressEADDRNOTAVAIL,
         /// <summary>
-        /// Network is down (ENETDOWN).
+        /// Network is down (ENETDOWN): thrown when the network subsystem is unavailable.
         /// </summary>
         NetworkIsDownENETDOWN,
         /// <summary>
-        /// Network is unreachable (ENETUNREACH).
+        /// Network is unreachable (ENETUNREACH): thrown when no routing could be found to reach the requested destination.
         /// </summary>
         NetworkIsUnreachableENETUNREACH,
         /// <summary>
-        /// Network dropped connection on reset (ENETRESET).
+        /// Network dropped connection on reset (ENETRESET): thrown when a connection is closed due to a reset.
         /// </summary>
         NetworkDroppedConnectionOnResetENETRESET,
         /// <summary>
-        /// Software caused connection abort (ECONNABORTED).
+        /// Software caused connection abort (ECONNABORTED): thrown when a connection is closed due to a software crash.
         /// </summary>
         SoftwareCausedConnectionAbortECONNABORTED,
         /// <summary>
-        /// Connection reset by peer (ECONNRESET).
+        /// Connection reset by peer (ECONNRESET): thrown when the connection is forcibly closed by the remote host.
         /// </summary>
         ConnectionResetByPeerECONNRESET,
         /// <summary>
-        /// No buffer space available (ENOBUFS).
+        /// No buffer space available (ENOBUFS): throw when the total of network buffer has exceed the system limit.
         /// </summary>
         NoBufferSpaceAvailableENOBUFS,
         /// <summary>
-        /// Transport endpoint is already connected (EISCONN).
+        /// Transport endpoint is already connected (EISCONN): thrown when a connection is attemped on a socket that is already connected.
         /// </summary>
         TransportEndpointIsAlreadyConnectedEISCONN,
         /// <summary>
-        /// Transport endpoint is not connected (ENOTCONN).
+        /// Transport endpoint is not connected (ENOTCONN): thrown when an operation is attemped on a non-connected socket.
         /// </summary>
         TransportEndpointIsNotConnectedENOTCONN,
         /// <summary>
