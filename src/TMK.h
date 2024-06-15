@@ -430,7 +430,7 @@ namespace TMK
         /// </summary>
         NetworkIsDownENETDOWN,
         /// <summary>
-        /// Network is unreachable (ENETUNREACH): thrown when no routing could be found to reach the requested destination.
+        /// Network is unreachable (ENETUNREACH): thrown when no routing could be found to reach a network.
         /// </summary>
         NetworkIsUnreachableENETUNREACH,
         /// <summary>
@@ -478,19 +478,19 @@ namespace TMK
         /// </summary>
         HostIsDownEHOSTDOWN,
         /// <summary>
-        /// No route to host (EHOSTUNREACH).
+        /// No route to host (EHOSTUNREACH): thrown when no routing could be found to reach a host inside of a network.
         /// </summary>
         NoRouteToHostEHOSTUNREACH,
         /// <summary>
-        /// Operation already in progress (EALREADY).
+        /// Operation already in progress (EALREADY): thrown when a non-blocking device has another operation currently queue.
         /// </summary>
         OperationAlreadyInProgressEALREADY,
         /// <summary>
-        /// Operation now in progress (EINPROGRESS).
+        /// Operation now in progress (EINPROGRESS): thrown when a non-blocking device is already running the operation request.
         /// </summary>
         OperationNowInProgressEINPROGRESS,
         /// <summary>
-        /// Stale file handle (ESTALE).
+        /// Stale file handle (ESTALE): thrown when an NFS file handle stales and becomes invalid.
         /// </summary>
         StaleFileHandleESTALE,
         /// <summary>
