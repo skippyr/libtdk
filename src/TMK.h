@@ -343,27 +343,27 @@ namespace TMK
         /// </summary>
         RemoteAddressChangedEREMCHG,
         /// <summary>
-        /// Can not access a needed shared library (ELIBACC).
+        /// Can not access a needed shared library (ELIBACC): thrown when a shared library can not be found or accessed.
         /// </summary>
         CanNotAccessANeededSharedLibraryELIBACC,
         /// <summary>
-        /// Accessing a corrupted shared library (ELIBBAD).
+        /// Accessing a corrupted shared library (ELIBBAD): thrown when a shared library is invalid or corrupted.
         /// </summary>
         AccessingACorruptedSharedLibraryELIBBAD,
         /// <summary>
-        /// .lib section in a.out corrupted (ELIBSCN).
+        /// .lib section in a.out corrupted (ELIBSCN): thrown when the .lib assembly section of an executable is invalid or corrupted.
         /// </summary>
         LibSectionInAOutCorruptedELIBSCN,
         /// <summary>
-        /// Attempting to link in too many shared libraries (ELIBMAX).
+        /// Attempting to link in too many shared libraries (ELIBMAX): thrown when the total of shared libraries being linked into an executable exceeds the system limit.
         /// </summary>
         AttemptingToLinkInTooManySharedLibrariesELIBMAX,
         /// <summary>
-        /// Cannot exec a shared library directly (ELIBEXEC).
+        /// Cannot exec a shared library directly (ELIBEXEC): thrown when a shared library is attemped to be executed directly.
         /// </summary>
         CannotExecASharedLibraryDirectlyELIBEXEC,
         /// <summary>
-        /// Invalid or incomplete multibyte or wide character (EILSEQ).
+        /// Invalid or incomplete multibyte or wide character (EILSEQ): thrown when a byte sequence is invalid given the expected encoding.
         /// </summary>
         InvalidOrIncompleteMultibyteOrWideCharacterEILSEQ,
         /// <summary>
