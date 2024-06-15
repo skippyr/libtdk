@@ -123,31 +123,31 @@ namespace TMK
         /// </summary>
         InvalidArgumentEINVAL,
         /// <summary>
-        /// Too many open files in system (ENFILE): when the system can not open more file descriptors due to its limit has been reached.
+        /// Too many open files in system (ENFILE): thrown when the system-wide limit of open file descriptors has been reached.
         /// </summary>
         TooManyOpenFilesInSystemENFILE,
         /// <summary>
-        /// Too many open files (EMFILE).
+        /// Too many open files (EMFILE): thrown when the limit of open file descriptors for a process has been reached.
         /// </summary>
         TooManyOpenFilesEMFILE,
         /// <summary>
-        /// Inappropriate ioctl for device (ENOTTY).
+        /// Inappropriate ioctl for device (ENOTTY): thrown when an input or output operation is attemped on a device that does not support it.
         /// </summary>
         InappropriateIoctlForDeviceENOTTY,
         /// <summary>
-        /// Text file busy (ETXTBSY).
+        /// Text file busy (ETXTBSY): thrown when a file descriptor referenced is in use by a process.
         /// </summary>
         TextFileBusyETXTBSY,
         /// <summary>
-        /// File too large (EFBIG).
+        /// File too large (EFBIG): thrown when a write operation fails due to the system file size limit has been reached.
         /// </summary>
         FileTooLargeEFBIG,
         /// <summary>
-        /// No space left on device (ENOSPC).
+        /// No space left on device (ENOSPC): thrown when a device does not have space available.
         /// </summary>
         NoSpaceLeftOnDeviceENOSPC,
         /// <summary>
-        /// Illegal seek (ESPIPE).
+        /// Illegal seek (ESPIPE): thrown when a seek operation is attemped on a file descriptor that does not supports it.
         /// </summary>
         IllegalSeekESPIPE,
         /// <summary>
@@ -607,7 +607,7 @@ namespace TMK
     /// <summary>
     /// Represents an exception thrown when a group of streams are redirected.
     /// </summary>
-    class StreamRedirectionException final : public Exception<ExitCode::DeviceNotAStreamENOSTR>
+    class StreamRedirectionException final : public Exception<ExitCode::InappropriateIoctlForDeviceENOTTY>
     {
     public:
         /// <summary>
