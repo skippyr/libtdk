@@ -676,11 +676,6 @@ namespace TMK
     /// </summary>
     class StreamRedirectionException final
     {
-    public:
-        /// <summary>
-        /// Creates an instance of the StreamRedirectionException class.
-        /// </summary>
-        StreamRedirectionException() = default;
     };
 
     /// <summary>
@@ -688,11 +683,6 @@ namespace TMK
     /// </summary>
     class InvalidStreamAttributesException final
     {
-    public:
-        /// <summary>
-        /// Creates an instance of the InvalidStreamAttributesException class.
-        /// </summary>
-        InvalidStreamAttributesException() = default;
     };
 
     /// <summary>
@@ -700,11 +690,6 @@ namespace TMK
     /// </summary>
     class WideCharacterOrientationException final
     {
-    public:
-        /// <summary>
-        /// Creates an instance of the WideCharacterOrientationException class.
-        /// </summary>
-        WideCharacterOrientationException() = default;
     };
 
     /// <summary>
@@ -712,15 +697,49 @@ namespace TMK
     /// </summary>
     class OutOfRangeException final
     {
-    public:
-        /// <summary>
-        /// Creates an instance of the OutOfRangeException class.
-        /// </summary>
-        OutOfRangeException() = default;
     };
 #pragma endregion
 
 #pragma region Color Classes
+    class RGBColor;
+
+    /// <summary>
+    /// Represents a hex color.
+    /// </summary>
+    class HexColor
+    {
+    public:
+        /// <summary>
+        /// Creates an instance of the HexColor class.
+        /// </summary>
+        HexColor() noexcept;
+        /// <summary>
+        /// Creates an instance of the HexColor class.
+        /// </summary>
+        /// <param name="code">The hex code of the color. It must be a value in range from 0x0 to 0xffffff.</param>
+        /// <exception cref="OutOfRangeException">Thrown when the hex code is out of the valid range.</exception>
+        HexColor(unsigned int code);
+        /// <summary>
+        /// Creates an instance of the HexColor class.
+        /// </summary>
+        /// <param name="color">An RGB color to be converted.</param>
+        HexColor(const RGBColor& color) noexcept;
+        /// <summary>
+        /// Gets the hex code of the color.
+        /// </summary>
+        /// <returns>The hex code of the color.</returns>
+        unsigned int GetCode() const noexcept;
+        /// <summary>
+        /// Sets the hex code of the color.
+        /// </summary>
+        /// <param name="code">The hex code of the color. It must be a value in range from 0x0 to 0xffffff.</param>
+        /// <exception cref="OutOfRangeException">Thrown when the hex code is out of the valid range.</exception>
+        void SetCode(unsigned int code);
+
+    private:
+        unsigned int m_code;
+    };
+
     /// <summary>
     /// Represents an RGB color.
     /// </summary>
@@ -728,16 +747,21 @@ namespace TMK
     {
     public:
         /// <summary>
-        /// Creates an instance of the RGB color class.
+        /// Creates an instance of the RGBColor class.
         /// </summary>
         RGBColor() noexcept;
         /// <summary>
-        /// Creates an instance of RGB color class.
+        /// Creates an instance of RGBColor class.
         /// </summary>
         /// <param name="red">The red component of the color.</param>
         /// <param name="green">The green component of the color.</param>
         /// <param name="blue">The blue component of the color.</param>
         RGBColor(unsigned char red, unsigned char green, unsigned char blue) noexcept;
+        /// <summary>
+        /// Creates an instance of the RGBColor class.
+        /// </summary>
+        /// <param name="color">A hex color to be converted.</param>
+        RGBColor(const HexColor& color) noexcept;
         /// <summary>
         /// Gets the red component of the color.
         /// </summary>
@@ -783,6 +807,14 @@ namespace TMK
         /// </summary>
         unsigned char m_blue;
     };
+
+    /// <summary>
+    /// Checks if two RGB colors are equal.
+    /// </summary>
+    /// <param name="colorI">The first color.</param>
+    /// <param name="colorII">The second color.</param>
+    /// <returns>A boolean that states both colors are equal.</returns>
+    bool operator==(const RGBColor& colorI, const RGBColor& colorII);
 #pragma endregion
 
     /// <summary>
@@ -1161,11 +1193,11 @@ namespace TMK
             /// <param name="layer">The layer where the color should be applied on.</param>
             static void SetXTermColor(XTermColor color, FontLayer layer) noexcept;
             /// <summary>
-            /// Sets an RGB color onto a terminal font layer.
+            /// Sets a true color onto a terminal font layer.
             /// </summary>
             /// <param name="color">The color to be applied.</param>
             /// <param name="layer">The layer where the color should be applied on.</param>
-            static void SetRGBColor(RGBColor color, FontLayer layer) noexcept;
+            static void SetTrueColor(RGBColor color, FontLayer layer) noexcept;
             /// <summary>
             /// Resets the terminal font weight.
             /// </summary>

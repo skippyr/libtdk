@@ -17,12 +17,45 @@
 namespace TMK
 {
 #pragma region Color Classes
+#pragma region HexColor
+    HexColor::HexColor() noexcept : m_code(0)
+    {
+    }
+
+    HexColor::HexColor(unsigned int code)
+    {
+        SetCode(code);
+    }
+
+    HexColor::HexColor(const RGBColor& color) noexcept : m_code(color.GetRed() << 16 | color.GetGreen() << 8 | color.GetBlue())
+    {
+    }
+
+    unsigned int HexColor::GetCode() const noexcept
+    {
+        return m_code;
+    }
+
+    void HexColor::SetCode(unsigned int code)
+    {
+        if (code > 0xffffff)
+        {
+            throw OutOfRangeException();
+        }
+        m_code = code;
+    }
+#pragma endregion
+
 #pragma region RGBColor
     RGBColor::RGBColor() noexcept : m_red(0), m_green(0), m_blue(0)
     {
     }
 
     RGBColor::RGBColor(unsigned char red, unsigned char green, unsigned char blue) noexcept : m_red(red), m_green(green), m_blue(blue)
+    {
+    }
+
+    RGBColor::RGBColor(const HexColor& color) noexcept : m_red(color.GetCode() >> 16 & 0xff), m_green(color.GetCode() >> 8 & 0xff), m_blue(color.GetCode() & 0xff)
     {
     }
 
@@ -55,7 +88,13 @@ namespace TMK
     {
         m_blue = blue;
     }
+
+    bool operator==(const RGBColor& colorI, const RGBColor& colorII)
+    {
+        return colorI.GetRed() == colorII.GetRed() && colorI.GetGreen() == colorII.GetGreen() && colorI.GetBlue() == colorII.GetBlue();
+    }
 #pragma endregion
+
 #pragma endregion
 
 #pragma region CMDArguments
@@ -220,7 +259,7 @@ namespace TMK
         SetXTermColor(static_cast<unsigned char>(color), layer);
     }
 
-    void Terminal::Font::SetRGBColor(RGBColor color, FontLayer layer) noexcept
+    void Terminal::Font::SetTrueColor(RGBColor color, FontLayer layer) noexcept
     {
         WriteANSIEscapeSequence("\x1b[{}8;2;{};{};{}m", static_cast<int>(layer), color.GetRed(), color.GetGreen(), color.GetBlue());
     }
