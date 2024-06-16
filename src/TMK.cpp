@@ -23,7 +23,7 @@ namespace TMK
     {
     }
 
-    const std::vector<std::wstring>& CMDArguments::GetUTF16Arguments()
+    const std::vector<std::wstring>& CMDArguments::GetUTF16Arguments() const noexcept
     {
         return m_utf16Arguments;
     }
@@ -32,14 +32,54 @@ namespace TMK
     {
     }
 #endif
-    std::size_t CMDArguments::GetTotalArguments() noexcept
+    std::size_t CMDArguments::GetTotalArguments() const noexcept
     {
         return m_utf8Arguments.size();
     }
 
-    const std::vector<std::string>& CMDArguments::GetUTF8Arguments()
+    const std::vector<std::string>& CMDArguments::GetUTF8Arguments() const noexcept
     {
         return m_utf8Arguments;
+    }
+#pragma endregion
+
+#pragma region RGBColor
+    RGBColor::RGBColor() noexcept : m_red(0), m_green(0), m_blue(0)
+    {
+    }
+
+    RGBColor::RGBColor(unsigned char red, unsigned char green, unsigned char blue) noexcept : m_red(red), m_green(green), m_blue(blue)
+    {
+    }
+
+    unsigned char RGBColor::GetRed() const noexcept
+    {
+        return m_red;
+    }
+
+    unsigned char RGBColor::GetGreen() const noexcept
+    {
+        return m_green;
+    }
+
+    unsigned char RGBColor::GetBlue() const noexcept
+    {
+        return m_blue;
+    }
+
+    void RGBColor::SetRed(unsigned char red) noexcept
+    {
+        m_red = red;
+    }
+
+    void RGBColor::SetGreen(unsigned char green) noexcept
+    {
+        m_green = green;
+    }
+
+    void RGBColor::SetBlue(unsigned char blue) noexcept
+    {
+        m_blue = blue;
     }
 #pragma endregion
 

@@ -670,6 +670,7 @@ namespace TMK
 #pragma endregion
 
 #pragma region Classes
+#pragma region Exception Classes
     /// <summary>
     /// Represents an exception thrown when a group of terminal streams are redirected.
     /// </summary>
@@ -717,6 +718,7 @@ namespace TMK
         /// </summary>
         OutOfRangeException() = default;
     };
+#pragma endregion
 
     /// <summary>
     /// Represents the command-line arguments.
@@ -730,12 +732,12 @@ namespace TMK
         /// Gets the total arguments.
         /// </summary>
         /// <returns>The total arguments.</returns>
-        std::size_t GetTotalArguments() noexcept;
+        std::size_t GetTotalArguments() const noexcept;
         /// <summary>
         /// Gets the UTF-8 encoded arguments.
         /// </summary>
         /// <returns>The UTF-8 encoded arguments.</returns>
-        const std::vector<std::string>& GetUTF8Arguments();
+        const std::vector<std::string>& GetUTF8Arguments() const noexcept;
 
     private:
 #ifdef _WIN32
@@ -749,7 +751,7 @@ namespace TMK
         /// Gets the UTF-16 encoded arguments.
         /// </summary>
         /// <returns>The UTF-16 encoded arguments.</returns>
-        const std::vector<std::wstring>& GetUTF16Arguments();
+        const std::vector<std::wstring>& GetUTF16Arguments() const noexcept;
         /// <summary>
         /// The arguments in UTF-16 encoding.
         /// </summary>
@@ -766,6 +768,69 @@ namespace TMK
         /// The arguments in UTF-8 encoding.
         /// </summary>
         std::vector<std::string> m_utf8Arguments;
+    };
+
+    /// <summary>
+    /// Represents an RGB color.
+    /// </summary>
+    class RGBColor
+    {
+    public:
+        /// <summary>
+        /// Creates an instance of the RGB color class.
+        /// </summary>
+        RGBColor() noexcept;
+        /// <summary>
+        /// Creates an instance of RGB color class.
+        /// </summary>
+        /// <param name="red">The red component of the color.</param>
+        /// <param name="green">The green component of the color.</param>
+        /// <param name="blue">The blue component of the color.</param>
+        RGBColor(unsigned char red, unsigned char green, unsigned char blue) noexcept;
+        /// <summary>
+        /// Gets the red component of the color.
+        /// </summary>
+        /// <returns>The red component of the color.</returns>
+        unsigned char GetRed() const noexcept;
+        /// <summary>
+        /// Gets the green component of the color.
+        /// </summary>
+        /// <returns>The green component of the color.</returns>
+        unsigned char GetGreen() const noexcept;
+        /// <summary>
+        /// Gets the blue component of the color.
+        /// </summary>
+        /// <returns>The blue component of the color.</returns>
+        unsigned char GetBlue() const noexcept;
+        /// <summary>
+        /// Sets the red component of the color.
+        /// </summary>
+        /// <param name="red">The red component of the color.</param>
+        void SetRed(unsigned char red) noexcept;
+        /// <summary>
+        /// Sets the green component of the color.
+        /// </summary>
+        /// <param name="green">The green component of the color.</param>
+        void SetGreen(unsigned char green) noexcept;
+        /// <summary>
+        /// Sets the blue component of the color.
+        /// </summary>
+        /// <param name="blue">The blue component of the color.</param>
+        void SetBlue(unsigned char blue) noexcept;
+
+    private:
+        /// <summary>
+        /// The red component of the color.
+        /// </summary>
+        unsigned char m_red;
+        /// <summary>
+        /// The green component of the color.
+        /// </summary>
+        unsigned char m_green;
+        /// <summary>
+        /// The blue component of the color.
+        /// </summary>
+        unsigned char m_blue;
     };
 
     /// <summary>
