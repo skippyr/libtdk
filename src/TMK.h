@@ -568,6 +568,21 @@ namespace TMK
     };
 
     /// <summary>
+    /// Contains the terminal font layers.
+    /// </summary>
+    enum class FontLayer
+    {
+        /// <summary>
+        /// Refers to the graphemes.
+        /// </summary>
+        Foreground = 3,
+        /// <summary>
+        /// Refers to the background of the graphemes.
+        /// </summary>
+        Background
+    };
+
+    /// <summary>
     /// Contains the terminal font weights.
     /// </summary>
     enum class FontWeight
@@ -580,6 +595,77 @@ namespace TMK
         /// Usually rendered with faint colors.
         /// </summary>
         Light
+    };
+
+    /// <summary>
+    /// Contains the first 16 colors of the XTerm color palette.
+    /// </summary>
+    enum class XTermColor
+    {
+        /// <summary>
+        /// The regular variant of the black color.
+        /// </summary>
+        Black,
+        /// <summary>
+        /// The regular variant of the red color.
+        /// </summary>
+        Red,
+        /// <summary>
+        /// The regular variant of the green color.
+        /// </summary>
+        Green,
+        /// <summary>
+        /// The regular variant of the yellow color.
+        /// </summary>
+        Yellow,
+        /// <summary>
+        /// The regular variant of the blue color.
+        /// </summary>
+        Blue,
+        /// <summary>
+        /// The regular variant of the magenta color.
+        /// </summary>
+        Magenta,
+        /// <summary>
+        /// The regular variant of the cyan color.
+        /// </summary>
+        Cyan,
+        /// <summary>
+        /// The regular variant of the white color.
+        /// </summary>
+        White,
+        /// <summary>
+        /// The light variant of the black color.
+        /// </summary>
+        LightBlack,
+        /// <summary>
+        /// The light variant of the red color.
+        /// </summary>
+        LightRed,
+        /// <summary>
+        /// The light variant of the green color.
+        /// </summary>
+        LightGreen,
+        /// <summary>
+        /// The light variant of the yellow color.
+        /// </summary>
+        LightYellow,
+        /// <summary>
+        /// The light variant of the blue color.
+        /// </summary>
+        LightBlue,
+        /// <summary>
+        /// The light variant of the magenta color.
+        /// </summary>
+        LightMagenta,
+        /// <summary>
+        /// The light variant of the cyan color.
+        /// </summary>
+        LightCyan,
+        /// <summary>
+        /// The light variant of the white color.
+        /// </summary>
+        LightWhite
     };
 #pragma endregion
 
@@ -995,9 +1081,25 @@ namespace TMK
             /// <param name="weight">The weight to be set.</param>
             static void SetWeight(FontWeight weight) noexcept;
             /// <summary>
+            /// Sets a color from the XTerm 256 colors palette onto a terminal font layer.
+            /// </summary>
+            /// <param name="color">The code of the color.</param>
+            /// <param name="layer">The layer where the should be applied on.</param>
+            static void SetXTermColor(unsigned char color, FontLayer layer) noexcept;
+            /// <summary>
+            /// Sets a color from the XTerm 256 colors palette onto a terminal font layer.
+            /// </summary>
+            /// <param name="color">The code of the color.</param>
+            /// <param name="layer">The layer where the should be applied on.</param>
+            static void SetXTermColor(XTermColor color, FontLayer layer) noexcept;
+            /// <summary>
             /// Resets the terminal font weight.
             /// </summary>
             static void ResetWeight() noexcept;
+            /// <summary>
+            /// Resets the terminal font colors.
+            /// </summary>
+            static void ResetColors() noexcept;
 
         private:
             Font() = delete;

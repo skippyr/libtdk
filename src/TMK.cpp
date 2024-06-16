@@ -168,9 +168,24 @@ namespace TMK
         WriteANSIEscapeSequence("\x1b[22;{}m", static_cast<int>(weight));
     }
 
+    void Terminal::Font::SetXTermColor(unsigned char color, FontLayer layer) noexcept
+    {
+        WriteANSIEscapeSequence("\x1b[{}8;5;{}m", static_cast<int>(layer), color);
+    }
+
+    void Terminal::Font::SetXTermColor(XTermColor color, FontLayer layer) noexcept
+    {
+        SetXTermColor(static_cast<unsigned char>(color), layer);
+    }
+
     void Terminal::Font::ResetWeight() noexcept
     {
         WriteANSIEscapeSequence("\x1b[22m");
+    }
+
+    void Terminal::Font::ResetColors() noexcept
+    {
+        WriteANSIEscapeSequence("\x1b[39;49m");
     }
 #pragma endregion
 }
