@@ -12,6 +12,7 @@
 
 namespace TMK
 {
+#pragma region Exception
     template <ExitCode T>
     Exception<T>::Exception(std::string description) noexcept : m_description(description)
     {
@@ -34,7 +35,17 @@ namespace TMK
     {
         return m_description.c_str();
     }
+#pragma endregion
 
+#pragma region WideCharacterOrientationException
+#ifndef _WIN32
+    WideCharacterOrientationException::WideCharacterOrientationException(std::string description) noexcept : Exception(description)
+    {
+    }
+#endif
+#pragma endregion
+
+#pragma region StreamRedirectionException
     StreamRedirectionException::StreamRedirectionException(std::string description) noexcept : Exception(description)
     {
     }
@@ -42,7 +53,9 @@ namespace TMK
     InvalidStreamAttributesException::InvalidStreamAttributesException(std::string description) noexcept : Exception(description)
     {
     }
+#pragma endregion
 
+#pragma region Terminal
     bool Terminal::s_hasInitializedStreamRedirectionCache = false;
     bool Terminal::s_isInputRedirected = true;
     bool Terminal::s_isOutputRedirected = true;
@@ -105,7 +118,9 @@ namespace TMK
             throw InvalidStreamAttributesException("can not set the terminal " + name + " mode due to it is invalid.");
         }
     }
+#pragma endregion
 
+#pragma region Terminal::Encoding
     void Terminal::Encoding::SetOutputCodePage(UINT codePage)
     {
         if (!SetConsoleOutputCP(codePage))
@@ -113,7 +128,9 @@ namespace TMK
             throw InvalidStreamAttributesException("can not set the code page of the terminal output stream due to it is being invalid.");
         }
     }
+#pragma endregion
 
+#pragma region Terminal::Input
     const std::string Terminal::Input::m_name = "input";
 
 #ifdef _WIN32
@@ -143,7 +160,9 @@ namespace TMK
         InitializeStreamRedirectionCache();
         return s_isInputRedirected;
     }
+#pragma endregion
 
+#pragma region Terminal::Output
     const std::string Terminal::Output::m_name = "output";
 
 #ifdef _WIN32
@@ -173,7 +192,9 @@ namespace TMK
         InitializeStreamRedirectionCache();
         return s_isOutputRedirected;
     }
+#pragma endregion
 
+#pragma region Terminal::Error
     const std::string Terminal::Error::m_name = "error";
 
 #ifdef _WIN32
@@ -203,4 +224,5 @@ namespace TMK
         InitializeStreamRedirectionCache();
         return s_isErrorRedirected;
     }
+#pragma endregion
 }

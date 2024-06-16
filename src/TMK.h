@@ -599,6 +599,20 @@ namespace TMK
         std::string m_description;
     };
 
+#ifndef _WIN32
+    /// <summary>
+    /// Represents an exception thrown when a terminal stream is wide character oriented.
+    /// </summary>
+    class WideCharacterOrientationException final : public Exception<ExitCode::NoMessageOfDesiredTypeENOMSG>
+    {
+        /// <summary>
+        /// Creates an instance of the WideCharacterOrientationException class.
+        /// </summary>
+        /// <param name="description">The description of why the exception was thrown.</param>
+        WideCharacterOrientationException(std::string description) noexcept;
+    };
+#endif
+
     /// <summary>
     /// Represents an exception thrown when a group of streams are redirected.
     /// </summary>
@@ -613,7 +627,7 @@ namespace TMK
     };
 
     /// <summary>
-    /// Represents an exception thrown when attributes of a terminal stream is invalid.
+    /// Represents an exception thrown when attributes of a terminal stream are invalid.
     /// </summary>
     class InvalidStreamAttributesException final : public Exception<ExitCode::InvalidArgumentEINVAL>
     {
@@ -623,10 +637,6 @@ namespace TMK
         /// </summary>
         /// <param name="description">The description of why the exception was thrown.</param>
         InvalidStreamAttributesException(std::string description) noexcept;
-    };
-
-    class WideCharacterOrientationException final : public Exception<ExitCode::NoMessageOfDesiredTypeENOMSG>
-    {
     };
 
     /// <summary>
