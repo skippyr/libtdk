@@ -726,31 +726,19 @@ namespace TMK
                 return N == 1 ? std::cout : std::cerr;
             }
             /// <summary>
-            /// Writes a newline grapheme to the terminal stream.
-            /// </summary>
-            static void WriteLine()
-            {
-                InitializeStreamRedirectionCache();
-                if (N == 2)
-                {
-                    Output::Flush();
-                }
-                GetOStream() << std::endl;
-            }
-            /// <summary>
             /// Formats and writes a string to the terminal stream.
             /// </summary>
             /// <typeparam name="T">The type of an argument to be formatted.</typeparam>
             /// <param name="argument">An argument to be formatted.</param>
             template <class T>
-            static void WriteLine(T argument)
+            static void Write(T argument)
             {
                 InitializeStreamRedirectionCache();
                 if (N == 2)
                 {
                     Output::Flush();
                 }
-                GetOStream() << argument << std::endl;
+                GetOStream() << argument;
             }
             /// <summary>
             /// Formats and writes a string to the terminal stream.
@@ -759,14 +747,44 @@ namespace TMK
             /// <param name="format">The format to be used. It uses the same format specifiers as the std::format function family.</param>
             /// <param name="...arguments">The arguments to be formatted.</param>
             template <class... Args>
-            static void WriteLine(const std::string_view& format, Args... arguments)
+            static void Write(const std::string_view& format, Args... arguments)
             {
                 InitializeStreamRedirectionCache();
                 if (N == 2)
                 {
                     Output::Flush();
                 }
-                std::cout << std::vformat(format, std::make_format_args(arguments...)) << std::endl;
+                std::cout << std::vformat(format, std::make_format_args(arguments...));
+            }
+            /// <summary>
+            /// Writes a newline grapheme to the terminal stream.
+            /// </summary>
+            static void WriteLine()
+            {
+                Write("\n");
+            }
+            /// <summary>
+            /// Formats and writes a string to the terminal stream with a newline grapheme appended to its end.
+            /// </summary>
+            /// <typeparam name="T">The type of an argument to be formatted.</typeparam>
+            /// <param name="argument">An argument to be formatted.</param>
+            template <class T>
+            static void WriteLine(T argument)
+            {
+                Write(argument);
+                std::cout << std::endl;
+            }
+            /// <summary>
+            /// Formats and writes a string to the terminal stream with a newline grapheme appended to its end.
+            /// </summary>
+            /// <typeparam name="...Args">The type of the arguments to be formatted.</typeparam>
+            /// <param name="format">The format to be used. It uses the same format specifiers as the std::format function family.</param>
+            /// <param name="...arguments">The arguments to be formatted.</param>
+            template <class... Args>
+            static void WriteLine(const std::string_view& format, Args... arguments)
+            {
+                Write(format, arguments...);
+                std::cout << std::endl;
             }
 
         private:
