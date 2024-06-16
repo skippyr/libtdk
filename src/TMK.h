@@ -50,11 +50,11 @@ namespace TMK
         /// </summary>
         NoSuchDeviceOrAddressENXIO,
         /// <summary>
-        /// Argument list too long (E2BIG): thrown when a process is executed with more command line arguments than the system allows.
+        /// Argument list too long (E2BIG): thrown when the total arguments given to a process exceeds the system limit.
         /// </summary>
         ArgumentListTooLongE2BIG,
         /// <summary>
-        /// Exec format error (ENOEXEC): thrown when a binary can not be executed without futher description.
+        /// Exec format error (ENOEXEC): thrown when a binary can not be executed.
         /// </summary>
         ExecFormatErrorENOEXEC,
         /// <summary>
@@ -70,7 +70,7 @@ namespace TMK
         /// </summary>
         ResourceTemporarilyUnavailableEAGAIN,
         /// <summary>
-        /// Resource temporarily unavailable (EWOULDBLOCK): thrown when a hardware or software resource is currently unavailable or can not be completed..
+        /// Resource temporarily unavailable (EWOULDBLOCK): thrown when a hardware or software resource is currently unavailable or can not be completed.
         /// </summary>
         ResourceTemporarilyUnavailableEWOULDBLOCK = 11,
         /// <summary>
@@ -90,11 +90,11 @@ namespace TMK
         /// </summary>
         BlockDeviceRequiredENOTBLK,
         /// <summary>
-        /// Device or resource busy (EBUSY): thrown when a referenced resource is currently in use by a process.
+        /// Device or resource busy (EBUSY): thrown when a resource is currently in use by a process.
         /// </summary>
         DeviceOrResourceBusyEBUSY,
         /// <summary>
-        /// File exists (EEXIST): thrown when a referenced file system entry already exists.
+        /// File exists (EEXIST): thrown when a file system entry already exists.
         /// </summary>
         FileExistsEEXIST,
         /// <summary>
@@ -114,15 +114,15 @@ namespace TMK
         /// </summary>
         IsADirectoryEISDIR,
         /// <summary>
-        /// Invalid argument (EINVAL): thrown when an operation is attemped with invalid arguments, such as a system call or function.
+        /// Invalid argument (EINVAL): thrown when an operation is attemped with invalid arguments.
         /// </summary>
         InvalidArgumentEINVAL,
         /// <summary>
-        /// Too many open files in system (ENFILE): thrown when the system-wide limit of open file descriptors has been reached.
+        /// Too many open files in system (ENFILE): thrown when the total of open file descriptors has exceeded the system-wide limit.
         /// </summary>
         TooManyOpenFilesInSystemENFILE,
         /// <summary>
-        /// Too many open files (EMFILE): thrown when the limit of open file descriptors for a process has been reached.
+        /// Too many open files (EMFILE): thrown when the total of open file descriptors has exceeded the process limit.
         /// </summary>
         TooManyOpenFilesEMFILE,
         /// <summary>
@@ -130,7 +130,7 @@ namespace TMK
         /// </summary>
         InappropriateIoctlForDeviceENOTTY,
         /// <summary>
-        /// Text file busy (ETXTBSY): thrown when a file descriptor referenced is in use by a process.
+        /// Text file busy (ETXTBSY): thrown when a file descriptor is in use by a process.
         /// </summary>
         TextFileBusyETXTBSY,
         /// <summary>
@@ -154,7 +154,7 @@ namespace TMK
         /// </summary>
         TooManyLinksEMLINK,
         /// <summary>
-        /// Broken pipe (EPIPE): thrown when a write operation is attemped a closed pipe.
+        /// Broken pipe (EPIPE): thrown when a write operation is attemped on a closed pipe.
         /// </summary>
         BrokenPipeEPIPE,
         /// <summary>
@@ -162,7 +162,7 @@ namespace TMK
         /// </summary>
         NumericalArgumentOutOfDomainEDOM,
         /// <summary>
-        /// Numerical result out of range (ERANGE): thrown when a value can not be represented within a given range, such as when a number variable overflows.
+        /// Numerical result out of range (ERANGE): thrown when a value can not be represented within a given range.
         /// </summary>
         NumericalResultOutOfRangeERANGE,
         /// <summary>
@@ -174,15 +174,15 @@ namespace TMK
         /// </summary>
         ResourceDeadlockAvoidedEDEADLOCK = 35,
         /// <summary>
-        /// File name too long (ENAMETOOLONG): thrown when a file system entry has a name that reaches the system limit.
+        /// File name too long (ENAMETOOLONG): thrown when a file system entry has a name that exceeds the system limit.
         /// </summary>
         FileNameTooLongENAMETOOLONG,
         /// <summary>
-        /// No locks available (ENOLCK): thrown when there are no network file system (NFS) locks available.
+        /// No locks available (ENOLCK): thrown when there are no NFS locks available.
         /// </summary>
         NoLocksAvailableENOLCK,
         /// <summary>
-        /// Function not implemented (ENOSYS): thrown when a non-existent system call or function is referenced.
+        /// Function not implemented (ENOSYS): thrown when a non-existent system call is referenced.
         /// </summary>
         FunctionNotImplementedENOSYS,
         /// <summary>
@@ -190,19 +190,19 @@ namespace TMK
         /// </summary>
         DirectoryNotEmptyENOTEMPTY,
         /// <summary>
-        /// Too many levels of symbolic links (ELOOP): thrown an operation can not be performed due to recursive calls on symbolic links.
+        /// Too many levels of symbolic links (ELOOP): thrown when an operation can not be performed due to recursive calls on the same symbolic link.
         /// </summary>
         TooManyLevelsOfSymbolicLinksELOOP,
         /// <summary>
-        /// No message of desired type (ENOMSG): thrown when a message queue does match a desired type.
+        /// No message of desired type (ENOMSG): thrown when a message queue does match the desired type.
         /// </summary>
         NoMessageOfDesiredTypeENOMSG = 42,
         /// <summary>
-        /// Identifier removed (EIDRM): thrown when an inter-process communication resource is removed during operations.
+        /// Identifier removed (EIDRM): thrown when an inter-process communication resource is removed during an operation.
         /// </summary>
         IdentifierRemovedEIDRM,
         /// <summary>
-        /// Channel number out of range (ECHRNG): thrown an invalid device channel number is referenced.
+        /// Channel number out of range (ECHRNG): thrown when an invalid device channel number is referenced.
         /// </summary>
         ChannelNumberOutOfRangeECHRNG,
         /// <summary>
@@ -226,11 +226,11 @@ namespace TMK
         /// </summary>
         ProtocolDriverNotAttachedEUNATCH,
         /// <summary>
-        /// No CSI structure available (ENOCSI): thrown when a terminal CSI structure is not available or invalid.
+        /// No CSI structure available (ENOCSI): thrown when a terminal CSI structure is not available or valid.
         /// </summary>
         NoCSIStructureAvailableENOCSI,
         /// <summary>
-        /// Level 2 halted (EL2HLT): thrown when the requested networking protocol is unavailable in the system.
+        /// Level 2 halted (EL2HLT): thrown when the requested network protocol is unavailable in the system.
         /// </summary>
         Level2HaltedEL2HLT,
         /// <summary>
@@ -250,7 +250,7 @@ namespace TMK
         /// </summary>
         NoAnodeENOANO,
         /// <summary>
-        /// Invalid request code (EBADRQC): thrown when an invalid system call code is used.
+        /// Invalid request code (EBADRQC): thrown when an invalid system call request code is used.
         /// </summary>
         InvalidRequestCodeEBADRQC,
         /// <summary>
@@ -262,11 +262,11 @@ namespace TMK
         /// </summary>
         BadFontFileFormatEBFONT = 59,
         /// <summary>
-        /// Device not a stream (ENOSTR): thrown when a file descriptor referenced does not supports streaming operations.
+        /// Device not a stream (ENOSTR): thrown when a file descriptor referenced does not support streaming operations.
         /// </summary>
         DeviceNotAStreamENOSTR,
         /// <summary>
-        /// No data available (ENODATA): thrown when no data is available during a non-blocking reading operation.
+        /// No data available (ENODATA): thrown when no data is available during a non-blocking read operation.
         /// </summary>
         NoDataAvailableENODATA,
         /// <summary>
@@ -278,7 +278,7 @@ namespace TMK
         /// </summary>
         OutOfStreamsResourcesENOSR,
         /// <summary>
-        /// Machine is not on the network (ENONET): thrown when an operation fails due to the machine not being connected to a network.
+        /// Machine is not on the network (ENONET): thrown when an operation fails due to the machine not being connected to the required network.
         /// </summary>
         MachineIsNotOnTheNetworkENONET,
         /// <summary>
@@ -298,15 +298,15 @@ namespace TMK
         /// </summary>
         AdvertiseErrorEADV,
         /// <summary>
-        /// Srmount error (ESRMNT): thrown when mouting a device using the obsolete srmount feature fails.
+        /// Srmount error (ESRMNT): thrown when mouting a device using the srmount feature fails.
         /// </summary>
         SrmountErrorESRMNT,
         /// <summary>
-        /// Communication error on send (ECOMM): thrown when a communication fails during a send operation.
+        /// Communication error on send (ECOMM): thrown when communication fails during a send operation.
         /// </summary>
         CommunicationErrorOnSendECOMM,
         /// <summary>
-        /// Protocol error (EPROTO): thrown when there is an error at the protocol of the network layer.
+        /// Protocol error (EPROTO): thrown when there is an error at the network protocol.
         /// </summary>
         ProtocolErrorEPROTO,
         /// <summary>
@@ -322,7 +322,7 @@ namespace TMK
         /// </summary>
         BadMessageEBADMSG,
         /// <summary>
-        /// Value too large for defined data type (EOVERFLOW): thrown when a value can not be hold by a type, such as a variable overflow.
+        /// Value too large for defined data type (EOVERFLOW): thrown when a value can not be hold by its data type.
         /// </summary>
         ValueTooLargeForDefinedDataTypeEOVERFLOW,
         /// <summary>
@@ -366,11 +366,11 @@ namespace TMK
         /// </summary>
         InterruptedSystemCallShouldBeRestartedERESTART,
         /// <summary>
-        /// Streams pipe error (ESTRPIPE): thrown when a write operation is perfomed in a closed stream.
+        /// Streams pipe error (ESTRPIPE): thrown when a write operation is perfomed on a closed stream.
         /// </summary>
         StreamsPipeErrorESTRPIPE,
         /// <summary>
-        /// Too many users (EUSERS): thrown when the system limit on the total number of network connections or users has been reached.
+        /// Too many users (EUSERS): thrown when the total of network connections or users exceeds the system limit.
         /// </summary>
         TooManyUsersEUSERS,
         /// <summary>
@@ -382,35 +382,35 @@ namespace TMK
         /// </summary>
         DestinationAddressRequiredEDESTADDRREQ,
         /// <summary>
-        /// Message too long (EMSGSIZE): thrown when the message sent through a socket exceeds a pre-defined limit.
+        /// Message too long (EMSGSIZE): thrown when the message sent through a socket exceeds the limit predefined by its protocol.
         /// </summary>
         MessageTooLongEMSGSIZE,
         /// <summary>
-        /// Protocol wrong type for socket (EPROTOTYPE): thrown when a socket fails due to an invalid use of its protocol.
+        /// Protocol wrong type for socket (EPROTOTYPE): thrown when a protocol does match the socket it is attemped on.
         /// </summary>
         ProtocolWrongTypeForSocketEPROTOTYPE,
         /// <summary>
-        /// Protocol not available (ENOPROTOOPT): thrown when the protocol requested is not available in the system.
+        /// Protocol not available (ENOPROTOOPT): thrown when a protocol requested is not available in the system.
         /// </summary>
         ProtocolNotAvailableENOPROTOOPT,
         /// <summary>
-        /// Protocol not supported (EPROTONOSUPPORT): thrown when the protocol requested is not available in the system.
+        /// Protocol not supported (EPROTONOSUPPORT): thrown when a protocol is not available in the system.
         /// </summary>
         ProtocolNotSupportedEPROTONOSUPPORT,
         /// <summary>
-        /// Socket type not supported (ESOCKTNOSUPPORT): thrown when the socket type requested is not available in the system.
+        /// Socket type not supported (ESOCKTNOSUPPORT): thrown a the socket type is not available in the system.
         /// </summary>
         SocketTypeNotSupportedESOCKTNOSUPPORT,
         /// <summary>
-        /// Operation not supported (EOPNOTSUPP): thrown when a socket does not support a protocol.
+        /// Operation not supported (EOPNOTSUPP): thrown when a socket or its protocol do not support an operation.
         /// </summary>
         OperationNotSupportedEOPNOTSUPP,
         /// <summary>
-        /// Operation not supported (ENOTSUP): thrown when a socket does not support a protocol.
+        /// Operation not supported (ENOTSUP): thrown when a socket or its protocol do not support an operation.
         /// </summary>
         OperationNotSupportedENOTSUP = 95,
         /// <summary>
-        /// Protocol family not supported (EPFNOSUPPORT): thrown when a protocol family is not supported by the system.
+        /// Protocol family not supported (EPFNOSUPPORT): thrown when a protocol family is not available in the system.
         /// </summary>
         ProtocolFamilyNotSupportedEPFNOSUPPORT,
         /// <summary>
@@ -442,11 +442,11 @@ namespace TMK
         /// </summary>
         SoftwareCausedConnectionAbortECONNABORTED,
         /// <summary>
-        /// Connection reset by peer (ECONNRESET): thrown when the connection is forcibly closed by the remote host.
+        /// Connection reset by peer (ECONNRESET): thrown when the connection is forcibly closed by one of its peer.
         /// </summary>
         ConnectionResetByPeerECONNRESET,
         /// <summary>
-        /// No buffer space available (ENOBUFS): thrown when the total of network buffer has exceed the system limit.
+        /// No buffer space available (ENOBUFS): thrown when the total of network buffers exceeds the system limit.
         /// </summary>
         NoBufferSpaceAvailableENOBUFS,
         /// <summary>
@@ -462,11 +462,11 @@ namespace TMK
         /// </summary>
         CanNotSendAfterTransportEndpointShutdownESHUTDOWN,
         /// <summary>
-        /// Too many references: cannot splice (ETOOMANYREFS): thrown when there are too many references to a kernel object.
+        /// Too many references: cannot splice (ETOOMANYREFS): thrown when there are too many references to a kernel resource.
         /// </summary>
         TooManyReferencesCannotSpliceETOOMANYREFSs,
         /// <summary>
-        /// Connection timed out (ETIMEDOUT): thrown when a connection can not be stablished in a given time.
+        /// Connection timed out (ETIMEDOUT): thrown when a connection can not be stablished in its protocol predefined time.
         /// </summary>
         ConnectionTimedOutETIMEDOUT,
         /// <summary>
@@ -486,11 +486,11 @@ namespace TMK
         /// </summary>
         OperationAlreadyInProgressEALREADY,
         /// <summary>
-        /// Operation now in progress (EINPROGRESS): thrown when a non-blocking device is already running the operation request.
+        /// Operation now in progress (EINPROGRESS): thrown when a non-blocking device is already running a same operation.
         /// </summary>
         OperationNowInProgressEINPROGRESS,
         /// <summary>
-        /// Stale file handle (ESTALE): thrown when an NFS file handle stales and becomes invalid.
+        /// Stale file handle (ESTALE): thrown when a NFS file handle stales and becomes invalid.
         /// </summary>
         StaleFileHandleESTALE,
         /// <summary>
@@ -498,7 +498,7 @@ namespace TMK
         /// </summary>
         StructureNeedsCleaningEUCLEAN,
         /// <summary>
-        /// Not a XENIX named type file (ENOTNAM): thrown when an invalid file is referenced in place of a named type file.
+        /// Not a XENIX named type file (ENOTNAM): thrown when an invalid file system entry is referenced in place of a named type file.
         /// </summary>
         NotAXENIXNamedTypeFileENOTNAM,
         /// <summary>
@@ -514,7 +514,7 @@ namespace TMK
         /// </summary>
         RemoteIOErrorEREMOTEIO,
         /// <summary>
-        /// Disk quota exceeded (EDQUOT): thrown when a write operation is attemped to be performed while the disk quote is at limit.
+        /// Disk quota exceeded (EDQUOT): thrown when a write operation is attemped while the disk quota exceeds its limit.
         /// </summary>
         DiskQuotaExceededEDQUOT,
         /// <summary>
@@ -522,7 +522,7 @@ namespace TMK
         /// </summary>
         NoMediumFoundENOMEDIUM,
         /// <summary>
-        /// Wrong medium type (EMEDIUMTYPE): thrown when the inserted medium is not supported by the drive or is not formatted.
+        /// Wrong medium type (EMEDIUMTYPE): thrown when the inserted medium is not supported by the drive or it is not formatted.
         /// </summary>
         WrongMediumTypeEMEDIUMTYPE,
         /// <summary>
@@ -530,15 +530,15 @@ namespace TMK
         /// </summary>
         OperationCanceledECANCELED,
         /// <summary>
-        /// Required key not available (ENOKEY): thrown when a required cryptographic key is not available.
+        /// Required key not available (ENOKEY): thrown when a cryptographic key is not available.
         /// </summary>
         RequiredKeyNotAvailableENOKEY,
         /// <summary>
-        /// Key has expired (EKEYEXPIRED): thrown when a cryptographic key has expired thus became invalid.
+        /// Key has expired (EKEYEXPIRED): thrown when a cryptographic key has expired.
         /// </summary>
         KeyHasExpiredEKEYEXPIRED,
         /// <summary>
-        /// Key has been revoked (EKEYREVOKED): thrown when a cryptographic key has been revoked thus became invalid.
+        /// Key has been revoked (EKEYREVOKED): thrown when a cryptographic key has been revoked.
         /// </summary>
         KeyHasBeenRevokedEKEYREVOKED,
         /// <summary>
@@ -558,7 +558,7 @@ namespace TMK
         /// </summary>
         OperationNotPossibleDueToRFKillERFKILL,
         /// <summary>
-        /// Memory page has hardware error (EHWPOISON): thrown when a memory page becomes corrupted.
+        /// Memory page has hardware error (EHWPOISON): thrown when a memory page gets corrupted.
         /// </summary>
         MemoryPageHasHardwareErrorEHWPOISON
     };
