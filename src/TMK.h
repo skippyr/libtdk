@@ -723,26 +723,9 @@ namespace TMK
     /// </summary>
     class CMDArguments
     {
+        friend class Terminal;
+
     public:
-#ifdef _WIN32
-        /// <summary>
-        /// Creates an instance of the CMDArguments class.
-        /// </summary>
-        /// <param name="utf16Arguments">The UTF-16 encoded arguments.</param>
-        /// <param name="utf8Arguments">The UTF-8 encoded arguments.</param>
-        CMDArguments(const std::vector<std::wstring>& utf16Arguments, const std::vector<std::string>& utf8Arguments) noexcept;
-        /// <summary>
-        /// Gets the UTF-16 encoded arguments.
-        /// </summary>
-        /// <returns>The UTF-16 encoded arguments.</returns>
-        const std::vector<std::wstring>& GetUTF16Arguments();
-#else
-        /// <summary>
-        /// Creates an instance of the CMDArguments class.
-        /// </summary>
-        /// <param name="utf8Arguments">The UTF-8 encoded arguments.</param>
-        CMDArguments(const std::vector<std::string>& utf8Arguments) noexcept;
-#endif
         /// <summary>
         /// Gets the total arguments.
         /// </summary>
@@ -757,10 +740,28 @@ namespace TMK
     private:
 #ifdef _WIN32
         /// <summary>
+        /// Creates an instance of the CMDArguments class.
+        /// </summary>
+        /// <param name="utf16Arguments">The UTF-16 encoded arguments.</param>
+        /// <param name="utf8Arguments">The UTF-8 encoded arguments.</param>
+        CMDArguments(const std::vector<std::wstring>& utf16Arguments, const std::vector<std::string>& utf8Arguments) noexcept;
+        /// <summary>
+        /// Gets the UTF-16 encoded arguments.
+        /// </summary>
+        /// <returns>The UTF-16 encoded arguments.</returns>
+        const std::vector<std::wstring>& GetUTF16Arguments();
+        /// <summary>
         /// The arguments in UTF-16 encoding.
         /// </summary>
         std::vector<std::wstring> m_utf16Arguments;
+#else
+        /// <summary>
+        /// Creates an instance of the CMDArguments class.
+        /// </summary>
+        /// <param name="utf8Arguments">The UTF-8 encoded arguments.</param>
+        CMDArguments(const std::vector<std::string>& utf8Arguments) noexcept;
 #endif
+        CMDArguments(const CMDArguments&) = delete;
         /// <summary>
         /// The arguments in UTF-8 encoding.
         /// </summary>
