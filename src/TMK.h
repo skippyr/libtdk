@@ -1,6 +1,6 @@
 #pragma region Headers
-#include <cstdarg>
-#include <string>
+#include <format>
+#include <iostream>
 #ifdef _WIN32
 #include <Windows.h>
 #else
@@ -568,19 +568,6 @@ namespace TMK
 #pragma endregion
 
 #pragma region Classes
-#ifndef _WIN32
-    /// <summary>
-    /// Represents an exception thrown when a terminal stream is wide character oriented.
-    /// </summary>
-    class WideCharacterOrientationException final
-    {
-        /// <summary>
-        /// Creates an instance of the WideCharacterOrientationException class.
-        /// </summary>
-        WideCharacterOrientationException() noexcept;
-    };
-#endif
-
     /// <summary>
     /// Represents an exception thrown when a group of terminal streams are redirected.
     /// </summary>
@@ -590,7 +577,7 @@ namespace TMK
         /// <summary>
         /// Creates an instance of the StreamRedirectionException class.
         /// </summary>
-        StreamRedirectionException() noexcept;
+        StreamRedirectionException() noexcept = default;
     };
 
     /// <summary>
@@ -602,7 +589,7 @@ namespace TMK
         /// <summary>
         /// Creates an instance of the InvalidStreamAttributesException class.
         /// </summary>
-        InvalidStreamAttributesException() noexcept;
+        InvalidStreamAttributesException() noexcept = default;
     };
 
     /// <summary>
@@ -614,7 +601,7 @@ namespace TMK
         /// <summary>
         /// Creates an instance of the WideCharacterOrientationException class.
         /// </summary>
-        WideCharacterOrientationException();
+        WideCharacterOrientationException() noexcept = default;
     };
 
     /// <summary>
@@ -643,8 +630,8 @@ namespace TMK
         /// <summary>
         /// Represents a terminal stream.
         /// </summary>
-        /// <typeparam name="T">The file ID related to the stream.</typeparam>
-        template <int T>
+        /// <typeparam name="N">The file ID related to the stream.</typeparam>
+        template <int N>
         class Stream
         {
         public:
@@ -653,36 +640,67 @@ namespace TMK
             /// Gets the handle related to the terminal stream.
             /// </summary>
             /// <returns>The handle related to the terminal stream.</returns>
-            static HANDLE GetHandle() noexcept;
+            static HANDLE GetHandle() noexcept
+            {
+                return GetStdHandle(!N ? STD_INPUT_HANDLE : N == 1 ? STD_OUTPUT_HANDLE : STD_ERROR_HANDLE);
+            }
             /// <summary>
             /// Gets the mode of the terminal stream.
             /// </summary>
             /// <returns>The mode of the terminal stream.</returns>
             /// <exception cref="StreamRedirectionException">Thrown whenever the stream is redirected.</exception>
-            static DWORD GetMode();
+            static DWORD GetMode()
+            {
+                DWORD mode;
+                if (!GetConsoleMode(GetHandle(), &mode))
+                {
+                    throw StreamRedirectionException();
+                }
+                return mode;
+            }
             /// <summary>
             /// Sets the mode of the terminal stream.
             /// </summary>
             /// <param name="mode">The mode to be set.</param>
             /// <exception cref="StreamRedirectionException">Thrown whenever the stream is redirected.</exception>
             /// <exception cref="InvalidStreamAttributesException">Thrown whenever the mode is invalid.</exception>
-            static void SetMode(DWORD mode);
+            static void SetMode(DWORD mode)
+            {
+                if (IsRedirected())
+                {
+                    throw StreamRedirectionException();
+                }
+                if (!SetConsoleMode(GetHandle(), mode))
+                {
+                    throw InvalidStreamAttributesException();
+                }
+            }
 #endif
             /// <summary>
             /// Gets the file related to the terminal stream.
             /// </summary>
             /// <returns>The file related to the terminal stream.</returns>
-            static std::FILE* GetFile() noexcept;
+            static std::FILE* GetFile() noexcept
+            {
+                return !N ? stdin : N == 1 ? stdout : stderr;
+            }
             /// <summary>
             /// Gets the file ID related to the terminal stream.
             /// </summary>
-            /// <returns></returns>
-            static int GetFileID() noexcept;
+            /// <returns>The file ID related to the terminal stream.</returns>
+            static int GetFileID() noexcept
+            {
+                return N;
+            }
             /// <summary>
             /// Checks if the terminal stream is redirected.
             /// </summary>
             /// <returns>A boolean that states the terminal stream is redirected.</returns>
-            static bool IsRedirected() noexcept;
+            static bool IsRedirected() noexcept
+            {
+                InitializeStreamRedirectionCache();
+                return !N ? s_isInputRedirected : N == 1 ? s_isOutputRedirected : s_isErrorRedirected;
+            }
 
         private:
             /// <summary>
@@ -694,39 +712,62 @@ namespace TMK
         /// <summary>
         /// Represents a terminal stream.
         /// </summary>
-        /// <typeparam name="T">The file ID related to the stream.</typeparam>
-        template <int T>
-        class WritableStream : public Stream<T>
+        /// <typeparam name="N">The file ID related to the stream.</typeparam>
+        template <int N>
+        class WritableStream : public Stream<N>
         {
         public:
             /// <summary>
-            /// Formats and writes a string to the terminal stream.
+            /// Gets the ostream related to the terminal stream.
             /// </summary>
-            /// <param name="format">The format to be used. It accepts the same format specifiers as the printf function family.</param>
-            /// <param name="arguments">The arguments to be formatted.</param>
-            /// <exception cref="WideCharacterOrientationException">Thrown when the terminal stream is wide character oriented.</exception>
-            static void Write(std::string format, std::va_list arguments);
+            /// <returns>The ostream related to the terminal stream.</returns>
+            static std::ostream& GetOStream() noexcept
+            {
+                return N == 1 ? std::cout : std::cerr;
+            }
+            /// <summary>
+            /// Writes a newline grapheme to the terminal stream.
+            /// </summary>
+            static void WriteLine()
+            {
+                InitializeStreamRedirectionCache();
+                if (N == 2)
+                {
+                    Output::Flush();
+                }
+                GetOStream() << std::endl;
+            }
             /// <summary>
             /// Formats and writes a string to the terminal stream.
             /// </summary>
-            /// <param name="format">The format to be used. It accepts the same format specifiers as the printf function family.</param>
-            /// <param name="">The arguments to be formatted.</param>
-            /// <exception cref="WideCharacterOrientationException">Thrown when the terminal stream is wide character oriented.</exception>
-            static void Write(std::string format, ...);
+            /// <typeparam name="T">The type of an argument to be formatted.</typeparam>
+            /// <param name="argument">An argument to be formatted.</param>
+            template <class T>
+            static void WriteLine(T argument)
+            {
+                InitializeStreamRedirectionCache();
+                if (N == 2)
+                {
+                    Output::Flush();
+                }
+                GetOStream() << argument << std::endl;
+            }
             /// <summary>
-            /// Formats and writes a string to the terminal stream with a newline character appended to its end.
+            /// Formats and writes a string to the terminal stream.
             /// </summary>
-            /// <param name="format">The format to be used. It accepts the same format specifiers as the printf function family.</param>
-            /// <param name="arguments">The arguments to be formatted.</param>
-            /// <exception cref="WideCharacterOrientationException">Thrown when the terminal stream is wide character oriented.</exception>
-            static void WriteLine(std::string format, std::va_list arguments);
-            /// <summary>
-            /// Formats and writes a string to the terminal stream with a newline character appended to its end.
-            /// </summary>
-            /// <param name="format">The format to be used. It accepts the same format specifiers as the printf function family.</param>
-            /// <param name="">The arguments to be formatted.</param>
-            /// <exception cref="WideCharacterOrientationException">Thrown when the terminal stream is wide character oriented.</exception>
-            static void WriteLine(std::string format, ...);
+            /// <typeparam name="...Args">The type of the arguments to be formatted.</typeparam>
+            /// <param name="format">The format to be used. It uses the same format specifiers as the std::format function family.</param>
+            /// <param name="...arguments">The arguments to be formatted.</param>
+            template <class... Args>
+            static void WriteLine(const std::string_view& format, Args... arguments)
+            {
+                InitializeStreamRedirectionCache();
+                if (N == 2)
+                {
+                    Output::Flush();
+                }
+                std::cout << std::vformat(format, std::make_format_args(arguments...)) << std::endl;
+            }
 
         private:
             /// <summary>

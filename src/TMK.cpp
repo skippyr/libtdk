@@ -16,32 +16,6 @@
 
 namespace TMK
 {
-#pragma region WideCharacterOrientationException
-#ifndef _WIN32
-    WideCharacterOrientationException::WideCharacterOrientationException() noexcept
-    {
-    }
-#endif
-#pragma endregion
-
-#pragma region StreamRedirectionException
-    StreamRedirectionException::StreamRedirectionException() noexcept
-    {
-    }
-#pragma endregion
-
-#pragma region InvalidStreamAttributesException
-    InvalidStreamAttributesException::InvalidStreamAttributesException() noexcept
-    {
-    }
-#pragma endregion
-
-#pragma region WideCharacterOrientationException
-    WideCharacterOrientationException::WideCharacterOrientationException()
-    {
-    }
-#pragma endregion
-
 #pragma region Terminal
     bool Terminal::s_hasInitializedStreamRedirectionCache = false;
     bool Terminal::s_isInputRedirected = true;
@@ -82,104 +56,6 @@ namespace TMK
         Encoding::SetOutputCodePage(CP_UTF8);
         InitializeVirtualTerminalProcessing();
 #endif
-    }
-#pragma endregion
-
-#pragma region Terminal::Stream
-    template class Terminal::Stream<0>;
-    template class Terminal::Stream<1>;
-    template class Terminal::Stream<2>;
-
-    template <int T>
-    HANDLE Terminal::Stream<T>::GetHandle() noexcept
-    {
-        return GetStdHandle(!T ? STD_INPUT_HANDLE : T == 1 ? STD_OUTPUT_HANDLE : STD_ERROR_HANDLE);
-    }
-
-    template <int T>
-    DWORD Terminal::Stream<T>::GetMode()
-    {
-        DWORD mode;
-        if (!GetConsoleMode(GetHandle(), &mode))
-        {
-            throw StreamRedirectionException();
-        }
-        return mode;
-    }
-
-    template <int T>
-    void Terminal::Stream<T>::SetMode(DWORD mode)
-    {
-        if (IsRedirected())
-        {
-            throw StreamRedirectionException();
-        }
-        if (!SetConsoleMode(GetHandle(), mode))
-        {
-            throw InvalidStreamAttributesException();
-        }
-    }
-
-    template <int T>
-    std::FILE* Terminal::Stream<T>::GetFile() noexcept
-    {
-        return !T ? stdin : T == 1 ? stdout : stderr;
-    }
-
-    template <int T>
-    int Terminal::Stream<T>::GetFileID() noexcept
-    {
-        return T;
-    }
-
-    template <int T>
-    bool Terminal::Stream<T>::IsRedirected() noexcept
-    {
-        InitializeStreamRedirectionCache();
-        return !T ? s_isInputRedirected : T == 1 ? s_isOutputRedirected : s_isErrorRedirected;
-    }
-#pragma endregion
-
-#pragma region Terminal::WritableStream
-    template class Terminal::WritableStream<1>;
-    template class Terminal::WritableStream<2>;
-
-    template <int T>
-    void Terminal::WritableStream<T>::Write(std::string format, std::va_list arguments)
-    {
-        if (GetFile() == Error::GetFile())
-        {
-            Output::Flush();
-        }
-        if (std::vfprintf(GetFile(), format.c_str(), arguments) < 0)
-        {
-            throw WideCharacterOrientationException();
-        }
-    }
-
-    template <int T>
-    void Terminal::WritableStream<T>::Write(std::string format, ...)
-    {
-        std::va_list arguments;
-        va_start(arguments, format);
-        Write(format, arguments);
-        va_end(arguments);
-    }
-
-    template <int T>
-    void Terminal::WritableStream<T>::WriteLine(std::string format, std::va_list arguments)
-    {
-        Write(format, arguments);
-        std::fputc('\n', GetFile());
-    }
-
-    template <int T>
-    void Terminal::WritableStream<T>::WriteLine(std::string format, ...)
-    {
-        std::va_list arguments;
-        va_start(arguments, format);
-        WriteLine(format, arguments);
-        va_end(arguments);
     }
 #pragma endregion
 
