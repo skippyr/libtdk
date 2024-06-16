@@ -825,6 +825,18 @@ namespace TMK
             /// <param name="codePage">The code page to be set.</param>
             /// <exception cref="InvalidStreamAttributesException">Thrown when the code page is invalid.</exception>
             static void SetOutputCodePage(UINT codePage);
+            /// <summary>
+            /// Converts an UTF-16 encoded string to UTF-8.
+            /// </summary>
+            /// <param name="utf16String">The UTF-16 encoded string to be converted.</param>
+            /// <returns>The converted UTF-8 encoded string.</returns>
+            static std::string ConvertUTF16ToUTF8(const std::wstring& utf16String);
+            /// <summary>
+            /// Converts an UTF-8 encoded string to UTF-16.
+            /// </summary>
+            /// <param name="utf8String">The UTF-8 encoded string to be converted.</param>
+            /// <returns>The converted UTF-16 encoded string.</returns>
+            static std::wstring ConvertUTF8ToUTF16(const std::string& utf8String);
 
         private:
             /// <summary>

@@ -59,20 +59,38 @@ namespace TMK
     }
 #pragma endregion
 
-#pragma region Terminal::Output
-    void Terminal::Output::Flush() noexcept
-    {
-        std::fflush(GetFile());
-    }
-#pragma endregion
-
 #pragma region Terminal::Encoding
+#ifdef _WIN32
     void Terminal::Encoding::SetOutputCodePage(UINT codePage)
     {
         if (!SetConsoleOutputCP(codePage))
         {
             throw InvalidStreamAttributesException();
         }
+    }
+
+    std::string Terminal::Encoding::ConvertUTF16ToUTF8(const std::wstring& utf16String)
+    {
+        int bufferSize = WideCharToMultiByte(CP_UTF8, 0, utf16String.c_str(), -1, nullptr, 0, nullptr, nullptr);
+        std::unique_ptr<char[]> buffer = std::make_unique<char[]>(bufferSize);
+        WideCharToMultiByte(CP_UTF8, 0, utf16String.c_str(), -1, buffer.get(), bufferSize, nullptr, nullptr);
+        return buffer.get();
+    }
+
+    std::wstring Terminal::Encoding::ConvertUTF8ToUTF16(const std::string& utf8String)
+    {
+        int bufferSize = MultiByteToWideChar(CP_UTF8, 0, utf8String.c_str(), -1, nullptr, 0);
+        std::unique_ptr<wchar_t[]> buffer = std::make_unique<wchar_t[]>(bufferSize);
+        MultiByteToWideChar(CP_UTF8, 0, utf8String.c_str(), -1, buffer.get(), bufferSize);
+        return buffer.get();
+    }
+#endif
+#pragma endregion
+
+#pragma region Terminal::Output
+    void Terminal::Output::Flush() noexcept
+    {
+        std::fflush(GetFile());
     }
 #pragma endregion
 }
