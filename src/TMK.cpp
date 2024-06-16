@@ -36,6 +36,12 @@ namespace TMK
     }
 #pragma endregion
 
+#pragma region WideCharacterOrientationException
+    WideCharacterOrientationException::WideCharacterOrientationException()
+    {
+    }
+#pragma endregion
+
 #pragma region Terminal
     bool Terminal::s_hasInitializedStreamRedirectionCache = false;
     bool Terminal::s_isInputRedirected = true;
@@ -81,6 +87,8 @@ namespace TMK
 
 #pragma region Terminal::Stream
     template class Terminal::Stream<0>;
+    template class Terminal::Stream<1>;
+    template class Terminal::Stream<2>;
 
     template <int T>
     HANDLE Terminal::Stream<T>::GetHandle() noexcept
@@ -137,8 +145,32 @@ namespace TMK
     template class Terminal::WritableStream<2>;
 
     template <int T>
+    void Terminal::WritableStream<T>::Write(std::string format, std::va_list arguments)
+    {
+        if (GetFile() == Error::GetFile())
+        {
+            Output::Flush();
+        }
+        if (std::vfprintf(GetFile(), format.c_str(), arguments) < 0)
+        {
+            throw WideCharacterOrientationException();
+        }
+    }
+
+    template <int T>
+    void Terminal::WritableStream<T>::Write(std::string format, ...)
+    {
+        std::va_list arguments;
+        va_start(arguments, format);
+        Write(format, arguments);
+        va_end(arguments);
+    }
+
+    template <int T>
     void Terminal::WritableStream<T>::WriteLine(std::string format, std::va_list arguments)
     {
+        Write(format, arguments);
+        std::fputc('\n', GetFile());
     }
 
     template <int T>
@@ -148,6 +180,13 @@ namespace TMK
         va_start(arguments, format);
         WriteLine(format, arguments);
         va_end(arguments);
+    }
+#pragma endregion
+
+#pragma region Terminal::Output
+    void Terminal::Output::Flush() noexcept
+    {
+        std::fflush(GetFile());
     }
 #pragma endregion
 

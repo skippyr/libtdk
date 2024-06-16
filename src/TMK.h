@@ -582,7 +582,7 @@ namespace TMK
 #endif
 
     /// <summary>
-    /// Represents an exception thrown when a group of streams are redirected.
+    /// Represents an exception thrown when a group of terminal streams are redirected.
     /// </summary>
     class StreamRedirectionException final
     {
@@ -603,6 +603,18 @@ namespace TMK
         /// Creates an instance of the InvalidStreamAttributesException class.
         /// </summary>
         InvalidStreamAttributesException() noexcept;
+    };
+
+    /// <summary>
+    /// Represents an exception thrown when a group of terminal streams are wide character oriented.
+    /// </summary>
+    class WideCharacterOrientationException final
+    {
+    public:
+        /// <summary>
+        /// Creates an instance of the WideCharacterOrientationException class.
+        /// </summary>
+        WideCharacterOrientationException();
     };
 
     /// <summary>
@@ -671,10 +683,16 @@ namespace TMK
             /// </summary>
             /// <returns>A boolean that states the terminal stream is redirected.</returns>
             static bool IsRedirected() noexcept;
+
+        private:
+            /// <summary>
+            /// Creates an instance of the Stream class.
+            /// </summary>
+            Stream() noexcept = delete;
         };
 
         /// <summary>
-        /// Represents a writable terminal stream.
+        /// Represents a terminal stream.
         /// </summary>
         /// <typeparam name="T">The file ID related to the stream.</typeparam>
         template <int T>
@@ -686,13 +704,35 @@ namespace TMK
             /// </summary>
             /// <param name="format">The format to be used. It accepts the same format specifiers as the printf function family.</param>
             /// <param name="arguments">The arguments to be formatted.</param>
-            static void WriteLine(std::string format, std::va_list arguments);
+            /// <exception cref="WideCharacterOrientationException">Thrown when the terminal stream is wide character oriented.</exception>
+            static void Write(std::string format, std::va_list arguments);
             /// <summary>
             /// Formats and writes a string to the terminal stream.
             /// </summary>
             /// <param name="format">The format to be used. It accepts the same format specifiers as the printf function family.</param>
             /// <param name="">The arguments to be formatted.</param>
+            /// <exception cref="WideCharacterOrientationException">Thrown when the terminal stream is wide character oriented.</exception>
+            static void Write(std::string format, ...);
+            /// <summary>
+            /// Formats and writes a string to the terminal stream with a newline character appended to its end.
+            /// </summary>
+            /// <param name="format">The format to be used. It accepts the same format specifiers as the printf function family.</param>
+            /// <param name="arguments">The arguments to be formatted.</param>
+            /// <exception cref="WideCharacterOrientationException">Thrown when the terminal stream is wide character oriented.</exception>
+            static void WriteLine(std::string format, std::va_list arguments);
+            /// <summary>
+            /// Formats and writes a string to the terminal stream with a newline character appended to its end.
+            /// </summary>
+            /// <param name="format">The format to be used. It accepts the same format specifiers as the printf function family.</param>
+            /// <param name="">The arguments to be formatted.</param>
+            /// <exception cref="WideCharacterOrientationException">Thrown when the terminal stream is wide character oriented.</exception>
             static void WriteLine(std::string format, ...);
+
+        private:
+            /// <summary>
+            /// Creates an instance of the WritableStream class.
+            /// </summary>
+            WritableStream() noexcept = delete;
         };
 
 #ifdef _WIN32
@@ -747,6 +787,11 @@ namespace TMK
         /// </summary>
         class Output final : public WritableStream<1>
         {
+        public:
+            /// <summary>
+            /// Flushes the terminal output buffer.
+            /// </summary>
+            static void Flush() noexcept;
         };
 
         /// <summary>
