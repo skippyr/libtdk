@@ -1,6 +1,7 @@
 #pragma region Headers
 #include <format>
 #include <iostream>
+#include <vector>
 #ifdef _WIN32
 #include <Windows.h>
 #else
@@ -577,7 +578,7 @@ namespace TMK
         /// <summary>
         /// Creates an instance of the StreamRedirectionException class.
         /// </summary>
-        StreamRedirectionException() noexcept = default;
+        StreamRedirectionException() = default;
     };
 
     /// <summary>
@@ -589,7 +590,7 @@ namespace TMK
         /// <summary>
         /// Creates an instance of the InvalidStreamAttributesException class.
         /// </summary>
-        InvalidStreamAttributesException() noexcept = default;
+        InvalidStreamAttributesException() = default;
     };
 
     /// <summary>
@@ -601,7 +602,68 @@ namespace TMK
         /// <summary>
         /// Creates an instance of the WideCharacterOrientationException class.
         /// </summary>
-        WideCharacterOrientationException() noexcept = default;
+        WideCharacterOrientationException() = default;
+    };
+
+    /// <summary>
+    /// Represents an exception thrown when a value is out of a valid range.
+    /// </summary>
+    class OutOfRangeException final
+    {
+    public:
+        /// <summary>
+        /// Creates an instance of the OutOfRangeException class.
+        /// </summary>
+        OutOfRangeException() = default;
+    };
+
+    /// <summary>
+    /// Represents the command-line arguments.
+    /// </summary>
+    class CMDArguments
+    {
+    public:
+#ifdef _WIN32
+        /// <summary>
+        /// Creates an instance of the CMDArguments class.
+        /// </summary>
+        /// <param name="utf16Arguments">The UTF-16 encoded arguments.</param>
+        /// <param name="utf8Arguments">The UTF-8 encoded arguments.</param>
+        CMDArguments(const std::vector<std::wstring>& utf16Arguments, const std::vector<std::string>& utf8Arguments) noexcept;
+        /// <summary>
+        /// Gets the UTF-16 encoded arguments.
+        /// </summary>
+        /// <returns>The UTF-16 encoded arguments.</returns>
+        const std::vector<std::wstring>& GetUTF16Arguments();
+#else
+        /// <summary>
+        /// Creates an instance of the CMDArguments class.
+        /// </summary>
+        /// <param name="utf8Arguments">The UTF-8 encoded arguments.</param>
+        CMDArguments(const std::vector<std::string>& utf8Arguments) noexcept;
+#endif
+        /// <summary>
+        /// Gets the total arguments.
+        /// </summary>
+        /// <returns>The total arguments.</returns>
+        std::size_t GetTotalArguments() noexcept;
+        /// <summary>
+        /// Gets the UTF-8 encoded arguments.
+        /// </summary>
+        /// <returns>The UTF-8 encoded arguments.</returns>
+        const std::vector<std::string>& GetUTF8Arguments();
+
+    private:
+#ifdef _WIN32
+        /// <summary>
+        /// The arguments in UTF-16 encoding.
+        /// </summary>
+        std::vector<std::wstring> m_utf16Arguments;
+#endif
+        /// <summary>
+        /// The arguments in UTF-8 encoding.
+        /// </summary>
+        std::vector<std::string> m_utf8Arguments;
     };
 
     /// <summary>
@@ -703,10 +765,7 @@ namespace TMK
             }
 
         private:
-            /// <summary>
-            /// Creates an instance of the Stream class.
-            /// </summary>
-            Stream() noexcept = delete;
+            Stream() = delete;
         };
 
         /// <summary>
@@ -786,12 +845,6 @@ namespace TMK
                 Write(format, arguments...);
                 std::cout << std::endl;
             }
-
-        private:
-            /// <summary>
-            /// Creates an instance of the WritableStream class.
-            /// </summary>
-            WritableStream() noexcept = delete;
         };
 
 #ifdef _WIN32
@@ -806,10 +859,7 @@ namespace TMK
         /// </summary>
         static void InitializeStreamRedirectionCache() noexcept;
 
-        /// <summary>
-        /// Creates an instance of the Terminal class.
-        /// </summary>
-        Terminal() noexcept = delete;
+        Terminal() = delete;
 
     public:
 #ifdef _WIN32
@@ -830,21 +880,36 @@ namespace TMK
             /// </summary>
             /// <param name="utf16String">The UTF-16 encoded string to be converted.</param>
             /// <returns>The converted UTF-8 encoded string.</returns>
-            static std::string ConvertUTF16ToUTF8(const std::wstring& utf16String);
+            static std::string ConvertUTF16ToUTF8(const std::wstring_view& utf16String);
             /// <summary>
             /// Converts an UTF-8 encoded string to UTF-16.
             /// </summary>
             /// <param name="utf8String">The UTF-8 encoded string to be converted.</param>
             /// <returns>The converted UTF-16 encoded string.</returns>
-            static std::wstring ConvertUTF8ToUTF16(const std::string& utf8String);
+            static std::wstring ConvertUTF8ToUTF16(const std::string_view& utf8String);
 
         private:
-            /// <summary>
-            /// Creates an instance of the Encoding class.
-            /// </summary>
-            Encoding() noexcept = delete;
+            Encoding() = delete;
         };
 #endif
+
+        /// <summary>
+        /// Represents the terminal process.
+        /// </summary>
+        class Process
+        {
+        public:
+            /// <summary>
+            /// Gets command-line arguments of the terminal process.
+            /// </summary>
+            /// <param name="totalRawCMDArguments">The total of raw arguments given as the first parameter of the main function.</param>
+            /// <param name="rawCMDArguments">The raw arguments given as the second parameter of the main function.</param>
+            /// <returns>The arguments.</returns>
+            static CMDArguments GetCMDArguments(int totalRawCMDArguments, const char** rawCMDArguments) noexcept;
+
+        private:
+            Process() = delete;
+        };
 
         /// <summary>
         /// Represents the terminal input stream.
