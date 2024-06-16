@@ -720,56 +720,7 @@ namespace TMK
     };
 #pragma endregion
 
-    /// <summary>
-    /// Represents the command-line arguments.
-    /// </summary>
-    class CMDArguments
-    {
-        friend class Terminal;
-
-    public:
-        /// <summary>
-        /// Gets the total arguments.
-        /// </summary>
-        /// <returns>The total arguments.</returns>
-        std::size_t GetTotalArguments() const noexcept;
-        /// <summary>
-        /// Gets the UTF-8 encoded arguments.
-        /// </summary>
-        /// <returns>The UTF-8 encoded arguments.</returns>
-        const std::vector<std::string>& GetUTF8Arguments() const noexcept;
-
-    private:
-#ifdef _WIN32
-        /// <summary>
-        /// Creates an instance of the CMDArguments class.
-        /// </summary>
-        /// <param name="utf16Arguments">The UTF-16 encoded arguments.</param>
-        /// <param name="utf8Arguments">The UTF-8 encoded arguments.</param>
-        CMDArguments(const std::vector<std::wstring>& utf16Arguments, const std::vector<std::string>& utf8Arguments) noexcept;
-        /// <summary>
-        /// Gets the UTF-16 encoded arguments.
-        /// </summary>
-        /// <returns>The UTF-16 encoded arguments.</returns>
-        const std::vector<std::wstring>& GetUTF16Arguments() const noexcept;
-        /// <summary>
-        /// The arguments in UTF-16 encoding.
-        /// </summary>
-        std::vector<std::wstring> m_utf16Arguments;
-#else
-        /// <summary>
-        /// Creates an instance of the CMDArguments class.
-        /// </summary>
-        /// <param name="utf8Arguments">The UTF-8 encoded arguments.</param>
-        CMDArguments(const std::vector<std::string>& utf8Arguments) noexcept;
-#endif
-        CMDArguments(const CMDArguments&) = delete;
-        /// <summary>
-        /// The arguments in UTF-8 encoding.
-        /// </summary>
-        std::vector<std::string> m_utf8Arguments;
-    };
-
+#pragma region Color Classes
     /// <summary>
     /// Represents an RGB color.
     /// </summary>
@@ -831,6 +782,57 @@ namespace TMK
         /// The blue component of the color.
         /// </summary>
         unsigned char m_blue;
+    };
+#pragma endregion
+
+    /// <summary>
+    /// Represents the command-line arguments.
+    /// </summary>
+    class CMDArguments
+    {
+        friend class Terminal;
+
+    public:
+        /// <summary>
+        /// Gets the total arguments.
+        /// </summary>
+        /// <returns>The total arguments.</returns>
+        std::size_t GetTotalArguments() const noexcept;
+        /// <summary>
+        /// Gets the UTF-8 encoded arguments.
+        /// </summary>
+        /// <returns>The UTF-8 encoded arguments.</returns>
+        const std::vector<std::string>& GetUTF8Arguments() const noexcept;
+
+    private:
+#ifdef _WIN32
+        /// <summary>
+        /// Creates an instance of the CMDArguments class.
+        /// </summary>
+        /// <param name="utf16Arguments">The UTF-16 encoded arguments.</param>
+        /// <param name="utf8Arguments">The UTF-8 encoded arguments.</param>
+        CMDArguments(const std::vector<std::wstring>& utf16Arguments, const std::vector<std::string>& utf8Arguments) noexcept;
+        /// <summary>
+        /// Gets the UTF-16 encoded arguments.
+        /// </summary>
+        /// <returns>The UTF-16 encoded arguments.</returns>
+        const std::vector<std::wstring>& GetUTF16Arguments() const noexcept;
+        /// <summary>
+        /// The arguments in UTF-16 encoding.
+        /// </summary>
+        std::vector<std::wstring> m_utf16Arguments;
+#else
+        /// <summary>
+        /// Creates an instance of the CMDArguments class.
+        /// </summary>
+        /// <param name="utf8Arguments">The UTF-8 encoded arguments.</param>
+        CMDArguments(const std::vector<std::string>& utf8Arguments) noexcept;
+#endif
+        CMDArguments(const CMDArguments&) = delete;
+        /// <summary>
+        /// The arguments in UTF-8 encoding.
+        /// </summary>
+        std::vector<std::string> m_utf8Arguments;
     };
 
     /// <summary>
@@ -1156,8 +1158,14 @@ namespace TMK
             /// Sets a color from the XTerm 256 colors palette onto a terminal font layer.
             /// </summary>
             /// <param name="color">The code of the color.</param>
-            /// <param name="layer">The layer where the should be applied on.</param>
+            /// <param name="layer">The layer where the color should be applied on.</param>
             static void SetXTermColor(XTermColor color, FontLayer layer) noexcept;
+            /// <summary>
+            /// Sets an RGB color onto a terminal font layer.
+            /// </summary>
+            /// <param name="color">The color to be applied.</param>
+            /// <param name="layer">The layer where the color should be applied on.</param>
+            static void SetRGBColor(RGBColor color, FontLayer layer) noexcept;
             /// <summary>
             /// Resets the terminal font weight.
             /// </summary>

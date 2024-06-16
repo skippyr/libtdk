@@ -16,33 +16,7 @@
 
 namespace TMK
 {
-#pragma region CMDArguments
-#ifdef _WIN32
-    CMDArguments::CMDArguments(const std::vector<std::wstring>& utf16Arguments, const std::vector<std::string>& utf8Arguments) noexcept
-        : m_utf16Arguments(utf16Arguments), m_utf8Arguments(utf8Arguments)
-    {
-    }
-
-    const std::vector<std::wstring>& CMDArguments::GetUTF16Arguments() const noexcept
-    {
-        return m_utf16Arguments;
-    }
-#else
-    CMDArguments::CMDArguments(const std::vector<std::string>& utf8Arguments) noexcept : m_utf8Arguments(utf8Arguments)
-    {
-    }
-#endif
-    std::size_t CMDArguments::GetTotalArguments() const noexcept
-    {
-        return m_utf8Arguments.size();
-    }
-
-    const std::vector<std::string>& CMDArguments::GetUTF8Arguments() const noexcept
-    {
-        return m_utf8Arguments;
-    }
-#pragma endregion
-
+#pragma region Color Classes
 #pragma region RGBColor
     RGBColor::RGBColor() noexcept : m_red(0), m_green(0), m_blue(0)
     {
@@ -80,6 +54,34 @@ namespace TMK
     void RGBColor::SetBlue(unsigned char blue) noexcept
     {
         m_blue = blue;
+    }
+#pragma endregion
+#pragma endregion
+
+#pragma region CMDArguments
+#ifdef _WIN32
+    CMDArguments::CMDArguments(const std::vector<std::wstring>& utf16Arguments, const std::vector<std::string>& utf8Arguments) noexcept
+        : m_utf16Arguments(utf16Arguments), m_utf8Arguments(utf8Arguments)
+    {
+    }
+
+    const std::vector<std::wstring>& CMDArguments::GetUTF16Arguments() const noexcept
+    {
+        return m_utf16Arguments;
+    }
+#else
+    CMDArguments::CMDArguments(const std::vector<std::string>& utf8Arguments) noexcept : m_utf8Arguments(utf8Arguments)
+    {
+    }
+#endif
+    std::size_t CMDArguments::GetTotalArguments() const noexcept
+    {
+        return m_utf8Arguments.size();
+    }
+
+    const std::vector<std::string>& CMDArguments::GetUTF8Arguments() const noexcept
+    {
+        return m_utf8Arguments;
     }
 #pragma endregion
 
@@ -216,6 +218,11 @@ namespace TMK
     void Terminal::Font::SetXTermColor(XTermColor color, FontLayer layer) noexcept
     {
         SetXTermColor(static_cast<unsigned char>(color), layer);
+    }
+
+    void Terminal::Font::SetRGBColor(RGBColor color, FontLayer layer) noexcept
+    {
+        WriteANSIEscapeSequence("\x1b[{}8;2;{};{};{}m", static_cast<int>(layer), color.GetRed(), color.GetGreen(), color.GetBlue());
     }
 
     void Terminal::Font::ResetWeight() noexcept
