@@ -1,5 +1,5 @@
 #pragma region Headers
-#include <exception>
+#include <cstdarg>
 #include <string>
 #ifdef _WIN32
 #include <Windows.h>
@@ -568,80 +568,41 @@ namespace TMK
 #pragma endregion
 
 #pragma region Classes
-    /// <summary>
-    /// Represents a generic exception.
-    /// </summary>
-    /// <typeparam name="T">The exit code related to the exception.</typeparam>
-    template <ExitCode T>
-    class Exception : public std::exception
-    {
-    public:
-        /// <summary>
-        /// Creates a new instance of the Exception class.
-        /// </summary>
-        /// <param name="description">The description of why the exception was thrown.</param>
-        Exception(std::string description) noexcept;
-        /// <summary>
-        /// Gets the description of why the exception was thrown.
-        /// </summary>
-        /// <returns>The description of why the exception was thrown.</returns>
-        std::string GetDescription() const noexcept;
-        /// <summary>
-        /// Gets the exit code related to the exception.
-        /// </summary>
-        /// <returns>The exit code related to the exception.</returns>
-        ExitCode GetExitCode() const noexcept;
-        /// <summary>
-        /// Gets the description of why the exception was thrown.
-        /// </summary>
-        /// <returns>The description of why the exception was thrown.</returns>
-        const char* what() const noexcept;
-
-    private:
-        /// <summary>
-        /// The description of why the exception was thrown.
-        /// </summary>
-        std::string m_description;
-    };
-
 #ifndef _WIN32
     /// <summary>
     /// Represents an exception thrown when a terminal stream is wide character oriented.
     /// </summary>
-    class WideCharacterOrientationException final : public Exception<ExitCode::NoMessageOfDesiredTypeENOMSG>
+    class WideCharacterOrientationException final
     {
         /// <summary>
         /// Creates an instance of the WideCharacterOrientationException class.
         /// </summary>
-        /// <param name="description">The description of why the exception was thrown.</param>
-        WideCharacterOrientationException(std::string description) noexcept;
+        WideCharacterOrientationException() noexcept;
     };
 #endif
 
     /// <summary>
     /// Represents an exception thrown when a group of streams are redirected.
     /// </summary>
-    class StreamRedirectionException final : public Exception<ExitCode::InappropriateIoctlForDeviceENOTTY>
+    class StreamRedirectionException final
     {
     public:
         /// <summary>
         /// Creates an instance of the StreamRedirectionException class.
         /// </summary>
-        /// <param name="description">The description of why the exception was thrown.</param>
-        StreamRedirectionException(std::string description) noexcept;
+        StreamRedirectionException() noexcept;
     };
 
     /// <summary>
     /// Represents an exception thrown when attributes of a terminal stream are invalid.
     /// </summary>
-    class InvalidStreamAttributesException final : public Exception<ExitCode::InvalidArgumentEINVAL>
+    class InvalidStreamAttributesException final
     {
     public:
         /// <summary>
         /// Creates an instance of the InvalidStreamAttributesException class.
         /// </summary>
-        /// <param name="description">The description of why the exception was thrown.</param>
-        InvalidStreamAttributesException(std::string description) noexcept;
+        InvalidStreamAttributesException() noexcept;
     };
 
     /// <summary>
@@ -675,6 +636,26 @@ namespace TMK
         class Stream
         {
         public:
+#ifdef _WIN32
+            /// <summary>
+            /// Gets the handle related to the terminal stream.
+            /// </summary>
+            /// <returns>The handle related to the terminal stream.</returns>
+            static HANDLE GetHandle() noexcept;
+            /// <summary>
+            /// Gets the mode of the terminal stream.
+            /// </summary>
+            /// <returns>The mode of the terminal stream.</returns>
+            /// <exception cref="StreamRedirectionException">Thrown whenever the stream is redirected.</exception>
+            static DWORD GetMode();
+            /// <summary>
+            /// Sets the mode of the terminal stream.
+            /// </summary>
+            /// <param name="mode">The mode to be set.</param>
+            /// <exception cref="StreamRedirectionException">Thrown whenever the stream is redirected.</exception>
+            /// <exception cref="InvalidStreamAttributesException">Thrown whenever the mode is invalid.</exception>
+            static void SetMode(DWORD mode);
+#endif
             /// <summary>
             /// Gets the file related to the terminal stream.
             /// </summary>
@@ -693,9 +674,38 @@ namespace TMK
         };
 
         /// <summary>
+        /// Represents a writable terminal stream.
+        /// </summary>
+        /// <typeparam name="T">The file ID related to the stream.</typeparam>
+        template <int T>
+        class WritableStream : public Stream<T>
+        {
+        public:
+            /// <summary>
+            /// Formats and writes a string to the terminal stream.
+            /// </summary>
+            /// <param name="format">The format to be used. It accepts the same format specifiers as the printf function family.</param>
+            /// <param name="arguments">The arguments to be formatted.</param>
+            static void WriteLine(std::string format, std::va_list arguments);
+            /// <summary>
+            /// Formats and writes a string to the terminal stream.
+            /// </summary>
+            /// <param name="format">The format to be used. It accepts the same format specifiers as the printf function family.</param>
+            /// <param name="">The arguments to be formatted.</param>
+            static void WriteLine(std::string format, ...);
+        };
+
+#ifdef _WIN32
+        /// <summary>
+        /// Initializes the virtual terminal processing: allowing terminals on Windows to process ANSI escape sequences.
+        /// </summary>
+        static void InitializeVirtualTerminalProcessing() noexcept;
+#endif
+
+        /// <summary>
         /// Initializes the redirection cache of the terminal streams.
         /// </summary>
-        void InitializeStreamRedirectionCache() noexcept;
+        static void InitializeStreamRedirectionCache() noexcept;
 
         /// <summary>
         /// Creates an instance of the Terminal class.
@@ -735,14 +745,14 @@ namespace TMK
         /// <summary>
         /// Represents the terminal output stream.
         /// </summary>
-        class Output final : public Stream<1>
+        class Output final : public WritableStream<1>
         {
         };
 
         /// <summary>
         /// Represents the terminal error stream.
         /// </summary>
-        class Error final : public Stream<2>
+        class Error final : public WritableStream<2>
         {
         };
     };

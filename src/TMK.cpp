@@ -8,53 +8,30 @@
 
 #pragma region Macros
 #ifdef _WIN32
-#define ISATTY(stream) _isatty(stream)
+#define IS_REDIRECTED(stream) !_isatty(stream::GetFileID())
 #else
-#define ISATTY(stream) isatty(stream)
+#define IS_REDIRECTED(stream) !isatty(stream::GetFileID())
 #endif
 #pragma endregion
 
 namespace TMK
 {
-#pragma region Exception
-    template <ExitCode T>
-    Exception<T>::Exception(std::string description) noexcept : m_description(description)
-    {
-    }
-
-    template <ExitCode T>
-    std::string Exception<T>::GetDescription() const noexcept
-    {
-        return m_description;
-    }
-
-    template <ExitCode T>
-    ExitCode Exception<T>::GetExitCode() const noexcept
-    {
-        return m_exitCode;
-    }
-
-    template <ExitCode T>
-    const char* Exception<T>::what() const noexcept
-    {
-        return m_description.c_str();
-    }
-#pragma endregion
-
 #pragma region WideCharacterOrientationException
 #ifndef _WIN32
-    WideCharacterOrientationException::WideCharacterOrientationException(std::string description) noexcept : Exception(description)
+    WideCharacterOrientationException::WideCharacterOrientationException() noexcept
     {
     }
 #endif
 #pragma endregion
 
 #pragma region StreamRedirectionException
-    StreamRedirectionException::StreamRedirectionException(std::string description) noexcept : Exception(description)
+    StreamRedirectionException::StreamRedirectionException() noexcept
     {
     }
+#pragma endregion
 
-    InvalidStreamAttributesException::InvalidStreamAttributesException(std::string description) noexcept : Exception(description)
+#pragma region InvalidStreamAttributesException
+    InvalidStreamAttributesException::InvalidStreamAttributesException() noexcept
     {
     }
 #pragma endregion
@@ -65,6 +42,26 @@ namespace TMK
     bool Terminal::s_isOutputRedirected = true;
     bool Terminal::s_isErrorRedirected = true;
 
+#ifdef _WIN32
+    void Terminal::InitializeVirtualTerminalProcessing() noexcept
+    {
+        try
+        {
+            Output::SetMode(Output::GetMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+        }
+        catch (StreamRedirectionException&)
+        {
+            try
+            {
+                Error::SetMode(Error::GetMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+            }
+            catch (StreamRedirectionException&)
+            {
+            }
+        }
+    }
+#endif
+
     void Terminal::InitializeStreamRedirectionCache() noexcept
     {
         if (s_hasInitializedStreamRedirectionCache)
@@ -72,13 +69,49 @@ namespace TMK
             return;
         }
         s_hasInitializedStreamRedirectionCache = true;
-        s_isInputRedirected = ISATTY(Input::GetFileID());
-        s_isOutputRedirected = ISATTY(Output::GetFileID());
-        s_isErrorRedirected = ISATTY(Error::GetFileID());
+        s_isInputRedirected = IS_REDIRECTED(Input);
+        s_isOutputRedirected = IS_REDIRECTED(Output);
+        s_isErrorRedirected = IS_REDIRECTED(Error);
+#ifdef _WIN32
+        Encoding::SetOutputCodePage(CP_UTF8);
+        InitializeVirtualTerminalProcessing();
+#endif
     }
 #pragma endregion
 
 #pragma region Terminal::Stream
+    template class Terminal::Stream<0>;
+
+    template <int T>
+    HANDLE Terminal::Stream<T>::GetHandle() noexcept
+    {
+        return GetStdHandle(!T ? STD_INPUT_HANDLE : T == 1 ? STD_OUTPUT_HANDLE : STD_ERROR_HANDLE);
+    }
+
+    template <int T>
+    DWORD Terminal::Stream<T>::GetMode()
+    {
+        DWORD mode;
+        if (!GetConsoleMode(GetHandle(), &mode))
+        {
+            throw StreamRedirectionException();
+        }
+        return mode;
+    }
+
+    template <int T>
+    void Terminal::Stream<T>::SetMode(DWORD mode)
+    {
+        if (IsRedirected())
+        {
+            throw StreamRedirectionException();
+        }
+        if (!SetConsoleMode(GetHandle(), mode))
+        {
+            throw InvalidStreamAttributesException();
+        }
+    }
+
     template <int T>
     std::FILE* Terminal::Stream<T>::GetFile() noexcept
     {
@@ -99,12 +132,31 @@ namespace TMK
     }
 #pragma endregion
 
+#pragma region Terminal::WritableStream
+    template class Terminal::WritableStream<1>;
+    template class Terminal::WritableStream<2>;
+
+    template <int T>
+    void Terminal::WritableStream<T>::WriteLine(std::string format, std::va_list arguments)
+    {
+    }
+
+    template <int T>
+    void Terminal::WritableStream<T>::WriteLine(std::string format, ...)
+    {
+        std::va_list arguments;
+        va_start(arguments, format);
+        WriteLine(format, arguments);
+        va_end(arguments);
+    }
+#pragma endregion
+
 #pragma region Terminal::Encoding
     void Terminal::Encoding::SetOutputCodePage(UINT codePage)
     {
         if (!SetConsoleOutputCP(codePage))
         {
-            throw InvalidStreamAttributesException("can not set the code page of the terminal output stream due to it is being invalid.");
+            throw InvalidStreamAttributesException();
         }
     }
 #pragma endregion
