@@ -689,6 +689,23 @@ namespace TMK
         /// </summary>
         static bool s_isErrorRedirected;
 
+        #ifdef _WIN32
+        /// <summary>
+        /// Initializes the virtual terminal processing: allowing terminals on Windows to process ANSI escape sequences.
+        /// </summary>
+        static void InitializeVirtualTerminalProcessing() noexcept;
+#endif
+        /// <summary>
+        /// Initializes the redirection cache of the terminal streams.
+        /// </summary>
+        static void InitializeStreamRedirectionCache() noexcept;
+        /// <summary>
+        /// Resets all terminal attributes.
+        /// </summary>
+        static void ResetAttributes() noexcept;
+
+        Terminal() = delete;
+
         /// <summary>
         /// Represents a terminal stream.
         /// </summary>
@@ -847,20 +864,6 @@ namespace TMK
             }
         };
 
-#ifdef _WIN32
-        /// <summary>
-        /// Initializes the virtual terminal processing: allowing terminals on Windows to process ANSI escape sequences.
-        /// </summary>
-        static void InitializeVirtualTerminalProcessing() noexcept;
-#endif
-
-        /// <summary>
-        /// Initializes the redirection cache of the terminal streams.
-        /// </summary>
-        static void InitializeStreamRedirectionCache() noexcept;
-
-        Terminal() = delete;
-
     public:
 #ifdef _WIN32
         /// <summary>
@@ -906,6 +909,16 @@ namespace TMK
             /// <param name="rawCMDArguments">The raw arguments given as the second parameter of the main function.</param>
             /// <returns>The arguments.</returns>
             static CMDArguments GetCMDArguments(int totalRawCMDArguments, const char** rawCMDArguments) noexcept;
+            /// <summary>
+            /// Exits the terminal process.
+            /// </summary>
+            /// <param name="code">The exit to be used.</param>
+            static void Exit(unsigned char code) noexcept;
+            /// <summary>
+            /// Exits the terminal process.
+            /// </summary>
+            /// <param name="code">The exit to be used.</param>
+            static void Exit(ExitCode code) noexcept;
 
         private:
             Process() = delete;

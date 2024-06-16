@@ -79,10 +79,15 @@ namespace TMK
         s_isInputRedirected = IS_REDIRECTED(Input);
         s_isOutputRedirected = IS_REDIRECTED(Output);
         s_isErrorRedirected = IS_REDIRECTED(Error);
+        ResetAttributes();
 #ifdef _WIN32
         Encoding::SetOutputCodePage(CP_UTF8);
         InitializeVirtualTerminalProcessing();
 #endif
+    }
+
+    void Terminal::ResetAttributes() noexcept
+    {
     }
 #pragma endregion
 
@@ -136,6 +141,17 @@ namespace TMK
         }
         return CMDArguments(utf8Arguments);
 #endif
+    }
+
+    void Terminal::Process::Exit(unsigned char code) noexcept
+    {
+        ResetAttributes();
+        std::exit(code);
+    }
+
+    void Terminal::Process::Exit(ExitCode code) noexcept
+    {
+        Exit(static_cast<unsigned char>(code));
     }
 #pragma endregion
 
