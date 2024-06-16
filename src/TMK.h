@@ -566,6 +566,21 @@ namespace TMK
         /// </summary>
         MemoryPageHasHardwareErrorEHWPOISON
     };
+
+    /// <summary>
+    /// Contains the terminal font weights.
+    /// </summary>
+    enum class FontWeight
+    {
+        /// <summary>
+        /// Usually rendered with bold weight and/or with light colors.
+        /// </summary>
+        Bold = 1,
+        /// <summary>
+        /// Usually rendered with faint colors.
+        /// </summary>
+        Light
+    };
 #pragma endregion
 
 #pragma region Classes
@@ -689,7 +704,7 @@ namespace TMK
         /// </summary>
         static bool s_isErrorRedirected;
 
-        #ifdef _WIN32
+#ifdef _WIN32
         /// <summary>
         /// Initializes the virtual terminal processing: allowing terminals on Windows to process ANSI escape sequences.
         /// </summary>
@@ -699,6 +714,24 @@ namespace TMK
         /// Initializes the redirection cache of the terminal streams.
         /// </summary>
         static void InitializeStreamRedirectionCache() noexcept;
+        /// <summary>
+        /// Writes an ANSI escape sequence to the terminal output or error streams.
+        /// </summary>
+        /// <typeparam name="...Args">The type of the arguments to be formatted.</typeparam>
+        /// <param name="format">The format to be used. It accepts the same format specifiers as the std::format function family.</param>
+        /// <param name="...arguments">The arguments to be formatted.</param>
+        template <class... Args>
+        static void WriteANSIEscapeSequence(const std::string_view& format, Args... arguments)
+        {
+            if (!Terminal::Output::IsRedirected())
+            {
+                Terminal::Output::Write(format, arguments...);
+            }
+            else if (!Terminal::Error::IsRedirected())
+            {
+                Terminal::Error::Write(format, arguments...);
+            }
+        }
         /// <summary>
         /// Resets all terminal attributes.
         /// </summary>
@@ -948,6 +981,26 @@ namespace TMK
         /// </summary>
         class Error final : public WritableStream<2>
         {
+        };
+
+        /// <summary>
+        /// Represents the terminal font.
+        /// </summary>
+        class Font final
+        {
+        public:
+            /// <summary>
+            /// Sets the terminal font weight.
+            /// </summary>
+            /// <param name="weight">The weight to be set.</param>
+            static void SetWeight(FontWeight weight) noexcept;
+            /// <summary>
+            /// Resets the terminal font weight.
+            /// </summary>
+            static void ResetWeight() noexcept;
+
+        private:
+            Font() = delete;
         };
     };
 #pragma endregion

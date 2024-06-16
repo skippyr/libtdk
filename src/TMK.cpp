@@ -161,4 +161,16 @@ namespace TMK
         std::fflush(GetFile());
     }
 #pragma endregion
+
+#pragma region Terminal::Font
+    void Terminal::Font::SetWeight(FontWeight weight) noexcept
+    {
+        WriteANSIEscapeSequence("\x1b[22;{}m", static_cast<int>(weight));
+    }
+
+    void Terminal::Font::ResetWeight() noexcept
+    {
+        WriteANSIEscapeSequence("\x1b[22m");
+    }
+#pragma endregion
 }
