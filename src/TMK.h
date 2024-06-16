@@ -1,3 +1,4 @@
+#pragma region Headers
 #include <exception>
 #include <string>
 #ifdef _WIN32
@@ -5,6 +6,7 @@
 #else
 #include <unistd.h>
 #endif
+#pragma endregion
 
 /// <summary>
 /// Terminal Manipulation Kit (TMK) - An open-source C++ terminal manipulation library for Windows and Linux that includes features to handle terminal attributes, arguments and
@@ -12,6 +14,7 @@
 /// </summary>
 namespace TMK
 {
+#pragma region Enums
     /// <summary>
     /// Contains the Linux exit codes.
     /// </summary>
@@ -562,7 +565,9 @@ namespace TMK
         /// </summary>
         MemoryPageHasHardwareErrorEHWPOISON
     };
+#pragma endregion
 
+#pragma region Classes
     /// <summary>
     /// Represents a generic exception.
     /// </summary>
@@ -644,6 +649,59 @@ namespace TMK
     /// </summary>
     class Terminal final
     {
+    private:
+        /// <summary>
+        /// A boolean that states the redirection cache of the terminal streams has been initialized.
+        /// </summary>
+        static bool s_hasInitializedStreamRedirectionCache;
+        /// <summary>
+        /// A boolean that states the terminal input stream is redirected.
+        /// </summary>
+        static bool s_isInputRedirected;
+        /// <summary>
+        /// A boolean that states the terminal output stream is redirected.
+        /// </summary>
+        static bool s_isOutputRedirected;
+        /// <summary>
+        /// A boolean that states the terminal error stream is redirected.
+        /// </summary>
+        static bool s_isErrorRedirected;
+
+        /// <summary>
+        /// Represents a terminal stream.
+        /// </summary>
+        /// <typeparam name="T">The file ID related to the stream.</typeparam>
+        template <int T>
+        class Stream
+        {
+        public:
+            /// <summary>
+            /// Gets the file related to the terminal stream.
+            /// </summary>
+            /// <returns>The file related to the terminal stream.</returns>
+            static std::FILE* GetFile() noexcept;
+            /// <summary>
+            /// Gets the file ID related to the terminal stream.
+            /// </summary>
+            /// <returns></returns>
+            static int GetFileID() noexcept;
+            /// <summary>
+            /// Checks if the terminal stream is redirected.
+            /// </summary>
+            /// <returns>A boolean that states the terminal stream is redirected.</returns>
+            static bool IsRedirected() noexcept;
+        };
+
+        /// <summary>
+        /// Initializes the redirection cache of the terminal streams.
+        /// </summary>
+        void InitializeStreamRedirectionCache() noexcept;
+
+        /// <summary>
+        /// Creates an instance of the Terminal class.
+        /// </summary>
+        Terminal() noexcept = delete;
+
     public:
 #ifdef _WIN32
         /// <summary>
@@ -670,198 +728,23 @@ namespace TMK
         /// <summary>
         /// Represents the terminal input stream.
         /// </summary>
-        class Input final
+        class Input final : public Stream<0>
         {
-        public:
-#ifdef _WIN32
-            /// <summary>
-            /// Gets the handle related to the terminal input stream.
-            /// </summary>
-            static HANDLE GetHandle() noexcept;
-            /// <summary>
-            /// Gets the mode of the terminal input stream.
-            /// </summary>
-            /// <exception cref="StreamRedirectionException">Thrown when the terminal input stream is redirected.</exception>
-            static DWORD GetMode();
-            /// <summary>
-            /// Sets the mode of the terminal input stream.
-            /// </summary>
-            /// <param name="mode">The mode to be set.</param>
-            /// <exception cref="StreamRedirectionException">Thrown when the terminal input stream is redirected.</exception>
-            /// <exception cref="InvalidStreamAttributesException">Thrown when the mode is invalid.</exception>
-            static void SetMode(DWORD mode);
-#endif
-            /// <summary>
-            /// Gets the file ID related to the terminal input stream.
-            /// </summary>
-            static int GetFileID() noexcept;
-            /// <summary>
-            /// Checks if the terminal input stream is redirected.
-            /// </summary>
-            /// <returns>A boolean that states the terminal input stream is redirected.</returns>
-            static bool IsRedirected() noexcept;
-            /// <summary>
-            /// Reads a byte from the terminal input buffer. If it is empty, it waits until the Enter key is pressed.
-            /// </summary>
-            /// <returns>The byte read.</returns>
-            /// <exception cref="StreamRedirectionException">Thrown when the terminal input stream is redirected.</exception>
-            /// <exception cref="WideCharacterOrientationException">Thrown whenever the terminal input stream is wide character oriented.</exception>
-            static char ReadByte();
-
-        private:
-            /// <summary>
-            /// The name of the terminal input stream.
-            /// </summary>
-            static const std::string m_name;
-
-            /// <summary>
-            /// Creates an instance of the Input class.
-            /// </summary>
-            Input() noexcept = delete;
         };
 
         /// <summary>
         /// Represents the terminal output stream.
         /// </summary>
-        class Output final
+        class Output final : public Stream<1>
         {
-        public:
-#ifdef _WIN32
-            /// <summary>
-            /// Gets the handle related to the terminal output stream.
-            /// </summary>
-            static HANDLE GetHandle() noexcept;
-            /// <summary>
-            /// Gets the mode of the terminal output stream.
-            /// </summary>
-            /// <exception cref="StreamRedirectionException">Thrown when the terminal output stream is redirected.</exception>
-            static DWORD GetMode();
-            /// <summary>
-            /// Sets the mode of the terminal output stream.
-            /// </summary>
-            /// <param name="mode">The mode to be set.</param>
-            /// <exception cref="StreamRedirectionException">Thrown when the terminal output stream is redirected.</exception>
-            /// <exception cref="InvalidStreamAttributesException">Thrown when the mode is invalid.</exception>
-            static void SetMode(DWORD mode);
-#endif
-            /// <summary>
-            /// Gets the file ID related to the terminal output stream.
-            /// </summary>
-            static int GetFileID() noexcept;
-            /// <summary>
-            /// Checks if the terminal output stream is redirected.
-            /// </summary>
-            /// <returns>A boolean that states the terminal output stream is redirected.</returns>
-            static bool IsRedirected() noexcept;
-
-        private:
-            /// <summary>
-            /// The name of the terminal output stream.
-            /// </summary>
-            static const std::string m_name;
-
-            /// <summary>
-            /// Creates an instance of the Output class.
-            /// </summary>
-            Output() noexcept = delete;
         };
 
         /// <summary>
         /// Represents the terminal error stream.
         /// </summary>
-        class Error final
+        class Error final : public Stream<2>
         {
-        public:
-#ifdef _WIN32
-            /// <summary>
-            /// Gets the handle related to the terminal error stream.
-            /// </summary>
-            static HANDLE GetHandle() noexcept;
-            /// <summary>
-            /// Gets the mode of the terminal error stream.
-            /// </summary>
-            /// <exception cref="StreamRedirectionException">Thrown when the terminal error stream is redirected.</exception>
-            static DWORD GetMode();
-            /// <summary>
-            /// Sets the mode of the terminal error stream.
-            /// </summary>
-            /// <param name="mode">The mode to be set.</param>
-            /// <exception cref="StreamRedirectionException">Thrown when the terminal error stream is redirected.</exception>
-            /// <exception cref="InvalidStreamAttributesException">Thrown when the mode is invalid.</exception>
-            static void SetMode(DWORD mode);
-#endif
-            /// <summary>
-            /// Gets the file ID related to the terminal error stream.
-            /// </summary>
-            static int GetFileID() noexcept;
-            /// <summary>
-            /// Checks if the terminal error stream is redirected.
-            /// </summary>
-            /// <returns>A boolean that states the terminal error stream is redirected.</returns>
-            static bool IsRedirected() noexcept;
-
-        private:
-            /// <summary>
-            /// The name of the terminal error stream.
-            /// </summary>
-            static const std::string m_name;
-
-            /// <summary>
-            /// Creates an instance of the Error class.
-            /// </summary>
-            Error() noexcept = delete;
         };
-
-    private:
-        /// <summary>
-        /// A boolean that states the redirection cache of the terminal streams has been initialized.
-        /// </summary>
-        static bool s_hasInitializedStreamRedirectionCache;
-        /// <summary>
-        /// A boolean that states the terminal input stream is redirected.
-        /// </summary>
-        static bool s_isInputRedirected;
-        /// <summary>
-        /// A boolean that states the terminal output stream is redirected.
-        /// </summary>
-        static bool s_isOutputRedirected;
-        /// <summary>
-        /// A boolean that states the terminal error stream is redirected.
-        /// </summary>
-        static bool s_isErrorRedirected;
-
-        /// <summary>
-        /// Creates an instance of the Terminal class.
-        /// </summary>
-        Terminal() noexcept = delete;
-
-#ifdef _WIN32
-        /// <summary>
-        /// Initializes the virtual terminal processing: allowing it to parse ANSI escape sequences.
-        /// </summary>
-        static void InitializeVirtualTerminalProcessing() noexcept;
-#endif
-
-        /// <summary>
-        /// Initializes the stream redirection cache.
-        /// </summary>
-        static void InitializeStreamRedirectionCache() noexcept;
-        /// <summary>
-        /// Gets the mode of a terminal stream.
-        /// </summary>
-        /// <param name="handle">The handle of the stream.</param>
-        /// <param name="name">The name of the stream.</param>
-        /// <exception cref="StreamRedirectionException">Thrown when the stream is redirected.</exception>
-        static DWORD GetStreamMode(HANDLE handle, const std::string& name);
-        /// <summary>
-        /// Sets the mode of a terminal stream.
-        /// </summary>
-        /// <param name="handle">The handle of the stream.</param>
-        /// <param name="isRedirected">A boolean that states the stream is redirected.</param>
-        /// <param name="name">The name of the stream.</param>
-        /// <param name="mode">The mode of the stream.</param>
-        /// <exception cref="StreamRedirectionException">Thrown when the stream is redirected.</exception>
-        /// <exception cref="InvalidStreamAttributesException">Thrown when the mode is invalid.</exception>
-        static void SetStreamMode(HANDLE handle, bool isRedirected, const std::string& name, DWORD mode);
     };
+#pragma endregion
 }

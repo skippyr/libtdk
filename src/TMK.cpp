@@ -1,14 +1,18 @@
+#pragma region Headers
 #ifdef _WIN32
 #include <io.h>
 #endif
 
 #include "TMK.h"
+#pragma endregion
 
+#pragma region Macros
 #ifdef _WIN32
-#define ISATTY(streamFileID) _isatty(streamFileID)
+#define ISATTY(stream) _isatty(stream)
 #else
-#define ISATTY(streamFileID) isatty(streamFileID)
+#define ISATTY(stream) isatty(stream)
 #endif
+#pragma endregion
 
 namespace TMK
 {
@@ -61,26 +65,6 @@ namespace TMK
     bool Terminal::s_isOutputRedirected = true;
     bool Terminal::s_isErrorRedirected = true;
 
-#ifdef _WIN32
-    void Terminal::InitializeVirtualTerminalProcessing() noexcept
-    {
-        try
-        {
-            Output::SetMode(Output::GetMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-        }
-        catch (StreamRedirectionException&)
-        {
-            try
-            {
-                Error::SetMode(Error::GetMode() | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-            }
-            catch (StreamRedirectionException&)
-            {
-            }
-        }
-    }
-#endif
-
     void Terminal::InitializeStreamRedirectionCache() noexcept
     {
         if (s_hasInitializedStreamRedirectionCache)
@@ -91,32 +75,27 @@ namespace TMK
         s_isInputRedirected = ISATTY(Input::GetFileID());
         s_isOutputRedirected = ISATTY(Output::GetFileID());
         s_isErrorRedirected = ISATTY(Error::GetFileID());
-#ifdef _WIN32
-        Encoding::SetOutputCodePage(CP_UTF8);
-        InitializeVirtualTerminalProcessing();
-#endif
+    }
+#pragma endregion
+
+#pragma region Terminal::Stream
+    template <int T>
+    std::FILE* Terminal::Stream<T>::GetFile() noexcept
+    {
+        return !T ? stdin : T == 1 ? stdout : stderr;
     }
 
-    DWORD Terminal::GetStreamMode(HANDLE handle, const std::string& name)
+    template <int T>
+    int Terminal::Stream<T>::GetFileID() noexcept
     {
-        DWORD mode;
-        if (!GetConsoleMode(handle, &mode))
-        {
-            throw StreamRedirectionException("can not get mode of the terminal " + name + " stream due to it is redirected.");
-        }
-        return mode;
+        return T;
     }
 
-    void Terminal::SetStreamMode(HANDLE handle, bool isRedirected, const std::string& name, DWORD mode)
+    template <int T>
+    bool Terminal::Stream<T>::IsRedirected() noexcept
     {
-        if (isRedirected)
-        {
-            throw StreamRedirectionException("can not set the terminal " + name + " mode due to it is redirected.");
-        }
-        if (!SetConsoleMode(handle, mode))
-        {
-            throw InvalidStreamAttributesException("can not set the terminal " + name + " mode due to it is invalid.");
-        }
+        InitializeStreamRedirectionCache();
+        return !T ? s_isInputRedirected : T == 1 ? s_isOutputRedirected : s_isErrorRedirected;
     }
 #pragma endregion
 
@@ -127,102 +106,6 @@ namespace TMK
         {
             throw InvalidStreamAttributesException("can not set the code page of the terminal output stream due to it is being invalid.");
         }
-    }
-#pragma endregion
-
-#pragma region Terminal::Input
-    const std::string Terminal::Input::m_name = "input";
-
-#ifdef _WIN32
-    HANDLE Terminal::Input::GetHandle() noexcept
-    {
-        return GetStdHandle(STD_INPUT_HANDLE);
-    }
-
-    DWORD Terminal::Input::GetMode()
-    {
-        return GetStreamMode(GetHandle(), m_name);
-    }
-
-    void Terminal::Input::SetMode(DWORD mode)
-    {
-        SetStreamMode(GetHandle(), IsRedirected(), m_name, mode);
-    }
-#endif
-
-    int Terminal::Input::GetFileID() noexcept
-    {
-        return 0;
-    }
-
-    bool Terminal::Input::IsRedirected() noexcept
-    {
-        InitializeStreamRedirectionCache();
-        return s_isInputRedirected;
-    }
-#pragma endregion
-
-#pragma region Terminal::Output
-    const std::string Terminal::Output::m_name = "output";
-
-#ifdef _WIN32
-    HANDLE Terminal::Output::GetHandle() noexcept
-    {
-        return GetStdHandle(STD_OUTPUT_HANDLE);
-    }
-
-    DWORD Terminal::Output::GetMode()
-    {
-        return GetStreamMode(GetHandle(), m_name);
-    }
-
-    void Terminal::Output::SetMode(DWORD mode)
-    {
-        SetStreamMode(GetHandle(), IsRedirected(), m_name, mode);
-    }
-#endif
-
-    int Terminal::Output::GetFileID() noexcept
-    {
-        return 1;
-    }
-
-    bool Terminal::Output::IsRedirected() noexcept
-    {
-        InitializeStreamRedirectionCache();
-        return s_isOutputRedirected;
-    }
-#pragma endregion
-
-#pragma region Terminal::Error
-    const std::string Terminal::Error::m_name = "error";
-
-#ifdef _WIN32
-    HANDLE Terminal::Error::GetHandle() noexcept
-    {
-        return GetStdHandle(STD_ERROR_HANDLE);
-    }
-
-    DWORD Terminal::Error::GetMode()
-    {
-        return GetStreamMode(GetHandle(), m_name);
-    }
-
-    void Terminal::Error::SetMode(DWORD mode)
-    {
-        return SetStreamMode(GetHandle(), IsRedirected(), m_name, mode);
-    }
-#endif
-
-    int Terminal::Error::GetFileID() noexcept
-    {
-        return 2;
-    }
-
-    bool Terminal::Error::IsRedirected() noexcept
-    {
-        InitializeStreamRedirectionCache();
-        return s_isErrorRedirected;
     }
 #pragma endregion
 }
