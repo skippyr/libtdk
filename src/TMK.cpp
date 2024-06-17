@@ -273,5 +273,21 @@ namespace TMK
     {
         WriteANSIEscapeSequence("\x1b[39;49m");
     }
+
+    void Terminal::Font::SetEffects(FontEffect effect)
+    {
+        WriteANSIEscapeSequence("\x1b[{}m", static_cast<int>(effect));
+    }
+
+    void Terminal::Font::ResetEffects() noexcept
+    {
+        for (std::size_t offset = 23; offset < 30; ++offset)
+        {
+            if (offset != 26)
+            {
+                WriteANSIEscapeSequence("\x1b[{}m", offset);
+            }
+        }
+    }
 #pragma endregion
 }

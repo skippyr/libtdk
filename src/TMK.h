@@ -598,6 +598,37 @@ namespace TMK
     };
 
     /// <summary>
+    /// Contains the terminal font effects.
+    /// </summary>
+    enum class FontEffect
+    {
+        /// <summary>
+        /// Makes the text curly.
+        /// </summary>
+        Italic = 3,
+        /// <summary>
+        /// Draws a horizontal line crossing below the text.
+        /// </summary>
+        Underline,
+        /// <summary>
+        /// Makes the text blink indefinitely.
+        /// </summary>
+        Blink,
+        /// <summary>
+        /// Swaps the background and foreground colors.
+        /// </summary>
+        Negative = 7,
+        /// <summary>
+        /// Makes the text hard to see or invisible.
+        /// </summary>
+        Hidden,
+        /// <summary>
+        /// Draws a horizontal line crossing through the middle of the text.
+        /// </summary>
+        Strike
+    };
+
+    /// <summary>
     /// Contains the first 16 colors of the XTerm color palette.
     /// </summary>
     enum class XTermColor
@@ -1199,6 +1230,17 @@ namespace TMK
             /// <param name="layer">The layer where the color should be applied on.</param>
             static void SetTrueColor(RGBColor color, FontLayer layer) noexcept;
             /// <summary>
+            /// Sets a terminal effect.
+            /// </summary>
+            /// <param name="effect">The effect to be set.</param>
+            static void SetEffects(FontEffect effect);
+            template <class... Effects>
+            static void SetEffects(FontEffect effect, Effects... effects) noexcept
+            {
+                SetEffects(effect);
+                SetEffects(effects...);
+            }
+            /// <summary>
             /// Resets the terminal font weight.
             /// </summary>
             static void ResetWeight() noexcept;
@@ -1206,6 +1248,10 @@ namespace TMK
             /// Resets the terminal font colors.
             /// </summary>
             static void ResetColors() noexcept;
+            /// <summary>
+            /// Resets the terminal font effects.
+            /// </summary>
+            static void ResetEffects() noexcept;
 
         private:
             Font() = delete;
