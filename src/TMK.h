@@ -934,11 +934,11 @@ namespace TMK
         /// <summary>
         /// Writes an ANSI escape sequence to the terminal output or error streams.
         /// </summary>
-        /// <typeparam name="...Args">The type of the arguments to be formatted.</typeparam>
+        /// <typeparam name="...Arguments">A parameter pack containing the arguments to be formatted.</typeparam>
         /// <param name="format">The format to be used. It accepts the same format specifiers as the std::format function family.</param>
         /// <param name="...arguments">The arguments to be formatted.</param>
-        template <class... Args>
-        static void WriteANSIEscapeSequence(const std::string_view& format, Args... arguments)
+        template <class... Arguments>
+        static void WriteANSIEscapeSequence(const std::string_view& format, Arguments... arguments)
         {
             if (!Terminal::Output::IsRedirected())
             {
@@ -1069,11 +1069,11 @@ namespace TMK
             /// <summary>
             /// Formats and writes a string to the terminal stream.
             /// </summary>
-            /// <typeparam name="...Args">The type of the arguments to be formatted.</typeparam>
+            /// <typeparam name="...Arguments">A parameter pack containing the arguments to be formatted.</typeparam>
             /// <param name="format">The format to be used. It uses the same format specifiers as the std::format function family.</param>
             /// <param name="...arguments">The arguments to be formatted.</param>
-            template <class... Args>
-            static void Write(const std::string_view& format, Args... arguments)
+            template <class... Arguments>
+            static void Write(const std::string_view& format, Arguments... arguments)
             {
                 InitializeStreamRedirectionCache();
                 if (N == 2)
@@ -1103,11 +1103,11 @@ namespace TMK
             /// <summary>
             /// Formats and writes a string to the terminal stream with a newline grapheme appended to its end.
             /// </summary>
-            /// <typeparam name="...Args">The type of the arguments to be formatted.</typeparam>
+            /// <typeparam name="...Arguments">A parameter pack containing the arguments to be formatted.</typeparam>
             /// <param name="format">The format to be used. It uses the same format specifiers as the std::format function family.</param>
             /// <param name="...arguments">The arguments to be formatted.</param>
-            template <class... Args>
-            static void WriteLine(const std::string_view& format, Args... arguments)
+            template <class... Arguments>
+            static void WriteLine(const std::string_view& format, Arguments... arguments)
             {
                 Write(format, arguments...);
                 std::cout << std::endl;
@@ -1234,6 +1234,12 @@ namespace TMK
             /// </summary>
             /// <param name="effect">The effect to be set.</param>
             static void SetEffects(FontEffect effect);
+            /// <summary>
+            /// Sets terminal effects.
+            /// </summary>
+            /// <typeparam name="...Effects">A parameter pack containing the remaining effects to be set.</typeparam>
+            /// <param name="effect">An effect to be set.</param>
+            /// <param name="...effects">The remaining effects to be set.</param>
             template <class... Effects>
             static void SetEffects(FontEffect effect, Effects... effects) noexcept
             {
