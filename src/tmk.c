@@ -56,9 +56,19 @@ static void _tmk_writeANSIEscapeSequence(const char* format, ...)
 #pragma endregion
 
 #pragma region Library Functions
-void tmk_setXColor(int color, tmk_Layer_t layer)
+void tmk_setXColor(unsigned char color, tmk_Layer_t layer)
 {
     _tmk_writeANSIEscapeSequence("\x1b[%d8;5;%dm", layer, color);
+}
+
+void tmk_setRGBColor(tmk_RGBColor_t color, tmk_Layer_t layer)
+{
+    _tmk_writeANSIEscapeSequence("\x1b[%d8;2;%d;%d;%dm", layer, color.red, color.green, color.blue);
+}
+
+void tmk_setHexColor(tmk_HexColor_t color, tmk_Layer_t layer)
+{
+    tmk_setRGBColor((tmk_RGBColor_t){color >> 16 & 0xff, color >> 8 & 0xff, color & 0xff}, layer);
 }
 
 void tmk_resetColors()

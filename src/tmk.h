@@ -110,6 +110,22 @@ typedef enum tmk_Layer
 } tmk_Layer_t;
 #pragma endregion
 
+#pragma region Structs
+typedef struct tmk_RGBColor
+{
+    unsigned char red;
+    unsigned char green;
+    unsigned char blue;
+} tmk_RGBColor_t;
+#pragma endregion
+
+#pragma region Types
+/**
+ * @brief Represents a hex color. It must be a value in range from 0x0 to 0xffffff.
+ */
+typedef unsigned int tmk_HexColor_t;
+#pragma endregion
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -118,13 +134,25 @@ extern "C"
     /**
      * @brief Sets a XTerm color into a terminal layer.
      * @param color The color to be set. It must be a value in range from 0 to 255 or an enumerator from the tmk_XColor enum.
-     * @param layer The layer to be affected. It must be a value of the tmk_Layer enum.
+     * @param layer The layer to be affected.
      */
-    void tmk_setXColor(int color, tmk_Layer_t layer);
+    void tmk_setXColor(unsigned char color, tmk_Layer_t layer);
+    /**
+     * @brief Sets an RGB color into a terminal layer.
+     * @param color The color to be set.
+     * @param layer The layer to be affected.
+     */
+    void tmk_setRGBColor(tmk_RGBColor_t color, tmk_Layer_t layer);
+    /**
+     * @brief Sets a hex color into a terminal layer.
+     * @param color The color to be set.
+     * @param layer The layer to be affected.
+     */
+    void tmk_setHexColor(tmk_HexColor_t color, tmk_Layer_t layer);
     /**
      * @brief Resets the terminal colors.
      */
-    void tmk_resetColors();
+    void tmk_resetColors(void);
 #pragma endregion
 #ifdef __cplusplus
 }
