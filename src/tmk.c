@@ -77,24 +77,50 @@ static void _tmk_write(tmk_Stream_t stream, bool hasNewline, const char* format,
 #pragma endregion
 
 #pragma region Library Functions
-void tmk_setXColor(unsigned char color, tmk_Layer_t layer)
+void tmk_setFontXColor(unsigned char color, tmk_Layer_t layer)
 {
     _tmk_writeANSIEscapeSequence("\x1b[%d8;5;%dm", layer, color);
 }
 
-void tmk_setRGBColor(tmk_RGBColor_t color, tmk_Layer_t layer)
+void tmk_setFontRGBColor(tmk_RGBColor_t color, tmk_Layer_t layer)
 {
     _tmk_writeANSIEscapeSequence("\x1b[%d8;2;%d;%d;%dm", layer, color.red, color.green, color.blue);
 }
 
-void tmk_setHexColor(tmk_HexColor_t color, tmk_Layer_t layer)
+void tmk_setFontHexColor(tmk_HexColor_t color, tmk_Layer_t layer)
 {
-    tmk_setRGBColor((tmk_RGBColor_t){color >> 16 & 0xff, color >> 8 & 0xff, color & 0xff}, layer);
+    tmk_setFontRGBColor((tmk_RGBColor_t){color >> 16 & 0xff, color >> 8 & 0xff, color & 0xff}, layer);
 }
 
-void tmk_resetColors()
+void tmk_resetFontColors()
 {
     _tmk_writeANSIEscapeSequence("\x1b[39;49m");
+}
+
+void tmk_writeErrorArguments(const char* format, va_list arguments)
+{
+    _tmk_write(tmk_Stream_Output, false, format, arguments);
+}
+
+void tmk_writeError(const char* format, ...)
+{
+    va_list arguments;
+    va_start(arguments, format);
+    tmk_writeArguments(format, arguments);
+    va_end(arguments);
+}
+
+void tmk_writeErrorLineArguments(const char* format, va_list arguments)
+{
+    _tmk_write(tmk_Stream_Output, true, format, arguments);
+}
+
+void tmk_writeErrorLine(const char* format, ...)
+{
+    va_list arguments;
+    va_start(arguments, format);
+    tmk_writeLineArguments(format, arguments);
+    va_end(arguments);
 }
 
 void tmk_writeArguments(const char* format, va_list arguments)

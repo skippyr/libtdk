@@ -133,27 +133,51 @@ extern "C"
 #endif
 #pragma region Functions
     /**
-     * @brief Sets a XTerm color into a terminal layer.
+     * @brief Sets a XTerm color into a terminal font layer.
      * @param color The color to be set. It must be a value in range from 0 to 255 or an enumerator from the tmk_XColor enum.
      * @param layer The layer to be affected.
      */
-    void tmk_setXColor(unsigned char color, tmk_Layer_t layer);
+    void tmk_setFontXColor(unsigned char color, tmk_Layer_t layer);
     /**
-     * @brief Sets an RGB color into a terminal layer.
+     * @brief Sets an RGB color into a terminal font layer.
      * @param color The color to be set.
      * @param layer The layer to be affected.
      */
-    void tmk_setRGBColor(tmk_RGBColor_t color, tmk_Layer_t layer);
+    void tmk_setFontRGBColor(tmk_RGBColor_t color, tmk_Layer_t layer);
     /**
-     * @brief Sets a hex color into a terminal layer.
+     * @brief Sets a hex color into a terminal font layer.
      * @param color The color to be set.
      * @param layer The layer to be affected.
      */
-    void tmk_setHexColor(tmk_HexColor_t color, tmk_Layer_t layer);
+    void tmk_setFontHexColor(tmk_HexColor_t color, tmk_Layer_t layer);
     /**
-     * @brief Resets the terminal colors.
+     * @brief Resets the terminal font colors.
      */
-    void tmk_resetColors(void);
+    void tmk_resetFontColors(void);
+    /**
+     * @brief Formats and writes a string to the terminal error stream.
+     * @param format The format to be used. It accepts the same format specifiers as the printf function family.
+     * @param arguments The arguments to be formatted.
+     */
+    void tmk_writeErrorArguments(const char* format, va_list arguments);
+    /**
+     * @brief Formats and writes a string to the terminal error stream.
+     * @param format The format to be used. It accepts the same format specifiers as the printf function family.
+     * @param ... The arguments to be formatted.
+     */
+    void tmk_writeError(const char* format, ...);
+    /**
+     * @brief Formats and writes a string to the terminal error stream.
+     * @param format The format to be used. It accepts the same format specifiers as the printf function family.
+     * @param arguments The arguments to be formatted.
+     */
+    void tmk_writeErrorLineArguments(const char* format, va_list arguments);
+    /**
+     * @brief Formats and writes a string to the terminal error stream.
+     * @param format The format to be used. It accepts the same format specifiers as the printf function family.
+     * @param ... The arguments to be formatted.
+     */
+    void tmk_writeErrorLine(const char* format, ...);
     /**
      * @brief Formats and writes a string to the terminal output stream.
      * @param format The format to be used. It accepts the same format specifiers as the printf function family.
