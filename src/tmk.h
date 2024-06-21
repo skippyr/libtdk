@@ -677,6 +677,37 @@ enum tmk_FontWeight
 };
 
 /**
+ * @brief Contains the terminal font effects.
+ */
+enum tmk_FontEffect
+{
+    /**
+     * @brief Makes the text curly.
+     */
+    tmk_FontEffect_Italic = 1 << 3,
+    /**
+     * @brief Draws a horizontal line crossing below the text.
+     */
+    tmk_FontEffect_Underline = 1 << 4,
+    /**
+     * @brief Makes the text blink indefinitely.
+     */
+    tmk_FontEffect_Blink = 1 << 5,
+    /**
+     * @brief Swaps the background and foreground colors.
+     */
+    tmk_FontEffect_Negative = 1 << 7,
+    /**
+     * @brief Makes the text hard to see or invisible.
+     */
+    tmk_FontEffect_Hidden = 1 << 8,
+    /**
+     * @brief Draws a horizontal line crossing through the middle of the text.
+     */
+    tmk_FontEffect_Strike = 1 << 9
+};
+
+/**
  * @brief Contains the terminal cursor shapes.
  */
 enum tmk_CursorShape
@@ -764,6 +795,11 @@ extern "C"
      */
     void tmk_setFontWeight(enum tmk_FontWeight weight);
     /**
+     * @brief Sets terminal font effects.
+     * @param effectsMask A bitmask containing the effects to be set.
+     */
+    void tmk_setFontEffects(int effectsMask);
+    /**
      * @brief Sets the terminal cursor shape.
      * @param shape The shape to be set.
      * @param shouldBlink A boolean that states the cursor should blink.
@@ -782,6 +818,10 @@ extern "C"
      * @brief Resets the terminal font weight.
      */
     void tmk_resetFontWeight(void);
+    /**
+     * @brief Resets the terminal font effects.
+     */
+    void tmk_resetFontEffects(void);
     /**
      * @brief Resets the terminal cursor shape.
      */

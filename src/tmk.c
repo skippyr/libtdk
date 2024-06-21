@@ -36,7 +36,8 @@ static void _tmk_fillTTYCache(void)
 {
     if (!(tmk_streamRedirectionCache_g & _TMK_STREAM_REDIRECTION_HAS_BEEN_FILLED))
     {
-        tmk_streamRedirectionCache_g |= _TMK_STREAM_REDIRECTION_HAS_BEEN_FILLED | _TMK_REDIRECTION_CACHE(tmk_Stream_Input) | _TMK_REDIRECTION_CACHE(tmk_Stream_Output) | _TMK_REDIRECTION_CACHE(tmk_Stream_Error);
+        tmk_streamRedirectionCache_g |= _TMK_STREAM_REDIRECTION_HAS_BEEN_FILLED | _TMK_REDIRECTION_CACHE(tmk_Stream_Input) | _TMK_REDIRECTION_CACHE(tmk_Stream_Output) |
+                                        _TMK_REDIRECTION_CACHE(tmk_Stream_Error);
     }
 }
 
@@ -115,6 +116,17 @@ void tmk_setFontWeight(enum tmk_FontWeight weight)
     _tmk_writeANSIEscapeSequence("\x1b[22;%dm", weight);
 }
 
+void tmk_setFontEffects(int effectsMask)
+{
+    for (int offset = 3; offset < 10; ++offset)
+    {
+        if (effectsMask & 1 << offset)
+        {
+            _tmk_writeANSIEscapeSequence("\x1b[%dm", offset);
+        }
+    }
+}
+
 void tmk_setCursorShape(enum tmk_CursorShape shape, bool shouldBlink)
 {
     _tmk_writeANSIEscapeSequence("\x1b[%d q", shape - shouldBlink);
@@ -133,6 +145,17 @@ void tmk_resetFontColors()
 void tmk_resetFontWeight()
 {
     _tmk_writeANSIEscapeSequence("\x1b[22m");
+}
+
+void tmk_resetFontEffects()
+{
+    for (int offset = 23; offset < 30; ++offset)
+    {
+        if (offset != 26)
+        {
+            _tmk_writeANSIEscapeSequence("\x1b[%dm", offset);
+        }
+    }
 }
 
 void tmk_resetCursorShape()
