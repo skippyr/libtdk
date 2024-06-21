@@ -97,6 +97,11 @@ void tmk_setFontWeight(enum tmk_FontWeight weight)
     _tmk_writeANSIEscapeSequence("\x1b[22;%dm", weight);
 }
 
+void tmk_setCursorShape(enum tmk_CursorShape shape, bool shouldBlink)
+{
+    _tmk_writeANSIEscapeSequence("\x1b[%d q", shape - shouldBlink);
+}
+
 void tmk_resetFontColors()
 {
     _tmk_writeANSIEscapeSequence("\x1b[39;49m");
@@ -105,6 +110,11 @@ void tmk_resetFontColors()
 void tmk_resetFontWeight()
 {
     _tmk_writeANSIEscapeSequence("\x1b[22m");
+}
+
+void tmk_resetCursorShape()
+{
+    _tmk_writeANSIEscapeSequence("\x1b[0 q");
 }
 
 void tmk_openAlternateWindow(void)

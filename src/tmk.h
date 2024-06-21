@@ -664,7 +664,7 @@ enum tmk_FontLayer
 /**
  * @brief Contains the terminal font weights.
  */
-typedef enum tmk_FontWeight
+enum tmk_FontWeight
 {
     /**
      * @brief Usually rendered as bold weight and/or with bright colors.
@@ -674,7 +674,26 @@ typedef enum tmk_FontWeight
      * @brief Usually rendered with faint colors.
      */
     tmk_FontWeight_Light
-} tmk_FontWeight_t;
+};
+
+/**
+ * @brief Contains the terminal cursor shapes.
+ */
+enum tmk_CursorShape
+{
+    /**
+     * @brief Fills the whole character cell.
+     **/
+    tmk_CursorShape_Block = 2,
+    /**
+     * @brief Fills a region at the bottom of the character cell.
+     **/
+    tmk_CursorShape_Underline = 4,
+    /**
+     * @brief Fills a region at the left of the character cell.
+     */
+    tmk_CursorShape_Bar = 6
+};
 #pragma endregion
 
 #pragma region Structs
@@ -715,6 +734,12 @@ extern "C"
      */
     void tmk_setFontWeight(enum tmk_FontWeight weight);
     /**
+     * @brief Sets the terminal cursor shape.
+     * @param shape The shape to be set.
+     * @param shouldBlink A boolean that states the cursor should blink.
+     */
+    void tmk_setCursorShape(enum tmk_CursorShape shape, bool shouldBlink);
+    /**
      * @brief Resets the terminal font colors.
      */
     void tmk_resetFontColors(void);
@@ -722,6 +747,10 @@ extern "C"
      * @brief Resets the terminal font weight.
      */
     void tmk_resetFontWeight(void);
+    /**
+     * @brief Resets the terminal cursor shape.
+     */
+    void tmk_resetCursorShape(void);
     /**
      * @brief Opens the alternate window buffer.
      */
