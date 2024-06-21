@@ -107,6 +107,16 @@ void tmk_resetFontWeight()
     _tmk_writeANSIEscapeSequence("\x1b[22m");
 }
 
+void tmk_openAlternateWindow(void)
+{
+    _tmk_writeANSIEscapeSequence("\x1b[?1049h\x1b[2J\x1b[1;1H");
+}
+
+void tmk_closeAlternateWindow(void)
+{
+    _tmk_writeANSIEscapeSequence("\x1b[?1049l");
+}
+
 void tmk_writeErrorArguments(const char* format, va_list arguments)
 {
     _tmk_writeToStream(tmk_Stream_Output, false, format, arguments);
