@@ -752,6 +752,21 @@ struct tmk_Dimensions
      */
     unsigned short totalRows;
 };
+
+/**
+ * @brief Represents a terminal coordinate.
+ */
+struct tmk_Coordinate
+{
+    /**
+     * @brief The column component of the coordinate.
+     */
+    unsigned short column;
+    /**
+     * @brief The row component of the coordinate.
+     */
+    unsigned short row;
+};
 #pragma endregion
 
 #ifdef __cplusplus
@@ -810,6 +825,11 @@ extern "C"
      * @param isVisible A boolean that states the terminal cursor should be visible.
      */
     void tmk_setCursorVisibility(bool isVisible);
+    /**
+     * @brief Sets the terminal cursor coordinate.
+     * @param coordinate The coordinate to be set.
+     */
+    void tmk_setCursorCoordinate(struct tmk_Coordinate coordinate);
     /**
      * @brief Resets the terminal font colors.
      */

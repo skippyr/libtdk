@@ -139,6 +139,11 @@ void tmk_setCursorVisibility(bool isVisible)
     _tmk_writeANSIEscapeSequence("\x1b[?25%c", isVisible ? 'h' : 'l');
 }
 
+void tmk_setCursorCoordinate(struct tmk_Coordinate coordinate)
+{
+    _tmk_writeANSIEscapeSequence("\x1b[%hu;%huH", coordinate.row + 1, coordinate.column + 1);
+}
+
 void tmk_resetFontColors()
 {
     _tmk_writeANSIEscapeSequence("\x1b[39;49m");
