@@ -697,11 +697,29 @@ enum tmk_CursorShape
 #pragma endregion
 
 #pragma region Structs
+/**
+ * @brief Represents an RGB color.
+ */
 struct tmk_RGBColor
 {
     unsigned char red;
     unsigned char green;
     unsigned char blue;
+};
+
+/**
+ * @brief Represents terminal dimensions.
+ */
+struct tmk_Dimensions
+{
+    /**
+     * @brief The total columns of the dimensions.
+     */
+    unsigned short totalColumns;
+    /**
+     * @brief The total rows of the dimensions.
+     */
+    unsigned short totalRows;
 };
 #pragma endregion
 
@@ -710,6 +728,12 @@ extern "C"
 {
 #endif
 #pragma region Functions
+    /**
+     * @brief Gets the terminal window dimensions.
+     * @param dimensions The address where the information about the dimensions should be put into.
+     * @returns 0 if successful or -1 otherwise.
+     */
+    int tmk_getWindowDimensions(struct tmk_Dimensions* dimensions);
     /**
      * @brief Sets a XTerm color into a terminal font layer.
      * @param color The color to be set. It must be a value in range from 0 to 255 or an enumerator from the tmk_XColor enum.

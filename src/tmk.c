@@ -1,6 +1,7 @@
 #include "tmk.h"
 
 #include <stdio.h>
+#include <sys/ioctl.h>
 #include <unistd.h>
 
 #pragma region Macros
@@ -77,6 +78,18 @@ static void _tmk_writeToStream(enum tmk_Stream stream, bool hasNewline, const ch
 #pragma endregion
 
 #pragma region Library Functions
+int tmk_getWindowDimensions(struct tmk_Dimensions* dimensions)
+{
+    struct winsize size;
+    if (ioctl(STDIN_FILENO, TIOCGWINSZ, &size) && ioctl(STDOUT_FILENO, TIOCGWINSZ, &size) && ioctl(STDERR_FILENO, TIOCGWINSZ, &size))
+    {
+        return -1;
+    }
+    dimensions->totalColumns = size.ws_col;
+    dimensions->totalRows = size.ws_row;
+    return 0;
+}
+
 void tmk_setFontXColor(unsigned char color, enum tmk_FontLayer layer)
 {
     _tmk_writeANSIEscapeSequence("\x1b[%d8;5;%dm", layer, color);
