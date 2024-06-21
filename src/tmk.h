@@ -847,6 +847,14 @@ extern "C"
      */
     void tmk_ringBell(void);
     /**
+     * @brief Flushes the terminal output buffer.
+     */
+    void tmk_flushOutputBuffer(void);
+    /**
+     * @brief Clears the terminal input buffer.
+     */
+    void tmk_clearInputBuffer(void);
+    /**
      * @brief Formats and writes a string to the terminal error stream.
      * @param format The format to be used. It accepts the same format specifiers as the printf function family.
      * @param arguments The arguments to be formatted.

@@ -1,7 +1,9 @@
 #include "tmk.h"
 
+#include <fcntl.h>
 #include <stdio.h>
 #include <sys/ioctl.h>
+#include <termios.h>
 #include <unistd.h>
 
 #pragma region Macros
@@ -186,6 +188,30 @@ void tmk_clearWindow(void)
 void tmk_ringBell(void)
 {
     _tmk_writeANSIEscapeSequence("\7");
+}
+
+void tmk_flushOutputBuffer(void)
+{
+    fflush(stdout);
+}
+
+void tmk_clearInputBuffer(void)
+{
+    struct termios attributes;
+    if (tcgetattr(STDIN_FILENO, &attributes))
+    {
+        return;
+    }
+    int flags = fcntl(STDIN_FILENO, F_GETFL);
+    attributes.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+    fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
+    while (getchar() != EOF)
+    {
+    }
+    attributes.c_lflag |= ICANON | ECHO;
+    tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+    fcntl(STDIN_FILENO, F_SETFL, flags);
 }
 
 void tmk_writeErrorArguments(const char* format, va_list arguments)
