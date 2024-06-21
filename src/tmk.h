@@ -96,9 +96,9 @@ typedef enum tmk_XColor
 } tmk_XColor_t;
 
 /**
- * @brief Contains the available terminal layers.
+ * @brief Contains the terminal font layers.
  */
-typedef enum tmk_Layer
+typedef enum tmk_FontLayer
 {
     /**
      * @brief Refers to the graphemes.
@@ -108,7 +108,22 @@ typedef enum tmk_Layer
      * @brief Refers to the background of the graphemes.
      */
     tmk_Layer_Background
-} tmk_Layer_t;
+} tmk_FontLayer_t;
+
+/**
+ * @brief Contains the terminal font weights.
+ */
+typedef enum tmk_FontWeight
+{
+    /**
+     * @brief Usually rendered as bold weight and/or with bright colors.
+     */
+    tmk_FontWeight_Bold = 1,
+    /**
+     * @brief Usually rendered with faint colors.
+     */
+    tmk_FontWeight_Light
+} tmk_FontWeight_t;
 #pragma endregion
 
 #pragma region Structs
@@ -137,23 +152,32 @@ extern "C"
      * @param color The color to be set. It must be a value in range from 0 to 255 or an enumerator from the tmk_XColor enum.
      * @param layer The layer to be affected.
      */
-    void tmk_setFontXColor(unsigned char color, tmk_Layer_t layer);
+    void tmk_setFontXColor(unsigned char color, tmk_FontLayer_t layer);
     /**
      * @brief Sets an RGB color into a terminal font layer.
      * @param color The color to be set.
      * @param layer The layer to be affected.
      */
-    void tmk_setFontRGBColor(tmk_RGBColor_t color, tmk_Layer_t layer);
+    void tmk_setFontRGBColor(tmk_RGBColor_t color, tmk_FontLayer_t layer);
     /**
      * @brief Sets a hex color into a terminal font layer.
      * @param color The color to be set.
      * @param layer The layer to be affected.
      */
-    void tmk_setFontHexColor(tmk_HexColor_t color, tmk_Layer_t layer);
+    void tmk_setFontHexColor(tmk_HexColor_t color, tmk_FontLayer_t layer);
+    /**
+     * @brief Sets the terminal font weight.
+     * @param weight The weight to be set.
+     */
+    void tmk_setFontWeight(tmk_FontWeight_t weight);
     /**
      * @brief Resets the terminal font colors.
      */
     void tmk_resetFontColors(void);
+    /**
+     * @brief Resets the terminal font weight.
+     */
+    void tmk_resetFontWeight(void);
     /**
      * @brief Formats and writes a string to the terminal error stream.
      * @param format The format to be used. It accepts the same format specifiers as the printf function family.

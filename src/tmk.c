@@ -10,13 +10,13 @@
 #define _TMK_TTY_CACHE_HAS_BEEN_FILLED_FLAG (1 << 7)
 /**
  * @brief Creates the TTY cache of a terminal stream in order to create a bitmask.
- * @param stream_a The stream being referenced. It must be a value from the tmk_Layer enum.
+ * @param stream_a The stream being referenced. It must be a value from the tmk_FontLayer enum.
  * @returns The TTY cache of the stream.
  */
 #define _TMK_TTY_CACHE(stream_a) (isatty(stream_a) << stream_a)
 /**
  * @brief Checks the cache to see if a terminal stream is a TTY.
- * @param stream_a The stream being referenced. It must be a value from the tmk_Layer enum.
+ * @param stream_a The stream being referenced. It must be a value from the tmk_FontLayer enum.
  * @returns A boolean that states the stream is a TTY.
  */
 #define _TMK_IS_TTY(stream_a) (tmk_ttyCache_g & 1 << stream_a)
@@ -60,7 +60,7 @@ static void _tmk_writeANSIEscapeSequence(const char* format, ...)
  * @param format The format to be used. It accepts the same format specifiers as the print function family.
  * @param arguments The arguments to be formatted.
  */
-static void _tmk_write(tmk_Stream_t stream, bool hasNewline, const char* format, va_list arguments)
+static void _tmk_writeToStream(tmk_Stream_t stream, bool hasNewline, const char* format, va_list arguments)
 {
     _tmk_fillTTYCache();
     if (stream == tmk_Stream_Error)
@@ -77,19 +77,24 @@ static void _tmk_write(tmk_Stream_t stream, bool hasNewline, const char* format,
 #pragma endregion
 
 #pragma region Library Functions
-void tmk_setFontXColor(unsigned char color, tmk_Layer_t layer)
+void tmk_setFontXColor(unsigned char color, tmk_FontLayer_t layer)
 {
     _tmk_writeANSIEscapeSequence("\x1b[%d8;5;%dm", layer, color);
 }
 
-void tmk_setFontRGBColor(tmk_RGBColor_t color, tmk_Layer_t layer)
+void tmk_setFontRGBColor(tmk_RGBColor_t color, tmk_FontLayer_t layer)
 {
     _tmk_writeANSIEscapeSequence("\x1b[%d8;2;%d;%d;%dm", layer, color.red, color.green, color.blue);
 }
 
-void tmk_setFontHexColor(tmk_HexColor_t color, tmk_Layer_t layer)
+void tmk_setFontHexColor(tmk_HexColor_t color, tmk_FontLayer_t layer)
 {
     tmk_setFontRGBColor((tmk_RGBColor_t){color >> 16 & 0xff, color >> 8 & 0xff, color & 0xff}, layer);
+}
+
+void tmk_setFontWeight(tmk_FontWeight_t weight)
+{
+    _tmk_writeANSIEscapeSequence("\x1b[22;%dm", weight);
 }
 
 void tmk_resetFontColors()
@@ -97,9 +102,14 @@ void tmk_resetFontColors()
     _tmk_writeANSIEscapeSequence("\x1b[39;49m");
 }
 
+void tmk_resetFontWeight()
+{
+    _tmk_writeANSIEscapeSequence("\x1b[22m");
+}
+
 void tmk_writeErrorArguments(const char* format, va_list arguments)
 {
-    _tmk_write(tmk_Stream_Output, false, format, arguments);
+    _tmk_writeToStream(tmk_Stream_Output, false, format, arguments);
 }
 
 void tmk_writeError(const char* format, ...)
@@ -112,7 +122,7 @@ void tmk_writeError(const char* format, ...)
 
 void tmk_writeErrorLineArguments(const char* format, va_list arguments)
 {
-    _tmk_write(tmk_Stream_Output, true, format, arguments);
+    _tmk_writeToStream(tmk_Stream_Output, true, format, arguments);
 }
 
 void tmk_writeErrorLine(const char* format, ...)
@@ -125,7 +135,7 @@ void tmk_writeErrorLine(const char* format, ...)
 
 void tmk_writeArguments(const char* format, va_list arguments)
 {
-    _tmk_write(tmk_Stream_Output, false, format, arguments);
+    _tmk_writeToStream(tmk_Stream_Output, false, format, arguments);
 }
 
 void tmk_write(const char* format, ...)
@@ -138,7 +148,7 @@ void tmk_write(const char* format, ...)
 
 void tmk_writeLineArguments(const char* format, va_list arguments)
 {
-    _tmk_write(tmk_Stream_Output, true, format, arguments);
+    _tmk_writeToStream(tmk_Stream_Output, true, format, arguments);
 }
 
 void tmk_writeLine(const char* format, ...)
