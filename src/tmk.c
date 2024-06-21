@@ -120,6 +120,11 @@ void tmk_setCursorShape(enum tmk_CursorShape shape, bool shouldBlink)
     _tmk_writeANSIEscapeSequence("\x1b[%d q", shape - shouldBlink);
 }
 
+void tmk_setCursorVisibility(bool isVisible)
+{
+    _tmk_writeANSIEscapeSequence("\x1b[?25%c", isVisible ? 'h' : 'l');
+}
+
 void tmk_resetFontColors()
 {
     _tmk_writeANSIEscapeSequence("\x1b[39;49m");

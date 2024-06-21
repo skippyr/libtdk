@@ -770,6 +770,11 @@ extern "C"
      */
     void tmk_setCursorShape(enum tmk_CursorShape shape, bool shouldBlink);
     /**
+     * @brief Sets the terminal cursor visibility.
+     * @param isVisible A boolean that states the terminal cursor should be visible.
+     */
+    void tmk_setCursorVisibility(bool isVisible);
+    /**
      * @brief Resets the terminal font colors.
      */
     void tmk_resetFontColors(void);
