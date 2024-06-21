@@ -1,6 +1,7 @@
 #ifndef _TMK_H
 #define _TMK_H
 
+#include <stdarg.h>
 #include <stdbool.h>
 
 #pragma region Enums
@@ -153,6 +154,30 @@ extern "C"
      * @brief Resets the terminal colors.
      */
     void tmk_resetColors(void);
+    /**
+     * @brief Formats and writes a string to the terminal output stream.
+     * @param format The format to be used. It accepts the same format specifiers as the printf function family.
+     * @param arguments The arguments to be formatted.
+     */
+    void tmk_writeArguments(const char* format, va_list arguments);
+    /**
+     * @brief Formats and writes a string to the terminal output stream.
+     * @param format The format to be used. It accepts the same format specifiers as the printf function family.
+     * @param ... The arguments to be formatted.
+     */
+    void tmk_write(const char* format, ...);
+    /**
+     * @brief Formats and writes a string to the terminal output stream.
+     * @param format The format to be used. It accepts the same format specifiers as the printf function family.
+     * @param arguments The arguments to be formatted.
+     */
+    void tmk_writeLineArguments(const char* format, va_list arguments);
+    /**
+     * @brief Formats and writes a string to the terminal output stream.
+     * @param format The format to be used. It accepts the same format specifiers as the printf function family.
+     * @param ... The arguments to be formatted.
+     */
+    void tmk_writeLine(const char* format, ...);
 #pragma endregion
 #ifdef __cplusplus
 }

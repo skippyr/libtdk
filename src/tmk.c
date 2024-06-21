@@ -1,6 +1,5 @@
 #include "tmk.h"
 
-#include <stdarg.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -53,6 +52,28 @@ static void _tmk_writeANSIEscapeSequence(const char* format, ...)
     vfprintf(_TMK_IS_TTY(tmk_Stream_Output) ? stdout : stderr, format, arguments);
     va_end(arguments);
 }
+
+/**
+ * @brief Formats and writes a string to a terminal stream.
+ * @param stream The stream to be affected.
+ * @param hasNewline A boolean that states a newline grapheme should be appended to the end of the stream.
+ * @param format The format to be used. It accepts the same format specifiers as the print function family.
+ * @param arguments The arguments to be formatted.
+ */
+static void _tmk_write(tmk_Stream_t stream, bool hasNewline, const char* format, va_list arguments)
+{
+    _tmk_fillTTYCache();
+    if (stream == tmk_Stream_Error)
+    {
+        fflush(stdout);
+    }
+    FILE* file = stream == tmk_Stream_Output ? stdout : stderr;
+    vfprintf(file, format, arguments);
+    if (hasNewline)
+    {
+        fputc('\n', file);
+    }
+}
 #pragma endregion
 
 #pragma region Library Functions
@@ -74,5 +95,31 @@ void tmk_setHexColor(tmk_HexColor_t color, tmk_Layer_t layer)
 void tmk_resetColors()
 {
     _tmk_writeANSIEscapeSequence("\x1b[39;49m");
+}
+
+void tmk_writeArguments(const char* format, va_list arguments)
+{
+    _tmk_write(tmk_Stream_Output, false, format, arguments);
+}
+
+void tmk_write(const char* format, ...)
+{
+    va_list arguments;
+    va_start(arguments, format);
+    tmk_writeArguments(format, arguments);
+    va_end(arguments);
+}
+
+void tmk_writeLineArguments(const char* format, va_list arguments)
+{
+    _tmk_write(tmk_Stream_Output, true, format, arguments);
+}
+
+void tmk_writeLine(const char* format, ...)
+{
+    va_list arguments;
+    va_start(arguments, format);
+    tmk_writeLineArguments(format, arguments);
+    va_end(arguments);
 }
 #pragma endregion
