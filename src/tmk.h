@@ -839,6 +839,10 @@ extern "C"
      */
     void tmk_clearWindow(void);
     /**
+     * @brief Rings the terminal bell.
+     */
+    void tmk_ringBell(void);
+    /**
      * @brief Formats and writes a string to the terminal error stream.
      * @param format The format to be used. It accepts the same format specifiers as the printf function family.
      * @param arguments The arguments to be formatted.

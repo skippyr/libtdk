@@ -178,6 +178,11 @@ void tmk_clearWindow(void)
     _tmk_writeANSIEscapeSequence("\x1b[2J\x1b[1;1H");
 }
 
+void tmk_ringBell(void)
+{
+    _tmk_writeANSIEscapeSequence("\7");
+}
+
 void tmk_writeErrorArguments(const char* format, va_list arguments)
 {
     _tmk_writeToStream(tmk_Stream_Output, false, format, arguments);
