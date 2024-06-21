@@ -60,7 +60,7 @@ static void _tmk_writeANSIEscapeSequence(const char* format, ...)
  * @param format The format to be used. It accepts the same format specifiers as the print function family.
  * @param arguments The arguments to be formatted.
  */
-static void _tmk_writeToStream(tmk_Stream_t stream, bool hasNewline, const char* format, va_list arguments)
+static void _tmk_writeToStream(enum tmk_Stream stream, bool hasNewline, const char* format, va_list arguments)
 {
     _tmk_fillTTYCache();
     if (stream == tmk_Stream_Error)
@@ -77,22 +77,22 @@ static void _tmk_writeToStream(tmk_Stream_t stream, bool hasNewline, const char*
 #pragma endregion
 
 #pragma region Library Functions
-void tmk_setFontXColor(unsigned char color, tmk_FontLayer_t layer)
+void tmk_setFontXColor(unsigned char color, enum tmk_FontLayer layer)
 {
     _tmk_writeANSIEscapeSequence("\x1b[%d8;5;%dm", layer, color);
 }
 
-void tmk_setFontRGBColor(tmk_RGBColor_t color, tmk_FontLayer_t layer)
+void tmk_setFontRGBColor(struct tmk_RGBColor color, enum tmk_FontLayer layer)
 {
     _tmk_writeANSIEscapeSequence("\x1b[%d8;2;%d;%d;%dm", layer, color.red, color.green, color.blue);
 }
 
-void tmk_setFontHexColor(tmk_HexColor_t color, tmk_FontLayer_t layer)
+void tmk_setFontHexColor(unsigned int color, enum tmk_FontLayer layer)
 {
-    tmk_setFontRGBColor((tmk_RGBColor_t){color >> 16 & 0xff, color >> 8 & 0xff, color & 0xff}, layer);
+    tmk_setFontRGBColor((struct tmk_RGBColor){color >> 16 & 0xff, color >> 8 & 0xff, color & 0xff}, layer);
 }
 
-void tmk_setFontWeight(tmk_FontWeight_t weight)
+void tmk_setFontWeight(enum tmk_FontWeight weight)
 {
     _tmk_writeANSIEscapeSequence("\x1b[22;%dm", weight);
 }

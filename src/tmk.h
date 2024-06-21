@@ -8,7 +8,7 @@
 /**
  * @brief Contains the terminal streams.
  */
-typedef enum tmk_Stream
+enum tmk_Stream
 {
     /**
      * @brief Where events and data is input.
@@ -22,12 +22,12 @@ typedef enum tmk_Stream
      * @brief Where error tense messages are output.
      */
     tmk_Stream_Error
-} tmk_Stream_t;
+};
 
 /**
  * @brief Contains the ANSI code of the first 16 colors of the XTerm palette.
  */
-typedef enum tmk_XColor
+enum tmk_XColor
 {
     /**
      * @brief The dark variant of the black color.
@@ -93,22 +93,22 @@ typedef enum tmk_XColor
      * @brief The light variant of the white color.
      */
     tmk_XColor_LightWhite,
-} tmk_XColor_t;
+};
 
 /**
  * @brief Contains the terminal font layers.
  */
-typedef enum tmk_FontLayer
+enum tmk_FontLayer
 {
     /**
      * @brief Refers to the graphemes.
      */
-    tmk_Layer_Foreground = 3,
+    tmk_FontLayer_Foreground = 3,
     /**
      * @brief Refers to the background of the graphemes.
      */
-    tmk_Layer_Background
-} tmk_FontLayer_t;
+    tmk_FontLayer_Background
+};
 
 /**
  * @brief Contains the terminal font weights.
@@ -127,19 +127,12 @@ typedef enum tmk_FontWeight
 #pragma endregion
 
 #pragma region Structs
-typedef struct tmk_RGBColor
+struct tmk_RGBColor
 {
     unsigned char red;
     unsigned char green;
     unsigned char blue;
-} tmk_RGBColor_t;
-#pragma endregion
-
-#pragma region Types
-/**
- * @brief Represents a hex color. It must be a value in range from 0x0 to 0xffffff.
- */
-typedef unsigned int tmk_HexColor_t;
+};
 #pragma endregion
 
 #ifdef __cplusplus
@@ -152,24 +145,24 @@ extern "C"
      * @param color The color to be set. It must be a value in range from 0 to 255 or an enumerator from the tmk_XColor enum.
      * @param layer The layer to be affected.
      */
-    void tmk_setFontXColor(unsigned char color, tmk_FontLayer_t layer);
+    void tmk_setFontXColor(unsigned char color, enum tmk_FontLayer layer);
     /**
      * @brief Sets an RGB color into a terminal font layer.
      * @param color The color to be set.
      * @param layer The layer to be affected.
      */
-    void tmk_setFontRGBColor(tmk_RGBColor_t color, tmk_FontLayer_t layer);
+    void tmk_setFontRGBColor(struct tmk_RGBColor color, enum tmk_FontLayer layer);
     /**
      * @brief Sets a hex color into a terminal font layer.
-     * @param color The color to be set.
+     * @param color The color to be set. It must be a value in range from 0x0 to 0xffffff.
      * @param layer The layer to be affected.
      */
-    void tmk_setFontHexColor(tmk_HexColor_t color, tmk_FontLayer_t layer);
+    void tmk_setFontHexColor(unsigned int color, enum tmk_FontLayer layer);
     /**
      * @brief Sets the terminal font weight.
      * @param weight The weight to be set.
      */
-    void tmk_setFontWeight(tmk_FontWeight_t weight);
+    void tmk_setFontWeight(enum tmk_FontWeight weight);
     /**
      * @brief Resets the terminal font colors.
      */
@@ -191,13 +184,13 @@ extern "C"
      */
     void tmk_writeError(const char* format, ...);
     /**
-     * @brief Formats and writes a string to the terminal error stream.
+     * @brief Formats and writes a string to the terminal error stream with a newline grapheme appended to its end.
      * @param format The format to be used. It accepts the same format specifiers as the printf function family.
      * @param arguments The arguments to be formatted.
      */
     void tmk_writeErrorLineArguments(const char* format, va_list arguments);
     /**
-     * @brief Formats and writes a string to the terminal error stream.
+     * @brief Formats and writes a string to the terminal error stream with a newline grapheme appended to its end.
      * @param format The format to be used. It accepts the same format specifiers as the printf function family.
      * @param ... The arguments to be formatted.
      */
@@ -215,13 +208,13 @@ extern "C"
      */
     void tmk_write(const char* format, ...);
     /**
-     * @brief Formats and writes a string to the terminal output stream.
+     * @brief Formats and writes a string to the terminal output stream with a newline grapheme appended to its end.
      * @param format The format to be used. It accepts the same format specifiers as the printf function family.
      * @param arguments The arguments to be formatted.
      */
     void tmk_writeLineArguments(const char* format, va_list arguments);
     /**
-     * @brief Formats and writes a string to the terminal output stream.
+     * @brief Formats and writes a string to the terminal output stream with a newline grapheme appended to its end.
      * @param format The format to be used. It accepts the same format specifiers as the printf function family.
      * @param ... The arguments to be formatted.
      */
