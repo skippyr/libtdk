@@ -835,6 +835,10 @@ extern "C"
      */
     void tmk_closeAlternateWindow(void);
     /**
+     * @brief Clears the terminal window.
+     */
+    void tmk_clearWindow(void);
+    /**
      * @brief Formats and writes a string to the terminal error stream.
      * @param format The format to be used. It accepts the same format specifiers as the printf function family.
      * @param arguments The arguments to be formatted.
