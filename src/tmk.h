@@ -835,6 +835,10 @@ extern "C"
      */
     void tmk_closeAlternateWindow(void);
     /**
+     * @brief Clears the terminal cursor line.
+     */
+    void tmk_clearCursorLine(void);
+    /**
      * @brief Clears the terminal window.
      */
     void tmk_clearWindow(void);

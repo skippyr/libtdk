@@ -173,6 +173,11 @@ void tmk_closeAlternateWindow(void)
     _tmk_writeANSIEscapeSequence("\x1b[?1049l");
 }
 
+void tmk_clearCursorLine(void)
+{
+    _tmk_writeANSIEscapeSequence("\x1b[2K\x1b[1G");
+}
+
 void tmk_clearWindow(void)
 {
     _tmk_writeANSIEscapeSequence("\x1b[2J\x1b[1;1H");
