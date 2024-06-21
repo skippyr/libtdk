@@ -6,27 +6,27 @@
 
 #pragma region Macros
 /**
- * @brief A bitmask flag that states the TTY cache has been filled.
+ * @brief A bitmask flag that states the redirection cache of the terminal streams has been filled.
  */
-#define _TMK_TTY_CACHE_HAS_BEEN_FILLED_FLAG (1 << 7)
+#define _TMK_STREAM_REDIRECTION_HAS_BEEN_FILLED (1 << 7)
 /**
- * @brief Creates the TTY cache of a terminal stream in order to create a bitmask.
+ * @brief Creates the redirection cache of a terminal stream in order to create a bitmask.
  * @param stream_a The stream being referenced. It must be a value from the tmk_FontLayer enum.
- * @returns The TTY cache of the stream.
+ * @returns The redirection cache of the stream.
  */
-#define _TMK_TTY_CACHE(stream_a) (isatty(stream_a) << stream_a)
+#define _TMK_REDIRECTION_CACHE(stream_a) (!isatty(stream_a) << stream_a)
 /**
- * @brief Checks the cache to see if a terminal stream is a TTY.
+ * @brief Checks the cache to see if a terminal stream is being redirected.
  * @param stream_a The stream being referenced. It must be a value from the tmk_FontLayer enum.
- * @returns A boolean that states the stream is a TTY.
+ * @returns A boolean that states the stream is being redirected.
  */
-#define _TMK_IS_TTY(stream_a) (tmk_ttyCache_g & 1 << stream_a)
+#define _TMK_IS_STREAM_REDIRECTED(stream_a) (tmk_streamRedirectionCache_g & 1 << stream_a)
 #pragma endregion
 
 /**
- * @brief Contains the TTY statuses of the terminal streams.
+ * @brief Contains the redirection cache of the terminal streams.
  */
-static char tmk_ttyCache_g = 0;
+static char tmk_streamRedirectionCache_g = 0;
 
 #pragma region Static Functions
 /**
@@ -34,9 +34,9 @@ static char tmk_ttyCache_g = 0;
  */
 static void _tmk_fillTTYCache(void)
 {
-    if (!(tmk_ttyCache_g & _TMK_TTY_CACHE_HAS_BEEN_FILLED_FLAG))
+    if (!(tmk_streamRedirectionCache_g & _TMK_STREAM_REDIRECTION_HAS_BEEN_FILLED))
     {
-        tmk_ttyCache_g |= _TMK_TTY_CACHE_HAS_BEEN_FILLED_FLAG | _TMK_TTY_CACHE(tmk_Stream_Input) | _TMK_TTY_CACHE(tmk_Stream_Output) | _TMK_TTY_CACHE(tmk_Stream_Error);
+        tmk_streamRedirectionCache_g |= _TMK_STREAM_REDIRECTION_HAS_BEEN_FILLED | _TMK_REDIRECTION_CACHE(tmk_Stream_Input) | _TMK_REDIRECTION_CACHE(tmk_Stream_Output) | _TMK_REDIRECTION_CACHE(tmk_Stream_Error);
     }
 }
 
@@ -50,7 +50,7 @@ static void _tmk_writeANSIEscapeSequence(const char* format, ...)
     _tmk_fillTTYCache();
     va_list arguments;
     va_start(arguments, format);
-    vfprintf(_TMK_IS_TTY(tmk_Stream_Output) ? stdout : stderr, format, arguments);
+    vfprintf(!_TMK_IS_STREAM_REDIRECTED(tmk_Stream_Output) ? stdout : stderr, format, arguments);
     va_end(arguments);
 }
 
@@ -63,7 +63,6 @@ static void _tmk_writeANSIEscapeSequence(const char* format, ...)
  */
 static void _tmk_writeToStream(enum tmk_Stream stream, bool hasNewline, const char* format, va_list arguments)
 {
-    _tmk_fillTTYCache();
     if (stream == tmk_Stream_Error)
     {
         fflush(stdout);
@@ -78,6 +77,12 @@ static void _tmk_writeToStream(enum tmk_Stream stream, bool hasNewline, const ch
 #pragma endregion
 
 #pragma region Library Functions
+bool tmk_isStreamRedirected(enum tmk_Stream stream)
+{
+    _tmk_fillTTYCache();
+    return _TMK_IS_STREAM_REDIRECTED(stream);
+}
+
 int tmk_getWindowDimensions(struct tmk_Dimensions* dimensions)
 {
     struct winsize size;

@@ -729,6 +729,12 @@ extern "C"
 #endif
 #pragma region Functions
     /**
+     * @brief Checks if a terminal stream is redirected.
+     * @param stream The stream being referenced.
+     * @returns A boolean that states the terminal stream is redirected.
+     */
+    bool tmk_isStreamRedirected(enum tmk_Stream stream);
+    /**
      * @brief Gets the terminal window dimensions.
      * @param dimensions The address where the information about the dimensions should be put into.
      * @returns 0 if successful or -1 otherwise.
