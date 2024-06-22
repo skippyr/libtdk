@@ -1,10 +1,17 @@
+#pragma region Headers
+#define _GNU_SOURCE
 #include "tmk.h"
 
 #include <fcntl.h>
+#include <poll.h>
+#include <signal.h>
 #include <stdio.h>
 #include <sys/ioctl.h>
+#include <syscall.h>
 #include <termios.h>
 #include <unistd.h>
+#include <wchar.h>
+#pragma endregion
 
 #pragma region Macros
 /**
@@ -24,6 +31,8 @@
  */
 #define _tmk_IS_STREAM_REDIRECTED(stream_a) (tmk_streamRedirectionCache_g & 1 << stream_a)
 #pragma endregion
+
+typedef unsigned long kernel_sigset_t;
 
 /**
  * @brief Contains the redirection cache of the terminal streams.
@@ -50,6 +59,10 @@ static int _tmk_writeANSIEscapeSequence(const char* format, ...);
  * @param arguments The arguments to be formatted.
  */
 static void _tmk_writeToStream(enum tmk_Stream stream, bool hasNewline, const char* format, va_list arguments);
+/**
+ * @brief A function handler to the SIGWINCH signal.
+ */
+static void _tmk_windowResizeHandle(int signal);
 
 static void _tmk_initializeStreamRedirectionCache(void)
 {
@@ -86,6 +99,10 @@ static void _tmk_writeToStream(enum tmk_Stream stream, bool hasNewline, const ch
     {
         fputc('\n', file);
     }
+}
+
+static void _tmk_windowResizeHandle(int signal)
+{
 }
 #pragma endregion
 
@@ -251,6 +268,46 @@ void tmk_clearInputBuffer(void)
 
 int tmk_readKeyEvent(int16_t waitInMilliseconds, bool (*filter)(struct tmk_KeyEvent*), struct tmk_KeyEvent* event)
 {
+    _tmk_initializeStreamRedirectionCache();
+    if (_tmk_IS_STREAM_REDIRECTED(tmk_Stream_Input) || fwide(stdin, 0) > 0 || (_tmk_IS_STREAM_REDIRECTED(tmk_Stream_Output) && _tmk_IS_STREAM_REDIRECTED(tmk_Stream_Error)))
+    {
+        return -1;
+    }
+    struct termios attributes;
+    int flags = fcntl(STDIN_FILENO, F_GETFL);
+    tcgetattr(STDIN_FILENO, &attributes);
+    attributes.c_lflag &= ~(ICANON | ECHO | ISIG);
+    attributes.c_iflag &= ~IXON;
+    tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+    fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
+    struct sigaction windowResizeAction;
+    windowResizeAction.sa_handler = _tmk_windowResizeHandle;
+    windowResizeAction.sa_flags = 0;
+    sigemptyset(&windowResizeAction.sa_mask);
+    sigaction(SIGWINCH, &windowResizeAction, NULL);
+    sigset_t blockedSignals;
+    sigfillset(&blockedSignals);
+    sigdelset(&blockedSignals, SIGWINCH);
+    struct pollfd inputHandle = {STDIN_FILENO, POLLIN, 0};
+    int status;
+    if (waitInMilliseconds < 0)
+    {
+        status = syscall(SYS_ppoll, &inputHandle, 1, NULL, &blockedSignals, sizeof(kernel_sigset_t));
+    }
+    else
+    {
+        struct timespec timer;
+        timer.tv_sec = waitInMilliseconds / 1000;
+        timer.tv_nsec = (waitInMilliseconds % 1000) * 1000000;
+        status = syscall(SYS_ppoll, &inputHandle, 1, &timer, &blockedSignals, sizeof(kernel_sigset_t));
+    }
+    printf("Status: %d.\n", status);
+    windowResizeAction.sa_handler = SIG_DFL;
+    sigaction(SIGWINCH, &windowResizeAction, NULL);
+    attributes.c_lflag |= ICANON | ECHO | ISIG;
+    attributes.c_iflag |= IXON;
+    tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+    fcntl(STDIN_FILENO, F_SETFL, flags);
     return 0;
 }
 

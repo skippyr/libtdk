@@ -1,9 +1,11 @@
 #ifndef _TMK_H
 #define _TMK_H
 
+#pragma region Headers
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
+#pragma endregion
 
 #pragma region Enums
 /**
