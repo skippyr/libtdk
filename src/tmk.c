@@ -34,7 +34,7 @@ static char tmk_streamRedirectionCache_g = 0;
 /**
  * @brief Fills the TTY cache.
  */
-static void _tmk_fillTTYCache(void)
+static void _tmk_initializeStreamRedirectionCache(void)
 {
     if (!(tmk_streamRedirectionCache_g & _tmk_STREAM_REDIRECTION_HAS_BEEN_FILLED))
     {
@@ -50,7 +50,7 @@ static void _tmk_fillTTYCache(void)
  */
 static void _tmk_writeANSIEscapeSequence(const char* format, ...)
 {
-    _tmk_fillTTYCache();
+    _tmk_initializeStreamRedirectionCache();
     va_list arguments;
     va_start(arguments, format);
     vfprintf(!_tmk_IS_STREAM_REDIRECTED(tmk_Stream_Output) ? stdout : stderr, format, arguments);
@@ -82,7 +82,7 @@ static void _tmk_writeToStream(enum tmk_Stream stream, bool hasNewline, const ch
 #pragma region Library Functions
 bool tmk_isStreamRedirected(enum tmk_Stream stream)
 {
-    _tmk_fillTTYCache();
+    _tmk_initializeStreamRedirectionCache();
     return _tmk_IS_STREAM_REDIRECTED(stream);
 }
 
@@ -98,7 +98,7 @@ int tmk_getWindowDimensions(struct tmk_Dimensions* dimensions)
     return 0;
 }
 
-void tmk_setFontXColor(unsigned char color, enum tmk_FontLayer layer)
+void tmk_setFontXColor(uint8_t color, enum tmk_FontLayer layer)
 {
     _tmk_writeANSIEscapeSequence("\x1b[%d8;5;%dm", layer, color);
 }
@@ -108,7 +108,7 @@ void tmk_setFontRGBColor(struct tmk_RGBColor color, enum tmk_FontLayer layer)
     _tmk_writeANSIEscapeSequence("\x1b[%d8;2;%d;%d;%dm", layer, color.red, color.green, color.blue);
 }
 
-void tmk_setFontHexColor(unsigned int color, enum tmk_FontLayer layer)
+void tmk_setFontHexColor(uint32_t color, enum tmk_FontLayer layer)
 {
     tmk_setFontRGBColor((struct tmk_RGBColor){color >> 16 & 0xff, color >> 8 & 0xff, color & 0xff}, layer);
 }
@@ -217,6 +217,11 @@ void tmk_clearInputBuffer(void)
     attributes.c_lflag |= ICANON | ECHO;
     tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
     fcntl(STDIN_FILENO, F_SETFL, flags);
+}
+
+int tmk_readKeyEvent(int16_t waitInMilliseconds, bool (*filter)(struct tmk_KeyEvent*), struct tmk_KeyEvent* event)
+{
+    return 0;
 }
 
 void tmk_writeErrorArguments(const char* format, va_list arguments)

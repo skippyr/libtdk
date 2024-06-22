@@ -3,6 +3,7 @@
 
 #include <stdarg.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #pragma region Enums
 /**
@@ -182,9 +183,18 @@ enum tmk_CursorShape
  */
 struct tmk_RGBColor
 {
-    unsigned char red;
-    unsigned char green;
-    unsigned char blue;
+    /**
+     * @brief The red component of the color.
+     */
+    uint8_t red;
+    /**
+     * @brief The green component of the color.
+     */
+    uint8_t green;
+    /**
+     * @brief The blue component of the color.
+     */
+    uint8_t blue;
 };
 
 /**
@@ -195,11 +205,11 @@ struct tmk_Dimensions
     /**
      * @brief The total columns of the dimensions.
      */
-    unsigned short totalColumns;
+    uint16_t totalColumns;
     /**
      * @brief The total rows of the dimensions.
      */
-    unsigned short totalRows;
+    uint16_t totalRows;
 };
 
 /**
@@ -210,11 +220,26 @@ struct tmk_Coordinate
     /**
      * @brief The column component of the coordinate.
      */
-    unsigned short column;
+    uint16_t column;
     /**
      * @brief The row component of the coordinate.
      */
-    unsigned short row;
+    uint16_t row;
+};
+
+/**
+ * @brief Contains information about a terminal key event reading.
+ */
+struct tmk_KeyEvent
+{
+    /**
+     * @brief The key pressed. It may be an UTF-8 grapheme or an enumerator from the tmk_VirtualKey enum.
+     */
+    int key;
+    /**
+     * @brief A bitmask containing the modifiers keys being holded during the event. It may be composed by enumerators from the tmk_ModifierKey enum.
+     */
+    int modifiers;
 };
 #pragma endregion
 
@@ -240,7 +265,7 @@ extern "C"
      * @param color The color to be set. It must be a value in range from 0 to 255 or an enumerator from the tmk_XColor enum.
      * @param layer The layer to be affected.
      */
-    void tmk_setFontXColor(unsigned char color, enum tmk_FontLayer layer);
+    void tmk_setFontXColor(uint8_t color, enum tmk_FontLayer layer);
     /**
      * @brief Sets an RGB color into a terminal font layer.
      * @param color The color to be set.
@@ -252,7 +277,7 @@ extern "C"
      * @param color The color to be set. It must be a value in range from 0x0 to 0xffffff.
      * @param layer The layer to be affected.
      */
-    void tmk_setFontHexColor(unsigned int color, enum tmk_FontLayer layer);
+    void tmk_setFontHexColor(uint32_t color, enum tmk_FontLayer layer);
     /**
      * @brief Sets the terminal font weight.
      * @param weight The weight to be set.
@@ -323,6 +348,17 @@ extern "C"
      * @brief Clears the terminal input buffer.
      */
     void tmk_clearInputBuffer(void);
+    /**
+     * @brief Reads a terminal key event.
+     * @param waitInMilliseconds The time, in milliseconds, to wait for an event to become available: if negative, it waits forever; If zero, it returns immediately; Otherwise, it
+     * waits the given time.
+     * @param filter A function intended to filter events while the wait time is running out, avoiding it to be interrupted. It returns a boolean that states the event should be
+     * captured. If not required, set it to NULL.
+     * @param event The address where the event information will be put into.
+     * @returns 0 if sucessful; -1 if the reading failed due to stream redirection or invalid orientation; -2 to indicate the wait time ran out; or -3 to indicate a window resize
+     * signal (SIGWINCH) interrupted the reading.
+     */
+    int tmk_readKeyEvent(int16_t waitInMilliseconds, bool (*filter)(struct tmk_KeyEvent*), struct tmk_KeyEvent* event);
     /**
      * @brief Formats and writes a string to the terminal error stream.
      * @param format The format to be used. It accepts the same format specifiers as the printf function family.
