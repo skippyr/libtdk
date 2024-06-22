@@ -42,7 +42,7 @@ static char tmk_streamRedirectionCache_g = 0;
 
 #pragma region Static Functions
 /**
- * @brief Fills the TTY cache.
+ * @brief Initializes the redirection cache of the terminal streams.
  */
 static void _tmk_initializeStreamRedirectionCache(void);
 /**
@@ -296,13 +296,15 @@ int tmk_readKeyEvent(int16_t waitInMilliseconds, bool (*filter)(struct tmk_KeyEv
     {
         goto end_l;
     }
+    bool hasSetTimer = false;
+    struct timespec timer;
     while (true)
     {
-        struct timespec timer;
-        if (waitInMilliseconds > 0)
+        if (waitInMilliseconds > 0 && !hasSetTimer)
         {
             timer.tv_sec = waitInMilliseconds / 1000;
             timer.tv_nsec = (waitInMilliseconds % 1000) * 1000000;
+            hasSetTimer = true;
         }
         int status = syscall(SYS_ppoll, &inputHandle, 1, waitInMilliseconds > 0 ? &timer : NULL, &blockedSignals, sizeof(kernel_sigset_t));
         if (status == -1 && errno == EINTR)
