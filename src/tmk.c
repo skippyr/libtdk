@@ -34,6 +34,23 @@ static char tmk_streamRedirectionCache_g = 0;
 /**
  * @brief Fills the TTY cache.
  */
+static void _tmk_initializeStreamRedirectionCache(void);
+/**
+ * @brief Writes an ANSI escape sequence to the terminal output or error streams.
+ * @param format The format to be used. It accepts the same format specifiers as the printf function family.
+ * @param ... The arguments to be formatted.
+ * @returns 0 if successful or -1 otherwise.
+ */
+static int _tmk_writeANSIEscapeSequence(const char* format, ...);
+/**
+ * @brief Formats and writes a string to a terminal stream.
+ * @param stream The stream to be affected.
+ * @param hasNewline A boolean that states a newline grapheme should be appended to the end of the stream.
+ * @param format The format to be used. It accepts the same format specifiers as the print function family.
+ * @param arguments The arguments to be formatted.
+ */
+static void _tmk_writeToStream(enum tmk_Stream stream, bool hasNewline, const char* format, va_list arguments);
+
 static void _tmk_initializeStreamRedirectionCache(void)
 {
     if (!(tmk_streamRedirectionCache_g & _tmk_STREAM_REDIRECTION_HAS_BEEN_FILLED))
@@ -43,27 +60,20 @@ static void _tmk_initializeStreamRedirectionCache(void)
     }
 }
 
-/**
- * @brief Writes an ANSI escape sequence to the terminal output or error streams.
- * @param format The format to be used. It accepts the same format specifiers as the printf function family.
- * @param ... The arguments to be formatted.
- */
-static void _tmk_writeANSIEscapeSequence(const char* format, ...)
+static int _tmk_writeANSIEscapeSequence(const char* format, ...)
 {
     _tmk_initializeStreamRedirectionCache();
+    if (_tmk_IS_STREAM_REDIRECTED(tmk_Stream_Output) && _tmk_IS_STREAM_REDIRECTED(tmk_Stream_Error))
+    {
+        return -1;
+    }
     va_list arguments;
     va_start(arguments, format);
     vfprintf(!_tmk_IS_STREAM_REDIRECTED(tmk_Stream_Output) ? stdout : stderr, format, arguments);
     va_end(arguments);
+    return 0;
 }
 
-/**
- * @brief Formats and writes a string to a terminal stream.
- * @param stream The stream to be affected.
- * @param hasNewline A boolean that states a newline grapheme should be appended to the end of the stream.
- * @param format The format to be used. It accepts the same format specifiers as the print function family.
- * @param arguments The arguments to be formatted.
- */
 static void _tmk_writeToStream(enum tmk_Stream stream, bool hasNewline, const char* format, va_list arguments)
 {
     if (stream == tmk_Stream_Error)
@@ -96,6 +106,26 @@ int tmk_getWindowDimensions(struct tmk_Dimensions* dimensions)
     dimensions->totalColumns = size.ws_col;
     dimensions->totalRows = size.ws_row;
     return 0;
+}
+
+int tmk_getCursorCoordinate(struct tmk_Coordinate* coordinate)
+{
+    tmk_clearInputBuffer();
+    struct termios attributes;
+    if (_tmk_writeANSIEscapeSequence("\x1b[6n") || tcgetattr(STDIN_FILENO, &attributes))
+    {
+        return -1;
+    }
+    attributes.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+    uint16_t temporaryColumn;
+    uint16_t temporaryRow;
+    int totalMatches = scanf("\x1b[%hu;%huR", &temporaryRow, &temporaryColumn);
+    coordinate->column = temporaryColumn - 1;
+    coordinate->row = temporaryRow - 1;
+    attributes.c_lflag |= ICANON | ECHO;
+    tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
+    return -(totalMatches < 2);
 }
 
 void tmk_setFontXColor(uint8_t color, enum tmk_FontLayer layer)

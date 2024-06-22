@@ -261,6 +261,12 @@ extern "C"
      */
     int tmk_getWindowDimensions(struct tmk_Dimensions* dimensions);
     /**
+     * @brief Gets the terminal cursor coordinate. As it reads the terminal answer from the input buffer, it clears it.
+     * @param coordinate The coordinate where the coordinate information will be put into.
+     * @returns 0 if successful or -1 otherwise.
+     */
+    int tmk_getCursorCoordinate(struct tmk_Coordinate* coordinate);
+    /**
      * @brief Sets a XTerm color into a terminal font layer.
      * @param color The color to be set. It must be a value in range from 0 to 255 or an enumerator from the tmk_XColor enum.
      * @param layer The layer to be affected.
@@ -300,7 +306,7 @@ extern "C"
      */
     void tmk_setCursorVisibility(bool isVisible);
     /**
-     * @brief Sets the terminal cursor coordinate.
+     * @brief Sets the terminal cursor coordinate. It may be constrained inside of the terminal window.
      * @param coordinate The coordinate to be set.
      */
     void tmk_setCursorCoordinate(struct tmk_Coordinate coordinate);
@@ -354,7 +360,7 @@ extern "C"
      * waits the given time.
      * @param filter A function intended to filter events while the wait time is running out, avoiding it to be interrupted. It returns a boolean that states the event should be
      * captured. If not required, set it to NULL.
-     * @param event The address where the event information will be put into.
+     * @param event The address where the event information will be put into. If not required, set it to NULL.
      * @returns 0 if sucessful; -1 if the reading failed due to stream redirection or invalid orientation; -2 to indicate the wait time ran out; or -3 to indicate a window resize
      * signal (SIGWINCH) interrupted the reading.
      */
