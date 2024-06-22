@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdlib.h>
 #pragma endregion
 
 #pragma region Enums

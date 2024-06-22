@@ -2,6 +2,7 @@
 #define _GNU_SOURCE
 #include "tmk.h"
 
+#include <errno.h>
 #include <fcntl.h>
 #include <poll.h>
 #include <signal.h>
@@ -290,25 +291,34 @@ int tmk_readKeyEvent(int16_t waitInMilliseconds, bool (*filter)(struct tmk_KeyEv
     sigdelset(&blockedSignals, SIGWINCH);
     struct pollfd inputHandle = {STDIN_FILENO, POLLIN, 0};
     int status;
-    if (waitInMilliseconds < 0)
+    int exitCode = 0;
+    if (!waitInMilliseconds)
     {
-        status = syscall(SYS_ppoll, &inputHandle, 1, NULL, &blockedSignals, sizeof(kernel_sigset_t));
+        goto end_l;
     }
-    else
+    while (true)
     {
         struct timespec timer;
-        timer.tv_sec = waitInMilliseconds / 1000;
-        timer.tv_nsec = (waitInMilliseconds % 1000) * 1000000;
-        status = syscall(SYS_ppoll, &inputHandle, 1, &timer, &blockedSignals, sizeof(kernel_sigset_t));
+        if (waitInMilliseconds > 0)
+        {
+            timer.tv_sec = waitInMilliseconds / 1000;
+            timer.tv_nsec = (waitInMilliseconds % 1000) * 1000000;
+        }
+        int status = syscall(SYS_ppoll, &inputHandle, 1, waitInMilliseconds > 0 ? &timer : NULL, &blockedSignals, sizeof(kernel_sigset_t));
+        if (status == -1 && errno == EINTR)
+        {
+            exitCode = -3;
+            goto end_l;
+        }
     }
-    printf("Status: %d.\n", status);
+end_l:
     windowResizeAction.sa_handler = SIG_DFL;
     sigaction(SIGWINCH, &windowResizeAction, NULL);
     attributes.c_lflag |= ICANON | ECHO | ISIG;
     attributes.c_iflag |= IXON;
     tcsetattr(STDIN_FILENO, TCSANOW, &attributes);
     fcntl(STDIN_FILENO, F_SETFL, flags);
-    return 0;
+    return exitCode;
 }
 
 void tmk_writeErrorArguments(const char* format, va_list arguments)
